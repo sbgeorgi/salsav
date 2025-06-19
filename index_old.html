@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALSA V - SemiArid Lab for Scalable Agrivoltaics</title>
+    <!-- Modern font combo: Inter for headings, Source Sans 3 for body text -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/main-styles.css">
+
+    <style>
+        /* Vertical spacing for map section title */
+        #map-section-wrapper .section-header {
+            margin-bottom: 3rem; /* Increased vertical spacing */
+        }
+
+        /* Styles for the new alternating layout in Detailed Site Sections */
+        .detailed-content-section > .container { /* Specific to containers within detailed-content-section */
+            max-width: 90%; /* Allow it to be up to 90% of the parent's width */
+        }
+
+        .detailed-content-section .section-header {
+            margin-bottom: 2.5rem; /* Space below country title */
+            text-align: center; 
+        }
+
+        .detailed-content-section .alternating-item {
+            display: flex;
+            flex-wrap: wrap; 
+            align-items: stretch; /* Make text and image columns of equal height */
+            gap: 2.5rem; /* Space between text and image columns */
+            margin-bottom: 3.5rem; /* Space between items */
+        }
+
+        .detailed-content-section .alternating-item__text,
+        .detailed-content-section .alternating-item__image {
+            flex: 1 1 calc(50% - 1.25rem); /* Basis 50% minus half gap */
+            min-width: 280px; /* Minimum width before stacking */
+        }
+
+        .detailed-content-section .alternating-item__image img {
+            width: 100%;
+            height: 100%; /* Fill the container height */
+            object-fit: cover; 
+            border-radius: 8px; 
+            display: block; 
+        }
+        
+        .detailed-content-section .alternating-item__text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+        }
+        .detailed-content-section .alternating-item__text h3 {
+            margin-top: 0; 
+            margin-bottom: 1rem;
+            color: var(--primary-dark-color, #333); /* Use existing color variable or a default */
+        }
+        .detailed-content-section .alternating-item__text p {
+            line-height: 1.7; /* Improved readability */
+        }
+        .detailed-content-section .alternating-item__text .img-caption {
+            margin-top: 1rem;
+            font-size: 0.875em;
+            color: #555; /* Slightly darker for better contrast */
+            font-style: italic;
+            text-align: center;
+        }
+
+       /* For ODD detailed-content-sections (1st, 3rd, ...): Image Left, Text Right */
+        .detailed-content-section:nth-of-type(odd) .alternating-item .alternating-item__image {
+            order: 0; /* Image appears first */
+        }
+        .detailed-content-section:nth-of-type(odd) .alternating-item .alternating-item__text {
+            order: 1; /* Text appears second */
+        }
+
+        /* For EVEN detailed-content-sections (2nd, 4th, ...): Text Left, Image Right */
+        .detailed-content-section:nth-of-type(even) .alternating-item .alternating-item__text {
+            order: 0; /* Text appears first */
+        }
+        .detailed-content-section:nth-of-type(even) .alternating-item .alternating-item__image {
+            order: 1; /* Image appears second */
+        }
+
+        @media (max-width: 768px) {
+            .detailed-content-section > .container { 
+                 max-width: 95%; /* Slightly more width on mobile if needed */
+            }
+            .detailed-content-section .alternating-item {
+                flex-direction: column; 
+                gap: 1.5rem; /* Reduced gap for stacked layout */
+            }
+
+            .detailed-content-section .alternating-item__text,
+            .detailed-content-section .alternating-item__image {
+                flex-basis: auto; 
+                width: 100%;
+            }
+            
+            /* Consistent order on mobile: Image first, then text */
+            .detailed-content-section .alternating-item .alternating-item__image {
+                order: 0 !important; 
+                max-height: 300px; /* Optional: constrain image height on mobile */
+            }
+            .detailed-content-section .alternating-item .alternating-item__text {
+                order: 1 !important; 
+                justify-content: flex-start; 
+            }
+            .detailed-content-section .alternating-item__text .img-caption {
+                 text-align: left; /* Align caption to left on mobile if text is left-aligned */
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#hero-section" class="navbar-brand" data-en="SALSA V Agrivoltaics" data-es="Agrivoltaicos SALSA V">
+                <!-- <i class="fas fa-solar-panel"></i> Optional Icon -->
+                SALSA V Agrivoltaics
+            </a>
+
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="navbar-links">
+                <ul class="navbar-menu">
+                    <li><a href="#hero-section" class="navbar-link active" data-en="Home" data-es="Inicio">Home</a></li>
+                    <li><a href="#map-section-wrapper" class="navbar-link" data-en="Global Map"
+                            data-es="Mapa Global">Global Map</a></li>
+                    <li class="has-dropdown">
+                        <a href="#sites-section" class="navbar-link" data-en="Research Sites"
+                            data-es="Sitios de Investigación">Research Sites <i
+                                class="fas fa-chevron-down fa-xs"></i></a>
+                        <ul class="dropdown-content">
+                            <li><a href="#sites-section" data-en="Overview" data-es="Visión General">Overview</a></li>
+                            <li><a href="#arizona-sites-detailed" data-en="Arizona (USA)"
+                                    data-es="Arizona (EE.UU.)">Arizona (USA)</a></li>
+                            <li><a href="#colorado-site-detailed" data-en="Colorado (USA)"
+                                    data-es="Colorado (EE.UU.)">Colorado (USA)</a></li>
+                            <li><a href="#kenya-site-detailed" data-en="Kenya" data-es="Kenia">Kenya</a></li>
+                            <li><a href="#israel-site-detailed" data-en="Israel" data-es="Israel">Israel</a></li>
+                            <li><a href="#morocco-collaboration-detailed" data-en="Morocco"
+                                    data-es="Marruecos">Morocco</a></li>
+                            <li><a href="#mexico-collaboration-detailed" data-en="Mexico" data-es="México">Mexico</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#team-section" class="navbar-link" data-en="Team" data-es="Equipo">Team</a></li>
+                    <li><a href="#footer" class="navbar-link" data-en="Contact" data-es="Contacto">Contact</a></li>
+                </ul>
+                <!-- Language Toggle Switch -->
+                <div class="language-toggle">
+                    <button class="toggle toggle--off" id="languageToggle"
+                        aria-label="Toggle Language English/Spanish"></button>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero-section">
+        <div class="hero-content">
+            <h1 data-en="SALSA V: Pioneering Scalable Agrivoltaics"
+                data-es="SALSA V: Pioneros en Agrivoltaicos Escalables">SALSA V: Pioneering Scalable Agrivoltaics</h1>
+            <p class="hero-subtitle"
+                data-en="Advancing food-energy-water solutions by integrating solar energy with agriculture in semi-arid environments worldwide. Research led by the University of Arizona."
+                data-es="Avanzando soluciones de alimento-energía-agua mediante la integración de energía solar con agricultura en entornos semiáridos a nivel mundial. Investigación liderada por la Universidad de Arizona.">
+                Advancing food-energy-water solutions by integrating solar energy with agriculture in semi-arid
+                environments worldwide. Research led by the University of Arizona.</p>
+            <a href="#sites-section" class="hero-cta scroll-link" data-en="Explore Our Research"
+                data-es="Explorar Investigación">Explore Our Research <i class="fas fa-arrow-down"></i></a>
+        </div>
+        <div class="hero-stats reveal">
+            <div class="stats-wrapper container">
+                <div class="hero-stat">
+                    <div class="hero-stat-number">6+</div>
+                    <div class="hero-stat-label" data-en="Countries Involved" data-es="Países Involucrados">Countries
+                        Involved</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">10+</div>
+                    <div class="hero-stat-label" data-en="Years of Research" data-es="Años de Investigación">Years of
+                        Research</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">20+</div>
+                    <div class="hero-stat-label" data-en="Collaborating Institutions"
+                        data-es="Instituciones Colaboradoras">Collaborating Institutions</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">FEW</div>
+                    <div class="hero-stat-label" data-en="Nexus Solutions" data-es="Soluciones Nexo">Food-Energy-Water
+                        Nexus</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Wrapper -->
+    <main>
+
+        <!-- Map Section -->
+        <section class="map-section" id="map-section-wrapper">
+            <div class="container reveal">
+                <div class="section-header">
+                    <h2 class="section-title" data-en="Global Agrivoltaic Research Sites"
+                        data-es="Sitios Globales de Investigación Agrivoltaica">Global Agrivoltaic Research Sites</h2>
+                    <p class="section-subtitle"
+                        data-en="Interactive map showcasing SALSA V's key research and collaboration sites for agrivoltaics across the globe."
+                        data-es="Mapa interactivo que muestra los sitios clave de investigación y colaboración de SALSA V para agrivoltaicos en todo el mundo.">
+                        Interactive map showcasing SALSA V's key research and collaboration sites for agrivoltaics
+                        across the globe.</p>
+                </div>
+            </div>
+            <div class="map-container reveal">
+                <div id="map"></div>
+            </div>
+        </section>
+
+        <!-- Research Sites Overview Section -->
+        <section class="section" id="sites-section">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2 class="section-title" data-en="Flagship Research Sites & Initiatives"
+                        data-es="Sitios e Iniciativas de Investigación Emblemáticos">Flagship Research Sites &
+                        Initiatives</h2>
+                    <p class="section-subtitle"
+                        data-en="Highlighting key agrivoltaic research locations and collaborative projects led or significantly contributed to by the SALSA V team at the University of Arizona."
+                        data-es="Destacando ubicaciones clave de investigación agrivoltaica y proyectos colaborativos liderados o con contribuciones significativas del equipo SALSA V de la Universidad de Arizona.">
+                        Highlighting key agrivoltaic research locations and collaborative projects led or significantly
+                        contributed to by the SALSA V team at the University of Arizona.</p>
+                </div>
+                <div class="sites-grid">
+                    <!-- Site Card 1: Biosphere 2 -->
+                    <div class="site-card reveal">
+                        <div class="site-image-container">
+                            <img src="static/biosphere2agriv.jpg" alt="Agrivoltaics at Biosphere 2"
+                                class="site-image"> 
+                        </div>
+                        <div class="site-details">
+                            <h3 class="site-title" data-en="Biosphere 2 Agrivoltaics Lab"
+                                data-es="Laboratorio Agrivoltaico Biosphere 2">Biosphere 2 Agrivoltaics Lab</h3>
+                            <p class="site-location"><i class="fas fa-map-marker-alt"></i><span data-en="Arizona, USA"
+                                    data-es="Arizona, EE.UU.">Arizona, USA</span></p>
+                            <p class="site-description"
+                                data-en="Pioneering dryland agrivoltaics research since 2017, focusing on food-energy-water nexus, crop yields, water conservation, and panel efficiency."
+                                data-es="Investigación pionera en agrivoltaicos en tierras áridas desde 2017, centrada en el nexo alimento-energía-agua, rendimiento de cultivos, conservación de agua y eficiencia de paneles.">
+                                Pioneering dryland agrivoltaics research since 2017, focusing on food-energy-water
+                                nexus, crop yields, water conservation, and panel efficiency.</p>
+                            <a href="#arizona-sites-detailed" class="site-cta" data-en="Learn More"
+                                data-es="Aprender Más">Learn More <i class="fas fa-arrow-right fa-xs"></i></a>
+                        </div>
+                    </div>
+                    <!-- Site Card 2: AES Utility Scale -->
+                    <div class="site-card reveal">
+                        <div class="site-image-container">
+                            <img src="static/aesagriv.jpg" alt="AES Utility-Scale Agrivoltaics Site"
+                                class="site-image"> 
+                        </div>
+                        <div class="site-details">
+                            <h3 class="site-title" data-en="AES Utility-Scale Agrivoltaics"
+                                data-es="Agrivoltaicos a Escala de Compañía Eléctrica (AES)">AES Utility-Scale
+                                Agrivoltaics</h3>
+                            <p class="site-location"><i class="fas fa-map-marker-alt"></i><span
+                                    data-en="Central Arizona, USA" data-es="Arizona Central, EE.UU.">Central Arizona,
+                                    USA</span></p>
+                            <p class="site-description"
+                                data-en="Translating agrivoltaics to commercial solar farms with The AES Corporation. Testing grazing, conventional, and climate-adapted crops under utility-scale panels."
+                                data-es="Traduciendo agrivoltaicos a granjas solares comerciales con The AES Corporation. Pruebas de pastoreo, cultivos convencionales y adaptados al clima bajo paneles a escala de servicios públicos.">
+                                Translating agrivoltaics to commercial solar farms with The AES Corporation. Testing
+                                grazing, conventional, and climate-adapted crops under utility-scale panels.</p>
+                            <a href="#arizona-sites-detailed" class="site-cta" data-en="Learn More"
+                                data-es="Aprender Más">Learn More <i class="fas fa-arrow-right fa-xs"></i></a>
+                        </div>
+                    </div>
+                    <!-- Site Card 3: Colorado -->
+                    <div class="site-card reveal">
+                        <div class="site-image-container">
+                            <img src="static/jacksagriv.jpg" alt="Colorado Agrivoltaics Research at Jack's Solar Garden"
+                                class="site-image">
+                        </div>
+                        <div class="site-details">
+                            <h3 class="site-title" data-en="Colorado Agrivoltaics (SCAPES)"
+                                data-es="Agrivoltaicos en Colorado (SCAPES)">Colorado Agrivoltaics (SCAPES)</h3>
+                            <p class="site-location"><i class="fas fa-map-marker-alt"></i><span data-en="Colorado, USA"
+                                    data-es="Colorado, EE.UU.">Colorado, USA</span></p>
+                            <p class="site-description"
+                                data-en="Collaboration with CSU and NREL at sites like Jack’s Solar Garden, evaluating system designs for Colorado's semi-arid climate and diverse agriculture."
+                                data-es="Colaboración con CSU y NREL en sitios como Jack’s Solar Garden, evaluando diseños de sistemas para el clima semiárido y la agricultura diversa de Colorado.">
+                                Collaboration with CSU and NREL at sites like Jack’s Solar Garden, evaluating system
+                                designs for Colorado's semi-arid climate and diverse agriculture.</p>
+                            <a href="#colorado-site-detailed" class="site-cta" data-en="Learn More"
+                                data-es="Aprender Más">Learn More <i class="fas fa-arrow-right fa-xs"></i></a>
+                        </div>
+                    </div>
+                    <!-- Site Card 4: Kenya -->
+                    <div class="site-card reveal">
+                        <div class="site-image-container">
+                            <img src="static/kenyaagriv.jpg" alt="Kenya Community Agrivoltaics Project"
+                                class="site-image">
+                        </div>
+                        <div class="site-details">
+                            <h3 class="site-title" data-en="Kenya Community Agrivoltaics"
+                                data-es="Agrivoltaicos Comunitarios en Kenia">Kenya Community Agrivoltaics</h3>
+                            <p class="site-location"><i class="fas fa-map-marker-alt"></i><span
+                                    data-en="Makueni County, Kenya" data-es="Condado de Makueni, Kenia">Makueni County,
+                                    Kenya</span></p>
+                            <p class="site-description"
+                                data-en="Addressing food and energy poverty through community-led agrivoltaics, powering irrigation and enhancing crop yields in a semi-arid region."
+                                data-es="Abordando la pobreza alimentaria y energética a través de agrivoltaicos comunitarios, impulsando el riego y mejorando los rendimientos de los cultivos en una región semiárida.">
+                                Addressing food and energy poverty through community-led agrivoltaics, powering
+                                irrigation and enhancing crop yields in a semi-arid region.</p>
+                            <a href="#kenya-site-detailed" class="site-cta" data-en="Learn More"
+                                data-es="Aprender Más">Learn More <i class="fas fa-arrow-right fa-xs"></i></a>
+                        </div>
+                    </div>
+                    <!-- Add other site cards similarly -->
+                    <div class="site-card reveal"> <!-- Israel -->
+                        <div class="site-image-container">
+                            <img src="static/aravaagriv.jpg" alt="Israel Agrivoltaics Research in Arava Desert"
+                                class="site-image">
+                        </div>
+                        <div class="site-details">
+                            <h3 class="site-title" data-en="Israel Agrivoltaics (Arava Desert)"
+                                data-es="Agrivoltaicos en Israel (Desierto de Arava)">Israel Agrivoltaics (Arava Desert)
+                            </h3>
+                            <p class="site-location"><i class="fas fa-map-marker-alt"></i><span data-en="Negev, Israel"
+                                    data-es="Néguev, Israel">Negev, Israel</span></p>
+                            <p class="site-description"
+                                data-en="Developing agrivoltaic systems for extreme desert climates with the Kasser Joint Institute and Arava Institute, focusing on water savings and crop resilience."
+                                data-es="Desarrollando sistemas agrivoltaicos para climas desérticos extremos con el Instituto Conjunto Kasser y el Instituto Arava, centrándose en el ahorro de agua y la resiliencia de los cultivos.">
+                                Developing agrivoltaic systems for extreme desert climates with the Kasser Joint
+                                Institute and Arava Institute, focusing on water savings and crop resilience.</p>
+                            <a href="#israel-site-detailed" class="site-cta" data-en="Learn More"
+                                data-es="Aprender Más">Learn More <i class="fas fa-arrow-right fa-xs"></i></a>
+                        </div>
+                    </div>
+                    <div class="site-card reveal"> <!-- Morocco -->
+                        <div class="site-image-container">
+                            <img src="static/um6pagriv.jpeg" alt="Morocco Agrivoltaics Collaboration at Green Energy Park"
+                                class="site-image">
+                        </div>
+                        <div class="site-details">
+                            <h3 class="site-title" data-en="Morocco Agrivoltaics Collaboration"
+                                data-es="Colaboración Agrivoltaica en Marruecos">Morocco Agrivoltaics Collaboration</h3>
+                            <p class="site-location"><i class="fas fa-map-marker-alt"></i><span data-en="Morocco"
+                                    data-es="Marruecos">Morocco</span></p>
+                            <p class="site-description"
+                                data-en="Partnering with IRESEN and Green Energy Park to advance agrivoltaics research and pilot projects, adapting solutions for North African arid lands."
+                                data-es="Asociación con IRESEN y Green Energy Park para avanzar en la investigación y proyectos piloto de agrivoltaicos, adaptando soluciones para tierras áridas del norte de África.">
+                                Partnering with IRESEN and Green Energy Park to advance agrivoltaics research and pilot
+                                projects, adapting solutions for North African arid lands.</p>
+                            <a href="#morocco-collaboration-detailed" class="site-cta" data-en="Learn More"
+                                data-es="Aprender Más">Learn More <i class="fas fa-arrow-right fa-xs"></i></a>
+                        </div>
+                    </div>
+                    <div class="site-card reveal"> <!-- Mexico -->
+                        <div class="site-image-container">
+                            <img src="static/paseagriv.jpg" alt="Mexico Agrivoltaics Initiatives including PASE project"
+                                class="site-image">
+                        </div>
+                        <div class="site-details">
+                            <h3 class="site-title" data-en="Mexico Agrivoltaics Initiatives"
+                                data-es="Iniciativas Agrivoltaicas en México">Mexico Agrivoltaics Initiatives</h3>
+                            <p class="site-location"><i class="fas fa-map-marker-alt"></i><span data-en="Mexico"
+                                    data-es="México">Mexico</span></p>
+                            <p class="site-description"
+                                data-en="Collaborating on the PASE project with UNAM and exploring community-based agrivoltaics in Northern Mexico for arid land solutions and education."
+                                data-es="Colaborando en el proyecto PASE con la UNAM y explorando agrivoltaicos comunitarios en el norte de México para soluciones en tierras áridas y educación.">
+                                Collaborating on the PASE project with UNAM and exploring community-based agrivoltaics
+                                in Northern Mexico for arid land solutions and education.</p>
+                            <a href="#mexico-collaboration-detailed" class="site-cta" data-en="Learn More"
+                                data-es="Aprender Más">Learn More <i class="fas fa-arrow-right fa-xs"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Site Sections -->
+        <section class="content-section section detailed-content-section" id="arizona-sites-detailed">
+            <div class="container reveal">
+                <div class="section-header">
+                    <h2 class="section-title" data-en="Arizona (USA) Research Sites"
+                        data-es="Sitios de Investigación en Arizona (EE.UU.)">Arizona (USA) Research Sites</h2>
+                </div>
+                
+                <div class="alternating-item"> 
+                    <div class="alternating-item__text">
+                        <h3 data-en="Biosphere 2 Agrivoltaics Research Laboratory"
+                            data-es="Laboratorio de Investigación Agrivoltaica Biosphere 2">Biosphere 2 Agrivoltaics Research
+                            Laboratory</h3>
+                        <p data-en="Biosphere 2, the famed ecological research facility in Oracle, Arizona, is where the Barron-Gafford team pioneered agrivoltaics in drylands. In 2017, they built one of the first agrivoltaic research sites here – installing solar panels 9 feet above test gardens to grow crops like tomatoes, peppers, kale, and okra in the partial shade.<sup class='citation-link'><a href='https://new.nsf.gov/news/agrivoltaics-proves-beneficial-across-food-water#:~:text=strikes%20right%20at%20the%20intersection,of%20solar%20panels%20ever%20since' target='_blank' rel='noopener'>[NSF]</a></sup> Barron-Gafford (who serves as Biosphere 2’s director of food, energy, and water resilience) and students monitored a full food-energy-water (FEW) cycle: plant growth and yield, soil moisture, microclimate, and solar panel performance.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=A%20new%20%2410%20million%20grant,land%20types%20and%20climate%20scenarios' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=graduate%20students%2C%20began%20growing%20crops,energy%20and%20water%20resilience%20solutions' target='_blank' rel='noopener'>[UA News]</a></sup> After multiple growing seasons, the results – published in <em>Nature Sustainability</em> (2019) – were eye-opening. Crops under the solar panels thrived with less water: for example, soil moisture stayed ~15% higher when irrigating every other day under panels versus an open-field control, because the shade reduced evaporation.<sup class='citation-link'><a href='https://cleantechnica.com/2024/07/15/agrivoltaics-conserve-precious-water-for-arizona-farmers/#:~:text=solar%20farming%20could%20benefit%20the,nearby%20plot%20without%20solar%20panels' target='_blank' rel='noopener'>[CleanTechnica]</a></sup> Surprisingly, some shade-tolerant vegetables produced more yield with half the water; e.g. cowpea (black-eyed pea) yields increased under the panels compared to full sun, which “required twice as much water” for the same output.<sup class='citation-link'><a href='https://cleantechnica.com/2024/07/15/agrivoltaics-conserve-precious-water-for-arizona-farmers/#:~:text=Some%20plants%20actually%20produced%20more,Gafford%20said' target='_blank' rel='noopener'>[CleanTechnica]</a></sup> Researchers also documented that agrivoltaics creates a cooler microclimate – midday temperatures were lower under the panels – which in turn kept the solar modules cooler and more efficient in generating power.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Planting%20crops%20under%20solar%20panels,cools%20the%20underside%20of%20panels' target='_blank' rel='noopener'>[UA News]</a></sup> These concurrent benefits across food, water, and energy validated agrivoltaics as a “win-win-win” strategy for arid regions.<sup class='citation-link'><a href='https://cleantechnica.com/2024/07/15/agrivoltaics-conserve-precious-water-for-arizona-farmers/#:~:text=solar%20farming%20could%20benefit%20the,nearby%20plot%20without%20solar%20panels' target='_blank' rel='noopener'>[CleanTechnica]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Planting%20crops%20under%20solar%20panels,cools%20the%20underside%20of%20panels' target='_blank' rel='noopener'>[UA News]</a></sup> This Biosphere 2 Agrivoltaic Learning Lab (supported by the U.S. National Science Foundation) became a template for larger projects, while also serving to educate the public and train students. It showed that instead of choosing between food vs. solar on limited land, we can do both on the same land – multiplying land productivity (news.arizona.edu)."
+                            data-es="Biosphere 2, la famosa instalación de investigación ecológica en Oracle, Arizona, es donde el equipo de Barron-Gafford fue pionero en agrivoltaicos en tierras áridas. En 2017, construyeron uno de los primeros sitios de investigación agrivoltaica aquí, instalando paneles solares a 9 pies sobre jardines de prueba para cultivar cosechas como tomates, pimientos, col rizada y okra en la sombra parcial.<sup class='citation-link'><a href='https://new.nsf.gov/news/agrivoltaics-proves-beneficial-across-food-water#:~:text=strikes%20right%20at%20the%20intersection,of%20solar%20panels%20ever%20since' target='_blank' rel='noopener'>[NSF]</a></sup> Barron-Gafford (director de resiliencia alimentaria, energética e hídrica de Biosphere 2) y estudiantes monitorearon un ciclo completo de alimento-energía-agua (FEW): crecimiento y rendimiento de las plantas, humedad del suelo, microclima y rendimiento de los paneles solares.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=A%20new%20%2410%20million%20grant,land%20types%20and%20climate%20scenarios' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=graduate%20students%2C%20began%20growing%20crops,energy%20and%20water%20resilience%20solutions' target='_blank' rel='noopener'>[UA News]</a></sup> Después de múltiples temporadas de cultivo, los resultados, publicados en <em>Nature Sustainability</em> (2019), fueron reveladores. Los cultivos bajo los paneles solares prosperaron con menos agua: por ejemplo, la humedad del suelo se mantuvo ~15% más alta al regar cada dos días bajo los paneles en comparación con un control de campo abierto, porque la sombra redujo la evaporación.<sup class='citation-link'><a href='https://cleantechnica.com/2024/07/15/agrivoltaics-conserve-precious-water-for-arizona-farmers/#:~:text=solar%20farming%20could%20benefit%20the,nearby%20plot%20without%20solar%20panels' target='_blank' rel='noopener'>[CleanTechnica]</a></sup> Sorprendentemente, algunas hortalizas tolerantes a la sombra produjeron más rendimiento con la mitad del agua; por ejemplo, los rendimientos del caupí (frijol de ojo negro) aumentaron bajo los paneles en comparación con el pleno sol, que “requirió el doble de agua” para la misma producción.<sup class='citation-link'><a href='https://cleantechnica.com/2024/07/15/agrivoltaics-conserve-precious-water-for-arizona-farmers/#:~:text=Some%20plants%20actually%20produced%20more,Gafford%20said' target='_blank' rel='noopener'>[CleanTechnica]</a></sup> Los investigadores también documentaron que los agrivoltaicos crean un microclima más fresco (las temperaturas del mediodía eran más bajas bajo los paneles), lo que a su vez mantuvo los módulos solares más frescos y eficientes en la generación de energía.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Planting%20crops%20under%20solar%20panels,cools%20the%20underside%20of%20panels' target='_blank' rel='noopener'>[UA News]</a></sup> Estos beneficios concurrentes en alimentos, agua y energía validaron los agrivoltaicos como una estrategia “ganar-ganar-ganar” para las regiones áridas.<sup class='citation-link'><a href='https://cleantechnica.com/2024/07/15/agrivoltaics-conserve-precious-water-for-arizona-farmers/#:~:text=solar%20farming%20could%20benefit%20the,nearby%20plot%20without%20solar%20panels' target='_blank' rel='noopener'>[CleanTechnica]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Planting%20crops%20under%20solar%20panels,cools%20the%20underside%20of%20panels' target='_blank' rel='noopener'>[UA News]</a></sup> Este Laboratorio de Aprendizaje Agrivoltaico de Biosphere 2 (apoyado por la Fundación Nacional de Ciencias de EE. UU.) se convirtió en una plantilla para proyectos más grandes, al mismo tiempo que sirvió para educar al público y capacitar a estudiantes. Demostró que, en lugar de elegir entre alimentos o energía solar en tierras limitadas, podemos hacer ambas cosas en la misma tierra, multiplicando la productividad de la tierra (news.arizona.edu).">
+                        </p>
+                    </div>
+                    <div class="alternating-item__image">
+                        <img src="static/biosphere2agriv.jpg" alt="Agrivoltaics Research at Biosphere 2">
+                    </div>
+                </div>
+
+                <div class="alternating-item">
+                    <div class="alternating-item__text">
+                        <h3 data-en="AES Utility-Scale Agrivoltaics Site"
+                            data-es="Sitio Agrivoltaico a Escala de Compañía Eléctrica (AES)">AES Utility-Scale Agrivoltaics
+                            Site</h3>
+                        <p data-en="Building on the Biosphere 2 success, Barron-Gafford’s team is now translating agrivoltaics to the utility scale. In 2023 they partnered with The AES Corporation – one of the world’s largest solar developers – to retrofit part of a 10 MW commercial solar farm in central Arizona into a working agrivoltaics system.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Water%20Futures%20for%20the%20Southwestern,Arizona%20by%20The%20AES%20Corporation' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=existing%20commercial%20solar%20farms%20without,Arizona%20by%20The%20AES%20Corporation' target='_blank' rel='noopener'>[UA News]</a></sup> This project, funded by a $1.2 million grant from the U.S. Department of Energy (DOE), was one of only six selected nationally under DOE’s Foundational Agrivoltaic Research for Megawatt-Scale (FARMS) program (aimed at creating new opportunities for farmers and the solar industry).<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=selected%20alongside%20five%20others%20across,communities%20and%20the%20solar%20industry' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=The%20UArizona%20project%2C%20,Arizona%20by%20The%20AES%20Corporation' target='_blank' rel='noopener'>[UA News]</a></sup> The Arizona site consists of three adjacent 5-acre test plots within an existing solar array on AES’s solar farm.<sup class='citation-link'><a href='https://www.salsav.org/#:~:text=We%20are%20transforming%20three%205,sheep%20grazing%20and%20pollinator%20habitat' target='_blank' rel='noopener'>[SALSA V]</a></sup> Each plot is being managed with a different agricultural approach representative of western U.S. practices:<sup class='citation-link'><a href='https://www.salsav.org/#:~:text=We%20are%20transforming%20three%205,sheep%20grazing%20and%20pollinator%20habitat' target='_blank' rel='noopener'>[SALSA V]</a></sup> 1) Grazing & Pollinator Habitat – solar panels with open areas where sheep graze and pollinator-friendly plants are grown.<sup class='citation-link'><a href='https://www.salsav.org/#:~:text=We%20are%20transforming%20three%205,sheep%20grazing%20and%20pollinator%20habitat' target='_blank' rel='noopener'>[SALSA V]</a></sup> 2) Conventional Crops – rows between solar panels are cultivated with typical produce and row crops.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Researchers%20will%20test%20three%20different,pear%2C%20agave%2C%20legumes%20and%20others' target='_blank' rel='noopener'>[UA News]</a></sup> 3) “Climate-Smart” Dryland Crops – planting drought-tolerant indigenous crops like prickly pear cacti, agave, tepary beans, and native desert grasses.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=with%20greater%20water%20needs%2C%20like,pear%2C%20agave%2C%20legumes%20and%20others' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=reintroduce%20native%20grasses,pear%2C%20agave%2C%20legumes%20and%20others' target='_blank' rel='noopener'>[UA News]</a></sup> All three plots are compared against control strips without solar panels (salsav.org). Researchers are testing three irrigation strategies.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Researchers%20will%20test%20three%20different,pear%2C%20agave%2C%20legumes%20and%20others' target='_blank' rel='noopener'>[UA News]</a></sup> Early observations show reduced crop water demand and cooler, damper soils under panels (news.arizona.edu). The ambition is to develop a replicable model for utility-scale solar farms that fits within typical solar design constraints.<sup class='citation-link'><a href='https://www.salsav.org/#:~:text=One%20possible%20solution%20is%20work,systems%20that%20support%20those%20panels' target='_blank' rel='noopener'>[SALSA V]</a></sup><sup class='citation-link'><a href='https://www.salsav.org/#:~:text=and%20heights%20of%20the%20racking,systems%20that%20support%20those%20panels' target='_blank' rel='noopener'>[SALSA V]</a></sup> Social science research is also being conducted to identify barriers and opportunities for agrivoltaics adoption in Arizona, with findings suggesting farmer skepticism towards standard solar but openness to agrivoltaics.<sup class='citation-link'><a href='https://www.salsav.org/news.html#:~:text=Solar%20energy%20was%20generally%20opposed,land%20and%20vocal%20public%20opposition' target='_blank' rel='noopener'>[SALSA V News]</a></sup><sup class='citation-link'><a href='https://www.salsav.org/news.html#:~:text=Government%20officials%20hold%20a%20positive,engage%20in%20developing%20agrivoltaic%20projects' target='_blank' rel='noopener'>[SALSA V News]</a></sup>"
+                            data-es="Aprovechando el éxito de Biosphere 2, el equipo de Barron-Gafford está traduciendo los agrivoltaicos a escala de servicios públicos. En 2023 se asociaron con The AES Corporation.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Water%20Futures%20for%20the%20Southwestern,Arizona%20by%20The%20AES%20Corporation' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=existing%20commercial%20solar%20farms%20without,Arizona%20by%20The%20AES%20Corporation' target='_blank' rel='noopener'>[UA News]</a></sup> Este proyecto, financiado con $1.2 millones del DOE, es parte del programa FARMS.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=selected%20alongside%20five%20others%20across,communities%20and%20the%20solar%20industry' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=The%20UArizona%20project%2C%20,Arizona%20by%20The%20AES%20Corporation' target='_blank' rel='noopener'>[UA News]</a></sup> Consta de tres parcelas de 5 acres en una granja solar de AES.<sup class='citation-link'><a href='https://www.salsav.org/#:~:text=We%20are%20transforming%20three%205,sheep%20grazing%20and%20pollinator%20habitat' target='_blank' rel='noopener'>[SALSA V]</a></sup> Cada una tiene un enfoque agrícola: 1) Pastoreo y Hábitat de Polinizadores,<sup class='citation-link'><a href='https://www.salsav.org/#:~:text=We%20are%20transforming%20three%205,sheep%20grazing%20and%20pollinator%20habitat' target='_blank' rel='noopener'>[SALSA V]</a></sup> 2) Cultivos Convencionales,<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Researchers%20will%20test%20three%20different,pear%2C%20agave%2C%20legumes%20and%20others' target='_blank' rel='noopener'>[UA News]</a></sup> y 3) Cultivos de Secano “Climáticamente Inteligentes” como nopal y agave.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=with%20greater%20water%20needs%2C%20like,pear%2C%20agave%2C%20legumes%20and%20others' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=reintroduce%20native%20grasses,pear%2C%20agave%2C%20legumes%20and%20others' target='_blank' rel='noopener'>[UA News]</a></sup> Se comparan con controles sin paneles (salsav.org) y se prueban tres estrategias de riego.<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites#:~:text=Researchers%20will%20test%20three%20different,pear%2C%20agave%2C%20legumes%20and%20others' target='_blank' rel='noopener'>[UA News]</a></sup> Observaciones iniciales muestran menor demanda de agua y suelos más frescos (news.arizona.edu). El objetivo es un modelo replicable para granjas solares.<sup class='citation-link'><a href='https://www.salsav.org/#:~:text=One%20possible%20solution%20is%20work,systems%20that%20support%20those%20panels' target='_blank' rel='noopener'>[SALSA V]</a></sup><sup class='citation-link'><a href='https://www.salsav.org/#:~:text=and%20heights%20of%20the%20racking,systems%20that%20support%20those%20panels' target='_blank' rel='noopener'>[SALSA V]</a></sup> Se investigan aspectos sociales para la adopción en Arizona, con hallazgos de escepticismo agrícola hacia solar estándar pero apertura a agrivoltaicos.<sup class='citation-link'><a href='https://www.salsav.org/news.html#:~:text=Solar%20energy%20was%20generally%20opposed,land%20and%20vocal%20public%20opposition' target='_blank' rel='noopener'>[SALSA V News]</a></sup><sup class='citation-link'><a href='https://www.salsav.org/news.html#:~:text=Government%20officials%20hold%20a%20positive,engage%20in%20developing%20agrivoltaic%20projects' target='_blank' rel='noopener'>[SALSA V News]</a></sup>">
+                        </p>
+                        <p class="img-caption"
+                            data-en="Layout of the agrivoltaics test plots at an AES solar farm in Arizona. Image: University of Arizona/SALSA Lab"
+                            data-es="Diseño de las parcelas de prueba agrivoltaicas en una granja solar de AES en Arizona. Imagen: Universidad de Arizona/SALSA Lab">
+                            Layout of the agrivoltaics test plots at an AES solar farm in Arizona. Image: University of
+                            Arizona/SALSA Lab</p>
+                    </div>
+                    <div class="alternating-item__image">
+                        <img src="static/aesagriv.jpg" alt="AES Utility-Scale Agrivoltaics Site">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section section detailed-content-section" id="colorado-site-detailed">
+            <div class="container reveal">
+                <div class="section-header">
+                    <h2 class="section-title" data-en="Colorado (USA) Agrivoltaics Collaboration"
+                        data-es="Colaboración Agrivoltaica en Colorado (EE.UU.)">Colorado (USA) Agrivoltaics
+                        Collaboration</h2>
+                </div>
+                <div class="alternating-item">
+                    <div class="alternating-item__text">
+                        <h3 data-en="Jack’s Solar Garden & NREL InSPIRE Program"
+                            data-es="Jack’s Solar Garden y Programa NREL InSPIRE">Jack’s Solar Garden & NREL InSPIRE Program
+                        </h3>
+                        <p data-en="In Colorado, agrivoltaics research is carried out via a multi-institution consortium, primarily with Colorado State University (CSU) and NREL. UArizona is a key partner in “SCAPES” (Sustainably Co-locating Agricultural and Photovoltaic Electricity Systems), a $10 million USDA-NIFA funded initiative (2021–2025) to study agrivoltaics across different climates in the United States.<sup class='citation-link'><a href='https://sustainability.illinois.edu/usda-funds-agrivoltaics-project/#:~:text=This%20%2410%20million%2C%20four,Illinois%2C%20Colorado%2C%20Arizona' target='_blank' rel='noopener'>[U of Illinois]</a></sup><sup class='citation-link'><a href='https://sustainability.illinois.edu/usda-funds-agrivoltaics-project/#:~:text=Institute%20of%20Food%20and%20Agriculture,Illinois%2C%20Colorado%2C%20Arizona' target='_blank' rel='noopener'>[U of Illinois]</a></sup> Led by the University of Illinois, SCAPES includes Colorado as a test region alongside Illinois and Arizona (with UArizona leading the physical science research).<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=The%20lead%20institute%20on%20the,The%20project%20is' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://sustainability.illinois.edu/usda-funds-agrivoltaics-project/#:~:text=This%20%2410%20million%2C%20four,Illinois%2C%20Colorado%2C%20Arizona' target='_blank' rel='noopener'>[U of Illinois]</a></sup> The focal site is Jack’s Solar Garden near Longmont – a 1.2 MW community solar farm nationally recognized as an agrivoltaics showcase (jackssolargarden.com). Through SCAPES, CSU researchers (led by Dr. Meagan Schipanski and Dr. Alan Knapp) are conducting trials at Jack’s to evaluate different agrivoltaic system designs in Colorado’s semi-arid climate.<sup class='citation-link'><a href='https://agsci.colostate.edu/agriculture-csu/agrivoltaics-innovation/#:~:text=Evaluating%20the%20Potential%20of%20Different,Agrivoltaic%20Systems%20in%20Colorado' target='_blank' rel='noopener'>[CSU AgSci]</a></sup> NREL experts also use Jack's for baseline data. CSU is expanding research on campus and regional farms, including testing panel heights, transparencies, and impacts on pasture, rangeland (Semi-Arid Grassland Research Center in Nunn, CO), and fruit orchards.<sup class='citation-link'><a href='https://agsci.colostate.edu/agriculture-csu/agrivoltaics-innovation/#:~:text=Small%20Scale%20Agrivoltaics' target='_blank' rel='noopener'>[CSU AgSci]</a></sup><sup class='citation-link'><a href='https://agsci.colostate.edu/agriculture-csu/agrivoltaics-innovation/#:~:text=Agrivoltaics%20and%20Livestock' target='_blank' rel='noopener'>[CSU AgSci]</a></sup><sup class='citation-link'><a href='https://agsci.colostate.edu/agriculture-csu/agrivoltaics-innovation/#:~:text=%2424%2C000' target='_blank' rel='noopener'>[CSU AgSci]</a></sup> The research focuses on microclimate moderation (hail damage, UV), irrigation efficiency, and pasture quality. Preliminary findings show reduced plant heat stress and potential extended growing seasons from hail or frost protection (nature.org)."
+                            data-es="En Colorado, la investigación agrivoltaica se realiza a través de un consorcio multiinstitucional, principalmente con la Universidad Estatal de Colorado (CSU) y NREL. La UArizona es un socio clave en “SCAPES”, una iniciativa de $10 millones financiada por USDA-NIFA (2021–2025) para estudiar agrivoltaicos en diferentes climas de EE. UU.<sup class='citation-link'><a href='https://sustainability.illinois.edu/usda-funds-agrivoltaics-project/#:~:text=This%20%2410%20million%2C%20four,Illinois%2C%20Colorado%2C%20Arizona' target='_blank' rel='noopener'>[U of Illinois]</a></sup><sup class='citation-link'><a href='https://sustainability.illinois.edu/usda-funds-agrivoltaics-project/#:~:text=Institute%20of%20Food%20and%20Agriculture,Illinois%2C%20Colorado%2C%20Arizona' target='_blank' rel='noopener'>[U of Illinois]</a></sup> Liderado por la Universidad de Illinois, SCAPES incluye a Colorado como región de prueba junto con Illinois y Arizona (con la UArizona liderando la investigación en ciencias físicas).<sup class='citation-link'><a href='https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=The%20lead%20institute%20on%20the,The%20project%20is' target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a href='https://sustainability.illinois.edu/usda-funds-agrivoltaics-project/#:~:text=This%20%2410%20million%2C%20four,Illinois%2C%20Colorado%2C%20Arizona' target='_blank' rel='noopener'>[U of Illinois]</a></sup> El sitio focal es Jack’s Solar Garden cerca de Longmont, una granja solar comunitaria de 1.2 MW reconocida a nivel nacional (jackssolargarden.com). A través de SCAPES, investigadores de CSU (liderados por Dr. Meagan Schipanski y Dr. Alan Knapp) realizan ensayos en Jack’s evaluando diseños de sistemas agrivoltaicos para el clima semiárido de Colorado.<sup class='citation-link'><a href='https://agsci.colostate.edu/agriculture-csu/agrivoltaics-innovation/#:~:text=Evaluating%20the%20Potential%20of%20Different,Agrivoltaic%20Systems%20in%20Colorado' target='_blank' rel='noopener'>[CSU AgSci]</a></sup> Expertos de NREL también usan Jack’s para datos base. CSU está expandiendo la investigación en campus y granjas regionales, incluyendo pruebas de alturas de paneles, transparencias e impactos en pastizales, praderas (Centro de Investigación de Pastizales Semiáridos en Nunn, CO) y huertos frutales.<sup class='citation-link'><a href='https://agsci.colostate.edu/agriculture-csu/agrivoltaics-innovation/#:~:text=Small%20Scale%20Agrivoltaics' target='_blank' rel='noopener'>[CSU AgSci]</a></sup><sup class='citation-link'><a href='https://agsci.colostate.edu/agriculture-csu/agrivoltaics-innovation/#:~:text=Agrivoltaics%20and%20Livestock' target='_blank' rel='noopener'>[CSU AgSci]</a></sup><sup class='citation-link'><a href='https://agsci.colostate.edu/agriculture-csu/agrivoltaics-innovation/#:~:text=%2424%2C000' target='_blank' rel='noopener'>[CSU AgSci]</a></sup> La investigación se centra en la moderación del microclima (daños por granizo, UV), eficiencia del riego y calidad del pasto. Hallazgos preliminares muestran reducción del estrés térmico en plantas y posible extensión de temporadas de cultivo por protección contra granizo o heladas (nature.org).">
+                        </p>
+                    </div>
+                    <div class="alternating-item__image">
+                         <img src="static/jacksagriv.jpg" alt="Agrivoltaics research at Jack's Solar Garden, Colorado">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section section detailed-content-section" id="kenya-site-detailed">
+            <div class="container reveal">
+                <div class="section-header">
+                    <h2 class="section-title" data-en="Kenya Community Agrivoltaics"
+                        data-es="Agrivoltaicos Comunitarios en Kenia">Kenya Community Agrivoltaics</h2>
+                </div>
+                <div class="alternating-item">
+                    <div class="alternating-item__text">
+                        <h3 data-en="Makueni County Site" data-es="Sitio en el Condado de Makueni">Makueni County Site</h3>
+                        <p data-en="In Makueni County, Kenya, a community agrivoltaics site was launched in July 2023. This partnership involves the local county government and the Kasser Joint Institute for Food, Water, and Energy Security (UArizona, Jewish National Fund-USA, Arava region-Israel).<sup class='citation-link'><a href='https://makueni.go.ke/2023/departments/energy/governor-mutula-launches-agrivoltaic-research-site-in-kibwezi-for-renewable-energy-while-empowering-local-farmers/#:~:text=A%20partnership%20between%20Makueni%20and,Kibwezi' target='_blank' rel='noopener'>[Makueni Gov]</a></sup> Located at St. Patrick’s Ng’omano Primary School, a solar PV array is installed above a community vegetable garden.<sup class='citation-link'><a href='https://makueni.go.ke/2023/departments/energy/governor-mutula-launches-agrivoltaic-research-site-in-kibwezi-for-renewable-energy-while-empowering-local-farmers/#:~:text=Agrivoltaic%20research%20site%20at%20St,Kibwezi' target='_blank' rel='noopener'>[Makueni Gov]</a></sup> The panels provide shade and power a water pump and microgrid for the school and village, addressing irrigation, food production, and clean energy access in this semi-arid, off-grid area.<sup class='citation-link'><a href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya#:~:text=Makueni%20is%20arid%3B%20its%20residents,eager%20to%20enjoy%20its%20benefits' target='_blank' rel='noopener'>[JNF]</a></sup><sup class='citation-link'><a href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya#:~:text=Every%20time%20I%20interact%20with,grid%2C%20and' target='_blank' rel='noopener'>[JNF]</a></sup> The project emphasizes co-design with the local community, prioritizing culturally appropriate crops (Arizona Jewish Post). Early results show improved crop yields, enabling the return of a daily school lunch program.<sup class='citation-link'><a href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya#:~:text=has%20been%20waiting%20for%20electricity%2C,eager%20to%20enjoy%20its%20benefits' target='_blank' rel='noopener'>[JNF]</a></sup> This pilot serves as a proof-of-concept for expansion in Kenya and sub-Saharan Africa (makueni.go.ke)."
+                            data-es="En el condado de Makueni, Kenia, se lanzó un sitio de agrivoltaicos comunitarios en julio de 2023. Esta asociación involucra al gobierno del condado local y al Instituto Conjunto Kasser para la Seguridad Alimentaria, Hídrica y Energética (UArizona, Jewish National Fund-USA, región de Arava-Israel).<sup class='citation-link'><a href='https://makueni.go.ke/2023/departments/energy/governor-mutula-launches-agrivoltaic-research-site-in-kibwezi-for-renewable-energy-while-empowering-local-farmers/#:~:text=A%20partnership%20between%20Makueni%20and,Kibwezi' target='_blank' rel='noopener'>[Makueni Gov]</a></sup> Ubicado en la Escuela Primaria St. Patrick’s Ng’omano, se instala un campo de paneles solares fotovoltaicos sobre un huerto comunitario.<sup class='citation-link'><a href='https://makueni.go.ke/2023/departments/energy/governor-mutula-launches-agrivoltaic-research-site-in-kibwezi-for-renewable-energy-while-empowering-local-farmers/#:~:text=Agrivoltaic%20research%20site%20at%20St,Kibwezi' target='_blank' rel='noopener'>[Makueni Gov]</a></sup> Los paneles proporcionan sombra y alimentan una bomba de agua y una microrred para la escuela y el pueblo, abordando el riego, la producción de alimentos y el acceso a energía limpia en esta área semiárida y sin conexión a la red.<sup class='citation-link'><a href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya#:~:text=Makueni%20is%20arid%3B%20its%20residents,eager%20to%20enjoy%20its%20benefits' target='_blank' rel='noopener'>[JNF]</a></sup><sup class='citation-link'><a href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya#:~:text=Every%20time%20I%20interact%20with,grid%2C%20and' target='_blank' rel='noopener'>[JNF]</a></sup> El proyecto enfatiza el codiseño con la comunidad local, priorizando cultivos culturalmente apropiados (Arizona Jewish Post). Los primeros resultados muestran mejores rendimientos de los cultivos, permitiendo el regreso de un programa diario de almuerzos escolares.<sup class='citation-link'><a href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya#:~:text=has%20been%20waiting%20for%20electricity%2C,eager%20to%20enjoy%20its%20benefits' target='_blank' rel='noopener'>[JNF]</a></sup> Este piloto sirve como prueba de concepto para la expansión en Kenia y África subsahariana (makueni.go.ke).">
+                        </p>
+                    </div>
+                    <div class="alternating-item__image">
+                        <img src="static/kenyaagriv.jpg" alt="Community agrivoltaics project in Makueni County, Kenya">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section section detailed-content-section" id="israel-site-detailed">
+            <div class="container reveal">
+                <div class="section-header">
+                    <h2 class="section-title" data-en="Israel Agrivoltaics Research"
+                        data-es="Investigación Agrivoltaica en Israel">Israel Agrivoltaics Research</h2>
+                </div>
+                <div class="alternating-item">
+                    <div class="alternating-item__text">
+                        <h3 data-en="Arava Desert Initiatives" data-es="Iniciativas en el Desierto de Arava">Arava Desert
+                            Initiatives</h3>
+                        <p data-en="Through the Kasser Joint Institute, UArizona partners with institutions in Israel’s Arava Valley to develop agrivoltaic systems for extreme desert climates.<sup class='citation-link'><a href='https://www.jns.org/wire/leading-research-collaboration-in-israel-unveils-new-name/#:~:text=Partnership%20between%20the%20University%20of,is%20renamed%20after%20Arizona%20residents' target='_blank' rel='noopener'>[JNS]</a></sup><sup class='citation-link'><a href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf#:~:text=drought%20as%20the%20climate%20crisis,This%20technology%20is%20useful' target='_blank' rel='noopener'>[Arava Inst.]</a></sup> Pilot plots were established around 2020 at the Arava Institute for Environmental Studies (Kibbutz Ketura) and local farms, with guidance from UArizona scientists.<sup class='citation-link'><a href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf#:~:text=drought%20as%20the%20climate%20crisis,This%20technology%20is%20useful' target='_blank' rel='noopener'>[Arava Inst.]</a></sup><sup class='citation-link'><a href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf#:~:text=support%20a%20sustainable%20future%20for,the%20Isidore%20and%20Bertha%20Gudelsky' target='_blank' rel='noopener'>[Arava Inst.]</a></sup> Research integrates solar panels above open-field crops (vegetables, forage) to examine enhancements in desert farming by reducing irrigation needs and heat stress. The collaboration involves the Arava Institute, Central Arava Regional Council’s R&D unit, Volcani Agricultural Research Center, and Arava Power Company. Funding comes from philanthropy (JNF donations<sup class='citation-link'><a href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf#:~:text=piloting%20new%20groups%20and%20conserving,Gudelsky%20Foundation%20in%20this%20work' target='_blank' rel='noopener'>[Arava Inst.]</a></sup>) and Israeli government grants. The main research site at Ketura Solar Park tests fixed-tilt and tracking panels over crops like cherry tomatoes and melons. Initial results show significant water savings and improved plant health (Piacenza, 2022 Agrivoltaics Conf.)."
+                            data-es="A través del Instituto Conjunto Kasser, la UArizona se asocia con instituciones en el Valle de Arava de Israel para desarrollar sistemas agrivoltaicos para climas desérticos extremos.<sup class='citation-link'><a href='https://www.jns.org/wire/leading-research-collaboration-in-israel-unveils-new-name/#:~:text=Partnership%20between%20the%20University%20of,is%20renamed%20after%20Arizona%20residents' target='_blank' rel='noopener'>[JNS]</a></sup><sup class='citation-link'><a href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf#:~:text=drought%20as%20the%20climate%20crisis,This%20technology%20is%20useful' target='_blank' rel='noopener'>[Arava Inst.]</a></sup> Se establecieron parcelas piloto alrededor de 2020 en el Instituto Arava de Estudios Ambientales (Kibbutz Ketura) y granjas locales, con la guía de científicos de la UArizona.<sup class='citation-link'><a href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf#:~:text=drought%20as%20the%20climate%20crisis,This%20technology%20is%20useful' target='_blank' rel='noopener'>[Arava Inst.]</a></sup><sup class='citation-link'><a href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf#:~:text=support%20a%20sustainable%20future%20for,the%20Isidore%20and%20Bertha%20Gudelsky' target='_blank' rel='noopener'>[Arava Inst.]</a></sup> La investigación integra paneles solares sobre cultivos de campo abierto (hortalizas, forraje) para examinar mejoras en la agricultura desértica mediante la reducción de las necesidades de riego y el estrés por calor. La colaboración involucra al Instituto Arava, la unidad de I+D del Consejo Regional de Arava Central, el Centro de Investigación Agrícola Volcani y Arava Power Company. La financiación proviene de la filantropía (donaciones de JNF<sup class='citation-link'><a href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf#:~:text=piloting%20new%20groups%20and%20conserving,Gudelsky%20Foundation%20in%20this%20work' target='_blank' rel='noopener'>[Arava Inst.]</a></sup>) y subvenciones del gobierno israelí. El principal sitio de investigación en el Parque Solar Ketura prueba paneles de inclinación fija y de seguimiento sobre cultivos como tomates cherry y melones. Los resultados iniciales muestran un ahorro significativo de agua y una mejor salud de las plantas (Piacenza, 2022 Agrivoltaics Conf.).">
+                        </p>
+                    </div>
+                    <div class="alternating-item__image">
+                        <img src="static/aravaagriv.jpg" alt="Agrivoltaics research in the Arava Desert, Israel">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section section detailed-content-section" id="morocco-collaboration-detailed">
+            <div class="container reveal">
+                <div class="section-header">
+                    <h2 class="section-title" data-en="Morocco Agrivoltaics Collaboration"
+                        data-es="Colaboración Agrivoltaica en Marruecos">Morocco Agrivoltaics Collaboration</h2>
+                </div>
+                <div class="alternating-item">
+                    <div class="alternating-item__text">
+                        <h3 data-en="Green Energy Park and North African Initiatives"
+                            data-es="Green Energy Park e Iniciativas del Norte de África">Green Energy Park and North African
+                            Initiatives</h3>
+                        <p data-en="SALSA V collaborates with Moroccan researchers, particularly through the Green Energy Park (GEP) in Ben Guerir, led by IRESEN and Mohammed VI Polytechnic University. This partnership is part of an international agrivoltaics consortium (UNAM’s PASE project).<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=Science%2C%20Technology%2C%20and%20Innovation%20,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> GEP launched an experimental station in 2020 (gef.org), testing open-field crops (maize, potatoes) and greenhouse-style agrivoltaics. UArizona shares dryland expertise and data, participating in joint workshops like the Agrivoltaics International Meeting (Biosphere 2, 2023).<sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=%E2%97%8F%20Solidify%20burgeoning%20international%20partnerships,our%20International%20Academy%20for%20Resilience' target='_blank' rel='noopener'>[FA Institute]</a></sup><sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=Morocco%2C%20Mexico%2C%20and%20Israel%20to,Mexico%29%2C%20TBD' target='_blank' rel='noopener'>[FA Institute]</a></sup> The collaboration aims to establish Morocco as a regional hub for agrivoltaics in West Africa, focusing on water-saving technologies, battery storage, and desalination.<sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=match%20at%20L830%20Morocco%20and,and%20Mechanical%20and%20Electronic%20Laboratory' target='_blank' rel='noopener'>[FA Institute]</a></sup><sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=Morocco%20and%20Sub,and%20Mechanical%20and%20Electronic%20Laboratory' target='_blank' rel='noopener'>[FA Institute]</a></sup> Funding involves Moroccan government R&D, Green Climate Fund, GEF, and European partners. Research shows reduced irrigation needs and maintained crop yields, with up to 5% increase in solar output due to crop cooling.<sup class='citation-link'><a href='https://eprints.whiterose.ac.uk/224814/#:~:text=This%20study%20presents%20evidence%20for,greater%20yields%20while%20needing%20less' target='_blank' rel='noopener'>[White Rose ePrints]</a></sup><sup class='citation-link'><a href='https://eprints.whiterose.ac.uk/224814/#:~:text=survivability%20during%20a%20warm%20period,resilient%20food' target='_blank' rel='noopener'>[White Rose ePrints]</a></sup>"
+                            data-es="SALSA V colabora con investigadores marroquíes, particularmente a través del Green Energy Park (GEP) en Ben Guerir, liderado por IRESEN y la Universidad Politécnica Mohammed VI. Esta asociación es parte de un consorcio internacional de agrivoltaicos (proyecto PASE de la UNAM).<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=Science%2C%20Technology%2C%20and%20Innovation%20,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> GEP lanzó una estación experimental en 2020 (gef.org), probando cultivos de campo abierto (maíz, papas) y agrivoltaicos tipo invernadero. La UArizona comparte experiencia en tierras áridas y datos, participando en talleres conjuntos como el Encuentro Internacional de Agrivoltaicos (Biosphere 2, 2023).<sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=%E2%97%8F%20Solidify%20burgeoning%20international%20partnerships,our%20International%20Academy%20for%20Resilience' target='_blank' rel='noopener'>[FA Institute]</a></sup><sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=Morocco%2C%20Mexico%2C%20and%20Israel%20to,Mexico%29%2C%20TBD' target='_blank' rel='noopener'>[FA Institute]</a></sup> La colaboración tiene como objetivo establecer a Marruecos como un centro regional para agrivoltaicos en África Occidental, centrándose en tecnologías de ahorro de agua, almacenamiento de baterías y desalinización.<sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=match%20at%20L830%20Morocco%20and,and%20Mechanical%20and%20Electronic%20Laboratory' target='_blank' rel='noopener'>[FA Institute]</a></sup><sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=Morocco%20and%20Sub,and%20Mechanical%20and%20Electronic%20Laboratory' target='_blank' rel='noopener'>[FA Institute]</a></sup> La financiación involucra I+D del gobierno marroquí, Fondo Verde para el Clima, GEF y socios europeos. La investigación muestra una reducción de las necesidades de riego y rendimientos de cultivos mantenidos, con un aumento de hasta el 5% en la producción solar debido al enfriamiento de los cultivos.<sup class='citation-link'><a href='https://eprints.whiterose.ac.uk/224814/#:~:text=This%20study%20presents%20evidence%20for,greater%20yields%20while%20needing%20less' target='_blank' rel='noopener'>[White Rose ePrints]</a></sup><sup class='citation-link'><a href='https://eprints.whiterose.ac.uk/224814/#:~:text=survivability%20during%20a%20warm%20period,resilient%20food' target='_blank' rel='noopener'>[White Rose ePrints]</a></sup>">
+                        </p>
+                    </div>
+                    <div class="alternating-item__image">
+                        <img src="static/um6pagriv.jpeg" alt="Green Energy Park in Morocco for agrivoltaics research">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section section detailed-content-section" id="mexico-collaboration-detailed">
+            <div class="container reveal">
+                <div class="section-header">
+                    <h2 class="section-title" data-en="Mexico Agrivoltaics Initiatives"
+                        data-es="Iniciativas Agrivoltaicas en México">Mexico Agrivoltaics Initiatives</h2>
+                </div>
+                <div class="alternating-item">
+                    <div class="alternating-item__text">
+                        <h3 data-en="PASE Project and Northern Mexico Research"
+                            data-es="Proyecto PASE e Investigación en el Norte de México">PASE Project and Northern Mexico
+                            Research</h3>
+                        <p data-en="In Mexico, collaborations focus on arid lands and educational farms. The flagship PASE (Sustainable Educational Agrivoltaic Plot) project, Mexico’s first full agrivoltaics pilot, was established in 2022 at UNAM’s Faculty of Veterinary Medicine and Zootechnics in Mexico City.<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=PASE%20was%20developed%20through%20a,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup><sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=institutions%20from%20France%2C%20Morocco%2C%20Israel%2C,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> Led by UNAM’s Renewable Energy Institute (IER) and supported by SECTEI,<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=PASE%20was%20developed%20through%20a,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup><sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=Science%2C%20Technology%2C%20and%20Innovation%20,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> PASE features a ~10 kW solar array over forage and horticultural crops, serving as a research and training site.<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=Training%20and%20Resources' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> It’s part of the same international consortium as other SALSA V sites.<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=Science%2C%20Technology%2C%20and%20Innovation%20,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> Barron-Gafford’s group also engages with partners in Sonora and Baja California for community-based agrivoltaics, leveraging UArizona's Southwest Center ties. Discussions include implementing agrivoltaics on demonstration farms and with tribal communities (e.g., Yaqui Valley) in partnership with institutions like ITSON. Feasibility studies have been conducted, with an eye toward attracting funding from sources like the World Bank or FAO for pilot networks.<sup class='citation-link'><a href='https://topsectoragrifood.nl/wp-content/uploads/2021/12/SMP21.14-Mexico-Agrivoltaics-in-Mexico-SMP21.14-20211210.pdf#:~:text=%5BPDF%5D%20Agrivoltaics%20in%20Mexico%20,of%20lack%20of%20funding' target='_blank' rel='noopener'>[Topsector AgriFood]</a></sup><sup class='citation-link'><a href='https://topsectoragrifood.nl/wp-content/uploads/2021/12/SMP21.14-Mexico-Agrivoltaics-in-Mexico-SMP21.14-20211210.pdf#:~:text=Potential%20pilot%20setup%20and%20crops,of%20lack%20of%20funding' target='_blank' rel='noopener'>[Topsector AgriFood]</a></sup>"
+                            data-es="En México, las colaboraciones se centran en tierras áridas y granjas educativas. El proyecto emblemático PASE (Parcela Agrovoltaica Sostenible y Educativa), el primer piloto completo de agrivoltaicos de México, se estableció en 2022 en la Facultad de Medicina Veterinaria y Zootecnia de la UNAM en la Ciudad de México.<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=PASE%20was%20developed%20through%20a,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup><sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=institutions%20from%20France%2C%20Morocco%2C%20Israel%2C,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> Liderado por el Instituto de Energías Renovables (IER) de la UNAM y apoyado por SECTEI,<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=PASE%20was%20developed%20through%20a,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup><sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=Science%2C%20Technology%2C%20and%20Innovation%20,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> PASE cuenta con un campo solar de ~10 kW sobre cultivos forrajeros y hortícolas, sirviendo como sitio de investigación y capacitación.<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=Training%20and%20Resources' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> Es parte del mismo consorcio internacional que otros sitios de SALSA V.<sup class='citation-link'><a href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/#:~:text=Science%2C%20Technology%2C%20and%20Innovation%20,the%20FMVZ%20facilities%20at%20UNAM' target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> El grupo de Barron-Gafford también colabora con socios en Sonora y Baja California para agrivoltaicos comunitarios, aprovechando los lazos del Centro del Suroeste de la UArizona. Las discusiones incluyen la implementación de agrivoltaicos en granjas de demostración y con comunidades tribales (por ejemplo, Valle del Yaqui) en asociación con instituciones como ITSON. Se han realizado estudios de viabilidad, con la mira puesta en atraer financiación de fuentes como el Banco Mundial o la FAO para redes piloto.<sup class='citation-link'><a href='https://topsectoragrifood.nl/wp-content/uploads/2021/12/SMP21.14-Mexico-Agrivoltaics-in-Mexico-SMP21.14-20211210.pdf#:~:text=%5BPDF%5D%20Agrivoltaics%20in%20Mexico%20,of%20lack%20of%20funding' target='_blank' rel='noopener'>[Topsector AgriFood]</a></sup><sup class='citation-link'><a href='https://topsectoragrifood.nl/wp-content/uploads/2021/12/SMP21.14-Mexico-Agrivoltaics-in-Mexico-SMP21.14-20211210.pdf#:~:text=Potential%20pilot%20setup%20and%20crops,of%20lack%20of%20funding' target='_blank' rel='noopener'>[Topsector AgriFood]</a></sup>">
+                        </p>
+                    </div>
+                    <div class="alternating-item__image">
+                        <img src="static/paseagriv.jpg" alt="PASE Agrivoltaics project in Mexico City">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Collaborative Frameworks Section -->
+        <section class="content-section section" id="collaborative-frameworks">
+            <div class="container reveal">
+                <div class="section-header">
+                    <h2 class="section-title" data-en="Collaborative Frameworks & Future Outlook"
+                        data-es="Marcos Colaborativos y Perspectivas Futuras">Collaborative Frameworks & Future Outlook
+                    </h2>
+                </div>
+                <p data-en="The SALSA V initiatives are interconnected through overarching frameworks aiming for global scalability. Key programs include DOE and USDA Agrivoltaics Programs in the USA (like FARMS and SCAPES), where UArizona plays a leading role in physical science (energy.gov).<sup class='citation-link'><a href='https://www.energy.gov/eere/solar/foundational-agrivoltaic-research-megawatt-scale-farms-funding-program' target='_blank' rel='noopener'>[DOE FARMS]</a></sup><sup class='citation-link'><a href='https://sustainability.illinois.edu/usda-funds-agrivoltaics-project/#:~:text=This%20%2410%20million%2C%20four,Illinois%2C%20Colorado%2C%20Arizona' target='_blank' rel='noopener'>[U of Illinois]</a></sup> The Kasser Joint Institute (UArizona, JNF-USA, Arava-Israel) facilitates projects in developing regions like Kenya, emphasizing community co-design (jnf.org).<sup class='citation-link'><a href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya' target='_blank' rel='noopener'>[JNF]</a></sup><sup class='citation-link'><a href='https://azjewishpost.com/2019/ua-joins-global-effort-with-jnf-and-israel-to-secure-food-water-energy/' target='_blank' rel='noopener'>[AZ Jewish Post]</a></sup> An international knowledge network, fostered through conferences like the Agrivoltaics International Meeting at Biosphere 2,<sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=%E2%97%8F%20Solidify%20burgeoning%20international%20partnerships,our%20International%20Academy%20for%20Resilience' target='_blank' rel='noopener'>[FA Institute]</a></sup> promotes shared learning. A strong emphasis is placed on stakeholder engagement, working with cooperative extensions, farmer bureaus, and local governments to translate research into practice (news.arizona.edu). Future objectives include scaling demonstrations to commercial levels, conducting detailed economic viability analyses to inform policy, advancing technological innovations (dynamic panels, integrated sensors), and expanding knowledge transfer through international academies and farmer-to-farmer networks. The ultimate goal is to make agrivoltaics a mainstream, globally adopted practice for sustainable food, energy, and water security (pv-magazine-usa.com)."
+                    data-es="Las iniciativas de SALSA V están interconectadas a través de marcos generales que buscan la escalabilidad global. Los programas clave incluyen los Programas de Agrivoltaicos del DOE y USDA en EE. UU. (como FARMS y SCAPES), donde la UArizona juega un papel principal en ciencias físicas (energy.gov).<sup class='citation-link'><a href='https://www.energy.gov/eere/solar/foundational-agrivoltaic-research-megawatt-scale-farms-funding-program' target='_blank' rel='noopener'>[DOE FARMS]</a></sup><sup class='citation-link'><a href='https://sustainability.illinois.edu/usda-funds-agrivoltaics-project/#:~:text=This%20%2410%20million%2C%20four,Illinois%2C%20Colorado%2C%20Arizona' target='_blank' rel='noopener'>[U of Illinois]</a></sup> El Instituto Conjunto Kasser (UArizona, JNF-USA, Arava-Israel) facilita proyectos en regiones en desarrollo como Kenia, enfatizando el codiseño comunitario (jnf.org).<sup class='citation-link'><a href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya' target='_blank' rel='noopener'>[JNF]</a></sup><sup class='citation-link'><a href='https://azjewishpost.com/2019/ua-joins-global-effort-with-jnf-and-israel-to-secure-food-water-energy/' target='_blank' rel='noopener'>[AZ Jewish Post]</a></sup> Una red internacional de conocimiento, fomentada a través de conferencias como el Encuentro Internacional de Agrivoltaicos en Biosphere 2,<sup class='citation-link'><a href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf#:~:text=%E2%97%8F%20Solidify%20burgeoning%20international%20partnerships,our%20International%20Academy%20for%20Resilience' target='_blank' rel='noopener'>[FA Institute]</a></sup> promueve el aprendizaje compartido. Se pone un fuerte énfasis en la participación de los interesados, trabajando con extensiones cooperativas, oficinas de agricultores y gobiernos locales para traducir la investigación en práctica (news.arizona.edu). Los objetivos futuros incluyen escalar demostraciones a niveles comerciales, realizar análisis detallados de viabilidad económica para informar políticas, avanzar en innovaciones tecnológicas (paneles dinámicos, sensores integrados) y expandir la transferencia de conocimiento a través de academias internacionales y redes de agricultor a agricultor. El objetivo final es hacer de los agrivoltaicos una práctica convencional y adoptada globalmente para la seguridad alimentaria, energética e hídrica sostenible (pv-magazine-usa.com).">
+                </p>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+<section class="section" id="team-section">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2 class="section-title" data-en="Key Contributors" data-es="Colaboradores Clave">Key Contributors</h2>
+            <p class="section-subtitle"
+                data-en="Meet the dedicated researchers and collaborators driving the SALSA V initiatives at the University of Arizona and partner institutions."
+                data-es="Conozca a los dedicados investigadores y colaboradores que impulsan las iniciativas SALSA V en la Universidad de Arizona e instituciones asociadas.">
+                Meet the dedicated researchers and collaborators driving the SALSA V initiatives at the University of Arizona and partner institutions.</p>
+        </div>
+        <div class="team-grid">
+            <!-- Greg Barron-Gafford -->
+            <div class="researcher-card reveal">
+                <div class="researcher-image-container">
+                    <img src="static/greg.png" alt="Photo of Dr. Greg Barron-Gafford">
+                </div>
+                <h4><a href="https://geography.arizona.edu/person/greg-barron-gafford" target="_blank" rel="noopener">Dr. Greg Barron-Gafford</a></h4>
+                <p class="researcher-title" data-en="Professor, SGDE; Biosphere 2, UArizona"
+                    data-es="Profesor, SGDE; Biosfera 2, UArizona">Professor, School of Geography, Development & Environment; Biosphere 2, University of Arizona</p>
+                <p class="researcher-description"
+                    data-en="Leads SALSA V. Research in biogeography, plant ecology, climate change impacts, and agrivoltaics. Pioneering FEW nexus solutions."
+                    data-es="Lidera SALSA V. Investigación en biogeografía, ecología vegetal, impactos del cambio climático y agrivoltaicos. Pionero en soluciones del nexo AEE.">
+                    Leads SALSA V. Research in biogeography, plant ecology, climate change impacts, and agrivoltaics. Pioneering FEW nexus solutions.</p>
+            </div>
+
+            <!-- Andrea Gerlak -->
+            <div class="researcher-card reveal">
+                <div class="researcher-image-container">
+                    <img src="static/andrea.png" alt="Photo of Dr. Andrea Gerlak">
+                </div>
+                <h4><a href="https://udallcenter.arizona.edu/people/andrea-k-gerlak" target="_blank" rel="noopener">Dr. Andrea Gerlak</a></h4>
+                <p class="researcher-title" data-en="Professor, SGDE; Director, Udall Center, UArizona"
+                    data-es="Profesora, SGDE; Directora, Centro Udall, UArizona">Professor, School of Geography, Development & Environment; Director, Udall Center for Studies in Public Policy, University of Arizona</p>
+                <p class="researcher-description"
+                    data-en="Focuses on water governance, environmental policy, equity, institutional change, and adaptation. Co-PI on AES utility-scale project."
+                    data-es="Se centra en la gobernanza del agua, política ambiental, equidad, cambio institucional y adaptación. Co-IP en proyecto AES a escala de servicios públicos.">
+                    Focuses on water governance, environmental policy, equity, institutional change, and adaptation. Co-PI on AES utility-scale project.</p>
+            </div>
+
+            <!-- Jordan Macknick -->
+            <div class="researcher-card reveal">
+                <div class="researcher-image-container">
+                    <img src="static/jordan.png" alt="Photo of Jordan Macknick">
+                </div>
+                <h4><a href="https://research-hub.nrel.gov/en/persons/jordan-macknick" target="_blank" rel="noopener">Jordan Macknick</a></h4>
+                <p class="researcher-title" data-en="Lead Energy-Water-Land Analyst, NREL"
+                    data-es="Analista Principal Energía-Agua-Tierra, NREL">Lead Energy-Water-Land Analyst, National Renewable Energy Laboratory</p>
+                <p class="researcher-description"
+                    data-en="Expert in environmental impacts of energy tech, energy-ecology synergies, and agrivoltaics. Leads NREL's InSPIRE project."
+                    data-es="Experto en impactos ambientales de tecnología energética, sinergias energía-ecología y agrivoltaicos. Lidera el proyecto InSPIRE de NREL.">
+                    Expert in environmental impacts of energy tech, energy-ecology synergies, and agrivoltaics. Leads NREL's InSPIRE project.</p>
+            </div>
+
+            <!-- Mitch Pavao-Zuckerman -->
+            <div class="researcher-card reveal">
+                <div class="researcher-image-container">
+                    <img src="static/mitch.png" alt="Photo of Dr. Mitch Pavao-Zuckerman">
+                </div>
+                <h4><a href="https://agnr.umd.edu/about/directory/mitchell-pavao-zuckerman" target="_blank" rel="noopener">Dr. Mitch Pavao-Zuckerman</a></h4>
+                <p class="researcher-title" data-en="Assoc. Professor, Univ. of Maryland"
+                    data-es="Prof. Asociado, Univ. de Maryland">Associate Professor, Environmental Science & Technology, University of Maryland</p>
+                <p class="researcher-description"
+                    data-en="Research in urban ecology, green infrastructure, stormwater management, and ecosystem services. Collaborator on early Biosphere 2 agrivoltaics research."
+                    data-es="Investigación en ecología urbana, infraestructura verde, gestión de aguas pluviales y servicios ecosistémicos. Colaborador en investigación temprana de agrivoltaicos en Biosphere 2.">
+                    Research in urban ecology, green infrastructure, stormwater management, and ecosystem services. Collaborator on early Biosphere 2 agrivoltaics research.</p>
+            </div>
+
+            <!-- Mary Werner -->
+            <div class="researcher-card reveal">
+                <div class="researcher-image-container">
+                    <img src="static/mary.png" alt="Photo of Mary Werner">
+                </div>
+                <h4><a href="https://geography.arizona.edu/people/mary-werner" target="_blank" rel="noopener">Mary Werner</a></h4>
+                <p class="researcher-title" data-en="Research Program Admin, SGDE, UArizona"
+                    data-es="Admin. Programa Invest., SGDE, UArizona">Research Program Administrator, School of Geography, Development, & Environment, University of Arizona</p>
+                <p class="researcher-description"
+                    data-en="Manages research programs and administrative aspects within the Barron-Gafford lab and SGDE."
+                    data-es="Gestiona programas de investigación y aspectos administrativos dentro del laboratorio Barron-Gafford y SGDE.">
+                    Manages research programs and administrative aspects within the Barron-Gafford lab and SGDE.</p>
+            </div>
+
+            <!-- Holly Andrews -->
+            <div class="researcher-card reveal">
+                <div class="researcher-image-container">
+                    <img src="static/holly.png" alt="Photo of Dr. Holly Andrews">
+                </div>
+                <h4><a href="https://geography.arizona.edu/person/holly-andrews" target="_blank" rel="noopener">Dr. Holly Andrews</a></h4>
+                <p class="researcher-title" data-en="Postdoctoral Research Assoc., SGDE & B2, UArizona"
+                    data-es="Asoc. Invest. Postdoc., SGDE y B2, UArizona">Postdoctoral Research Associate, School of Geography, Development, & Environment; Biosphere 2, University of Arizona</p>
+                <p class="researcher-description"
+                    data-en="Ecosystem ecologist and biogeochemist. Research on sustainable agriculture, biosphere-atmosphere interactions, soil ecology, and the SCAPES Agrivoltaics Project."
+                    data-es="Ecóloga de ecosistemas y biogeoquímica. Investiga agricultura sostenible, interacciones biosfera-atmósfera, ecología del suelo y el Proyecto Agrivoltaico SCAPES.">
+                    Ecosystem ecologist and biogeochemist. Research on sustainable agriculture, biosphere-atmosphere interactions, soil ecology, and the SCAPES Agrivoltaics Project.</p>
+            </div>
+
+            <!-- Carrie Seay-Fleming -->
+            <div class="researcher-card reveal">
+                <div class="researcher-image-container">
+                    <img src="static/carrie.png" alt="Photo of Dr. Carrie Seay-Fleming">
+                </div>
+                <h4><a href="https://geography.arizona.edu/person/carrie-seay-fleming" target="_blank" rel="noopener">Dr. Carrie Seay-Fleming</a></h4>
+                <p class="researcher-title" data-en="Postdoctoral Research Assoc., Udall Center & SGDE, UArizona"
+                    data-es="Asoc. Invest. Postdoc., Centro Udall y SGDE, UArizona">Postdoctoral Research Associate, Udall Center for Studies in Public Policy; School of Geography, Development, & Environment, University of Arizona</p>
+                <p class="researcher-description"
+                    data-en="Environmental sociologist focusing on food system transformations, sustainability transitions, land-use conflict, and social aspects of solar development and agrivoltaics."
+                    data-es="Socióloga ambiental enfocada en transformaciones del sistema alimentario, transiciones de sostenibilidad, conflicto por uso de suelo y aspectos sociales del desarrollo solar y agrivoltaicos.">
+                    Environmental sociologist focusing on food system transformations, sustainability transitions, land-use conflict, and social aspects of solar development and agrivoltaics.</p>
+            </div>
+
+                    <!-- Tali Neesham-McTiernan -->
+                    <div class="researcher-card reveal">
+                        <div class="researcher-image-container">
+                            <img src="static/tali.png" alt="Photo of Tali Neesham-McTiernan">
+                        </div>
+                        <h4><a href="https://geography.arizona.edu/people/tali-neesham-mctiernan" target="_blank"
+                                rel="noopener">Tali Neesham-McTiernan</a></h4>
+                        <p class="researcher-title" data-en="PhD Candidate, SGDE & B2, UArizona"
+                            data-es="Candidata PhD, SGDE y B2, UArizona">PhD Candidate, School of Geography,
+                            Development, & Environment; Biosphere 2, University of Arizona</p>
+                        <p class="researcher-description"
+                            data-en="Research merges physical and social sciences to map areas suitable for agrivoltaics in East Africa and the US. Interests: agrivoltaics, climate adaptation, GIS.<sup class='citation-link'><a href='https://www.researchgate.net/profile/Tali-Neesham-Mctiernan' target='_blank'>[22]</a></sup>"
+                            data-es="Investigación que fusiona ciencias físicas y sociales para mapear áreas adecuadas para agrivoltaicos en África Oriental y EE. UU. Intereses: agrivoltaicos, adaptación climática, SIG.<sup class='citation-link'><a href='https://www.researchgate.net/profile/Tali-Neesham-Mctiernan' target='_blank'>[22]</a></sup>">
+                            Research merges physical and social sciences to map areas suitable for agrivoltaics in East
+                            Africa and the US. Interests: agrivoltaics, climate adaptation, GIS.</p>
+                    </div>
+
+<!-- Tyler Swanson -->
+<div class="researcher-card reveal">
+    <div class="researcher-image-container">
+        <img src="static/tyler.png" alt="Photo of Tyler Swanson">
+    </div>
+    <h4><a href="https://geography.arizona.edu/person/tyler-swanson" target="_blank" rel="noopener">Tyler Swanson</a></h4>
+    <p class="researcher-title" data-en="Graduate Research Assistant, Udall Center & SGDE, UArizona"
+        data-es="Asist. Invest. Graduado, Centro Udall y SGDE, UArizona">Graduate Research Assistant, Udall Center for Studies in Public Policy; School of Geography, Development, & Environment, University of Arizona</p>
+    <p class="researcher-description"
+        data-en="M.A. student studying social aspects of agrivoltaics, agritourism, rural geography, sociotechnical transitions, and energy policy for sustainable rural development.<sup class='citation-link'><a href='https://geography.arizona.edu/person/tyler-swanson' target='_blank'>[23]</a></sup><sup class='citation-link'><a href='https://udallcenter.arizona.edu/people/tyler-swanson' target='_blank'>[24]</a></sup>"
+        data-es="Estudiante de M.A. que estudia aspectos sociales de agrivoltaicos, agroturismo, geografía rural, transiciones sociotécnicas y política energética para el desarrollo rural sostenible.<sup class='citation-link'><a href='https://geography.arizona.edu/person/tyler-swanson' target='_blank'>[23]</a></sup><sup class='citation-link'><a href='https://udallcenter.arizona.edu/people/tyler-swanson' target='_blank'>[24]</a></sup>">
+        M.A. student studying social aspects of agrivoltaics, agritourism, rural geography, sociotechnical transitions, and energy policy for sustainable rural development.
+    </p>
+</div>
+
+<!-- Alyssa Salazar -->
+<div class="researcher-card reveal">
+    <div class="researcher-image-container">
+        <img src="static/alyssa.png" alt="Photo of Alyssa Salazar">
+    </div>
+    <h4><a href="https://biosphere2.org/person/alyssa-salazar" target="_blank" rel="noopener">Alyssa Salazar</a></h4>
+    <p class="researcher-title" data-en="Research Associate, SGDE & B2, UArizona"
+        data-es="Asoc. Invest., SGDE y B2, UArizona">Research Associate, School of Geography, Development, & Environment; Biosphere 2, University of Arizona</p>
+    <p class="researcher-description"
+        data-en="Research Professional II. Leads research on agrivoltaic impacts on crop phenology and growing season patterns. Involved in desert farming experiments.<sup class='citation-link'><a href='https://www.researchgate.net/profile/Alyssa-Salazar-2' target='_blank'>[27]</a></sup>"
+        data-es="Profesional de Investigación II. Lidera investigación sobre impactos agrivoltaicos en fenología de cultivos y patrones de temporada de crecimiento. Involucrada en experimentos de agricultura desértica.<sup class='citation-link'><a href='https://www.researchgate.net/profile/Alyssa-Salazar-2' target='_blank'>[27]</a></sup>">
+        Research Professional II. Leads research on agrivoltaic impacts on crop phenology and growing season patterns. Involved in desert farming experiments.
+    </p>
+</div>
+
+<!-- Caleb Ortega -->
+<div class="researcher-card reveal">
+    <div class="researcher-image-container">
+        <img src="static/caleb.png" alt="Photo of Caleb Ortega">
+    </div>
+    <h4><a href="https://biosphere2.org/person/caleb-ortega" target="_blank" rel="noopener">Caleb Ortega</a></h4>
+    <p class="researcher-title" data-en="Program Coordinator, B2 & SGDE, UArizona"
+        data-es="Coord. Programa, B2 y SGDE, UArizona">Program Coordinator, School of Geography, Development, & Environment; Biosphere 2; School Garden Workshop, University of Arizona</p>
+    <p class="researcher-description"
+        data-en="Coordinates UA Community and School Garden Program. Supports agrivoltaics research at Biosphere 2 and local schools through site maintenance and planning.<sup class='citation-link'><a href='https://biosphere2.org/person/caleb-ortega' target='_blank'>[30]</a></sup><sup class='citation-link'><a href='https://msgist.arizona.edu/news/msgist-alumnus-caleb-ortega-named-conservation-program-manager-tucson-water' target='_blank'>[32]</a></sup>"
+        data-es="Coordina el Programa de Huertos Comunitarios y Escolares de la UA. Apoya la investigación agrivoltaica en Biosphere 2 y escuelas locales mediante mantenimiento y planificación de sitios.<sup class='citation-link'><a href='https://biosphere2.org/person/caleb-ortega' target='_blank'>[30]</a></sup><sup class='citation-link'><a href='https://msgist.arizona.edu/news/msgist-alumnus-caleb-ortega-named-conservation-program-manager-tucson-water' target='_blank'>[32]</a></sup>">
+        Coordinates UA Community and School Garden Program. Supports agrivoltaics research at Biosphere 2 and local schools through site maintenance and planning.
+    </p>
+</div>
+
+<!-- Patrick Murphy -->
+<div class="researcher-card reveal">
+    <div class="researcher-image-container">
+        <img src="static/patrick.png" alt="Photo of Patrick Murphy">
+    </div>
+    <h4><a href="https://kmap.arizona.edu/people/murphyp" target="_blank" rel="noopener">Patrick Murphy</a></h4>
+    <p class="researcher-title" data-en="Research Specialist, SGDE & B2, UArizona"
+        data-es="Especialista Invest., SGDE y B2, UArizona">Research Specialist, School of Geography & Development; Biosphere 2, University of Arizona</p>
+    <p class="researcher-description"
+        data-en="Contributes to research efforts within the Barron-Gafford lab at Biosphere 2, focusing on agrivoltaics and related ecological studies.<sup class='citation-link'><a href='https://kmap.arizona.edu/people/murphyp' target='_blank'>[14]</a></sup>"
+        data-es="Contribuye a los esfuerzos de investigación dentro del laboratorio Barron-Gafford en Biosphere 2, centrándose en agrivoltaicos y estudios ecológicos relacionados.<sup class='citation-link'><a href='https://kmap.arizona.edu/people/murphyp' target='_blank'>[14]</a></sup>">
+        Contributes to research efforts within the Barron-Gafford lab at Biosphere 2, focusing on agrivoltaics and related ecological studies.
+    </p>
+</div>
+
+<!-- Isaiah Barnett-Moreno -->
+<div class="researcher-card reveal">
+    <div class="researcher-image-container">
+        <img src="static/isaiah.png" alt="Photo of Isaiah Barnett-Moreno">
+    </div>
+    <h4><a href="https://biosphere2.org/person/isaiah-barnett-moreno" target="_blank" rel="noopener">Isaiah Barnett-Moreno</a></h4>
+    <p class="researcher-title"
+        data-en="Undergrad Research Asst. & Farm Manager, SGDE & B2, UArizona/PCC"
+        data-es="Asist. Invest. Pregrado y Gerente Granja, SGDE y B2, UArizona/PCC">Undergraduate Research Assistant & Farm Manager, School of Geography, Development, & Environment; Biosphere 2, University of Arizona & Pima Community College</p>
+    <p class="researcher-description"
+        data-en="Manages research farm operations, involved in agrivoltaics research at Biosphere 2, and works with aquaponics for food accessibility.<sup class='citation-link'><a href='https://biosphere2.org/person/isaiah-barnett-moreno' target='_blank'>[37]</a></sup>"
+        data-es="Gestiona operaciones de granja de investigación, involucrado en investigación agrivoltaica en Biosphere 2, y trabaja con acuaponía para accesibilidad alimentaria.<sup class='citation-link'><a href='https://biosphere2.org/person/isaiah-barnett-moreno' target='_blank'>[37]</a></sup>">
+        Manages research farm operations, involved in agrivoltaics research at Biosphere 2, and works with aquaponics for food accessibility.
+    </p>
+</div>
+                </div>
+
+                <!-- Summary Table -->
+                <div class="table-container reveal" style="margin-top: 4rem;">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" data-en="Team Summary" data-es="Resumen del Equipo">Team Summary</h3>
+                    </div>
+                    <div class="table-scroll-wrapper">
+                        <table class="project-table">
+                            <thead>
+                                <tr>
+                                    <th data-en="Contributor Name" data-es="Nombre">Contributor Name</th>
+                                    <th data-en="Affiliation" data-es="Afiliación">Affiliation</th>
+                                    <th data-en="Area of Expertise / Role" data-es="Área de Experiencia / Rol">Area of
+                                        Expertise / Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Dr. Greg Barron-Gafford</td>
+                                    <td data-en="UArizona (SGDE, Biosphere 2)" data-es="UArizona (SGDE, Biosfera 2)">
+                                        UArizona (SGDE, Biosphere 2)</td>
+                                    <td data-en="Agrivoltaics, Biogeography, Plant Ecology, FEW Nexus"
+                                        data-es="Agrivoltaicos, Biogeografía, Ecología Vegetal, Nexo AEE">Agrivoltaics,
+                                        Biogeography, Plant Ecology, FEW Nexus</td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Andrea Gerlak</td>
+                                    <td data-en="UArizona (SGDE, Udall Center)" data-es="UArizona (SGDE, Centro Udall)">
+                                        UArizona (SGDE, Udall Center)</td>
+                                    <td data-en="Water Governance, Environmental Policy, Adaptation"
+                                        data-es="Gobernanza del Agua, Política Ambiental, Adaptación">Water Governance,
+                                        Environmental Policy, Adaptation</td>
+                                </tr>
+                                <tr>
+                                    <td>Jordan Macknick</td>
+                                    <td data-en="NREL" data-es="NREL">NREL</td>
+                                    <td data-en="Energy-Water-Land Analysis, Agrivoltaics (InSPIRE)"
+                                        data-es="Análisis Energía-Agua-Tierra, Agrivoltaicos (InSPIRE)">
+                                        Energy-Water-Land Analysis, Agrivoltaics (InSPIRE)</td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Mitch Pavao-Zuckerman</td>
+                                    <td data-en="University of Maryland (ENST)"
+                                        data-es="Universidad de Maryland (ENST)">University of Maryland (ENST)</td>
+                                    <td data-en="Urban Ecology, Green Infrastructure, Ecosystem Services"
+                                        data-es="Ecología Urbana, Infraestructura Verde, Servicios Ecosistémicos">Urban
+                                        Ecology, Green Infrastructure, Ecosystem Services</td>
+                                </tr>
+                                <tr>
+                                    <td>Mary Werner</td>
+                                    <td data-en="UArizona (SGDE)" data-es="UArizona (SGDE)">UArizona (SGDE)</td>
+                                    <td data-en="Research Program Administration"
+                                        data-es="Administración de Programas de Investigación">Research Program
+                                        Administration</td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Holly Andrews</td>
+                                    <td data-en="UArizona (SGDE, Biosphere 2)" data-es="UArizona (SGDE, Biosfera 2)">
+                                        UArizona (SGDE, Biosphere 2)</td>
+                                    <td data-en="Ecosystem Ecology, Biogeochemistry, Sustainable Ag"
+                                        data-es="Ecología de Ecosistemas, Biogeoquímica, Agric. Sostenible">Ecosystem
+                                        Ecology, Biogeochemistry, Sustainable Ag</td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Carrie Seay-Fleming</td>
+                                    <td data-en="UArizona (Udall Center, SGDE)" data-es="UArizona (Centro Udall, SGDE)">
+                                        UArizona (Udall Center, SGDE)</td>
+                                    <td data-en="Environmental Sociology, Food Systems, Land-Use Conflict"
+                                        data-es="Sociología Ambiental, Sistemas Alimentarios, Conflicto Uso de Suelo">
+                                        Environmental Sociology, Food Systems, Land-Use Conflict</td>
+                                </tr>
+                                <tr>
+                                    <td>Tali Neesham-McTiernan</td>
+                                    <td data-en="UArizona (SGDE, Biosphere 2)" data-es="UArizona (SGDE, Biosfera 2)">
+                                        UArizona (SGDE, Biosphere 2)</td>
+                                    <td data-en="Agrivoltaics Mapping, Climate Adaptation, GIS"
+                                        data-es="Mapeo Agrivoltaico, Adaptación Climática, SIG">Agrivoltaics Mapping,
+                                        Climate Adaptation, GIS</td>
+                                </tr>
+                                <tr>
+                                    <td>Tyler Swanson</td>
+                                    <td data-en="UArizona (Udall Center, SGDE)" data-es="UArizona (Centro Udall, SGDE)">
+                                        UArizona (Udall Center, SGDE)</td>
+                                    <td data-en="Social Aspects of Agrivoltaics, Rural Geography"
+                                        data-es="Aspectos Sociales de Agrivoltaicos, Geografía Rural">Social Aspects of
+                                        Agrivoltaics, Rural Geography</td>
+                                </tr>
+                                <tr>
+                                    <td>Alyssa Salazar</td>
+                                    <td data-en="UArizona (SGDE, Biosphere 2)" data-es="UArizona (SGDE, Biosfera 2)">
+                                        UArizona (SGDE, Biosphere 2)</td>
+                                    <td data-en="Crop Phenology, Agrivoltaic Impacts Research"
+                                        data-es="Fenología de Cultivos, Invest. Impactos Agrivoltaicos">Crop Phenology,
+                                        Agrivoltaic Impacts Research</td>
+                                </tr>
+                                <tr>
+                                    <td>Caleb Ortega</td>
+                                    <td data-en="UArizona (Biosphere 2, SGDE)" data-es="UArizona (Biosfera 2, SGDE)">
+                                        UArizona (Biosphere 2, SGDE)</td>
+                                    <td data-en="Community/School Garden Program Coordination, Site Support"
+                                        data-es="Coord. Programa Huertos Comunitarios/Escolares, Apoyo Sitios">
+                                        Community/School Garden Program Coordination, Site Support</td>
+                                </tr>
+                                <tr>
+                                    <td>Patrick Murphy</td>
+                                    <td data-en="UArizona (SGDE, Biosphere 2)" data-es="UArizona (SGDE, Biosfera 2)">
+                                        UArizona (SGDE, Biosphere 2)</td>
+                                    <td data-en="Research Support, Agrivoltaics Lab"
+                                        data-es="Apoyo Investigación, Laboratorio Agrivoltaicos">Research Support,
+                                        Agrivoltaics Lab</td>
+                                </tr>
+                                <tr>
+                                    <td>Isaiah Barnett-Moreno</td>
+                                    <td data-en="UArizona/PCC (SGDE, Biosphere 2)"
+                                        data-es="UArizona/PCC (SGDE, Biosfera 2)">UArizona/PCC (SGDE, Biosphere 2)</td>
+                                    <td data-en="Research Farm Management, Aquaponics"
+                                        data-es="Gestión Granja Investigación, Acuaponía">Research Farm Management,
+                                        Aquaponics</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<!-- Our Partners Section -->
+    <section class="section section-condensed-padding" id="partners-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title" data-en="We Are Proud to be Partners" data-es="Estamos Orgullosos de Ser Socios">We Are Proud to be Partners</h2>
+                <p class="section-subtitle" data-en="Complex challenges require great partners with diverse backgrounds. Our team bridges the biophysical and social science, and works across food, water, and energy disciplines."
+                   data-es="Los desafíos complejos requieren grandes socios con antecedentes diversos. Nuestro equipo une las ciencias biofísicas y sociales, y trabaja en las disciplinas de alimentos, agua y energía.">Complex challenges require great partners with diverse backgrounds. Our team bridges the biophysical and social science, and works across food, water, and energy disciplines.</p>
+            </div>
+            <div class="partners-grid reveal">
+                <a href="https://sgde.arizona.edu/" target="_blank" rel="noopener" class="partner-logo-link">
+                    <!-- Assuming uaes.png corresponds to UArizona School of Geography, Development & Environment -->
+                    <img src="static/uaes.png" alt="UArizona School of Geography, Development & Environment Logo" class="partner-logo">
+                </a>
+                 <a href="https://agnr.umd.edu/" target="_blank" rel="noopener" class="partner-logo-link">
+                    <!-- Assuming umav.png corresponds to University of Maryland College of Agriculture & Natural Resources -->
+                    <img src="static/umav.png" alt="University of Maryland College of Agriculture & Natural Resources Logo" class="partner-logo">
+                </a>
+                <a href="https://environmentalscience.arizona.edu/" target="_blank" rel="noopener" class="partner-logo-link">
+                    <!-- Assuming uaenv.png corresponds to UArizona Environmental Science -->
+                    <img src="static/uaenv.png" alt="UArizona Environmental Science Logo" class="partner-logo">
+                </a>
+                <a href="https://www.aes.com/" target="_blank" rel="noopener" class="partner-logo-link">
+                    <img src="static/aes.png" alt="AES Corporation Logo" class="partner-logo">
+                </a>
+                <a href="https://www.nrel.gov/" target="_blank" rel="noopener" class="partner-logo-link">
+                    <img src="static/nrel.png" alt="NREL Transforming Energy Logo" class="partner-logo">
+                </a>
+                <a href="https://www.energy.gov/eere/solar/solar-energy-technologies-office" target="_blank" rel="noopener" class="partner-logo-link">
+                    <img src="static/doe.jpg" alt="U.S. Department of Energy Solar Awardee Logo" class="partner-logo">
+                </a>
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3 data-en="SALSA V Agrivoltaics" data-es="Agrivoltaicos SALSA V">SALSA V Agrivoltaics</h3>
+                    <p data-en="Advancing sustainable food, energy, and water solutions through innovative research and global collaboration. University of Arizona."
+                        data-es="Avanzando soluciones sostenibles de alimento, energía y agua a través de investigación innovadora y colaboración global. Universidad de Arizona.">
+                        Advancing sustainable food, energy, and water solutions through innovative research and global
+                        collaboration. University of Arizona.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/in/greg-barron-gafford-33380428/" target="_blank"
+                            rel="noopener" class="social-link" aria-label="LinkedIn"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link" aria-label="ResearchGate"><i
+                                class="fab fa-researchgate"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4 class="footer-title" data-en="Quick Links" data-es="Enlaces Rápidos">Quick Links</h4>
+                    <ul>
+                        <li><a href="#hero-section" data-en="Home" data-es="Inicio">Home</a></li>
+                        <li><a href="#map-section-wrapper" data-en="Global Map" data-es="Mapa Global">Global Map</a>
+                        </li>
+                        <li><a href="#sites-section" data-en="Research Sites" data-es="Sitios de Investigación">Research
+                                Sites</a></li>
+                        <li><a href="#team-section" data-en="Our Team" data-es="Nuestro Equipo">Our Team</a></li>
+                        <li><a href="#collaborative-frameworks" data-en="Collaborations"
+                                data-es="Colaboraciones">Collaborations</a></li>
+                    </ul>
+                </div>
+                <div class="footer-resources">
+                    <h4 class="footer-title" data-en="Resources" data-es="Recursos">Resources</h4>
+                    <ul>
+                        <li><a href="https://scholar.google.com/citations?user=Nin1E9QAAAAJ&hl=en" target="_blank"
+                                rel="noopener" data-en="Publications (Google Scholar)"
+                                data-es="Publicaciones (Google Scholar)">Publications (Google Scholar)</a></li>
+                        <li><a href="https://www.salsav.org/" target="_blank" rel="noopener" data-en="SALSA V Lab Site"
+                                data-es="Sitio Laboratorio SALSA V">SALSA V Lab Site</a></li>
+                        <li><a href="https://biosphere2.org/research/research-initiatives/agrivoltaics" target="_blank"
+                                rel="noopener" data-en="Biosphere 2 Agrivoltaics"
+                                data-es="Agrivoltaicos Biosfera 2">Biosphere 2 Agrivoltaics</a></li>
+                        <li><a href="https://www.energy.gov/eere/solar/agrivoltaics-solar-and-agriculture-co-location" target="_blank" rel="noopener"
+                                data-en="DOE Agrivoltaics" data-es="DOE Agrivoltaicos">DOE Agrivoltaics</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4 class="footer-title" data-en="Contact Us" data-es="Contáctanos">Contact Us</h4>
+                    <p data-en="University of Arizona" data-es="Universidad de Arizona">University of Arizona</p>
+                    <p><i class="fas fa-user fa-fw" style="margin-right: 5px;"></i> <span
+                            data-en="PI: Dr. Greg Barron-Gafford" data-es="IP: Dr. Greg Barron-Gafford">PI: Dr. Greg
+                            Barron-Gafford</span></p>
+                    <p><i class="fas fa-envelope fa-fw" style="margin-right: 5px;"></i> <a
+                            href="mailto:gregbg@arizona.edu" data-en="Email Contact"
+                            data-es="Contacto Email">gregbg@arizona.edu</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <a href="https://www.arizona.edu" target="_blank" rel="noopener noreferrer"><img
+                        src="static/ua_logo_white.png" alt="University of Arizona Logo" class="footer-logo ua-logo"></a>
+                <!-- Placeholder white UA logo -->
+                <div class="footer-bottom-text"
+                    data-en="© 2024 SALSA V - SemiArid Lab for Scalable Agrivoltaics. All Rights Reserved."
+                    data-es="© 2024 SALSA V - Laboratorio SemiÁrido para Agrivoltaicos Escalables. Todos los Derechos Reservados.">
+                    © 2024 SALSA V - SemiArid Lab for Scalable Agrivoltaics. All Rights Reserved.</div>
+                <!-- Add other partner logos if desired, e.g., UNAM, NREL, etc. using similar structure -->
+                <!-- <a href="https://www.nrel.gov" target="_blank" rel="noopener noreferrer"><img src="static/nrel_logo_white.png" alt="NREL Logo" class="footer-logo"></a> -->
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const languageToggle = document.getElementById('languageToggle');
+            let currentLanguage = localStorage.getItem('language') || 'en';
+
+            function setLanguage(lang) {
+                currentLanguage = lang;
+                localStorage.setItem('language', lang);
+                document.documentElement.lang = lang;
+
+                if (lang === 'es') {
+                    languageToggle.classList.add('toggle--on');
+                    languageToggle.classList.remove('toggle--off');
+                    languageToggle.setAttribute('aria-label', 'Cambiar idioma a Inglés');
+                } else {
+                    languageToggle.classList.remove('toggle--on');
+                    languageToggle.classList.add('toggle--off');
+                    languageToggle.setAttribute('aria-label', 'Toggle Language to Spanish');
+                }
+                updateContent();
+                if (typeof updateMapLegendText === 'function') {
+                    updateMapLegendText();
+                }
+            }
+
+            function updateContent() {
+                document.querySelectorAll('[data-en]').forEach(element => {
+                    const englishText = element.getAttribute('data-en');
+                    const spanishText = element.getAttribute('data-es');
+                    
+                    let newText;
+                    if (currentLanguage === 'es' && spanishText) {
+                        newText = spanishText;
+                    } else {
+                        newText = englishText;
+                    }
+                    
+                    if (element.innerHTML !== newText) { 
+                        element.innerHTML = newText;
+                    }
+                });
+            }
+
+            languageToggle.addEventListener('click', () => {
+                setLanguage(currentLanguage === 'en' ? 'es' : 'en');
+            });
+            setLanguage(currentLanguage); 
+
+            const navbar = document.querySelector('.navbar');
+            const scrollThreshold = 50;
+            function handleScroll() {
+                if (window.scrollY > scrollThreshold) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            }
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            handleScroll(); 
+
+            const mobileToggle = document.querySelector('.mobile-toggle');
+            const navbarLinks = document.querySelector('.navbar-links');
+            mobileToggle.addEventListener('click', () => {
+                const isExpanded = mobileToggle.getAttribute('aria-expanded') === 'true';
+                mobileToggle.setAttribute('aria-expanded', !isExpanded);
+                mobileToggle.classList.toggle('active');
+                navbarLinks.classList.toggle('active');
+            });
+
+            navbarLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (navbarLinks.classList.contains('active')) {
+                        if (!link.parentElement.classList.contains('has-dropdown') || window.innerWidth >= 768) {
+                             if (!link.closest('.dropdown-content')) { 
+                                mobileToggle.setAttribute('aria-expanded', 'false');
+                                mobileToggle.classList.remove('active');
+                                navbarLinks.classList.remove('active');
+                             }
+                        }
+                         if (link.closest('.dropdown-content')) { 
+                            mobileToggle.setAttribute('aria-expanded', 'false');
+                            mobileToggle.classList.remove('active');
+                            navbarLinks.classList.remove('active');
+                        }
+                    }
+                });
+            });
+
+            const dropdownToggles = navbarLinks.querySelectorAll('.has-dropdown > a');
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    if (window.innerWidth < 768) { 
+                        e.preventDefault();
+                        const parentLi = toggle.parentElement;
+                        parentLi.classList.toggle('open');
+                    }
+                });
+            });
+
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1, 
+                rootMargin: '0px 0px -50px 0px' 
+            });
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+
+            let map;
+            let legend;
+
+            function initializeMap() {
+                const mapElement = document.getElementById('map');
+                if (!mapElement) return;
+
+                var initialZoom = window.innerWidth < 768 ? 2 : 3; 
+
+                map = L.map('map').setView([20, 0], initialZoom); 
+
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: 'Tiles © Esri',
+                    maxZoom: 18
+                }).addTo(map);
+
+                function createRegionIcon(color, initial = '') {
+                    const markerHtmlStyles = `
+                  background-color: ${color};
+                  width: 1.2rem;
+                  height: 1.2rem;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  border-radius: 50%;
+                  border: 2px solid #FFFFFF;
+                  box-shadow: 0 0 0 1px ${color};
+                  color: white;
+                  font-size: 0.7rem;
+                  font-weight: bold;
+                  font-family: 'Inter', sans-serif;`;
+                    return L.divIcon({
+                        html: `<span style="${markerHtmlStyles}">${initial}</span>`,
+                        className: 'custom-div-icon', 
+                        iconSize: [20, 20], 
+                        iconAnchor: [10, 10] 
+                    });
+                }
+
+                var usaIcon = createRegionIcon('var(--primary-color, #CC0000)', 'US'); 
+                var africaIcon = createRegionIcon('#228B22', 'AF'); 
+                var middleEastIcon = createRegionIcon('#FFA500', 'ME'); 
+                var latAmIcon = createRegionIcon('#007BFF', 'LA'); 
+
+
+                const projectLocations = [
+                    { name_en: "Biosphere 2 & AES Site", name_es: "Biosphere 2 y Sitio AES", coords: [32.5786, -110.8539], region_en: "Arizona, USA", region_es: "Arizona, EE.UU.", type: "USA", icon: usaIcon },
+                    { name_en: "Jack’s Solar Garden (SCAPES)", name_es: "Jack’s Solar Garden (SCAPES)", coords: [40.1748, -105.1000], region_en: "Colorado, USA", region_es: "Colorado, EE.UU.", type: "USA", icon: usaIcon },
+                    { name_en: "Makueni County Community Site", name_es: "Sitio Comunitario Condado Makueni", coords: [-2.2833, 37.7333], region_en: "Kenya", region_es: "Kenia", type: "Africa", icon: africaIcon },
+                    { name_en: "Arava Desert Research", name_es: "Investigación Desierto de Arava", coords: [29.9000, 35.0000], region_en: "Israel", region_es: "Israel", type: "Middle East", icon: middleEastIcon },
+                    { name_en: "Green Energy Park Collaboration", name_es: "Colaboración Green Energy Park", coords: [32.2345, -7.9448], region_en: "Morocco", region_es: "Marruecos", type: "Africa", icon: africaIcon },
+                    { name_en: "PASE Project (UNAM)", name_es: "Proyecto PASE (UNAM)", coords: [19.3327, -99.1840], region_en: "Mexico", region_es: "México", type: "Latin America", icon: latAmIcon },
+                    { name_en: "Sonora & Baja California Initiatives", name_es: "Iniciativas Sonora y Baja California", coords: [29.5, -111.0], region_en: "Northern Mexico", region_es: "Norte de México", type: "Latin America", icon: latAmIcon }
+                ];
+
+                projectLocations.forEach(function (location) {
+                    let name_key = currentLanguage === 'es' ? location.name_es : location.name_en;
+                    let region_key = currentLanguage === 'es' ? location.region_es : location.region_en;
+                    let popup_region_label = currentLanguage === 'es' ? 'Región' : 'Region';
+
+
+                    L.marker(location.coords, { icon: location.icon })
+                        .addTo(map)
+                        .bindPopup(`<strong>${name_key}</strong><br>${popup_region_label}: ${region_key}`);
+                });
+
+                legend = L.control({ position: 'bottomright' });
+                legend.onAdd = function (map) {
+                    const div = L.DomUtil.create('div', 'info legend leaflet-legend'); 
+                    div.innerHTML = getLegendContent(); 
+                    return div;
+                };
+                legend.addTo(map);
+                
+                window.updateMapLegendText = function () {
+                    if (legend && map) {
+                        const container = legend.getContainer();
+                        if (container) {
+                            container.innerHTML = getLegendContent();
+                        }
+                    }
+                    const legendDiv = document.querySelector('.leaflet-legend');
+                    if (legendDiv) {
+                         legendDiv.querySelectorAll('[data-en]').forEach(el => {
+                            const englishText = el.getAttribute('data-en');
+                            const spanishText = el.getAttribute('data-es');
+                            if (currentLanguage === 'es' && spanishText) {
+                                el.textContent = spanishText;
+                            } else {
+                                el.textContent = englishText;
+                            }
+                        });
+                        const strongTitle = legendDiv.querySelector('strong');
+                        if(strongTitle) {
+                            strongTitle.textContent = currentLanguage === 'es' ? 'Regiones Clave' : 'Key Regions';
+                        }
+                    }
+                };
+
+
+                function getLegendContent() {
+                    const title = currentLanguage === 'es' ? 'Regiones Clave' : 'Key Regions';
+                    return `
+                  <strong>${title}</strong>
+                  <div>
+                      <span style="background-color:var(--primary-color, #CC0000); width:18px; height:18px; border-radius:50%; display:inline-block; margin-right:5px; text-align:center; color:white; font-size:0.7rem; line-height:18px; font-weight:bold;">US</span>
+                      <span data-en="USA Sites" data-es="Sitios EE.UU.">${currentLanguage === 'es' ? "Sitios EE.UU." : "USA Sites"}</span>
+                  </div>
+                  <div>
+                       <span style="background-color:#228B22; width:18px; height:18px; border-radius:50%; display:inline-block; margin-right:5px; text-align:center; color:white; font-size:0.7rem; line-height:18px; font-weight:bold;">AF</span>
+                      <span data-en="Africa Sites" data-es="Sitios África">${currentLanguage === 'es' ? "Sitios África" : "Africa Sites"}</span>
+                  </div>
+                  <div>
+                       <span style="background-color:#FFA500; width:18px; height:18px; border-radius:50%; display:inline-block; margin-right:5px; text-align:center; color:white; font-size:0.7rem; line-height:18px; font-weight:bold;">ME</span>
+                      <span data-en="Middle East Sites" data-es="Sitios Medio Oriente">${currentLanguage === 'es' ? "Sitios Medio Oriente" : "Middle East Sites"}</span>
+                  </div>
+                  <div>
+                      <span style="background-color:#007BFF; width:18px; height:18px; border-radius:50%; display:inline-block; margin-right:5px; text-align:center; color:white; font-size:0.7rem; line-height:18px; font-weight:bold;">LA</span>
+                      <span data-en="Latin America Sites" data-es="Sitios América Latina">${currentLanguage === 'es' ? "Sitios América Latina" : "Latin America Sites"}</span>
+                  </div>`;
+                }
+
+
+                fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json') 
+                    .then(response => response.json())
+                    .then(data => {
+                        L.geoJSON(data, {
+                            style: function (feature) {
+                                return {
+                                    'color': '#ccc', 
+                                    'weight': 0.5,
+                                    'opacity': 0.6,
+                                    'fillOpacity': 0.05,
+                                    'fillColor': '#e0e0e0' 
+                                };
+                            }
+                        }).addTo(map);
+                    })
+                    .catch(error => console.error('Error loading GeoJSON:', error));
+
+                let resizeTimeout;
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(function() {
+                        if (map) {
+                            map.invalidateSize();
+                        }
+                    }, 250);
+                });
+                setTimeout(function () { if(map) map.invalidateSize(); }, 200);
+
+            } 
+            
+            initializeMap();
+
+
+            const tableContainer = document.querySelector('.table-container');
+            const tableWrapper = document.querySelector('.table-scroll-wrapper');
+            if (tableContainer && tableWrapper) {
+                function checkScroll() {
+                    if (!tableWrapper) return;
+                    const hasHorizontalScroll = tableWrapper.scrollWidth > tableWrapper.clientWidth;
+                    
+                    const isAtEnd = tableWrapper.scrollLeft >= (tableWrapper.scrollWidth - tableWrapper.clientWidth - 5);
+
+                    if (hasHorizontalScroll && !isAtEnd) {
+                        tableContainer.classList.add('is-scrolling');
+                    } else {
+                        tableContainer.classList.remove('is-scrolling');
+                    }
+                }
+                tableWrapper.addEventListener('scroll', checkScroll, { passive: true });
+                window.addEventListener('resize', checkScroll);
+                checkScroll(); 
+            }
+            
+            document.querySelectorAll('.citation-link a').forEach(link => { 
+                link.addEventListener('click', (e) => {
+                    // Default behavior (opening link in new tab due to target='_blank') is fine
+                });
+            });
+
+        });
+    </script>
+</body>
+
+</html>
