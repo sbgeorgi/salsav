@@ -1,0 +1,450 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+    :root {
+        /* UArizona Enhanced Color Palette */
+        --primary-color: #A3001E;
+        /* UArizona Red */
+        --primary-light: #CC0033;
+        /* Brighter Red for interaction */
+        --secondary-color: #ffffff;
+        /* White */
+        --accent-color: #FFC72C;
+        /* UArizona Gold (vibrant) */
+        --accent-dark: #EAB628;
+        /* Darker Gold for hover */
+        --text-color: #0C234B;
+        /* UArizona Navy */
+        --text-light: #ffffff;
+        /* White text */
+        --ua-blue: #007D84;
+        /* UArizona Blue (for secondary accents) */
+        
+        --text-muted: #5F728D; /* Muted Navy/Gray */
+        --bg-light: #F0F4F7; /* Very light cool gray/blue, inspired by UArizona Cool Gray */
+        --bg-medium: #E2E9EB; /* UArizona Cool Gray */
+        --border-color: #CCD5DD; /* Subtle border, complements grays */
+
+        /* Typography - Aligned with UArizona style (using web-safe alternatives) */
+        --font-serif: "Merriweather", "Georgia", serif; /* For headings, like Milo Serif */
+        --font-sans-serif: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif; /* For body, like Proxima Nova */
+
+        /* Shadows - Kept as they are well-defined, based on Navy */
+        --shadow-sm: 0 2px 4px rgba(12, 35, 75, 0.08); /* Slightly enhanced visibility */
+        --shadow-md: 0 5px 10px rgba(12, 35, 75, 0.1);
+        --shadow-lg: 0 15px 30px rgba(12, 35, 75, 0.12);
+        --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        /* Borders & Transitions - Kept as they are good */
+        --border-radius-sm: 6px;
+        --border-radius-md: 10px;
+        --border-radius-lg: 16px;
+        --transition-fast: all 0.2s ease-in-out;
+        --transition-standard: all 0.3s ease-in-out;
+        --transition-slow: all 0.5s ease-in-out;
+    }
+
+    /* Base & Typography */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: var(--font-sans-serif); /* UArizona aligned sans-serif */
+        line-height: 1.7;
+        color: var(--text-color); /* Default to UA Navy */
+        background-color: var(--bg-light);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-serif); /* UArizona aligned serif for headings */
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--text-color); /* Headings in UA Navy */
+        /* Specific headings like section titles can be UA Red */
+    }
+
+    a {
+        text-decoration: none;
+        color: var(--primary-color); /* Links in UA Red */
+        transition: var(--transition-standard);
+    }
+
+    a:hover {
+        color: var(--primary-light); /* Brighter UA Red on hover */
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    /* Utility classes */
+    .container {
+        max-width: 1200px;
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .section {
+        padding: 6rem 0;
+    }
+
+    .section.section-condensed-padding {
+        padding: 4rem 0;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-title {
+        color: var(--primary-color); /* UA Red for section titles */
+        font-size: clamp(2.2rem, 4.5vw, 3rem); /* Slightly larger and more impactful */
+        margin-bottom: 1.2rem;
+        position: relative;
+        display: inline-block;
+        font-weight: 700; /* Ensure serif headings are bold */
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: -1rem; /* Increased space */
+        transform: translateX(-50%);
+        width: 70px; /* Wider */
+        height: 5px; /* Bolder */
+        background-color: var(--accent-color); /* UA Gold underline */
+        border-radius: 3px;
+    }
+
+    .section-subtitle {
+        color: var(--text-muted);
+        max-width: 800px; /* Slightly wider for better flow */
+        margin: 0 auto;
+        font-size: 1.2rem; /* Enhanced readability */
+        line-height: 1.7;
+        font-family: var(--font-sans-serif); /* Subtitles in sans-serif for clarity */
+    }
+
+    /* Navbar - Enhanced UArizona Branding */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 1.5rem 0;
+        transition: padding var(--transition-standard), background-color var(--transition-standard), box-shadow var(--transition-standard);
+    }
+
+    .navbar.scrolled {
+        background-color: rgba(12, 35, 75, 0.97); /* UA Navy background when scrolled */
+        backdrop-filter: blur(12px); /* Enhanced blur */
+        padding: 1rem 0; /* Adjusted padding */
+        box-shadow: var(--shadow-lg); /* Stronger shadow for depth */
+    }
+
+    .navbar-container {
+        max-width: 1300px;
+        width: 90%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar-brand {
+        font-family: var(--font-serif); /* Brand name in serif */
+        font-size: 1.8rem; /* More prominent */
+        font-weight: 700;
+        color: var(--text-light); /* White when transparent */
+        transition: var(--transition-standard);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .navbar-brand i {
+        color: var(--accent-color); /* Gold icon */
+    }
+
+    .navbar.scrolled .navbar-brand {
+        color: var(--text-light); /* White on Navy background */
+    }
+
+    .navbar.scrolled .navbar-brand i {
+        color: var(--accent-color); /* Gold icon stays Gold */
+    }
+
+    .navbar-links {
+        display: flex;
+        align-items: center;
+        gap: 2.8rem; /* Increased gap */
+    }
+
+    .navbar-menu {
+        display: flex;
+        list-style: none;
+        gap: 2.8rem;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar-menu>li {
+        position: relative;
+    }
+
+    .navbar-link {
+        font-family: var(--font-sans-serif); /* Links in sans-serif */
+        color: var(--text-light); /* White when transparent */
+        font-weight: 600; /* Bolder links */
+        transition: var(--transition-standard);
+        padding: 0.5rem 0.25rem; /* Add slight horizontal padding for better spacing */
+        position: relative;
+        font-size: 1rem;
+    }
+
+    .navbar-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 3px; /* Thicker underline */
+        bottom: -6px; /* Positioned slightly lower */
+        left: 0;
+        background-color: var(--accent-color); /* Gold underline */
+        transition: width var(--transition-fast);
+        border-radius: 1px;
+    }
+
+    .navbar-link:hover::after,
+    .navbar-link.active::after {
+        width: 100%;
+    }
+
+    .navbar.scrolled .navbar-link {
+        color: var(--text-light); /* White on Navy background */
+    }
+
+    .navbar-link:hover,
+    .navbar-link.active {
+        color: var(--accent-color); /* Gold hover/active on scrolled */
+    }
+
+    .navbar:not(.scrolled) .navbar-link:hover,
+    .navbar:not(.scrolled) .navbar-link.active {
+        color: var(--accent-color); /* Gold hover/active when transparent */
+    }
+    
+    /* Ensure correct underline color for transparent state */
+    .navbar:not(.scrolled) .navbar-link:hover::after,
+    .navbar:not(.scrolled) .navbar-link.active::after {
+        background-color: var(--accent-color);
+    }
+    
+    .navbar.scrolled .navbar-link:hover::after,
+    .navbar.scrolled .navbar-link.active::after {
+        background-color: var(--accent-color); /* Always gold for active/hover underline */
+    }
+
+    /* Dropdown Styles */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: var(--secondary-color);
+        min-width: 220px;
+        box-shadow: var(--shadow-lg);
+        z-index: 1;
+        list-style: none;
+        padding: 0.75rem 0; /* More padding */
+        margin: 0;
+        border-radius: var(--border-radius-md); /* Softer radius */
+        top: calc(100% + 12px);
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--transition-fast), visibility var(--transition-fast), top var(--transition-fast);
+        border: 1px solid var(--border-color);
+    }
+
+    .dropdown-content a {
+        font-family: var(--font-sans-serif);
+        color: var(--text-color);
+        padding: 0.9rem 1.8rem; /* Generous padding */
+        text-decoration: none;
+        display: block;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        transition: background-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .dropdown-content a:hover {
+        background-color: var(--bg-medium); /* UA Cool Gray bg hover */
+        color: var(--primary-color); /* UA Red text hover */
+    }
+
+    .navbar-menu>li:hover .dropdown-content {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        top: calc(100% + 8px); /* Animate slightly upwards */
+    }
+
+    /* Language Toggle */
+    .language-toggle {
+        margin-left: 1.5rem;
+    }
+
+    .toggle {
+        position: relative;
+        display: block;
+        width: 70px;
+        height: 30px;
+        outline: 0;
+        border-radius: 30px;
+        background-color: rgba(255, 255, 255, 0.2); /* Light bg when transparent */
+        border: 1px solid rgba(255, 255, 255, 0.5); /* Light border */
+        transition: background-color var(--transition-standard), border-color var(--transition-standard);
+        cursor: pointer;
+    }
+
+    .navbar.scrolled .toggle {
+        border-color: rgba(255, 255, 255, 0.4); /* Whiteish border on Navy */
+        background-color: rgba(255, 255, 255, 0.15); /* Subtle bg on Navy */
+    }
+
+    .toggle:after { /* Handle */
+        content: '';
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        left: 2px;
+        width: calc(50% - 3px);
+        border-radius: 30px;
+        background-color: var(--secondary-color); /* White handle */
+        transition: transform var(--transition-standard), background-color var(--transition-standard), color var(--transition-standard);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8em;
+        font-weight: 700; /* Bolder text */
+        font-family: var(--font-sans-serif);
+        color: var(--primary-color); /* Default to Red text on handle */
+        box-shadow: var(--shadow-sm);
+    }
+
+    .toggle--on { /* Spanish Active */
+        background-color: var(--accent-color); /* Gold for active ES */
+        border-color: var(--accent-color);
+    }
+    .navbar.scrolled .toggle--on {
+        background-color: var(--accent-color); /* Gold for ES on scrolled nav */
+        border-color: var(--accent-color);
+    }
+
+    .toggle--on:after {
+        content: 'ES';
+        transform: translateX(calc(100% + 2px));
+        background-color: var(--secondary-color); /* White handle */
+        color: var(--text-color); /* Navy text for ES */
+    }
+
+    .toggle--off:after { /* English Active */
+        content: 'EN';
+        background-color: var(--secondary-color); /* White handle */
+        color: var(--primary-color); /* Red text for EN */
+    }
+    .navbar.scrolled .toggle--off:after {
+         color: var(--primary-color); /* Red text for EN on scrolled nav */
+    }
+    .navbar.scrolled .toggle--on:after {
+        color: var(--text-color); /* Navy text for ES on scrolled nav */
+    }
+
+
+    /* Mobile Menu Toggle Button */
+    .mobile-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text-light); /* White when transparent */
+        font-size: 2rem; /* Larger icon */
+        cursor: pointer;
+        transition: var(--transition-standard);
+        padding: 0.5rem;
+        line-height: 1;
+        z-index: 1001;
+    }
+
+    .navbar.scrolled .mobile-toggle {
+        color: var(--text-light); /* White on Navy background */
+    }
+
+    .mobile-toggle .fa-times { display: none; }
+    .mobile-toggle.active .fa-bars { display: none; }
+    .mobile-toggle.active .fa-times { display: inline-block; }
+
+    /* Hero Section */
+    .hero {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, rgba(163, 0, 30, 0.92), rgba(12, 35, 75, 0.92)), /* UA Red and Navy gradient */
+                    url("/api/placeholder/1920/1080/0C234B/A3001E?text=UArizona+Research") no-repeat center center; /* Placeholder with UA colors */
+        background-size: cover;
+        color: var(--text-light);
+        overflow: hidden;
+        text-align: center;
+        padding-top: 100px; /* Increased to account for larger navbar */
+    }
+
+    .hero-content {
+        max-width: 950px; /* Wider content area */
+        width: 90%;
+        position: relative;
+        z-index: 2;
+        padding: 3rem 0;
+    }
+
+    .hero h1 {
+        font-family: var(--font-serif); /* Serif for hero title */
+        font-size: clamp(3rem, 7vw, 5rem); /* Even larger title */
+        margin-bottom: 1.8rem;
+        line-height: 1.15;
+        font-weight: 800; /* Bolder */
+        color: var(--text-light);
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.3); /* Subtle text shadow for depth */
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-subtitle {
+        font-family: var(--font-sans-serif); /* Sans-serif for subtitle */
+        font-size: clamp(1.3rem, 3vw, 1.7rem); /* Larger Subtitle */
+        font-weight: 400; /* Regular weight */
+        max-width: 750px;
+        margin: 0 auto 3rem;
+        opacity: 0.95; /* More opaque */
+        animation: fadeInUp 1s ease-out 0.2s;
+        animation-fill-mode: both;
+    }
