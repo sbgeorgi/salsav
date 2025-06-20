@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALSA - Scaling Up Research</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/main-styles.css">
+    <style>
+        /* Define root variables if not in main-styles.css */
+        :root {
+            --primary-color: #003366; /* Example dark blue */
+            --secondary-color: #E87A24; /* Example orange */
+            --background-color: #FFFFFF;
+            --text-color: #343A40;
+            --font-body: 'Source Sans 3', sans-serif;
+        }
+
+        .content-flex {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        .content-text {
+            flex: 1 1 40%;
+        }
+        .content-image {
+            flex: 1 1 60%;
+        }
+
+        .scaling-diagram-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 450px;
+            padding: 2rem;
+        }
+
+        .scaling-diagram-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 2rem auto;
+        }
+
+        .scaling-diagram-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #343A40;
+            transform: translateY(-50%);
+        }
+
+        .scaling-diagram-container::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: #343A40;
+            transform: translateX(-50%);
+        }
+        
+        /* CSS for the VERTICAL axis arrowheads */
+        .axis-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        .axis-arrow.up {
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 6px 9px 6px;
+            border-color: transparent transparent #343A40 transparent;
+        }
+        .axis-arrow.down {
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 9px 6px 0 6px;
+            border-color: #343A40 transparent transparent transparent;
+        }
+
+        .axis-label {
+            position: absolute;
+            font-weight: 600;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 0 8px;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .diagram-point {
+            position: absolute;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-weight: 500;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+            transition: background-color 0.3s, transform 0.3s;
+            z-index: 15;
+        }
+
+        .diagram-point:hover {
+            background-color: #005f9e; 
+            transform: translate(-50%, -50%) scale(1.1);
+            z-index: 20;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            width: 280px;
+            background-color: #212529;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 15px;
+            position: absolute;
+            z-index: 1;
+            transition: opacity 0.3s ease;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            pointer-events: none;
+        }
+
+        .diagram-point:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tooltip-text strong {
+            display: block;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .tooltip-text p {
+            margin: 0;
+            font-family: var(--font-body);
+            font-weight: 400;
+        }
+        
+        #tooltip-jsg,
+        #tooltip-hh,
+        #tooltip-b2 {
+            bottom: 125%;
+            left: 50%;
+            margin-left: -140px;
+        }
+        #tooltip-farms {
+            top: 125%;
+            left: 50%;
+            margin-left: -140px;
+        }
+        #tooltip-scapes {
+            top: 125%;
+            left: 50%;
+            margin-left: -110px;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+        }
+        
+        #tooltip-jsg::after,
+        #tooltip-hh::after,
+        #tooltip-b2::after {
+            top: 100%;
+            border-color: #212529 transparent transparent transparent;
+        }
+        
+        #tooltip-scapes::after,
+        #tooltip-farms::after {
+            bottom: 100%;
+            border-color: transparent transparent #212529 transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
+                <span>AGRIVOLTAICS</span>
+            </a>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <div class="navbar-links">
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li class="has-dropdown">
+                        <a href="#" class="navbar-link">Research</a>
+                        <ul class="dropdown-content">
+                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="education.html" class="navbar-link">Education</a></li>
+                    <li><a href="sites.html" class="navbar-link">Sites</a></li>
+                    <li><a href="news.html" class="navbar-link">News</a></li>
+                    <li><a href="team.html" class="navbar-link">Team</a></li>
+                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero hero-subpage" style="background-image: url('static/scaling-up-hero.jpg');">
+        <div class="hero-content">
+            <h1>Agrivoltaics from kW to MW scale</h1>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="container">
+            <div class="content-block">
+                <div class="content-flex">
+                    <div class="content-text">
+                        <h2>Research Questions</h2>
+                        <p>How do we take the proven benefits of agrivoltaics from small test plots to large,
+                            utility-scale solar installations? This research explores the engineering, economic, and
+                            agronomic challenges of scaling up. We analyze different system designs, from
+                            agriculture-centric to energy-centric, to find the optimal balance for different goals and
+                            contexts. Our work provides data-driven models for developers, farmers, and policymakers.
+                        </p>
+                    </div>
+                    <div class="content-image scaling-diagram-wrapper">
+                        <div class="scaling-diagram-container">
+                            <!-- Axis Arrows for VERTICAL axis only -->
+                            <div class="axis-arrow up"></div>
+                            <div class="axis-arrow down"></div>
+
+                            <!-- Axis Labels -->
+                            <div class="axis-label" style="top: 25px; left: 50%;">MW</div>
+                            <div class="axis-label" style="bottom: 5px; left: 50%;">kW</div>
+                            <div class="axis-label" style="top: 50%; left: 0px;"><i class="fas fa-arrow-left"></i> Ag-centric</div>
+                            <div class="axis-label" style="top: 50%; right: -70px;">Energy-centric <i class="fas fa-arrow-right"></i></div>
+
+                            <!-- Diagram Points with Tooltips -->
+                            <div class="diagram-point" style="top: 25%; left: 20%;">
+                                Scapes
+                                <span class="tooltip-text" id="tooltip-scapes">
+                                    <strong>SCAPES</strong>
+                                    <p><b>Scale:</b> Multi-site, ~100 kW to several MW<br>
+                                        USDA-funded multistate research</p>
+                                </span>
+                            </div>
+                            <div class="diagram-point" style="top: 20%; left: 85%;">
+                                FARMS
+                                <span class="tooltip-text" id="tooltip-farms">
+                                    <strong>FARMS</strong>
+                                    <p><b>Scale:</b> Utility-scale, 10–100+ MW<br>
+                                        DOE-supported commercial solar </p>
+                                </span>
+                            </div>
+                            <div class="diagram-point" style="top: 75%; left: 30%;">
+                                B2
+                                <span class="tooltip-text" id="tooltip-b2">
+                                    <strong>Biosphere 2</strong>
+                                    <p><b>Scale:</b> Research plot, 10–100 kW<br>
+                                        Foundational agrivoltaics research </p>
+                                </span>
+                            </div>
+                            <div class="diagram-point" style="top: 90%; left: 70%;">
+                                HH
+                                <span class="tooltip-text" id="tooltip-hh">
+                                    <strong>Homestead/Community</strong>
+                                    <p><b>Scale:</b> Small plot, 1–10 kW<br>
+                                        Localized systems off-grid homes</p>
+                                </span>
+                            </div>
+                            <div class="diagram-point" style="top: 50%; left: 50%;">
+                                JSG
+                                <span class="tooltip-text" id="tooltip-jsg">
+                                    <strong>Jack's Solar Garden</strong>
+                                    <p><b>Scale:</b> Community site, 1.2 MW<br>
+                                        5 acre farm integrates crops and grazing</p>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer" id="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3>SALSA Agrivoltaics</h3>
+                <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="sites.html">Sites</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="team.html">Team</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>University of Arizona</p>
+                <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Font Awesome for arrows -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>

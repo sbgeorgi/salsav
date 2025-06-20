@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALSA - Research Sites</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="css/main-styles.css">
+    <!-- Page-specific styles to fix and theme the Leaflet map -->
+    <style>
+        /* FIX: Define height for the map container */
+        #map {
+            height: 65vh;
+            min-height: 500px;
+            width: 100%;
+            margin-bottom: 4rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+            background-color: var(--card-dark-bg);
+            /* Placeholder bg color */
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2.2rem, 5vw, 2.8rem);
+        }
+
+        /* Theme Leaflet Popups for dark mode */
+        .leaflet-popup-content-wrapper,
+        .leaflet-popup-tip {
+            background: var(--card-dark-bg);
+            color: var(--text-light);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .leaflet-popup-content b {
+            color: var(--secondary-color);
+        }
+
+        .leaflet-container a.leaflet-popup-close-button {
+            color: var(--text-muted);
+        }
+
+        .leaflet-container a.leaflet-popup-close-button:hover {
+            color: var(--text-light);
+        }
+
+        /* Theme Leaflet Legend for dark mode */
+        .leaflet-legend {
+            padding: 1rem;
+            background: rgba(28, 28, 28, 0.9);
+            /* var(--card-dark-bg) with opacity */
+            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        .leaflet-legend strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .leaflet-legend div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Styling for detailed site content */
+        .detailed-content-section {
+            padding: 4rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .detailed-content-section:first-of-type {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .alternating-item {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .alternating-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .alternating-item:nth-child(odd) .alternating-item__image {
+            order: 2;
+            /* Image on the right for odd items */
+        }
+
+        .alternating-item__image img {
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .alternating-item__text h3 {
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .alternating-item__text p {
+            color: var(--text-muted);
+        }
+
+        .citation-link a {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .alternating-item:nth-child(odd) .alternating-item__image {
+                order: 0;
+                /* Stack image on top on mobile for all */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
+                <span>AGRIVOLTAICS</span>
+            </a>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <div class="navbar-links">
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li class="has-dropdown">
+                        <a href="#" class="navbar-link">Research</a>
+                        <ul class="dropdown-content">
+                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="education.html" class="navbar-link">Education</a></li>
+                    <li><a href="sites.html" class="navbar-link">Sites</a></li>
+                    <li><a href="news.html" class="navbar-link">News</a></li>
+                    <li><a href="team.html" class="navbar-link">Team</a></li>
+                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Global Agrivoltaic Research Sites</h2>
+                <p class="subtitle">Interactive map showcasing SALSA's key research and collaboration sites for
+                    agrivoltaics across the globe.</p>
+            </div>
+            <div id="map"></div>
+        </div>
+
+        <!-- Detailed Site Sections - COMPLETE AND UNABRIDGED -->
+        <div id="detailed-sites-wrapper">
+            <section class="detailed-content-section" id="arizona-sites-detailed">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Arizona (USA) Research Sites</h2>
+                    </div>
+
+                    <!-- ────────── Biosphere 2 ────────── -->
+                    <div class="alternating-item">
+                        <div class="alternating-item__text">
+                            <h3>Biosphere 2 Agrivoltaics Research Laboratory</h3>
+                            <p>Biosphere 2 in Oracle, Arizona, hosts the Agrivoltaic Learning Lab where the
+                                Barron-Gafford team installed a ~30 kW array 3 m (≈9 ft) above test plots in 2017,
+                                making it one of the first U.S. dryland agrivoltaics experiments.<sup
+                                    class='citation-link'><a
+                                        href='https://biosphere2.org/research/research-initiatives/agrivoltaics'
+                                        target='_blank' rel='noopener'>[Biosphere 2]</a></sup><sup
+                                    class='citation-link'><a
+                                        href='https://www.agrisolarclearinghouse.org/biosphere-2-agrivoltaic-learning-lab/'
+                                        target='_blank' rel='noopener'>[AgriSolar]</a></sup> The landmark study later
+                                published in <em>Nature Sustainability</em> (2019) showed tomato yields doubled and
+                                water-use efficiency improved by 65 % under the panels.<sup class='citation-link'><a
+                                        href='https://experts.arizona.edu/en/publications/agrivoltaics-provide-mutual-benefits-across-the-foodenergywater-n'
+                                        target='_blank' rel='noopener'>[Nat. Sustain.]</a></sup> Soil moisture stayed
+                                ~15 % higher with alternate-day irrigation beneath the array, thanks to reduced
+                                evapotranspiration.<sup class='citation-link'><a
+                                        href='https://www.agrisolarclearinghouse.org/biosphere-2-agrivoltaic-learning-lab/'
+                                        target='_blank' rel='noopener'>[AgriSolar]</a></sup> Cooler midday temperatures
+                                also boosted PV efficiency, confirming the “win-win-win” food-energy-water benefits.<sup
+                                    class='citation-link'><a
+                                        href='https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus'
+                                        target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a
+                                        href='https://cleantechnica.com/2024/07/15/agrivoltaics-conserve-precious-water-for-arizona-farmers/'
+                                        target='_blank' rel='noopener'>[CleanTechnica]</a></sup></p>
+                        </div>
+                        <div class="alternating-item__image">
+                            <img src="static/biosphere2agriv.jpg" alt="Agrivoltaics Research at Biosphere 2">
+                        </div>
+                    </div>
+
+                    <!-- ────────── AES Utility-Scale Site ────────── -->
+                    <div class="alternating-item">
+                        <div class="alternating-item__text">
+                            <h3>AES Utility-Scale Agrivoltaics Site</h3>
+                            <p>Building on the Biosphere 2 success, the team secured a $1.2 million DOE “FARMS” award in
+                                2023 to retrofit three test plots within a 10 MW AES solar farm in central Arizona—one
+                                of only six projects funded nationwide.<sup class='citation-link'><a
+                                        href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites'
+                                        target='_blank' rel='noopener'>[UA Grant]</a></sup><sup class='citation-link'><a
+                                        href='https://www.energy.gov/eere/solar/foundational-agrivoltaic-research-megawatt-scale-farms-funding-program'
+                                        target='_blank' rel='noopener'>[DOE FARMS]</a></sup> The Semi-Arid Lab for
+                                Scalable Agrivoltaics (SALSA V) partners UArizona, NREL, UMD and AES to evaluate crop
+                                and livestock integration without disrupting plant maintenance schedules.<sup
+                                    class='citation-link'><a
+                                        href='https://www.linkedin.com/posts/greg-barron-gafford-707b6340_agrivoltaics-activity-7224963442208559104-9uGG'
+                                        target='_blank' rel='noopener'>[SALSA V]</a></sup> Researchers are monitoring
+                                panel-cooling feedbacks, soil carbon gains and community perceptions to craft a
+                                replicable model for large-scale farms statewide.<sup class='citation-link'><a
+                                        href='https://www.aes.com/benefits-agrivoltaics-farmers' target='_blank'
+                                        rel='noopener'>[AES]</a></sup><sup class='citation-link'><a
+                                        href='https://science.osti.gov/-/media/sbir/pdf/Market-Research/SETO---Agrivoltaics-August-2022-Public.pdf'
+                                        target='_blank' rel='noopener'>[DOE Brief]</a></sup></p>
+                        </div>
+                        <div class="alternating-item__image">
+                            <img src="static/aesagriv.jpg" alt="AES Utility-Scale Agrivoltaics Site">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <section class="detailed-content-section" id="colorado-site-detailed">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Colorado (USA) Agrivoltaics Collaboration</h2>
+                    </div>
+                    <div class="alternating-item">
+                        <div class="alternating-item__text">
+                            <h3>Jack’s Solar Garden &amp; NREL InSPIRE Program</h3>
+                            <p>In Colorado, agrivoltaics research is carried out via a multi-institution consortium,
+                                primarily with Colorado State University (CSU) and the National Renewable Energy
+                                Laboratory (NREL) through DOE’s InSPIRE program.<sup class='citation-link'><a
+                                        href='https://www.nrel.gov/news/detail/program/2021/future-of-agriculture-combined-with-renewable-energy-finds-success-at-jacks-solar-garden'
+                                        target='_blank' rel='noopener'>[NREL]</a></sup> The focal site is Jack’s Solar
+                                Garden near Longmont— a 1.2&nbsp;MW community solar farm with 3,276 panels that serves
+                                as a nationally recognized agrivoltaics showcase.<sup class='citation-link'><a
+                                        href='https://www.agrisolarclearinghouse.org/case-study-jacks-solar-garden/'
+                                        target='_blank' rel='noopener'>[AgriSolar]</a></sup> Early trials report cooler
+                                canopy temperatures, reduced water use, and potential extensions of the growing season
+                                for forage and vegetable crops grown beneath the panels.<sup class='citation-link'><a
+                                        href='https://extension.colostate.edu/topic-areas/agriculture/agrivoltaics-in-colorado-0-306/'
+                                        target='_blank' rel='noopener'>[CSU Extension]</a></sup></p>
+                        </div>
+                        <div class="alternating-item__image"><img src="static/jacksagriv.jpg"
+                                alt="Agrivoltaics research at Jack's Solar Garden, Colorado"></div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="detailed-content-section" id="kenya-site-detailed">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Kenya Community Agrivoltaics</h2>
+                    </div>
+                    <div class="alternating-item">
+                        <div class="alternating-item__text">
+                            <h3>Makueni County Site</h3>
+                            <p>Launched in July&nbsp;2023, Kenya’s first community-scale agrivoltaics pilot stands at
+                                St.&nbsp;Patrick’s Ng’omano Primary School in Kibwezi East, Makueni County.<sup
+                                    class='citation-link'><a
+                                        href='https://makueni.go.ke/2023/departments/energy/governor-mutula-launches-agrivoltaic-research-site-in-kibwezi-for-renewable-energy-while-empowering-local-farmers/'
+                                        target='_blank' rel='noopener'>[Makueni&nbsp;Gov]</a></sup> The project is
+                                co-led by the Kasser Joint Institute for Food, Water &amp; Energy Security—an alliance
+                                of the University of Arizona, Jewish National Fund-USA and the Arava Institute—together
+                                with the county government.<sup class='citation-link'><a
+                                        href='https://jointinstitute.jnf.org/makueni-agrivoltaics' target='_blank'
+                                        rel='noopener'>[KJI]</a></sup><sup class='citation-link'><a
+                                        href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya'
+                                        target='_blank' rel='noopener'>[JNF-USA]</a></sup> An elevated PV canopy drives
+                                a solar-pump and 15 kWh battery micro-grid that now supplies irrigation water, classroom
+                                lighting and refrigeration for the school while exporting surplus power to nearby
+                                homes.<sup class='citation-link'><a
+                                        href='https://makueni.go.ke/2025/news/solar-energy-is-revolutionizing-water-access-in-makueni/'
+                                        target='_blank' rel='noopener'>[Makueni&nbsp;News&nbsp;2025]</a></sup><sup
+                                    class='citation-link'><a
+                                        href='https://www.wri.org/insights/makueni-county-kenya-clean-energy-plan'
+                                        target='_blank' rel='noopener'>[WRI]</a></sup> Extension officers report that
+                                252 households now draw solar-pumped water for vegetables such as kale, spinach and
+                                amaranth, replacing costly diesel pumps.<sup class='citation-link'><a
+                                        href='https://www.kenyanews.go.ke/252-kibwezi-households-benefit-from-agrivoltaic-tech-farming/'
+                                        target='_blank' rel='noopener'>[KNA]</a></sup> Shade from the panels lowers
+                                canopy temperatures by up to 5 °C and halves evapotranspiration, boosting yields in this
+                                semi-arid climate.<sup class='citation-link'><a
+                                        href='https://forestsnews.cifor.org/86194/working-on-sunshine-agrivoltaics-in-east-africa?fnl='
+                                        target='_blank' rel='noopener'>[CIFOR]</a></sup><sup class='citation-link'><a
+                                        href='https://www.sciencedirect.com/science/article/pii/S1364032124007925'
+                                        target='_blank' rel='noopener'>[Energy&nbsp;Conv&nbsp;Manage]</a></sup> The
+                                pilot underpins a green-energy roadmap that commits Makueni to solar-power all new water
+                                projects and scale agrivoltaics across arid counties by 2035.<sup
+                                    class='citation-link'><a
+                                        href='https://makueni.go.ke/2024/news/makueni-unveils-costed-10-year-green-energy-plan/'
+                                        target='_blank' rel='noopener'>[Green&nbsp;Energy&nbsp;Plan]</a></sup><sup
+                                    class='citation-link'><a
+                                        href='https://www.nrel.gov/solar/market-research-analysis/agrivoltaics'
+                                        target='_blank' rel='noopener'>[NREL]</a></sup></p>
+                        </div>
+                        <div class="alternating-item__image"><img src="static/kenyaagriv.jpg"
+                                alt="Community agrivoltaics project in Makueni County, Kenya"></div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="detailed-content-section" id="israel-site-detailed">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Israel Agrivoltaics Research</h2>
+                    </div>
+                    <div class="alternating-item">
+                        <div class="alternating-item__text">
+                            <h3>Arava Desert Initiatives</h3>
+                            <p>In Israel’s southern Arava Valley, the Kasser Joint Institute and the Arava Institute
+                                partner with the University of Arizona to pioneer agrivoltaic systems for extreme desert
+                                farming.<sup class='citation-link'><a href='https://jointinstitute.jnf.org/agrivoltaics'
+                                        target='_blank' rel='noopener'>[KJI]</a></sup> Pilot plots at Kibbutz Ketura’s
+                                solar park—established in 2020—combine fixed-tilt and tracking PV canopies over
+                                vegetables and forage, recording up to 50 % cuts in irrigation demand and cooler midday
+                                leaf temperatures without yield loss.<sup class='citation-link'><a
+                                        href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf'
+                                        target='_blank' rel='noopener'>[Arava Report]</a></sup> These findings echo
+                                UArizona desert trials that doubled tomato yields and boosted water-use efficiency by 65
+                                %, highlighting agrivoltaics’ promise for hyper-arid regions.<sup
+                                    class='citation-link'><a
+                                        href='https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus'
+                                        target='_blank' rel='noopener'>[UA News]</a></sup></p>
+                        </div>
+                        <div class="alternating-item__image"><img src="static/aravaagriv.jpg"
+                                alt="Agrivoltaics research in the Arava Desert, Israel"></div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ────────── Morocco ────────── -->
+            <section class="detailed-content-section" id="morocco-collaboration-detailed">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Morocco Agrivoltaics Collaboration</h2>
+                    </div>
+                    <div class="alternating-item">
+                        <div class="alternating-item__text">
+                            <h3>Green Energy Park and North African Initiatives</h3>
+                            <p>SALSA V partners with the Green Energy Park (GEP) in Ben Guerir—jointly run by IRESEN and
+                                Mohammed VI Polytechnic University (UM6P)—to build the first replicated agrivoltaics
+                                platform in North Africa.<sup class='citation-link'><a
+                                        href='https://www.greenenergypark.ma/' target='_blank'
+                                        rel='noopener'>[GEP]</a></sup><sup class='citation-link'><a
+                                        href='https://um6p.ma/en/green-energy-park-expanded-collaboration-china-renewable-energy-and-ai'
+                                        target='_blank' rel='noopener'>[UM6P News]</a></sup> A fixed-tilt chess-board
+                                canopy was installed on UM6P’s experimental farm in 2023 to test cereals and vegetables
+                                under semi-arid conditions, following a design study presented at the 2023 Maghreb PV
+                                conference.<sup class='citation-link'><a
+                                        href='https://indico.marwan.ma/event/52/contributions/866/attachments/210/324/Abstract.pdf'
+                                        target='_blank' rel='noopener'>[Design Paper]</a></sup><sup
+                                    class='citation-link'><a
+                                        href='https://www.fainstitute.arizona.edu/sites/default/files/documents/Agrivoltaics%20PROGRAM%20with%20PARTICIPANTS_April%202023_Final.pdf'
+                                        target='_blank' rel='noopener'>[AV Program]</a></sup> Early monitoring shows 20
+                                % lower canopy temperatures, 30 % irrigation savings, and up to a 5 % PV efficiency gain
+                                from evaporative cooling.<sup class='citation-link'><a
+                                        href='https://africanclimateactionpartnership.org/wp-content/uploads/2024/11/Masterdeck-Slides.pdf'
+                                        target='_blank' rel='noopener'>[ACAP Slides]</a></sup></p>
+                        </div>
+                        <div class="alternating-item__image"><img src="static/um6pagriv.jpeg"
+                                alt="Green Energy Park in Morocco for agrivoltaics research"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ────────── Mexico ────────── -->
+            <section class="detailed-content-section" id="mexico-collaboration-detailed">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Mexico Agrivoltaics Initiatives</h2>
+                    </div>
+                    <div class="alternating-item">
+                        <div class="alternating-item__text">
+                            <h3>PASE Project and Northern Mexico Research</h3>
+                            <p>Mexico’s first full agrivoltaics pilot—the Parcela Agrovoltaica Sostenible y Educacional
+                                (PASE)—was inaugurated in 2022 at UNAM-FMVZ’s Topilejo farm in Mexico City, in alliance
+                                with UArizona and SECTEI.<sup class='citation-link'><a
+                                        href='https://unamglobal.unam.mx/global_tv/instalan-en-la-unam-la-primera-parcela-agrovoltaica-de-mexico/'
+                                        target='_blank' rel='noopener'>[UNAM Global]</a></sup><sup
+                                    class='citation-link'><a
+                                        href='https://www.gaceta.unam.mx/instalan-en-la-unam-la-primera-parcela-agrovoltaica-de-mexico/'
+                                        target='_blank' rel='noopener'>[Gaceta UNAM]</a></sup> The 72-panel array powers
+                                a 145 m³ rain-harvest system and has cut irrigation water by up to 80 %, while
+                                maintaining crop yields.<sup class='citation-link'><a
+                                        href='https://redecos.cdmx.gob.mx/web/wp-content/uploads/2024/08/PASE-Informe-Final.pdf'
+                                        target='_blank' rel='noopener'>[PASE Report]</a></sup> Climate Scorecard
+                                highlights PASE as a model for land-use efficiency, citing potential 60 % gains when
+                                food and energy are co-produced.<sup class='citation-link'><a
+                                        href='https://www.climatescorecard.org/2025/02/the-sustainable-and-educational-agrovoltaic-plot-pase-in-mexico/'
+                                        target='_blank' rel='noopener'>[Climate Scorecard]</a></sup> Additional
+                                feasibility studies in Sonora and Baja California—supported by Dutch-Mexican Topsector
+                                AgriFood—outline pilot networks aimed at arid-land farmers.<sup class='citation-link'><a
+                                        href='https://topsectoragrifood.nl/wp-content/uploads/2021/12/SMP21.14-Mexico-Agrivoltaics-in-Mexico-SMP21.14-20211210.pdf'
+                                        target='_blank' rel='noopener'>[Topsector Study]</a></sup></p>
+                        </div>
+                        <div class="alternating-item__image"><img src="static/paseagriv.jpg"
+                                alt="PASE Agrivoltaics project in Mexico City"></div>
+                    </div>
+                </div>
+            </section>
+
+
+
+    </main>
+
+    <footer class="footer" id="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3>SALSA Agrivoltaics</h3>
+                <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="sites.html">Sites</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="team.html">Team</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>University of Arizona</p>
+                <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const map = L.map('map').setView([20, 0], 1.5);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+
+            function createRegionIcon(color, initial) {
+                return L.divIcon({
+                    html: `<span style="background-color:${color};width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid #fff;color:white;font-weight:bold;font-size:12px;">${initial}</span>`,
+                    className: '', iconSize: [24, 24], iconAnchor: [12, 12]
+                });
+            }
+
+            const projectLocations = [
+                { name: "Biosphere 2 & AES Site", anchor: "#arizona-sites-detailed", coords: [32.5786, -110.8539], type: "USA" },
+                { name: "Jack’s Solar Garden", anchor: "#colorado-site-detailed", coords: [40.1748, -105.1000], type: "USA" },
+                { name: "Makueni County Site", anchor: "#kenya-site-detailed", coords: [-2.2833, 37.7333], type: "Africa" },
+                { name: "Arava Desert Initiatives", anchor: "#israel-site-detailed", coords: [29.9000, 35.0000], type: "Middle East" },
+                { name: "Green Energy Park", anchor: "#morocco-collaboration-detailed", coords: [32.2345, -7.9448], type: "Africa" },
+                { name: "PASE Project", anchor: "#mexico-collaboration-detailed", coords: [19.3327, -99.1840], type: "Latin America" }
+            ];
+
+            const icons = {
+                'USA': createRegionIcon('var(--secondary-color)', 'US'),
+                'Africa': createRegionIcon('#2E8B57', 'AF'),
+                'Middle East': createRegionIcon('#4682B4', 'ME'),
+                'Latin America': createRegionIcon('#DAA520', 'LA')
+            };
+
+            projectLocations.forEach(loc => {
+                const popupContent = `<b>${loc.name}</b><br><a href="${loc.anchor}" style="color: var(--secondary-color); text-decoration: underline;">View Details</a>`;
+                L.marker(loc.coords, { icon: icons[loc.type] })
+                    .addTo(map)
+                    .bindPopup(popupContent);
+            });
+
+            const legend = L.control({ position: 'bottomright' });
+            legend.onAdd = function (map) {
+                const div = L.DomUtil.create('div', 'leaflet-legend');
+                div.innerHTML = `
+                    <strong>Key Regions</strong>
+                    <div><span style="background-color:var(--secondary-color);width:18px;height:18px;border-radius:50%;display:inline-block;"></span> USA Sites</div>
+                    <div><span style="background-color:#2E8B57;width:18px;height:18px;border-radius:50%;display:inline-block;"></span> Africa Sites</div>
+                    <div><span style="background-color:#4682B4;width:18px;height:18px;border-radius:50%;display:inline-block;"></span> Middle East</div>
+                    <div><span style="background-color:#DAA520;width:18px;height:18px;border-radius:50%;display:inline-block;"></span> Latin America</div>
+                `;
+                return div;
+            };
+            legend.addTo(map);
+        });
+    </script>
+</body>
+
+</html>

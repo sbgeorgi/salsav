@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALSA - Ecophysiology Research</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main-styles.css">
+    <!-- Helper styles for subpages to align with the new theme -->
+    <style>
+        .hero-subpage {
+            position: relative;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 1rem;
+            background-size: cover;
+            background-position: center;
+            min-height: 40vh;
+        }
+        .hero-subpage::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+        .hero-subpage .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        .hero-subpage h1 {
+            font-size: clamp(2.5rem, 6vw, 3.4rem);
+            font-weight: 800;
+            color: #fff;
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-header h2 {
+            font-size: clamp(2.2rem, 5vw, 2.8rem);
+        }
+        .projects-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all var(--transition-speed) ease;
+            text-align: center;
+            border: 2px solid var(--secondary-color);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--secondary-color);
+        }
+        .btn-secondary:hover {
+            background: var(--secondary-color);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .news-card a { display: block; height: 100%;}
+        .news-card:hover a { color: var(--text-light); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
+                <span>AGRIVOLTAICS</span>
+            </a>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <div class="navbar-links">
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li class="has-dropdown">
+                        <a href="#" class="navbar-link">Research</a>
+                        <ul class="dropdown-content">
+                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="education.html" class="navbar-link">Education</a></li>
+                    <li><a href="sites.html" class="navbar-link">Sites</a></li>
+                    <li><a href="news.html" class="navbar-link">News</a></li>
+                    <li><a href="team.html" class="navbar-link">Team</a></li>
+                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero hero-subpage" style="background-image: url('static/ecophysiology-hero.jpg');">
+        <div class="hero-content">
+            <h1>Ecophysiology in Agrivoltaics Systems</h1>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <div class="content-grid">
+                <div>
+                    <h2>Research Questions</h2>
+                    <p>This research area focuses on the micro-level interactions between plants, soil, and the altered environment created by solar panels. We investigate fundamental questions about how partial shade and changed microclimates affect plant physiology, water use efficiency, and overall crop health and productivity. How do plants adapt their photosynthetic processes? How much water can be saved? Which crops benefit the most from these conditions?</p>
+                </div>
+                <div>
+                    <img src="static/ecophysiology-diagram.png" alt="Diagram showing sun, solar panels, and shaded plants with water conservation" style="border-radius: 12px; box-shadow: var(--shadow-md);">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 4rem;">
+                <div class="section-header">
+                    <h2>Projects & Sites</h2>
+                </div>
+                <div class="projects-grid">
+                    <a href="sites.html#arizona-sites-detailed" class="btn btn-secondary">B2</a>
+                    <a href="sites.html#colorado-site-detailed" class="btn btn-secondary">Jack's</a>
+                    <a href="sites.html#arizona-sites-detailed" class="btn btn-secondary">FARMS</a>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-header">
+                    <h2>Outputs</h2>
+                </div>
+                 <div class="news-grid">
+                    <div class="news-card">
+                        <a href="https://www.nature.com/articles/s41893-019-0364-5" target="_blank" aria-label="View Nature Sustainability Publication">
+                            <div class="news-image-wrapper">
+                                <img src="static/output1.png" alt="Cover of Nature Sustainability Publication">
+                            </div>
+                        </a>
+                    </div>
+                    <div class="news-card">
+                        <a href="https://www.nature.com/articles/s41598-018-21724-1" target="_blank" aria-label="View Scientific Reports Publication">
+                            <div class="news-image-wrapper">
+                                <img src="static/output2.png" alt="Cover of Scientific Reports Publication">
+                            </div>
+                        </a>
+                    </div>
+                    <div class="news-card">
+                        <a href="https://www.sciencedirect.com/science/article/pii/S136403212100588X" target="_blank" aria-label="View Renewable and Sustainable Energy Reviews Publication">
+                            <div class="news-image-wrapper">
+                                <img src="static/output3.png" alt="Cover of Renewable and Sustainable Energy Reviews Publication">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer" id="footer">
+        <div class="container footer-content">
+             <div class="footer-brand">
+                <h3>SALSA Agrivoltaics</h3>
+                <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
+             </div>
+             <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="sites.html">Sites</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="team.html">Team</a></li>
+                </ul>
+             </div>
+             <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>University of Arizona</p>
+                <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
+             </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+
+</body>
+</html>

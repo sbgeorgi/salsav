@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALSA - News & Publications</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main-styles.css">
+    <!-- Page-specific styles -->
+    <style>
+        .hero-subpage {
+            position: relative;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 1rem;
+            background-size: cover;
+            background-position: center;
+            min-height: 40vh;
+        }
+        .hero-subpage::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+        .hero-subpage .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        .hero-subpage h1 {
+            font-size: clamp(2.5rem, 6vw, 3.4rem);
+            font-weight: 800;
+            color: #fff;
+        }
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 2px solid var(--border-color);
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all var(--transition-speed) ease;
+        }
+        .filter-btn:hover {
+            color: var(--text-light);
+            border-color: var(--secondary-color);
+        }
+        .filter-btn.active {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
+                <span>AGRIVOLTAICS</span>
+            </a>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <div class="navbar-links">
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li class="has-dropdown">
+                        <a href="#" class="navbar-link">Research</a>
+                        <ul class="dropdown-content">
+                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="education.html" class="navbar-link">Education</a></li>
+                    <li><a href="sites.html" class="navbar-link">Sites</a></li>
+                    <li><a href="news.html" class="navbar-link">News</a></li>
+                    <li><a href="team.html" class="navbar-link">Team</a></li>
+                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero hero-subpage" style="background-image: url('static/news-hero.jpg');">
+        <div class="hero-content">
+            <h1>News & Publications</h1>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="paper">Papers</button>
+                <button class="filter-btn" data-filter="video">Videos</button>
+                <button class="filter-btn" data-filter="article">Articles</button>
+            </div>
+            
+            <div class="news-grid">
+                <!-- Card 1 -->
+                <a href="https://www.nature.com/articles/s41893-019-0364-5" target="_blank" class="news-card" data-category="paper">
+                    <div class="news-image-wrapper"><img src="static/output1.png" alt="Nature Sustainability publication cover"></div>
+                    <div class="news-card-content">
+                        <span class="tag">Paper</span>
+                        <h3>Agrivoltaics provide mutual benefits across the food–energy–water nexus in drylands</h3>
+                        <p>Our foundational 2019 paper in Nature Sustainability demonstrating the co-benefits of agrivoltaics.</p>
+                    </div>
+                </a>
+                <!-- Card 2 -->
+                <a href="https://www.youtube.com/watch?v=g5i33A6A-pQ" target="_blank" class="news-card" data-category="video">
+                    <div class="news-image-wrapper"><img src="static/video-thumb1.jpg" alt="Thumbnail of a video showing agrivoltaics"></div>
+                    <div class="news-card-content">
+                        <span class="tag">Video</span>
+                        <h3>Farming in the Shade of Solar Panels</h3>
+                        <p>A short documentary by the University of Arizona showcasing the early research at the Biosphere 2 site.</p>
+                    </div>
+                </a>
+                <!-- Card 3 -->
+                <a href="https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites" target="_blank" class="news-card" data-category="article">
+                    <div class="news-image-wrapper"><img src="static/news-article1.jpg" alt="Solar panels in a field"></div>
+                    <div class="news-card-content">
+                        <span class="tag">Article</span>
+                        <h3>UArizona Researchers Awarded $1.2M for Utility-Scale Agrivoltaics</h3>
+                        <p>Read about our Department of Energy FARMS grant to explore agrivoltaics on existing commercial solar sites.</p>
+                    </div>
+                </a>
+                <!-- Card 4 -->
+                <a href="https://www.nature.com/articles/s41598-018-21724-1" target="_blank" class="news-card" data-category="paper">
+                    <div class="news-image-wrapper"><img src="static/output2.png" alt="Scientific Reports publication cover"></div>
+                    <div class="news-card-content">
+                        <span class="tag">Paper</span>
+                        <h3>Impacts of Solar Photovoltaic Systems on Dryland Ecohydrology</h3>
+                        <p>An early study in Scientific Reports on how solar arrays alter soil moisture and microclimates.</p>
+                    </div>
+                </a>
+                <!-- Card 5 -->
+                <a href="https://cleantechnica.com/2024/07/15/agrivoltaics-conserve-precious-water-for-arizona-farmers/" target="_blank" class="news-card" data-category="article">
+                    <div class="news-image-wrapper"><img src="static/news-article2.jpg" alt="Chili peppers growing under solar panels"></div>
+                    <div class="news-card-content">
+                        <span class="tag">Article</span>
+                        <h3>Agrivoltaics Conserve Precious Water For Arizona Farmers</h3>
+                        <p>A CleanTechnica article highlighting the water-saving benefits discovered through our research.</p>
+                    </div>
+                </a>
+                <!-- Card 6 -->
+                 <a href="https://www.youtube.com/watch?v=d_21b0s3-fk" target="_blank" class="news-card" data-category="video">
+                    <div class="news-image-wrapper"><img src="static/video-thumb2.jpg" alt="Thumbnail of a video showing a presentation on agrivoltaics"></div>
+                    <div class="news-card-content">
+                        <span class="tag">Video</span>
+                        <h3>The Future of Farming: Agrivoltaics</h3>
+                        <p>Watch Greg Barron-Gafford's TEDxTucson talk on the potential of agrivoltaics to reshape agriculture.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer" id="footer">
+        <div class="container footer-content">
+             <div class="footer-brand"><h3>SALSA Agrivoltaics</h3><p>A project of the University of Arizona, pioneering food-energy-water solutions.</p></div>
+             <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="sites.html">Sites</a></li><li><a href="news.html">News</a></li><li><a href="team.html">Team</a></li></ul></div>
+             <div class="footer-contact"><h4>Contact Us</h4><p>University of Arizona</p><p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p></div>
+        </div>
+        <div class="footer-bottom"><p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p></div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const newsCards = document.querySelectorAll('.news-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active button
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filter = btn.getAttribute('data-filter');
+                    
+                    // Show/hide cards
+                    newsCards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = 'flex'; // Use flex as defined in main-styles.css
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
