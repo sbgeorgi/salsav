@@ -13,8 +13,918 @@
         rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Core Stylesheet -->
-    <link rel="stylesheet" href="css/main-styles.css">
+
+    <style>
+        /* --- Root Variables: Dark Motif --- */
+        :root {
+            --primary-color: #002147;
+            /* UA Blue */
+            --secondary-color: #E87A24;
+            --secondary-color-dark: #d76d1a;
+            --dark-bg: #0d0d0d;
+            --card-dark-bg: #1c1c1c;
+            --text-light: #f1f1f1;
+            --text-muted: #9e9e9e;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --font-main: 'Inter', sans-serif;
+            --font-alt: 'Source Sans 3', sans-serif;
+            --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        /* --- Base & Utilities --- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            font-family: var(--font-main);
+            color: var(--text-light);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: 6rem 0;
+        }
+
+        .tag {
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        /* --- Scroll Reveal Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Navigation --- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1.2rem 0;
+            transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, backdrop-filter var(--transition-speed) ease;
+        }
+
+        .navbar.scrolled {
+            background-color: rgba(13, 13, 13, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .navbar-brand img {
+            height: 45px;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .navbar-brand:hover img {
+            transform: rotate(-10deg);
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .navbar-link {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: width var(--transition-speed) ease;
+        }
+
+        .navbar-link:hover::after,
+        .navbar-link.active::after {
+            width: 100%;
+        }
+
+        .has-dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: -20px;
+            background-color: var(--card-dark-bg);
+            min-width: 200px;
+            box-shadow: var(--shadow-md);
+            z-index: 1;
+            list-style: none;
+            padding: 1rem;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+            pointer-events: none;
+        }
+
+        .has-dropdown:hover .dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .dropdown-content li a {
+            color: var(--text-light);
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            display: block;
+            border-radius: 4px;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        .dropdown-content li a:hover {
+            background-color: var(--secondary-color);
+            color: #fff;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            text-align: center;
+            padding: 6rem 1rem 4rem;
+            background-color: var(--dark-bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(232, 122, 36, 0.1), rgba(0, 33, 71, 0.15));
+            animation: gradient-flow 15s ease infinite;
+            background-size: 400% 400%;
+            z-index: 0;
+        }
+
+        @keyframes gradient-flow {
+            0% {
+                background-position: 0% 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+
+            100% {
+                background-position: 0% 50%
+            }
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-headline {
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin: 0;
+            color: var(--text-light);
+        }
+
+        .hero-subheadline {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.75rem);
+            color: var(--text-muted);
+        }
+
+        .typing-container {
+            border: 3px solid var(--secondary-color);
+            padding: 0.8rem 2.2rem;
+            border-radius: 50px;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            line-height: 1.2;
+            background-color: transparent;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 4px;
+            height: 1.1em;
+            background-color: var(--secondary-color);
+            animation: blink 1s infinite;
+            vertical-align: bottom;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* --- Orb --- */
+        .orb-section {
+            padding: 4rem 0;
+            background: var(--dark-bg);
+        }
+
+        .orb-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            transition: transform .5s ease-out;
+        }
+
+        .orb-video-wrapper {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: pulse 4s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(232, 122, 36, 0.4), var(--shadow-lg);
+            }
+
+            70% {
+                box-shadow: 0 0 0 20px rgba(232, 122, 36, 0), var(--shadow-lg);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(232, 122, 36, 0), var(--shadow-lg);
+            }
+        }
+
+        .orb-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .mute-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background-color: rgba(0, 0, 0, .6);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            font-size: 1rem;
+        }
+
+        .mute-btn:hover {
+            background-color: rgba(0, 0, 0, .8);
+            transform: scale(1.1);
+        }
+
+        /* --- Partners Section (IMPROVED) --- */
+        .partners-section {
+            padding: 4rem 1rem;
+            background: var(--dark-bg);
+        }
+
+        .partners-section .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .partners-section .section-header h2 {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .partners-section .section-header .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .partners-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .partner-logo-link {
+            display: block;
+            width: 180px;
+            height: 110px;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            /* CRITICAL: This makes the image respect the border-radius */
+            transition: all var(--transition-speed) ease;
+            filter: grayscale(1);
+        }
+
+        .partner-logo-link:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary-color);
+            box-shadow: 0 5px 20px rgba(232, 122, 36, 0.1);
+            filter: grayscale(0);
+        }
+
+        .partner-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            /* CRITICAL: Fills the container, cropping if necessary */
+            background-color: #fff;
+            /* Provides a solid background for transparent logos */
+        }
+
+        /* --- Pillars Section --- */
+        .pillars-section .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: flex-start;
+        }
+
+        .pillars-left {
+            position: sticky;
+            top: 120px;
+            height: 80vh;
+        }
+
+        .pillar-item {
+            padding: 2rem 0 2rem 2rem;
+            border-left: 3px solid transparent;
+            opacity: .4;
+            transition: opacity .4s ease, border-color .4s ease;
+        }
+
+        .pillar-item.is-visible {
+            opacity: 1;
+            border-color: var(--secondary-color);
+        }
+
+        .pillar-item h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .pillar-item p {
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .pillars-right {
+            position: relative;
+            height: 80vh;
+        }
+
+        .pillar-image {
+            position: absolute;
+            top: 150px;
+            width: 100%;
+            height: 60vh;
+            border-radius: 12px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity .5s ease, transform .5s ease;
+            transform: scale(0.98);
+        }
+
+        .pillar-image.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .pillar-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- Researcher Section --- */
+        .researcher-section {
+            background-color: var(--dark-bg);
+        }
+
+        .researcher-section .container {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .researcher-info h2 {
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .researcher-info h3 {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-top: 0;
+            font-weight: 500;
+        }
+
+        .researcher-info p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 500px;
+            color: var(--text-muted);
+        }
+
+        .researcher-video-wrapper {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .researcher-video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        /* --- Carousel Section --- */
+        .carousel-section {
+            padding: 6rem 0;
+            background: var(--dark-bg);
+        }
+
+        .carousel-section>h2 {
+            text-align: center;
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+            color: var(--text-light);
+        }
+
+        .carousel-container {
+            width: 90%;
+            margin: auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform .5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 50%;
+            box-sizing: border-box;
+            padding: 0 1rem;
+        }
+
+        .testimonial-card {
+            background: var(--card-dark-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            height: 100%;
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .testimonial-card img {
+            height: 35px;
+            margin-bottom: 1.5rem;
+            max-width: 150px;
+            object-fit: contain;
+        }
+
+        .testimonial-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 0;
+            color: var(--text-light);
+        }
+
+        .carousel-nav {
+            text-align: right;
+            margin-top: 2rem;
+            padding-right: 5%;
+        }
+
+        .nav-btn {
+            background: var(--card-dark-bg);
+            border: 1px solid var(--border-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: .5rem;
+            transition: all var(--transition-speed) ease;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .nav-btn:hover {
+            background: var(--secondary-color);
+            color: #fff;
+            border-color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        /* --- News & Publications --- */
+        .news-section {
+            background: var(--dark-bg);
+            padding: 6rem 0;
+        }
+
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .news-header h2 {
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            margin: 0;
+            color: var(--text-light);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .news-card {
+            background: var(--card-dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--text-light);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .news-image-wrapper {
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .news-card img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .news-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .news-card-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: .75rem;
+            flex: 1;
+        }
+
+        .news-card-content h3 {
+            font-size: 1.15rem;
+            margin: 0;
+            line-height: 1.4;
+            flex: 1;
+            color: var(--text-light);
+        }
+
+        /* --- CTA --- */
+        .cta-section {
+            text-align: center;
+            padding: 6rem 1rem;
+            background: var(--primary-color);
+            color: var(--text-light);
+            background-image: linear-gradient(45deg, var(--primary-color) 0%, #003366 100%);
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2.5rem, 6vw, 3.4rem);
+            font-weight: 800;
+        }
+
+        .cta-section p {
+            max-width: 650px;
+            margin: 1.5rem auto 2.5rem;
+            color: rgba(241, 241, 241, 0.8);
+            font-size: 1.15rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: #fff;
+            padding: 1rem 2.6rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all var(--transition-speed) ease;
+            box-shadow: var(--shadow-md);
+            border: 2px solid transparent;
+        }
+
+        .cta-button:hover {
+            background: var(--secondary-color-dark);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background: #000;
+            color: var(--text-light);
+            padding-top: 5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            max-width: 300px;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .footer-links h4,
+        .footer-contact h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--text-light);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a,
+        .footer-contact a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .footer-links a:hover,
+        .footer-contact a:hover {
+            color: var(--secondary-color);
+        }
+
+        .footer-contact p {
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- Focus Visible --- */
+        :focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) {
+            .navbar-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 85px;
+                right: 0;
+                width: 100%;
+                background-color: var(--card-dark-bg);
+                padding: 2rem;
+                gap: 1.5rem;
+                box-shadow: var(--shadow-lg);
+                border-bottom-left-radius: 12px;
+                border-bottom-right-radius: 12px;
+            }
+
+            .navbar-links.active .navbar-menu {
+                display: flex;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .pillars-section .container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .pillars-left,
+            .pillars-right {
+                position: static;
+                height: auto;
+            }
+
+            .pillar-image {
+                position: relative;
+                top: 0;
+                height: 40vh;
+                display: none;
+            }
+
+            .pillar-image.is-visible {
+                display: block;
+            }
+
+            .researcher-section .container {
+                grid-template-columns: 1fr;
+            }
+
+            .researcher-info {
+                text-align: center;
+            }
+
+            .researcher-info p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-brand p {
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                min-width: 100%;
+            }
+
+            .carousel-nav {
+                padding-right: 0;
+                text-align: center;
+            }
+
+            .hero-headline {
+                font-size: 2.5rem;
+            }
+
+            .hero-subheadline {
+                font-size: 1.1rem;
+            }
+
+            .typing-container {
+                font-size: 1.5rem;
+            }
+
+            .footer-content {
+                gap: 2.5rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -42,7 +952,8 @@
                     <li><a href="#footer" class="navbar-link">Contact</a></li>
                 </ul>
             </div>
-            <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu"
+                aria-expanded="false">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
@@ -78,20 +989,24 @@
         <!-- PARTNERS SECTION -->
         <section class="partners-section" id="partners-section">
             <div class="container">
-                <div class="news-header reveal">
+                <div class="section-header reveal">
                     <h2>We Are Proud to be Partners</h2>
+                    <p class="subtitle">Complex challenges require great partners with diverse backgrounds. Our team
+                        bridges the biophysical and social sciences, and works across food, water, and energy
+                        disciplines.</p>
                 </div>
-                <p class="subtitle reveal" style="text-align: center; max-width: 800px; margin: -2rem auto 3rem;">
-                    Complex challenges require great partners with diverse backgrounds. Our team bridges the biophysical and social sciences, and works across food, water, and energy disciplines.
-                </p>
                 <div class="partners-grid reveal" style="transition-delay: 0.2s;">
-                     <a href="https://sgde.arizona.edu/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/uaes.png" alt="UArizona School of Geography, Development & Environment Logo" class="partner-logo">
+                    <a href="https://sgde.arizona.edu/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/uaes.png" alt="UArizona School of Geography, Development & Environment Logo"
+                            class="partner-logo">
                     </a>
                     <a href="https://agnr.umd.edu/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/umav.png" alt="University of Maryland College of Agriculture & Natural Resources Logo" class="partner-logo">
+                        <img src="static/umav.png"
+                            alt="University of Maryland College of Agriculture & Natural Resources Logo"
+                            class="partner-logo">
                     </a>
-                    <a href="https://environmentalscience.arizona.edu/" target="_blank" rel="noopener" class="partner-logo-link">
+                    <a href="https://environmentalscience.arizona.edu/" target="_blank" rel="noopener"
+                        class="partner-logo-link">
                         <img src="static/uaenv.png" alt="UArizona Environmental Science Logo" class="partner-logo">
                     </a>
                     <a href="https://www.aes.com/" target="_blank" rel="noopener" class="partner-logo-link">
@@ -100,37 +1015,48 @@
                     <a href="https://www.nrel.gov/" target="_blank" rel="noopener" class="partner-logo-link">
                         <img src="static/nrel.png" alt="NREL Transforming Energy Logo" class="partner-logo">
                     </a>
-                    <a href="https://www.energy.gov/eere/solar/solar-energy-technologies-office" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/doe.jpg" alt="U.S. Department of Energy Solar Awardee Logo" class="partner-logo">
+                    <a href="https://www.energy.gov/eere/solar/solar-energy-technologies-office" target="_blank"
+                        rel="noopener" class="partner-logo-link">
+                        <img src="static/doe.jpg" alt="U.S. Department of Energy Solar Awardee Logo"
+                            class="partner-logo">
                     </a>
                 </div>
             </div>
         </section>
 
         <!-- RESEARCH PILLARS -->
-        <section class="section section-dark pillars-section">
+        <section class="section pillars-section">
             <div class="container">
                 <div class="pillars-left">
                     <div class="pillar-item" data-image="static/ecophysiology-hero.jpg">
                         <span class="tag">01. Ecophysiology</span>
                         <h3>The Plant-Panel Symbiosis</h3>
-                        <p>We study the intricate interactions between solar panels and plant life, measuring how shade and altered microclimates affect crop health, water use, and overall yield.</p>
+                        <p>We study the intricate interactions between solar panels and plant life, measuring how shade
+                            and altered microclimates affect crop health, water use, and overall yield. This
+                            foundational science unlocks the secrets to successful co-location.</p>
                     </div>
                     <div class="pillar-item" data-image="static/scaling-up-hero.jpg">
                         <span class="tag">02. Scaling Up</span>
                         <h3>From Kilowatts to Megawatts</h3>
-                        <p>Taking proven benefits from test plots to utility-scale requires robust engineering and economic models to create a clear roadmap for profitable projects.</p>
+                        <p>Taking proven benefits from test plots to utility-scale requires robust engineering and
+                            economic models. We analyze system designs and financial viability to create a clear roadmap
+                            for profitable agrivoltaic projects.</p>
                     </div>
                     <div class="pillar-item" data-image="static/scaling-out-card.png">
                         <span class="tag">03. Scaling Out</span>
                         <h3>Adapting to Diverse Environments</h3>
-                        <p>An agrivoltaic solution for Arizona's desert differs from one for Colorado's pastures. Our research spans multiple climates to develop adaptable models that work worldwide.</p>
+                        <p>An agrivoltaic solution for Arizona's desert differs from one for Colorado's pastures. Our
+                            research spans multiple climates and crop types to develop adaptable, resilient models that
+                            work worldwide.</p>
                     </div>
                 </div>
                 <div class="pillars-right">
-                    <div class="pillar-image is-visible" id="pillar-image-ecophysiology-hero"><img src="static/ecophysiology-hero.jpg" alt="Ecophysiology research"></div>
-                    <div class="pillar-image" id="pillar-image-scaling-up-hero"><img src="static/scaling-up-hero.jpg" alt="Large-scale agrivoltaics"></div>
-                    <div class="pillar-image" id="pillar-image-scaling-out-card"><img src="static/scaling-out-card.png" alt="Agrivoltaics in diverse environments"></div>
+                    <div class="pillar-image is-visible" id="pillar-image-ecophysiology-hero"><img
+                            src="static/ecophysiology-hero.jpg" alt="Ecophysiology research"></div>
+                    <div class="pillar-image" id="pillar-image-scaling-up-hero"><img src="static/scaling-up-hero.jpg"
+                            alt="Large-scale agrivoltaics"></div>
+                    <div class="pillar-image" id="pillar-image-scaling-out-card"><img src="static/scaling-out-card.png"
+                            alt="Agrivoltaics in diverse environments"></div>
                 </div>
             </div>
         </section>
@@ -142,34 +1068,218 @@
                     <span class="tag">The SALSA Team</span>
                     <h2>A climate expert takes you inside the research</h2>
                     <h3>Dr. Greg Barron-Gafford, Lead Investigator</h3>
-                    <p>As a Professor at the University of Arizona, Dr. Barron-Gafford leads our multi-disciplinary team exploring the food-energy-water nexus, demonstrating how agrivoltaics can meet our growing need for renewable energy and sustainable agriculture.</p>
+                    <p>As a Professor at the University of Arizona, Dr. Barron-Gafford leads our multi-disciplinary team
+                        exploring the food-energy-water nexus, demonstrating how agrivoltaics can meet our growing need
+                        for renewable energy and sustainable agriculture.</p>
                 </div>
                 <div class="researcher-video-wrapper reveal" style="transition-delay: 0.2s;">
-                    <video class="researcher-video" src="static/farm_to_table.mp4" controls poster="static/barron-gafford-poster.jpg"></video>
+                    <video class="researcher-video" src="static/farm_to_table.mp4" controls
+                        poster="static/barron-gafford-poster.jpg"></video>
                 </div>
             </div>
         </section>
-        
-        <!-- FEATURED SITES CAROUSEL -->
+
+                <!-- FEATURED SITES CAROUSEL (REPLACES PARTNERS CAROUSEL) -->
         <section class="section sites-carousel-section">
             <div class="container">
                 <div class="news-header reveal">
                     <h2>Our Global Research Sites</h2>
                     <a href="sites.html" class="cta-button" style="padding:.8rem 2rem;">View All Sites</a>
                 </div>
-                <p class="subtitle reveal" style="text-align: center; max-width: 800px; margin: -2rem auto 3rem;">
-                    From arid deserts to community gardens, our research spans diverse climates to create adaptable, resilient agrivoltaic models.
+                <p class="subtitle reveal" style="text-align: center; max-width: 800px; margin: -2rem auto 3rem; color: var(--text-muted);">
+                    From the arid deserts of Arizona to community gardens in Kenya, our research spans diverse climates to create adaptable, resilient agrivoltaic models.
                 </p>
             </div>
             
             <div class="carousel-container reveal" style="transition-delay: 0.2s;">
-                <div class="carousel-track" id="sites-carousel-track">
-                    <!-- Cards will be dynamically inserted here by JS -->
+                <div class="carousel-track">
+                    <!-- Original Set of Site Cards -->
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#arizona-sites-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/biosphere2agriv.jpg" alt="Agrivoltaics research at Biosphere 2"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Arizona, USA</span>
+                                <h3>Biosphere 2 Laboratory</h3>
+                                <p>The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win' for food, water, and energy.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#colorado-site-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/jacksagriv.jpg" alt="Agrivoltaics at Jack's Solar Garden"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Colorado, USA</span>
+                                <h3>Jack’s Solar Garden</h3>
+                                <p>A nationally-recognized showcase focusing on microclimate benefits and improving pasture quality for livestock grazing.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/kenyaagriv.jpg" alt="Community agrivoltaics in Kenya"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Makueni County, Kenya</span>
+                                <h3>Community Agrivoltaics</h3>
+                                <p>A community-focused site providing clean energy and irrigation to tackle food and energy security in a semi-arid region.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#israel-site-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/aravaagriv.jpg" alt="Agrivoltaics in the Arava Desert, Israel"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Arava Desert, Israel</span>
+                                <h3>Extreme Climate Research</h3>
+                                <p>Developing robust systems for extreme desert climates, focusing on enhancing crop yields while drastically reducing water needs.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#morocco-collaboration-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/um6pagriv.jpeg" alt="Green Energy Park in Morocco"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Ben Guerir, Morocco</span>
+                                <h3>Green Energy Park</h3>
+                                <p>A regional hub for West Africa, focusing on water-saving tech, battery storage, and increasing solar output via crop cooling.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#mexico-collaboration-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/paseagriv.jpg" alt="PASE Agrivoltaics project in Mexico"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Mexico City, Mexico</span>
+                                <h3>PASE Project at UNAM</h3>
+                                <p>Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable and educational research plot.</p>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- Duplicated Set for Seamless Loop -->
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#arizona-sites-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/biosphere2agriv.jpg" alt="Agrivoltaics research at Biosphere 2"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Arizona, USA</span>
+                                <h3>Biosphere 2 Laboratory</h3>
+                                <p>The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win' for food, water, and energy.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#colorado-site-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/jacksagriv.jpg" alt="Agrivoltaics at Jack's Solar Garden"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Colorado, USA</span>
+                                <h3>Jack’s Solar Garden</h3>
+                                <p>A nationally-recognized showcase focusing on microclimate benefits and improving pasture quality for livestock grazing.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/kenyaagriv.jpg" alt="Community agrivoltaics in Kenya"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Makueni County, Kenya</span>
+                                <h3>Community Agrivoltaics</h3>
+                                <p>A community-focused site providing clean energy and irrigation to tackle food and energy security in a semi-arid region.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#israel-site-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/aravaagriv.jpg" alt="Agrivoltaics in the Arava Desert, Israel"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Arava Desert, Israel</span>
+                                <h3>Extreme Climate Research</h3>
+                                <p>Developing robust systems for extreme desert climates, focusing on enhancing crop yields while drastically reducing water needs.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#morocco-collaboration-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/um6pagriv.jpeg" alt="Green Energy Park in Morocco"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Ben Guerir, Morocco</span>
+                                <h3>Green Energy Park</h3>
+                                <p>A regional hub for West Africa, focusing on water-saving tech, battery storage, and increasing solar output via crop cooling.</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="slide">
+                        <a class="news-card" href="sites.html#mexico-collaboration-detailed" target="_blank">
+                            <div class="news-image-wrapper"><img src="static/paseagriv.jpg" alt="PASE Agrivoltaics project in Mexico"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Mexico City, Mexico</span>
+                                <h3>PASE Project at UNAM</h3>
+                                <p>Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable and educational research plot.</p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="carousel-nav reveal" style="transition-delay: 0.2s;">
-                <button class="nav-btn" id="sites-prevBtn" aria-label="Previous slide"><i class="fa-solid fa-arrow-left"></i></button>
-                <button class="nav-btn" id="sites-nextBtn" aria-label="Next slide"><i class="fa-solid fa-arrow-right"></i></button>
+                <button class="nav-btn" id="prevBtn" aria-label="Previous slide"><i class="fa-solid fa-arrow-left"></i></button>
+                <button class="nav-btn" id="nextBtn" aria-label="Next slide"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </section>
+
+       <!-- NEWS & PUBLICATIONS (MODIFIED to use <img> tags) -->
+        <section class="news-section">
+            <div class="container">
+                <div class="news-header">
+                    <h2>Field & Academic Press</h2>
+                    <a href="news.html" class="cta-button" style="padding:.8rem 2rem;">See All</a>
+                </div>
+
+                <div class="news-grid">
+                    <!-- 2025 Publication -->
+                    <a class="news-card" href="https://doi.org/10.1038/s44264-025-00073-1" target="_blank">
+                        <img src="static/pub-placeholder.jpg" alt="Agrivoltaics as a climate-smart solution">
+                        <div class="news-card-content">
+                            <span>Publication • 2025</span>
+                            <h3>Agrivoltaics as a climate-smart solution for midday photosynthesis collapse</h3>
+                        </div>
+                    </a>
+
+                    <!-- 2022 NREL Report -->
+                    <a class="news-card" href="https://www.nrel.gov/docs/fy22osti/83566.pdf" target="_blank">
+                        <img src="static/5cs.jpg" alt="Placeholder image for a report">
+                        <div class="news-card-content">
+                            <span>Report • 2022</span>
+                            <h3>The 5 Cs of Agrivoltaic Success Factors in the United States</h3>
+                        </div>
+                    </a>
+
+                    <!-- 2021 Wired US -->
+                    <a class="news-card"
+                        href="https://www.wired.com/story/growing-crops-under-solar-panels-now-theres-a-bright-idea/"
+                        target="_blank">
+                        <img src="static/wired1.jpg" alt="Placeholder image for a news article">
+                        <div class="news-card-content">
+                            <span>News • 2021</span>
+                            <h3>Wired: Growing Crops Under Solar Panels? Now There’s a Bright Idea</h3>
+                        </div>
+                    </a>
+
+                    <!-- 2019 Wired UK -->
+                    <a class="news-card" href="https://www.wired.com/story/energy-agrivoltaic-farms/" target="_blank">
+                        <img src="static/wired2.jpg" alt="Placeholder image for a news article">
+                        <div class="news-card-content">
+                            <span>News • 2019</span>
+                            <h3>Wired: A tech revolution helps farmers harvest sunshine with crops</h3>
+                        </div>
+                    </a>
+
+                    <!-- 2019 Publication -->
+                    <a class="news-card" href="https://www.nature.com/articles/s41893-019-0364-5" target="_blank">
+                        <img src="static/nature1.jpg" alt="Placeholder image for a publication">
+                        <div class="news-card-content">
+                            <span>Publication • 2019</span>
+                            <h3>Agrivoltaics provide mutual benefits across the food-energy-water nexus</h3>
+                        </div>
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -177,7 +1287,8 @@
         <section class="cta-section">
             <div class="container">
                 <h2 class="reveal">Let’s shape the future of energy & agriculture.</h2>
-                <p class="reveal" style="transition-delay: 0.1s;">Our research provides data-driven models that developers, farmers and policymakers can trust.</p>
+                <p class="reveal" style="transition-delay: 0.1s;">Our research provides data-driven models that
+                    developers, farmers and policymakers can trust.</p>
                 <a href="#footer" class="cta-button reveal" style="transition-delay: 0.2s;">Talk to an Expert</a>
             </div>
         </section>
@@ -211,8 +1322,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- General Initializers ---
             const initScrollReveal = () => {
                 const revealObserver = new IntersectionObserver((entries, observer) => {
                     entries.forEach(entry => {
@@ -224,7 +1333,6 @@
                 }, { threshold: 0.1 });
                 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
             };
-
             const initStickyNav = () => {
                 const navbar = document.getElementById('navbar');
                 if (!navbar) return;
@@ -232,7 +1340,6 @@
                     navbar.classList.toggle('scrolled', window.scrollY > 50);
                 });
             };
-            
             const initMobileNav = () => {
                 const toggleBtn = document.getElementById('mobile-toggle');
                 const navLinks = document.getElementById('navbar-links');
@@ -245,8 +1352,6 @@
                     icon.className = isActive ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
                 });
             };
-
-            // --- Homepage-Specific Modules ---
             const initTypingAnimation = () => {
                 const typingText = document.getElementById('typing-text');
                 if (!typingText) return;
@@ -258,17 +1363,22 @@
                     if (isDeleting) {
                         typingText.textContent = currentWord.substring(0, letterIndex - 1);
                         letterIndex--;
-                        if (letterIndex === 0) { isDeleting = false; wordIndex = (wordIndex + 1) % words.length; }
+                        if (letterIndex === 0) {
+                            isDeleting = false;
+                            wordIndex = (wordIndex + 1) % words.length;
+                        }
                     } else {
                         typingText.textContent = currentWord.substring(0, letterIndex + 1);
                         letterIndex++;
-                        if (letterIndex === currentWord.length) { isDeleting = true; speed = 2000; }
+                        if (letterIndex === currentWord.length) {
+                            isDeleting = true;
+                            speed = 2000;
+                        }
                     }
                     setTimeout(type, speed);
                 };
                 type();
             };
-
             const initOrbScale = () => {
                 const orb = document.getElementById('orb-container');
                 if (!orb) return;
@@ -277,18 +1387,22 @@
                     orb.style.transform = `scale(${scale})`;
                 }, { passive: true });
             };
-
             const initOrbVideo = () => {
                 const orbVideo = document.getElementById('orb-video');
                 const muteBtn = document.getElementById('muteBtn');
                 if (!orbVideo || !muteBtn) return;
                 const icon = muteBtn.querySelector('i');
-                const setIcon = () => { icon.className = orbVideo.muted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high'; };
+                const setIcon = () => {
+                    icon.className = orbVideo.muted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+                };
                 orbVideo.play().catch(() => { orbVideo.muted = true; setIcon(); });
-                muteBtn.addEventListener('click', (e) => { e.stopPropagation(); orbVideo.muted = !orbVideo.muted; setIcon(); });
+                muteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    orbVideo.muted = !orbVideo.muted;
+                    setIcon();
+                });
                 setIcon();
             };
-            
             const initPillars = () => {
                 const pillarItems = document.querySelectorAll('.pillar-item');
                 const pillarImages = document.querySelectorAll('.pillar-image');
@@ -306,32 +1420,23 @@
                 }, { rootMargin: '-40% 0px -40% 0px' });
                 pillarItems.forEach(item => observer.observe(item));
             };
-            
-            // --- Reusable Carousel Module ---
-            const createCarousel = (trackId, nextBtnId, prevBtnId) => {
-                const track = document.getElementById(trackId);
+            const initCarousel = () => {
+                const track = document.querySelector('.carousel-track');
                 if (!track) return;
-
-                const nextBtn = document.getElementById(nextBtnId);
-                const prevBtn = document.getElementById(prevBtnId);
+                const slides = [...track.children];
+                const nextBtn = document.getElementById('nextBtn');
+                const prevBtn = document.getElementById('prevBtn');
                 let currentIndex = 0;
-                let slides = Array.from(track.children);
-                if (slides.length === 0) return;
-                
                 let slideWidth = slides[0].getBoundingClientRect().width;
-                const totalVisibleSlides = Math.round(track.parentElement.clientWidth / slideWidth);
                 const totalSlides = slides.length / 2;
-
                 const moveToSlide = () => {
                     track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
                 };
-
                 const handleNext = () => {
                     currentIndex++;
                     track.style.transition = 'transform .5s ease-in-out';
                     moveToSlide();
-
-                    if (currentIndex >= totalSlides) {
+                    if (currentIndex === totalSlides) {
                         setTimeout(() => {
                             track.style.transition = 'none';
                             currentIndex = 0;
@@ -339,63 +1444,21 @@
                         }, 500);
                     }
                 };
-
                 nextBtn.addEventListener('click', handleNext);
                 prevBtn.addEventListener('click', () => {
-                     if (currentIndex === 0) {
-                        track.style.transition = 'none';
-                        currentIndex = totalSlides;
-                        moveToSlide();
-                        setTimeout(() => {
-                            track.style.transition = 'transform .5s ease-in-out';
-                            currentIndex--;
-                            moveToSlide();
-                        }, 20);
-                    } else {
+                    if (currentIndex > 0) {
                         currentIndex--;
+                        track.style.transition = 'transform .5s ease-in-out';
                         moveToSlide();
                     }
                 });
-
                 setInterval(handleNext, 5000);
-
                 window.addEventListener('resize', () => {
                     slideWidth = slides[0].getBoundingClientRect().width;
                     moveToSlide();
                 });
             };
 
-            const SITES_DATA = [
-                { href: 'sites.html#arizona-sites-detailed', imgSrc: 'static/biosphere2agriv.jpg', alt: 'Agrivoltaics at Biosphere 2', tag: 'Arizona, USA', title: 'Biosphere 2 Laboratory', desc: "The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win' for food, water, and energy." },
-                { href: 'sites.html#colorado-site-detailed', imgSrc: 'static/jacksagriv.jpg', alt: 'Agrivoltaics at Jack\'s Solar Garden', tag: 'Colorado, USA', title: 'Jack’s Solar Garden', desc: 'A nationally-recognized showcase focusing on microclimate benefits and improving pasture quality for livestock grazing.' },
-                { href: 'sites.html#kenya-site-detailed', imgSrc: 'static/kenyaagriv.jpg', alt: 'Community agrivoltaics in Kenya', tag: 'Makueni County, Kenya', title: 'Community Agrivoltaics', desc: 'A community-focused site providing clean energy and irrigation to tackle food and energy security in a semi-arid region.' },
-                { href: 'sites.html#israel-site-detailed', imgSrc: 'static/aravaagriv.jpg', alt: 'Agrivoltaics in the Arava Desert, Israel', tag: 'Arava Desert, Israel', title: 'Extreme Climate Research', desc: 'Developing robust systems for extreme desert climates, focusing on enhancing crop yields while drastically reducing water needs.' },
-                { href: 'sites.html#morocco-collaboration-detailed', imgSrc: 'static/um6pagriv.jpeg', alt: 'Green Energy Park in Morocco', tag: 'Ben Guerir, Morocco', title: 'Green Energy Park', desc: 'A regional hub for West Africa, focusing on water-saving tech, battery storage, and increasing solar output via crop cooling.' },
-                { href: 'sites.html#mexico-collaboration-detailed', imgSrc: 'static/paseagriv.jpg', alt: 'PASE Agrivoltaics project in Mexico', tag: 'Mexico City, Mexico', title: 'PASE Project at UNAM', desc: 'Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable and educational research plot.' }
-            ];
-
-            const populateSitesCarousel = () => {
-                const track = document.getElementById('sites-carousel-track');
-                if(!track) return;
-                
-                const createCardHTML = (site) => `
-                    <div class="slide">
-                        <a class="news-card" href="${site.href}" target="_blank">
-                            <div class="news-image-wrapper"><img src="${site.imgSrc}" alt="${site.alt}"></div>
-                            <div class="news-card-content">
-                                <span class="tag">${site.tag}</span>
-                                <h3>${site.title}</h3>
-                                <p>${site.desc}</p>
-                            </div>
-                        </a>
-                    </div>
-                `;
-                
-                const allSitesHTML = [...SITES_DATA, ...SITES_DATA].map(createCardHTML).join('');
-                track.innerHTML = allSitesHTML;
-            };
-
-            // Initialize Everything
             initScrollReveal();
             initStickyNav();
             initMobileNav();
@@ -403,9 +1466,9 @@
             initOrbScale();
             initOrbVideo();
             initPillars();
-            populateSitesCarousel();
-            createCarousel('sites-carousel-track', 'sites-nextBtn', 'sites-prevBtn');
+            initCarousel();
         });
     </script>
 </body>
+
 </html>
