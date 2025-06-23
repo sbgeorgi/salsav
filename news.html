@@ -94,8 +94,6 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-brand">
-                <!-- Using relative paths again, assuming your server setup expects this.
-                     If you're still seeing 404s, try absolute paths like /static/salsa-logo.png -->
                 <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
                 <span>AGRIVOLTAICS</span>
             </a>
@@ -114,7 +112,7 @@
                     <li><a href="education.html" class="navbar-link">Education</a></li>
                     <li><a href="sites.html" class="navbar-link">Sites</a></li>
                     <li><a href="news.html" class="navbar-link">News</a></li>
-                    <li><a href="team.html">Team</a></li>
+                    <li><a href="team.html" class="navbar-link">Team</a></li>
                     <li><a href="#footer" class="navbar-link">Contact</a></li>
                 </ul>
             </div>
@@ -171,14 +169,18 @@
             { title: 'Exploring Crop Nutrients in Agrivoltaic Systems', source: 'UA CRFS Blog', description: 'SALSAv study shows PV-shade alters soil moisture & nutrient dynamics, with implications for produce quality.', date: '2025-04-15', url: 'https://crfs.arizona.edu/news/exploring-crop-nutrients-agrivoltaic-systems', category: 'article' },
             { title: 'Growing Knowledge: U of A Researchers Share Findings at 2024 Agrivoltaics World Conference', source: 'Udall Center News', description: 'Conference recap—team reports physiological data showing crop heat-stress relief under PV arrays.', date: '2024-07-02', url: 'https://udallcenter.arizona.edu/news/uarizona-researchers-on-the-rise-at-2024-agrivoltaics-world-conference', category: 'article' },
             { title: 'Semi-Arid Lab for Scalable Agrivoltaics (SALSAv) – project site', source: 'University of Arizona', description: 'Describes transformation of three 5-acre PV blocks into plots for sheep-grazing, commodity veg, and climate-smart native crops.', date: '2024-04-01', url: 'https://www.salsav.org/', category: 'article' },
+            { title: 'Farmer-Centered Agrivoltaics: A Guide to Integrating Agricultural Production and Solar Energy Operations', source: 'American Farmland Trust', description: 'A comprehensive guide from AFT focused on co-location design, soil health, and equitable leasing agreements to benefit farmers and communities.', date: '2024-04-10', url: 'https://farmland.org/farmer-centered-agrivoltaics-a-guide-to-integrating-agricultural-solar-operations/', category: 'article' },
             { title: 'State of U.S. Agrivoltaics Deployment & Farmer’s Forum', source: 'Solar Farm Summit 2024 (YouTube)', description: 'NREL status update + farmer panel on scale-up hurdles, economics and labour safety in large PV farms.', date: '2024-03-25', url: 'https://www.youtube.com/watch?v=0K8-hHv9dpQ', category: 'video' },
             { title: 'Trends, Insights, and Future Prospects for CEA & Agrivoltaics Systems (EIB-264)', source: 'USDA ERS', description: 'National outlook on investment, adoption rates and policy levers for controlled-environment ag and agrivoltaics.', date: '2024-01-15', url: 'https://www.ers.usda.gov/sites/default/files/_laserfiche/publications/108221/EIB-264.pdf', category: 'paper' },
+            { title: 'The economic trade-offs of agrivoltaics', source: 'Nature Energy', description: 'A global meta-analysis finding that while agrivoltaics reduce land-use competition, their economic viability is highly sensitive to crop choice, system design, and policy support.', date: '2023-12-11', url: 'https://www.nature.com/articles/s41560-023-01413-z', category: 'paper' },
             { title: 'Biosphere 2 Agrivoltaics Walk-through', source: 'UArizona YouTube', description: 'Field tour of Biosphere 2 plots; explains instrumentation and crop responses under PV shade.', date: '2023-11-12', url: 'https://www.youtube.com/watch?v=PUmq1lTQJ98', category: 'video' },
             { title: 'Knowns, uncertainties, and challenges in agrivoltaics to sustainably meet FEW goals', source: 'Curr. Opin. Env. Sustainability', description: 'Peer-reviewed meta-analysis highlighting UA/Biosphere-2 micro-climate & labor-safety datasets as highest-quality evidence; lists research gaps.', date: '2023-11-10', url: 'https://www.sciencedirect.com/science/article/pii/S2666386423003028', category: 'paper' },
             { title: 'UArizona researchers awarded $1.2 M to explore farming at existing solar sites', source: 'UA News', description: 'DOE FARMS grant funds Barron-Gafford team to retrofit commercial PV farms for crop & grazing trials.', date: '2023-02-15', url: 'https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites', category: 'article' },
             { title: 'WEBINAR: Made in the Shade – Growing Crops under Solar Panels', source: 'AgriSolar Clearinghouse', description: '45-min webinar where Dr. Barron-Gafford shares yield, water-use & panel-cooling data and best-practice tips.', date: '2023-02-20', url: 'https://attra.ncat.org/webinar-made-in-the-shade-growing-crops-under-solar-panels/', category: 'video' },
             { title: 'The 5 Cs of Agrivoltaic Success Factors in the United States', source: 'NREL (Tech. Rep. 83566)', description: 'Synthesises lessons from 20+ InSPIRE sites into design rubric—Crops, Climates, Configuration, Constraints, Community—for developers & regulators.', date: '2022-08-01', url: 'https://www.nrel.gov/docs/fy22osti/83566.pdf', category: 'paper' },
             { title: 'DOE SBIR Market-Research Study: Agrivoltaics', source: 'US DOE SETO', description: 'Maps federal SBIR/STTR funding flows and sizes the U.S. market; flags SALSAv as a “flagship semi-arid test-bed.”', date: '2022-08-01', url: 'https://science.osti.gov/-/media/sbir/pdf/Market-Research/SETO---Agrivoltaics-August-2022-Public.pdf', category: 'paper' },
+            { title: 'Agri-Photovoltaics: Guideline for a Resilient and Resource-Efficient Agriculture', source: 'Fraunhofer ISE', description: 'Definitive guideline from Europe\'s leading solar institute on APV technology, standards, and best practices for different crop types and regions.', date: '2022-05-12', url: 'https://www.ise.fraunhofer.de/en/publications/studies/agri-photovoltaics-guideline.html', category: 'article' },
+            { title: 'Solar PV arrays sustain pollinator communities in intensively managed agricultural landscapes', source: 'Scientific Reports', description: 'Oregon State study shows solar farms can serve as vital habitats for native bees, boosting biodiversity in surrounding agricultural areas.', date: '2022-03-24', url: 'https://www.nature.com/articles/s41598-022-08993-9', category: 'paper' },
             { title: 'Growing Crops Under Solar Panels? Now There’s a Bright Idea', source: 'WIRED', description: 'Popular feature on Barron-Gafford’s “salsa garden” trials—up to 50 % water savings and cooler panels boosting efficiency.', date: '2021-10-14', url: 'https://www.wired.com/story/growing-crops-under-solar-panels-now-theres-a-bright-idea/', category: 'article' },
             { title: 'Designing Agrivoltaics for Sustainably Intensifying Food & Energy Production', source: 'USDA-NIFA', description: 'Multi-institution (UI, CSU, UA) award building coupled PV–crop model validated at three solar farms, incl. SALSAv.', date: '2021-08-15', url: 'https://portal.nifa.usda.gov/web/crisprojectpages/1027532-designing-agrivoltaics-for-sustainably-intensifying-food-and-energy-production.html', category: 'article' },
             { title: 'Agrivoltaics provide mutual benefits across the food–energy–water nexus in drylands', source: 'Nature Sustainability', description: 'Arizona field trial shows PV shade cut plant drought stress, boosted fruit yields and cooled panels, confirming the “win–win-win” food-water-energy model.', date: '2019-09-02', url: 'https://www.nature.com/articles/s41893-019-0364-5', category: 'paper' }
@@ -187,22 +189,8 @@
         // This line correctly sorts by date (newest first) before anything is displayed.
         newsItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        /**
-         * Converts a string into a URL-friendly slug.
-         * Used for generating consistent local image filenames.
-         * @param {string} text The input string (e.g., article title).
-         * @returns {string} The slugified string.
-         */
-        const slugify = (text) => {
-            return text.toString().toLowerCase()
-                .replace(/\s+/g, '-')           // Replace spaces with -
-                .replace(/[^\w-]+/g, '')       // Remove all non-word chars
-                .replace(/--+/g, '-')          // Replace multiple - with single -
-                .replace(/^-+/, '')            // Trim - from start of text
-                .replace(/-+$/, '');           // Trim - from end of text
-        };
-
-        const createCard = (item, imageUrl) => { // imageUrl is now directly the final URL to use
+        const createCard = (item, apiData) => {
+            const imageUrl = apiData.image?.url || 'static/salsa-logo.png'; // Fallback image
             const displayDate = new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
             
             const cardHTML = `
@@ -228,66 +216,33 @@
             // Ensure the loading message is visible initially
             if (loadingMessage) loadingMessage.style.display = 'block';
 
-            // Define a small delay between Microlink API requests to avoid rate limiting
-            const delayBetweenApiRequests = 100; // milliseconds (increased for better reliability)
-
-            for (const item of newsItems) {
-                let finalImageUrl = 'static/salsa-logo.png'; // Default fallback image
-
-                // 1. Construct the path for the potential local static image
-                // Make sure your 'static' folder contains a 'news_previews' subfolder
-                // E.g., 'static/news_previews/agrivoltaics-as-a-climate-smart-solution.jpg'
-                const localImagePath = `static/news_previews/${slugify(item.title)}.jpg`;
-
-                try {
-                    // Test if the local image exists by trying to load it
-                    const localImageLoadedSuccessfully = await new Promise(resolve => {
-                        const img = new Image();
-                        img.onload = () => resolve(true); // Image loaded successfully
-                        img.onerror = () => resolve(false); // Image failed to load (e.g., 404)
-                        img.src = localImagePath;
-                        // To prevent memory leaks for images that fail immediately:
-                        img.decode().catch(() => {}); 
-                    });
-
-                    if (localImageLoadedSuccessfully) {
-                        finalImageUrl = localImagePath; // Use the local image
-                    } else {
-                        // 2. Local image not found, try fetching from Microlink API
-                        console.log(`Local image not found for "${item.title}". Attempting Microlink API...`);
-                        const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(item.url)}&screenshot=true&palette=true`;
-                        
-                        const response = await fetch(apiUrl);
-                        if (!response.ok) { 
-                           throw new Error(`Microlink API response not OK for ${item.url} (Status: ${response.status} ${response.statusText})`);
+            const fetchPromises = newsItems.map(item => {
+                const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(item.url)}&screenshot=true&palette=true`;
+                
+                return fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) { // Catches 500 errors etc.
+                           throw new Error(`API response not OK for ${item.url}`);
                         }
-                        const data = await response.json();
-                        
-                        if (data.status === 'success' && data.data.image?.url) {
-                            finalImageUrl = data.data.image.url; // Use Microlink's image
-                            console.log(`Microlink API successful for "${item.title}".`);
+                        return response.json();
+                    })
+                    .then(response => {
+                        if(response.status === 'success') {
+                            createCard(item, response.data);
                         } else {
-                            console.warn('Microlink API reported failure or no image for:', item.url, 'Using default fallback.');
-                            // finalImageUrl remains 'static/salsa-logo.png'
+                            console.warn('API reported failure for:', item.url, 'Using fallback.');
+                            createCard(item, {}); 
                         }
-                    }
-                } catch (error) {
-                    console.error('Error fetching image for:', item.url, error, 'Using default fallback.');
-                    // finalImageUrl remains 'static/salsa-logo.png'
-                } finally {
-                    // Create the card with the determined final image URL
-                    createCard(item, finalImageUrl);
+                    })
+                    .catch(error => {
+                        console.error('Fetch/Processing error for:', item.url, error);
+                        createCard(item, {}); // Always create a card even on total failure
+                    });
+            });
 
-                    // Add a delay ONLY when a Microlink API call was made,
-                    // or if it was explicitly a network issue on a local image load attempt.
-                    // To keep it simple and safe, we'll apply delay after each item
-                    // if an API call *might* have happened, or just unconditionally.
-                    // For robustness against Microlink, it's safer to always delay here.
-                    await new Promise(resolve => setTimeout(resolve, delayBetweenApiRequests)); 
-                }
-            }
+            await Promise.all(fetchPromises);
             
-            // Once all items have been processed (and their cards created), hide the loading message
+            // Once all promises are settled, hide the loading message
             if (loadingMessage) loadingMessage.style.display = 'none';
             initializeFilters();
         };
