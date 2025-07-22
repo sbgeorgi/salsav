@@ -6,7 +6,7 @@
     <title>SALSA - Scaling Out Research</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main-styles.css">
-    <!-- Helper styles for subpages to align with the new theme -->
+    <!-- Helper styles for subpages -->
     <style>
         .hero-subpage {
             position: relative;
@@ -45,11 +45,39 @@
         .text-block h2 {
             font-size: clamp(2.2rem, 5vw, 2.8rem);
         }
-        .image-container {
-            margin-top: 2rem;
+        .content-flex {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+            padding-top: 2rem;
+        }
+        .content-flex.reverse {
+            flex-direction: row-reverse;
+        }
+        .content-text {
+            flex: 1 1 45%;
+            min-width: 300px;
+        }
+        .content-image {
+            flex: 1 1 45%;
+            min-width: 300px;
+        }
+        .content-image img {
+            width: 100%;
+            height: auto;
             border-radius: 12px;
-            overflow: hidden;
             box-shadow: var(--shadow-md);
+        }
+        sup a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8em;
+        }
+        sup a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -83,7 +111,7 @@
         </div>
     </nav>
 
-    <header class="hero hero-subpage" style="background-image: url('static/scaling-out-hero.jpg');">
+    <header class="hero-subpage" style="background-image: url('static/scaling-out-hero.jpg');">
         <div class="hero-content">
             <h1>Scaling Out Agrivoltaics – Impact across Contexts</h1>
         </div>
@@ -92,14 +120,54 @@
     <main class="section">
         <div class="container">
             <div class="text-block">
-                <h2>Global Collaboration</h2>
-                <p class="subtitle">Suitability & system design questions. Partnerships for exploring agrivoltaics research questions across diverse social-ecological contexts.</p>
-                <p style="margin-top: 1.5rem;">A big way we do that is through <strong>Agrivoltaics Living Labs</strong>, a global collaboratory where we co-design and test solutions with local partners, ensuring they are effective, appropriate, and scalable for their unique environments.</p>
+                <h2>Global Collaboration & Living Labs</h2>
+                <p class="subtitle">An agrivoltaic solution for Arizona’s desert will differ from one for a Colorado prairie or a smallholder farm in East Africa. Scaling "out" means adapting the concept to a wide variety of social-ecological contexts. Our approach is to create <strong>Agrivoltaic Living Labs</strong>—collaborative field sites where we co-design and test solutions with local partners, ensuring they are effective, appropriate, and scalable for each unique environment.<a href="https://sbgeorgi.github.io/salsav/research-scaling-out.html#:~:text=Suitability%20%26%20system%20design%20questions,ecological%20contexts" target="_blank" rel="noopener"><sup>[1]</sup></a></p>
             </div>
 
-            <div class="image-container">
-                <img src="static/scaling-out-diagram.jpg" alt="Infographic of Agrivoltaics Living Labs Global Collaboratory">
+            <!-- Kenya Section -->
+            <div class="content-flex">
+                <div class="content-text">
+                    <h3>Kenya: Food & Water Security</h3>
+                    <p>In Makueni County, our team helped implement Kenya’s first community-scale agrivoltaic pilot. An elevated solar canopy powers a well pump for irrigation and drinking water, while also providing electricity for a local school and clinic.<a href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=elevated%20PV%20canopy%20drives%20a,arid%20climate.%5BCIFOR%5D%2029%20%5BEnergy%20Conv" target="_blank" rel="noopener"><sup>[2]</sup></a> The shade has boosted vegetable yields while cutting water use by roughly half, demonstrating a powerful model for addressing energy access and food security in tandem.<a href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=while%20exporting%20surplus%20power%20to,water%20projects%20and%20scale%20agrivoltaics" target="_blank" rel="noopener"><sup>[3]</sup></a></p>
+                </div>
+                <div class="content-image">
+                    <img src="static/kenyaagriv.jpg" alt="Community agrivoltaics project in Makueni County, Kenya">
+                </div>
             </div>
+
+            <!-- Israel Section -->
+            <div class="content-flex reverse">
+                <div class="content-text">
+                    <h3>Israel: Extreme Desert Farming</h3>
+                    <p>In the hyper-arid Arava Desert, SALSA collaborators are pioneering agrivoltaics for extreme heat and drought. At experimental plots in Kibbutz Ketura, shading from solar canopies has reduced irrigation requirements for crops by up to <strong>50%</strong> without hurting yields. These findings, which echo our trials in Arizona, validate agrivoltaics as a promising climate adaptation strategy for the world’s most water-scarce agricultural regions.<a href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=for%20extreme%20desert%20farming.,arid%20regions.%5BUA%20News" target="_blank" rel="noopener"><sup>[4]</sup></a></p>
+                </div>
+                <div class="content-image">
+                    <img src="static/aravaagriv.jpg" alt="Agrivoltaics research in the Arava Desert, Israel">
+                </div>
+            </div>
+
+            <!-- Morocco Section -->
+            <div class="content-flex">
+                <div class="content-text">
+                    <h3>Morocco: North Africa's First Platform</h3>
+                    <p>In partnership with the Green Energy Park, SALSA helped establish the first replicated agrivoltaic research platform in North Africa. Using a unique "chessboard" panel layout, initial monitoring shows promising results: ~30% water savings for crops and a modest <strong>+5% gain in solar panel efficiency</strong> from the cooling effect of the plants below. This site serves as a vital research and training hub for a region where water constraints and solar potential are both high.<a href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=presented%20at%20the%202023%20Maghreb,ACAP%20Slides" target="_blank" rel="noopener"><sup>[5]</sup></a></p>
+                </div>
+                <div class="content-image">
+                    <img src="static/um6pagriv.jpeg" alt="Green Energy Park in Morocco for agrivoltaics research">
+                </div>
+            </div>
+
+            <!-- Mexico Section -->
+            <div class="content-flex reverse">
+                <div class="content-text">
+                    <h3>Mexico: Urban and Arid Farming</h3>
+                    <p>The P.A.S.E. Project, Mexico’s first full agrivoltaic pilot, was inaugurated in 2022 near Mexico City. Integrated with a rainwater harvesting system, the installation slashed the need for additional irrigation by up to <strong>80%</strong>.<a href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=Mexico%20City%2C%20in%20alliance%20with,use%20efficiency%2C%20citing" target="_blank" rel="noopener"><sup>[6]</sup></a> A Climate Scorecard report noted that the combined food and energy output from the site could be ~60% more valuable than using the land for a single purpose. The project's success has spurred feasibility studies to expand agrivoltaics to arid northern Mexico.<a href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=potential%2060%20,land%20farmers.%5BTopsector%20Study" target="_blank" rel="noopener"><sup>[7]</sup></a></p>
+                </div>
+                <div class="content-image">
+                    <img src="static/paseagriv.jpg" alt="PASE Agrivoltaics project in Mexico City">
+                </div>
+            </div>
+            
         </div>
     </main>
 

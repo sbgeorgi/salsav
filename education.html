@@ -6,6 +6,70 @@
     <title>SALSA - Education & Training</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main-styles.css">
+    <style>
+        .hero-subpage {
+            position: relative;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 1rem;
+            background-size: cover;
+            background-position: center;
+            min-height: 40vh;
+        }
+        .hero-subpage::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+        .hero-subpage .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        .content-block {
+            text-align: center; 
+            max-width: 800px; 
+            margin: 0 auto 4rem auto;
+        }
+        .content-flex {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+        .content-flex.reverse {
+            flex-direction: row-reverse;
+        }
+        .content-text {
+            flex: 1 1 45%;
+            min-width: 300px;
+        }
+        .content-image {
+            flex: 1 1 45%;
+            min-width: 300px;
+        }
+        .content-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+        }
+        sup a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8em;
+        }
+        sup a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -44,38 +108,38 @@
 
     <main class="page-content">
         <div class="container">
-            <div class="content-block" style="text-align: center; max-width: 800px; margin: 0 auto 4rem auto;">
+            <div class="content-block">
                 <h2>Why is education and training on agrivoltaics so important?</h2>
-                <p>Building a sustainable future requires not only technological innovation but also a knowledgeable and engaged community. Our educational initiatives aim to empower the next generation of scientists, farmers, policymakers, and citizens with the skills and understanding to advance food-energy-water solutions.</p>
+                <p>Technological innovation alone isn’t enough to create sustainable change. Agrivoltaics sits at the intersection of multiple fields, so it’s critical to <strong>educate a new generation of interdisciplinary problem-solvers</strong>. Our educational initiatives aim to empower future scientists, farmers, engineers, policymakers, and informed citizens with the skills and understanding to advance food-energy-water solutions. By raising awareness and building expertise, we ensure that agrivoltaic knowledge spreads from research labs into farms, classrooms, and government agencies.</p>
             </div>
             
-            <div class="education-item">
-                <div class="education-item__image">
+            <div class="content-flex">
+                <div class="content-image">
                     <img src="static/school-garden.jpg" alt="Children and teachers in a school garden">
                 </div>
-                <div class="education-item__text">
+                <div class="content-text">
                     <h3>School Garden Program</h3>
-                    <p>We partner with local schools to bring agrivoltaics concepts into the classroom and the schoolyard. These living laboratories provide hands-on learning experiences in science, technology, engineering, agriculture, and math (STEAM), connecting students directly with their food and energy sources.</p>
+                    <p>We partner with local schools to bring agrivoltaics into the schoolyard. Through the UArizona Community and School Garden Program and with support from the SCAPES project, we help install small agrivoltaic systems in school gardens.<a href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=Moses%20Thompson" target="_blank" rel="noopener"><sup>[1]</sup></a> Students get to grow vegetables in the shade of solar panels, observing first-hand how it affects growth and soil moisture. This tangible experience gives students a sense of agency in addressing grand challenges like climate change.<a href="https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus#:~:text=Barron,12%20students" target="_blank" rel="noopener"><sup>[2]</sup></a></p>
                 </div>
             </div>
 
-            <div class="education-item">
-                 <div class="education-item__image">
+            <div class="content-flex reverse">
+                <div class="content-text">
+                    <h3>Global School of Agrivoltaics</h3>
+                    <p>Through workshops, training programs, and online courses, we connect people across different countries to share knowledge and best practices. We have participated in events like the <strong>AgriVoltaics World Conference</strong> to teach the fundamentals of agrivoltaic design, operation, and policy.<a href="https://www.agrivoltaics-conference.org/program/agrivoltaics-summer-school#:~:text=This%20five,experts%20from%20academia%20and%20industry" target="_blank" rel="noopener"><sup>[3]</sup></a> This knowledge exchange accelerates the adoption of best practices worldwide, creating a community of trained individuals who can adapt agrivoltaics to their local needs.</p>
+                </div>
+                <div class="content-image">
                     <img src="static/global-school-placeholder.jpg" alt="Diverse group of students in a workshop setting">
                 </div>
-                <div class="education-item__text">
-                    <h3>Global School of Agrivoltaics</h3>
-                    <p>Through international workshops, online courses, and collaborative research projects, we are building a global network of agrivoltaics practitioners. This initiative facilitates knowledge exchange across different climates and cultures, accelerating the adoption of best practices worldwide.</p>
-                </div>
             </div>
 
-            <div class="education-item">
-                <div class="education-item__image">
+            <div class="content-flex">
+                <div class="content-image">
                     <img src="static/interdisciplinary.jpg" alt="University students collaborating on a project">
                 </div>
-                <div class="education-item__text">
+                <div class="content-text">
                     <h3>Interdisciplinary Opportunities</h3>
-                    <p>At the university level, we provide research opportunities for undergraduate and graduate students from a wide range of disciplines, including geography, environmental science, engineering, and public policy. This interdisciplinary approach is crucial for solving the complex challenges at the food-energy-water nexus.</p>
+                    <p>At the university level, SALSA provides rich research and training opportunities for students from a wide range of disciplines, including Geography, Environmental Science, Engineering, and Public Policy. Our team involves students in cutting-edge research, such as mapping agrivoltaic suitability with GIS or conducting surveys of farmer attitudes.<a href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=Andrea%20Gerlak%2C%20UArizona%20professor%20in,new%20research%20results%20become%20available" target="_blank" rel="noopener"><sup>[4]</sup></a> This hands-on, interdisciplinary training produces graduates who are uniquely equipped to tackle sustainability challenges.</p>
                 </div>
             </div>
         </div>

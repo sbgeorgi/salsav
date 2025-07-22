@@ -78,6 +78,17 @@
         }
         .news-card a { display: block; height: 100%;}
         .news-card:hover a { color: var(--text-light); }
+        
+        /* Styles for inline citations */
+        sup a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8em;
+        }
+        sup a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -112,7 +123,7 @@
 
     <header class="hero hero-subpage" style="background-image: url('static/ecophysiology-hero.jpg');">
         <div class="hero-content">
-            <h1>Ecophysiology in Agrivoltaics Systems</h1>
+            <h1>Ecophysiology in Agrivoltaic Systems</h1>
         </div>
     </header>
 
@@ -127,6 +138,22 @@
                     <img src="static/ecophysiology-diagram.png" alt="Diagram showing sun, solar panels, and shaded plants with water conservation" style="border-radius: 12px; box-shadow: var(--shadow-md);">
                 </div>
             </div>
+            
+            <!-- NEW CONTENT SECTION -->
+            <div style="margin-bottom: 4rem;">
+                <div class="section-header">
+                    <h2>The Plant-Panel Symbiosis</h2>
+                </div>
+                
+                <!-- Image Placeholder -->
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <img src="https://via.placeholder.com/800x400.png?text=Agrivoltaic+Field+Research" alt="Placeholder image of researchers in an agrivoltaic field" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-md);">
+                </div>
+
+                <p>Years of field experiments have revealed a remarkable symbiosis between plants and solar panels. In hot, arid climates, the shade provided by panels creates a milder microclimate, buffering crops from extreme heat and light. This protection helps plants avoid the typical "midday depression" of photosynthesis, where they shut down to conserve water, allowing them to remain productive throughout the day.<a href="https://bioengineer.org/agrivoltaics-boosts-photosynthesis-amid-dryland-midday-stress/#:~:text=ADVERTISEMENT" target="_blank" rel="noopener"><sup>[1]</sup></a> The results are striking: in Arizona trials, chiltepin peppers produced three times more fruit and tomatoes doubled their yield under panels, all while using significantly less water.<a href="https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus#:~:text=,production%20was%20twice%20as%20great" target="_blank" rel="noopener"><sup>[2]</sup></a></p>
+                <p>This relationship is mutual. As plants transpire, they release water vapor that acts as a natural evaporative cooler, lowering the temperature of the overlying solar panels. Since panels operate more efficiently when cool, this plant-driven cooling actually boosts electricity production.<a href="https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus#:~:text=In%20addition%20to%20the%20benefits,the%20temperature%20of%20the%20panels" target="_blank" rel="noopener"><sup>[3]</sup></a> The shade also dramatically conserves water by reducing soil evaporation, with some studies showing soil moisture remaining 15% higher under panels even with reduced irrigation.<a href="https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus#:~:text=,when%20irrigating%20every%20other%20day" target="_blank" rel="noopener"><sup>[4]</sup></a> This virtuous cycle creates a win-win-win for food, energy, and water systems.</p>
+            </div>
+            <!-- END NEW CONTENT SECTION -->
 
             <div style="margin-bottom: 4rem;">
                 <div class="section-header">
@@ -145,23 +172,23 @@
                 </div>
                  <div class="news-grid">
                     <div class="news-card">
-                        <a href="https://www.nature.com/articles/s41893-019-0364-5" target="_blank" aria-label="View Nature Sustainability Publication">
+                        <a href="https://www.nature.com/articles/s41893-019-0364-5" target="_blank" aria-label="View Nature Sustainability Publication (2019)">
                             <div class="news-image-wrapper">
                                 <img src="static/output1.png" alt="Cover of Nature Sustainability Publication">
                             </div>
                         </a>
                     </div>
                     <div class="news-card">
-                        <a href="https://www.nature.com/articles/s41598-018-21724-1" target="_blank" aria-label="View Scientific Reports Publication">
+                        <a href="https://www.researchgate.net/publication/392474399_Agrivoltaics_as_a_climate-smart_and_resilient_solution_for_midday_depression_in_photosynthesis_in_dryland_regions" target="_blank" aria-label="View npj Sustainable Agriculture Publication on ResearchGate">
                             <div class="news-image-wrapper">
-                                <img src="static/output2.png" alt="Cover of Scientific Reports Publication">
+                                <img src="static/output2.png" alt="Cover of npj Sustainable Agriculture Publication">
                             </div>
                         </a>
                     </div>
                     <div class="news-card">
-                        <a href="https://www.sciencedirect.com/science/article/pii/S136403212100588X" target="_blank" aria-label="View Renewable and Sustainable Energy Reviews Publication">
+                        <a href="https://www.energy.gov/eere/solar/articles/new-reports-highlight-best-practices-combining-solar-energy-and-agriculture" target="_blank" aria-label="View NREL Best Practices Report">
                             <div class="news-image-wrapper">
-                                <img src="static/output3.png" alt="Cover of Renewable and Sustainable Energy Reviews Publication">
+                                <img src="static/output3.png" alt="Cover of NREL Best Practices Report">
                             </div>
                         </a>
                     </div>
