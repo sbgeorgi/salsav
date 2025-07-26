@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALSA - Research Sites</title>
+    <title>SALSA - Learning Labs</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
         rel="stylesheet">
@@ -142,7 +142,6 @@
 </head>
 
 <body>
-
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-brand">
@@ -161,8 +160,15 @@
                             <li><a href="research-scaling-out.html">Scaling Out</a></li>
                         </ul>
                     </li>
-                    <li><a href="education.html" class="navbar-link">Education</a></li>
-                    <li><a href="sites.html" class="navbar-link">Sites</a></li>
+                    <li class="has-dropdown">
+                        <a href="education.html" class="navbar-link">Education</a>
+                        <ul class="dropdown-content">
+                            <li><a href="education.html">School Gardens</a></li>
+                            <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
+                            <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="sites.html" class="navbar-link active">Learning Labs</a></li>
                     <li><a href="news.html" class="navbar-link">News</a></li>
                     <li><a href="team.html" class="navbar-link">Team</a></li>
                     <li><a href="#footer" class="navbar-link">Contact</a></li>
@@ -174,7 +180,7 @@
     <main class="section">
         <div class="container">
             <div class="section-header">
-                <h2>Global Agrivoltaic Research Sites</h2>
+                <h2>Global Agrivoltaic Learning Labs</h2>
                 <p class="subtitle">Interactive map showcasing SALSA's key research and collaboration sites for
                     agrivoltaics across the globe.</p>
             </div>
@@ -193,57 +199,35 @@
                     <div class="alternating-item">
                         <div class="alternating-item__text">
                             <h3>Biosphere 2 Agrivoltaics Research Laboratory</h3>
-                            <p>Biosphere 2 in Oracle, Arizona, hosts the Agrivoltaic Learning Lab where the
-                                Barron-Gafford team installed a ~30 kW array 3 m (≈9 ft) above test plots in 2017,
-                                making it one of the first U.S. dryland agrivoltaics experiments.<sup
-                                    class='citation-link'><a
+                            <p>Biosphere 2 hosts our Agrivoltaic Learning Lab -- a 30 kW array 3 m (≈9 ft) above test
+                                plots. Established in 2017, this was the first U.S. dryland agrivoltaics experimental
+                                sites.<sup class='citation-link'><a
                                         href='https://biosphere2.org/research/research-initiatives/agrivoltaics'
                                         target='_blank' rel='noopener'>[Biosphere 2]</a></sup><sup
                                     class='citation-link'><a
                                         href='https://www.agrisolarclearinghouse.org/biosphere-2-agrivoltaic-learning-lab/'
-                                        target='_blank' rel='noopener'>[AgriSolar]</a></sup> The landmark study later
-                                published in <em>Nature Sustainability</em> (2019) showed tomato yields doubled and
-                                water-use efficiency improved by 65 % under the panels.<sup class='citation-link'><a
-                                        href='https://experts.arizona.edu/en/publications/agrivoltaics-provide-mutual-benefits-across-the-foodenergywater-n'
-                                        target='_blank' rel='noopener'>[Nat. Sustain.]</a></sup> Soil moisture stayed
-                                ~15 % higher with alternate-day irrigation beneath the array, thanks to reduced
-                                evapotranspiration.<sup class='citation-link'><a
-                                        href='https://www.agrisolarclearinghouse.org/biosphere-2-agrivoltaic-learning-lab/'
-                                        target='_blank' rel='noopener'>[AgriSolar]</a></sup> Cooler midday temperatures
-                                also boosted PV efficiency, confirming the “win-win-win” food-energy-water benefits.<sup
-                                    class='citation-link'><a
-                                        href='https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus'
-                                        target='_blank' rel='noopener'>[UA News]</a></sup><sup class='citation-link'><a
-                                        href='https://cleantechnica.com/2024/07/15/agrivoltaics-conserve-precious-water-for-arizona-farmers/'
-                                        target='_blank' rel='noopener'>[CleanTechnica]</a></sup></p>
+                                        target='_blank' rel='noopener'>[AgriSolar]</a></sup></p>
                         </div>
                         <div class="alternating-item__image">
-                            <img src="static/biosphere2agriv.jpg" alt="Agrivoltaics Research at Biosphere 2">
+                            <img src="static/b2agrivoltaics.jpg"
+                                alt="Agrivoltaics Research at Biosphere 2">
                         </div>
                     </div>
 
                     <!-- ────────── AES Utility-Scale Site ────────── -->
                     <div class="alternating-item">
                         <div class="alternating-item__text">
-                            <h3>AES Utility-Scale Agrivoltaics Site</h3>
-                            <p>Building on the Biosphere 2 success, the team secured a $1.2 million DOE “FARMS” award in
-                                2023 to retrofit three test plots within a 10 MW AES solar farm in central Arizona—one
-                                of only six projects funded nationwide.<sup class='citation-link'><a
+                            <h3>AZ Utility-scale Agrivoltaics Learning Lab</h3>
+                            <p>Building on the Biosphere 2 success, the team responded to a call for proposals from the
+                                US Dept of Energy asking for Foundational Agrivoltaic Research at the Megawatt Scale
+                                (FARMS). The team argued that the easiest way to scale-up agrivoltaics would be to
+                                reduce the burden on PV developers. They secured a $1.2 million award in 2023 to
+                                retrofit a 10 MW section of a functional PV facility in central Arizona—one of only six
+                                projects funded nationwide.<sup class='citation-link'><a
                                         href='https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites'
                                         target='_blank' rel='noopener'>[UA Grant]</a></sup><sup class='citation-link'><a
                                         href='https://www.energy.gov/eere/solar/foundational-agrivoltaic-research-megawatt-scale-farms-funding-program'
-                                        target='_blank' rel='noopener'>[DOE FARMS]</a></sup> The Semi-Arid Lab for
-                                Scalable Agrivoltaics (SALSA V) partners UArizona, NREL, UMD and AES to evaluate crop
-                                and livestock integration without disrupting plant maintenance schedules.<sup
-                                    class='citation-link'><a
-                                        href='https://www.linkedin.com/posts/greg-barron-gafford-707b6340_agrivoltaics-activity-7224963442208559104-9uGG'
-                                        target='_blank' rel='noopener'>[SALSA V]</a></sup> Researchers are monitoring
-                                panel-cooling feedbacks, soil carbon gains and community perceptions to craft a
-                                replicable model for large-scale farms statewide.<sup class='citation-link'><a
-                                        href='https://www.aes.com/benefits-agrivoltaics-farmers' target='_blank'
-                                        rel='noopener'>[AES]</a></sup><sup class='citation-link'><a
-                                        href='https://science.osti.gov/-/media/sbir/pdf/Market-Research/SETO---Agrivoltaics-August-2022-Public.pdf'
-                                        target='_blank' rel='noopener'>[DOE Brief]</a></sup></p>
+                                        target='_blank' rel='noopener'>[DOE FARMS]</a></sup></p>
                         </div>
                         <div class="alternating-item__image">
                             <img src="static/aesagriv.jpg" alt="AES Utility-Scale Agrivoltaics Site">
@@ -264,17 +248,17 @@
                             <h3>Jack’s Solar Garden &amp; NREL InSPIRE Program</h3>
                             <p>In Colorado, agrivoltaics research is carried out via a multi-institution consortium,
                                 primarily with Colorado State University (CSU) and the National Renewable Energy
-                                Laboratory (NREL) through DOE’s InSPIRE program.<sup class='citation-link'><a
+                                Laboratory (NREL).<sup class='citation-link'><a
                                         href='https://www.nrel.gov/news/detail/program/2021/future-of-agriculture-combined-with-renewable-energy-finds-success-at-jacks-solar-garden'
-                                        target='_blank' rel='noopener'>[NREL]</a></sup> The focal site is Jack’s Solar
-                                Garden near Longmont— a 1.2&nbsp;MW community solar farm with 3,276 panels that serves
-                                as a nationally recognized agrivoltaics showcase.<sup class='citation-link'><a
+                                        target='_blank' rel='noopener'>[NREL]</a></sup> Jack’s Solar Garden is a
+                                1.2&nbsp;MW community solar farm with 3,276 panels that serves as a nationally
+                                recognized agrivoltaics showcase.<sup class='citation-link'><a
                                         href='https://www.agrisolarclearinghouse.org/case-study-jacks-solar-garden/'
-                                        target='_blank' rel='noopener'>[AgriSolar]</a></sup> Early trials report cooler
-                                canopy temperatures, reduced water use, and potential extensions of the growing season
-                                for forage and vegetable crops grown beneath the panels.<sup class='citation-link'><a
-                                        href='https://extension.colostate.edu/topic-areas/agriculture/agrivoltaics-in-colorado-0-306/'
-                                        target='_blank' rel='noopener'>[CSU Extension]</a></sup></p>
+                                        target='_blank' rel='noopener'>[AgriSolar]</a></sup> Sprout City Farms supports
+                                farming activities at the site enabling the SALSA team to study 30+ crop types and
+                                varieties every growing season!<sup class='citation-link'><a
+                                        href='https://www.lhvc.com/story/2024/05/22/news/sprout-city-farms-farms-with-jacks-solar-garden/9200.html'
+                                        target='_blank' rel='noopener'>[Sprout City Farms]</a></sup></p>
                         </div>
                         <div class="alternating-item__image"><img src="static/jacksagriv.jpg"
                                 alt="Agrivoltaics research at Jack's Solar Garden, Colorado"></div>
@@ -290,24 +274,18 @@
                     </div>
                     <div class="alternating-item">
                         <div class="alternating-item__text">
-                            <h3>Makueni County Site</h3>
-                            <p>Launched in July&nbsp;2023, Kenya’s first community-scale agrivoltaics pilot stands at
-                                St.&nbsp;Patrick’s Ng’omano Primary School in Kibwezi East, Makueni County.<sup
+                            <h3>Makueni Community Agrivoltaics Learning Lab</h3>
+                            <p>Launched in July 2023, our agrivoltaics site is the first in Kenya intentionally built
+                                within a community to be operated by and provide food for the community. The project is
+                                on the grounds of St. Patrick's Ng'omano Primary School in Kibwezi East, Makueni County.<sup
                                     class='citation-link'><a
                                         href='https://makueni.go.ke/2023/departments/energy/governor-mutula-launches-agrivoltaic-research-site-in-kibwezi-for-renewable-energy-while-empowering-local-farmers/'
-                                        target='_blank' rel='noopener'>[Makueni&nbsp;Gov]</a></sup> The project is
-                                co-led by the Kasser Joint Institute for Food, Water &amp; Energy Security—an alliance
-                                of the University of Arizona, Jewish National Fund-USA and the Arava Institute—together
-                                with the county government.<sup class='citation-link'><a
-                                        href='https://jointinstitute.jnf.org/makueni-agrivoltaics' target='_blank'
-                                        rel='noopener'>[KJI]</a></sup><sup class='citation-link'><a
-                                        href='https://www.jnf.org/byachad-magazine/article/israel-brings-hope-to-kenya'
-                                        target='_blank' rel='noopener'>[JNF-USA]</a></sup> An elevated PV canopy drives
-                                a solar-pump and 15 kWh battery micro-grid that now supplies irrigation water, classroom
-                                lighting and refrigeration for the school while exporting surplus power to nearby
-                                homes.<sup class='citation-link'><a
+                                        target='_blank' rel='noopener'>[Makueni Gov]</a></sup> The elevated PV canopy
+                                drives a solar-pump and 15 kWh battery micro-grid that supplies irrigation water,
+                                classroom lighting and refrigeration for the school while exporting surplus power to
+                                nearby homes.<sup class='citation-link'><a
                                         href='https://makueni.go.ke/2025/news/solar-energy-is-revolutionizing-water-access-in-makueni/'
-                                        target='_blank' rel='noopener'>[Makueni&nbsp;News&nbsp;2025]</a></sup><sup
+                                        target='_blank' rel='noopener'>[Makueni News 2025]</a></sup><sup
                                     class='citation-link'><a
                                         href='https://www.wri.org/insights/makueni-county-kenya-clean-energy-plan'
                                         target='_blank' rel='noopener'>[WRI]</a></sup> Extension officers report that
@@ -320,15 +298,16 @@
                                         href='https://forestsnews.cifor.org/86194/working-on-sunshine-agrivoltaics-in-east-africa?fnl='
                                         target='_blank' rel='noopener'>[CIFOR]</a></sup><sup class='citation-link'><a
                                         href='https://www.sciencedirect.com/science/article/pii/S1364032124007925'
-                                        target='_blank' rel='noopener'>[Energy&nbsp;Conv&nbsp;Manage]</a></sup> The
-                                pilot underpins a green-energy roadmap that commits Makueni to solar-power all new water
+                                        target='_blank' rel='noopener'>[Energy Conv Manage]</a></sup> The pilot
+                                underpins a green-energy roadmap that commits Makueni to solar-power all new water
                                 projects and scale agrivoltaics across arid counties by 2035.<sup
                                     class='citation-link'><a
                                         href='https://makueni.go.ke/2024/news/makueni-unveils-costed-10-year-green-energy-plan/'
-                                        target='_blank' rel='noopener'>[Green&nbsp;Energy&nbsp;Plan]</a></sup><sup
+                                        target='_blank' rel='noopener'>[Green Energy Plan]</a></sup><sup
                                     class='citation-link'><a
                                         href='https://www.nrel.gov/solar/market-research-analysis/agrivoltaics'
-                                        target='_blank' rel='noopener'>[NREL]</a></sup></p>
+                                        target='_blank' rel='noopener'>[NREL]</a></sup> The project is funded by the
+                                Kasser Joint Institute for Food, Water & Energy Security.</p>
                         </div>
                         <div class="alternating-item__image"><img src="static/kenyaagriv.jpg"
                                 alt="Community agrivoltaics project in Makueni County, Kenya"></div>
@@ -452,7 +431,7 @@
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="sites.html">Sites</a></li>
+                    <li><a href="sites.html">Learning Labs</a></li>
                     <li><a href="news.html">News</a></li>
                     <li><a href="team.html">Team</a></li>
                 </ul>

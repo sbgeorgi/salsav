@@ -15,8 +15,8 @@
         }
 
         :root {
-            --primary-color: #003366; 
-            --secondary-color: #E87A24; 
+            --primary-color: #003366;
+            --secondary-color: #E87A24;
             --background-color: #FFFFFF;
             --text-color: #343A40;
             --font-body: 'Source Sans 3', sans-serif;
@@ -34,13 +34,18 @@
             background-position: center;
             min-height: 40vh;
         }
+
         .hero-subpage::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.6);
             z-index: 1;
         }
+
         .hero-subpage .hero-content {
             position: relative;
             z-index: 2;
@@ -51,31 +56,36 @@
             display: flex;
             align-items: center;
             gap: 3rem;
-            flex-wrap: wrap; 
-            margin-bottom: 4rem; 
-            padding-top: 2rem; 
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+            padding-top: 2rem;
         }
+
         .content-flex.reverse {
             flex-direction: row-reverse;
         }
+
         .content-text {
             flex: 1 1 45%;
             min-width: 300px;
         }
+
         .content-image {
             flex: 1 1 45%;
             min-width: 300px;
         }
+
         .content-image img {
             width: 100%;
             height: auto;
             border-radius: 12px;
             box-shadow: var(--shadow-md);
         }
+
         .content-block {
             margin-bottom: 3rem;
         }
-        
+
         .scaling-diagram-wrapper {
             display: flex;
             justify-content: center;
@@ -113,13 +123,14 @@
             background-color: #343A40;
             transform: translateX(-50%);
         }
-        
+
         .axis-arrow {
             position: absolute;
             width: 0;
             height: 0;
             border-style: solid;
         }
+
         .axis-arrow.up {
             top: -4px;
             left: 50%;
@@ -127,6 +138,7 @@
             border-width: 0 6px 9px 6px;
             border-color: transparent transparent #343A40 transparent;
         }
+
         .axis-arrow.down {
             bottom: -4px;
             left: 50%;
@@ -162,7 +174,7 @@
         }
 
         .diagram-point:hover {
-            background-color: #005f9e; 
+            background-color: #005f9e;
             transform: translate(-50%, -50%) scale(1.1);
             z-index: 20;
         }
@@ -202,7 +214,7 @@
             font-family: var(--font-body);
             font-weight: 400;
         }
-        
+
         #tooltip-jsg,
         #tooltip-hh,
         #tooltip-b2 {
@@ -210,11 +222,13 @@
             left: 50%;
             margin-left: -140px;
         }
+
         #tooltip-farms {
             top: 125%;
             left: 50%;
             margin-left: -140px;
         }
+
         #tooltip-scapes {
             top: 125%;
             left: 50%;
@@ -229,26 +243,27 @@
             border-width: 5px;
             border-style: solid;
         }
-        
+
         #tooltip-jsg::after,
         #tooltip-hh::after,
         #tooltip-b2::after {
             top: 100%;
             border-color: #212529 transparent transparent transparent;
         }
-        
+
         #tooltip-scapes::after,
         #tooltip-farms::after {
             bottom: 100%;
             border-color: transparent transparent #212529 transparent;
         }
-        
+
         sup a {
             text-decoration: none;
             color: var(--secondary-color);
             font-weight: 600;
             font-size: 0.8em;
         }
+
         sup a:hover {
             text-decoration: underline;
         }
@@ -274,8 +289,15 @@
                             <li><a href="research-scaling-out.html">Scaling Out</a></li>
                         </ul>
                     </li>
-                    <li><a href="education.html" class="navbar-link">Education</a></li>
-                    <li><a href="sites.html" class="navbar-link">Sites</a></li>
+                    <li class="has-dropdown">
+                        <a href="education.html" class="navbar-link">Education</a>
+                        <ul class="dropdown-content">
+                            <li><a href="education.html">School Gardens</a></li>
+                            <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
+                            <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="sites.html" class="navbar-link active">Learning Labs</a></li>
                     <li><a href="news.html" class="navbar-link">News</a></li>
                     <li><a href="team.html" class="navbar-link">Team</a></li>
                     <li><a href="#footer" class="navbar-link">Contact</a></li>
@@ -284,7 +306,7 @@
         </div>
     </nav>
 
-    <header class="hero-subpage" style="background-image: url('static/scaling-up-hero.jpg');">
+    <header class="hero-subpage" style="background-image: url('static/scalingup-hero.jpg');">
         <div class="hero-content">
             <h1>Agrivoltaics from kW to MW scale</h1>
         </div>
@@ -296,7 +318,15 @@
                 <div class="content-flex">
                     <div class="content-text">
                         <h2>Research Questions</h2>
-                        <p>How do we take the proven benefits of agrivoltaics from small test plots to <strong>large, utility-scale</strong> solar installations? Scaling up introduces engineering and economic challenges: How should we design the rows of panels to accommodate farming activities? What are the best crops or grazing systems to pair with multi-megawatt solar fields? And critically, will the “win-win” benefits seen at the garden or acre scale still hold when hundreds of acres are covered with solar panels? This research thrust tackles those questions by combining field trials at larger scales with modeling of energy and crop performance and techno-economic analysis to create blueprints for systems that are profitable and practical for farmers, solar developers, and utilities.</p>
+                        <p>How do we take the proven benefits of agrivoltaics from small test plots to <strong>large,
+                                utility-scale</strong> solar installations? Scaling up introduces engineering and
+                            economic challenges: How should we design the rows of panels to accommodate farming
+                            activities? What are the best crops or grazing systems to pair with multi-megawatt solar
+                            fields? And critically, will the “win-win” benefits seen at the garden or acre scale still
+                            hold when hundreds of acres are covered with solar panels? This research thrust tackles
+                            those questions by combining field trials at larger scales with modeling of energy and crop
+                            performance and techno-economic analysis to create blueprints for systems that are
+                            profitable and practical for farmers, solar developers, and utilities.</p>
                     </div>
                     <div class="content-image scaling-diagram-wrapper">
                         <div class="scaling-diagram-container">
@@ -304,8 +334,10 @@
                             <div class="axis-arrow down"></div>
                             <div class="axis-label" style="top: 25px; left: 50%;">MW</div>
                             <div class="axis-label" style="bottom: 5px; left: 50%;">kW</div>
-                            <div class="axis-label" style="top: 50%; left: 0px;"><i class="fas fa-arrow-left"></i> Ag-centric</div>
-                            <div class="axis-label" style="top: 50%; right: -70px;">Energy-centric <i class="fas fa-arrow-right"></i></div>
+                            <div class="axis-label" style="top: 50%; left: 0px;"><i class="fas fa-arrow-left"></i>
+                                Ag-centric</div>
+                            <div class="axis-label" style="top: 50%; right: -70px;">Energy-centric <i
+                                    class="fas fa-arrow-right"></i></div>
                             <a href="#scale-scapes" class="diagram-point" style="top: 25%; left: 20%;">
                                 Scapes
                                 <span class="tooltip-text" id="tooltip-scapes">
@@ -330,14 +362,6 @@
                                         Foundational agrivoltaics research </p>
                                 </span>
                             </a>
-                            <a href="#scale-b2-hh" class="diagram-point" style="top: 90%; left: 70%;">
-                                HH
-                                <span class="tooltip-text" id="tooltip-hh">
-                                    <strong>Homestead/Community</strong>
-                                    <p><b>Scale:</b> Small plot, 1–10 kW<br>
-                                        Localized systems off-grid homes</p>
-                                </span>
-                            </a>
                             <a href="#scale-jsg" class="diagram-point" style="top: 50%; left: 50%;">
                                 JSG
                                 <span class="tooltip-text" id="tooltip-jsg">
@@ -354,46 +378,90 @@
             <div class="content-block">
                 <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
                     <h2 style="font-size: 2.2rem;">Approach and Initiatives</h2>
-                    <p>To explore scaling up, SALSA and its partners are involved in projects spanning a range of system sizes and configurations. By examining performance at multiple scales, we address the key question posed by stakeholders: <strong>Do the benefits seen in small trials still hold when you scale up?</strong> Early indications are yes, with careful design.<a href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=,that%20come%20with%20that%20scale" target="_blank" rel="noopener"><sup>[1]</sup></a></p>
+                    <p>To explore scaling up, SALSA and its partners are involved in projects spanning a range of system
+                        sizes and configurations. By examining performance at multiple scales, we address the key
+                        question posed by stakeholders: <strong>Do the benefits seen in small trials still hold when you
+                            scale up?</strong> Early indications are yes, with careful design.<a
+                            href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=,that%20come%20with%20that%20scale"
+                            target="_blank" rel="noopener"><sup>[1]</sup></a></p>
                 </div>
 
                 <div class="content-flex" id="scale-b2-hh">
                     <div class="content-text">
                         <h3>Foundational Plots (kW-scale): B2 & Homesteads</h3>
-                        <p>Our work began at the kilowatt-scale with research plots like the ~30 kW <strong>Biosphere 2 (B2)</strong> Agrivoltaics Lab, which proved the concept in a controlled setting. These pilot systems allowed us to document core benefits and inform the design of larger experiments. For example, we confirmed that raising panels ~3 meters high enabled tractor access and crop cultivation underneath without major losses in solar output<a href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=Barron,Gafford%20said" target="_blank" rel="noopener"><sup>[2]</sup></a>. These foundational principles also apply at the smallest <strong>Homestead/Community (HH)</strong> scale (1-10 kW), where off-grid systems can power homes while supporting garden-scale agriculture.</p>
+                        <p>Our work began at the kilowatt-scale with research plots like the ~30 kW <strong>Biosphere 2
+                                (B2)</strong> Agrivoltaics Lab, which proved the concept in a controlled setting. These
+                            pilot systems allowed us to document core benefits and inform the design of larger
+                            experiments. For example, we confirmed that raising panels ~3 meters high enabled tractor
+                            access and crop cultivation underneath without major losses in solar output<a
+                                href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=Barron,Gafford%20said"
+                                target="_blank" rel="noopener"><sup>[2]</sup></a>. These foundational principles also
+                            apply at the smallest <strong>Homestead/Community (HH)</strong> scale (1-10 kW), where
+                            off-grid systems can power homes while supporting garden-scale agriculture.</p>
                     </div>
                     <div class="content-image">
-                        <img src="https://via.placeholder.com/600x400.png?text=B2+Foundational+Research+Plot" alt="Placeholder image of the Biosphere 2 research plot">
+                        <img src="static/foundational_plot.png"
+                            alt="Placeholder image of the Biosphere 2 research plot">
                     </div>
                 </div>
 
                 <div class="content-flex reverse" id="scale-jsg">
                     <div class="content-text">
                         <h3>Community Solar Farm (MW-scale): Jack's Solar Garden (JSG)</h3>
-                        <p>At <strong>Jack’s Solar Garden (JSG)</strong> in Colorado, a 1.2 MW solar array over a 5-acre farm, research in collaboration with NREL and Colorado State University demonstrates cooler canopy temperatures, reduced water stress for crops, and an extended growing season due to the moderated microclimate<a href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=Longmont%E2%80%94%20a%201,CSU%20Extension" target="_blank" rel="noopener"><sup>[3]</sup></a>. The farm also integrates <strong>sheep grazing</strong>, providing vegetation management for the solar operator and forage for the farmer. JSG serves as a real-world proof that solar farms can double as working farms that feed local communities.<a href="https://www.energy.gov/eere/solar/articles/new-reports-highlight-best-practices-combining-solar-energy-and-agriculture#:~:text=Energy%20Technologies%20Office%20,resulting%20ecological%20and%20agricultural%20benefits" target="_blank" rel="noopener"><sup>[4]</sup></a></p>
+                        <p>At <strong>Jack’s Solar Garden (JSG)</strong> in Colorado, a 1.2 MW solar array over a 5-acre
+                            farm, research in collaboration with NREL and Colorado State University demonstrates cooler
+                            canopy temperatures, reduced water stress for crops, and an extended growing season due to
+                            the moderated microclimate<a
+                                href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=Longmont%E2%80%94%20a%201,CSU%20Extension"
+                                target="_blank" rel="noopener"><sup>[3]</sup></a>. The farm also integrates
+                            <strong>sheep grazing</strong>, providing vegetation management for the solar operator and
+                            forage for the farmer. JSG serves as a real-world proof that solar farms can double as
+                            working farms that feed local communities.<a
+                                href="https://www.energy.gov/eere/solar/articles/new-reports-highlight-best-practices-combining-solar-energy-and-agriculture#:~:text=Energy%20Technologies%20Office%20,resulting%20ecological%20and%20agricultural%20benefits"
+                                target="_blank" rel="noopener"><sup>[4]</sup></a></p>
                     </div>
                     <div class="content-image">
-                         <img src="https://via.placeholder.com/600x400.png?text=Jack's+Solar+Garden+(JSG)" alt="Placeholder image of Jack's Solar Garden">
+                        <img src="static/jacks_solar.jpg" alt="Placeholder image of Jack's Solar Garden">
                     </div>
                 </div>
-                
+
                 <div class="content-flex" id="scale-farms">
-                   <div class="content-text">
-                       <h3>Utility Scale (10+ MW): FARMS Project</h3>
-                       <p>SALSA is leading one of the first utility-scale agrivoltaic pilot projects in the country, the <strong>FARMS</strong> project. With a $1.2 million award from the U.S. Department of Energy, our team is transforming three plots within a 10 MW commercial solar farm in Arizona into test beds<a href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=Building%20on%20the%20Biosphere%202,community%20perceptions%20to%20craft%20a" target="_blank" rel="noopener"><sup>[5]</sup></a>. By retrofitting an existing solar power plant for crop cultivation and grazing, we can assess operational questions and craft a replicable model that large solar operators could deploy across the sunny American southwest.</p>
-                   </div>
-                   <div class="content-image">
-                       <img src="https://via.placeholder.com/600x400.png?text=FARMS+Utility-Scale+Project" alt="Placeholder image of a utility-scale agrivoltaics site">
-                   </div>
-               </div>
+                    <div class="content-text">
+                        <h3>Utility Scale (10+ MW): FARMS Project</h3>
+                        <p>SALSA is leading one of the first utility-scale agrivoltaic pilot projects in the country,
+                            the <strong>FARMS</strong> project. With a $1.2 million award from the U.S. Department of
+                            Energy, our team is transforming three plots within a 10 MW commercial solar farm in Arizona
+                            into test beds<a
+                                href="https://sbgeorgi.github.io/salsav/sites.html#:~:text=Building%20on%20the%20Biosphere%202,community%20perceptions%20to%20craft%20a"
+                                target="_blank" rel="noopener"><sup>[5]</sup></a>. By retrofitting an existing solar
+                            power plant for crop cultivation and grazing, we can assess operational questions and craft
+                            a replicable model that large solar operators could deploy across the sunny American
+                            southwest.</p>
+                    </div>
+                    <div class="content-image">
+                        <img src="static/utility_scale.jpeg"
+                            alt="Placeholder image of a utility-scale agrivoltaics site">
+                    </div>
+                </div>
 
                 <div class="content-flex reverse" id="scale-scapes">
                     <div class="content-text">
                         <h3>Multi-Site Research (Regional/National): SCAPES</h3>
-                        <p>SALSA is a key partner in broader initiatives like <strong>SCAPES</strong>, a 4-year, $10 million USDA-funded project to rigorously investigate agrivoltaics across different climates and farming styles<a href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=The%20SCAPES%20project%20will%20use,Gafford" target="_blank" rel="noopener"><sup>[6]</sup></a>. With large, standardized research sites in Arizona, Illinois, and Colorado, SCAPES will answer big-picture questions: Can agrivoltaics improve yield for Midwest row crops as well as Southwest specialty crops? The project's comprehensive analysis will guide how future large solar farms can be intentionally designed to also support agriculture.<a href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=,across%20a%20range%20of%20environments" target="_blank" rel="noopener"><sup>[7]</sup></a></p>
+                        <p>SALSA is a key partner in broader initiatives like <strong>SCAPES</strong>, a 4-year, $10
+                            million USDA-funded project to rigorously investigate agrivoltaics across different climates
+                            and farming styles<a
+                                href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=The%20SCAPES%20project%20will%20use,Gafford"
+                                target="_blank" rel="noopener"><sup>[6]</sup></a>. With large, standardized research
+                            sites in Arizona, Illinois, and Colorado, SCAPES will answer big-picture questions: Can
+                            agrivoltaics improve yield for Midwest row crops as well as Southwest specialty crops? The
+                            project's comprehensive analysis will guide how future large solar farms can be
+                            intentionally designed to also support agriculture.<a
+                                href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=,across%20a%20range%20of%20environments"
+                                target="_blank" rel="noopener"><sup>[7]</sup></a></p>
                     </div>
-                     <div class="content-image">
-                         <img src="https://via.placeholder.com/600x400.png?text=SCAPES+Multi-State+Research" alt="Placeholder image illustrating multi-site research for SCAPES">
+                    <div class="content-image">
+                        <img src="static/scapes.png" alt="Placeholder image illustrating multi-site research for SCAPES"
+                            style="background-color: white;">
                     </div>
                 </div>
 
@@ -431,4 +499,5 @@
     <script src="js/main.js"></script>
 
 </body>
+
 </html>

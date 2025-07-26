@@ -142,9 +142,10 @@
         }
 
         .navbar-brand img {
-            height: 48px;
-            transition: transform var(--transition-speed) var(--transition-smooth);
-        }
+    height: 64px; /* Increased from 48px */
+    border-radius: 8px; /* Added for rounded edges */
+    transition: transform var(--transition-speed) var(--transition-smooth);
+}
 
         .navbar-brand:hover img {
             transform: rotate(-12deg) scale(1.05);
@@ -280,22 +281,18 @@
         }
 
         .hero-headline {
-            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-size: clamp(3rem, 7vw, 5.5rem);
             font-weight: 800;
-            line-height: 1.05;
+            line-height: 1.1;
             margin: 0;
             color: var(--text-lightest);
         }
 
         .hero-subheadline {
             margin: 2rem auto 0;
-            max-width: 700px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            max-width: 750px;
             color: var(--text-body);
+            font-size: 1.25rem;
         }
 
         .typing-container {
@@ -1024,46 +1021,55 @@
 
 <body>
     <nav class="navbar" id="navbar">
-        <div class="navbar-container">
-            <a href="index.html" class="navbar-brand">
-                <img src="static/salsa-logo.png" alt="SALSAV Agrivoltaics Logo">
-                <span>AGRIVOLTAICS</span>
-            </a>
-            <div class="navbar-links" id="navbar-links">
-                <ul class="navbar-menu">
-                    <li><a href="index.html" class="navbar-link active">Home</a></li>
-                    <li class="has-dropdown">
-                        <a href="#" class="navbar-link">Research</a>
-                        <ul class="dropdown-content">
-                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
-                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
-                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="education.html" class="navbar-link">Education</a></li>
-                    <li><a href="sites.html" class="navbar-link">Sites</a></li>
-                    <li><a href="news.html" class="navbar-link">News</a></li>
-                    <li><a href="team.html" class="navbar-link">Team</a></li>
-                    <li><a href="#footer" class="navbar-link">Contact</a></li>
-                </ul>
-            </div>
-            <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu"
-                aria-expanded="false">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+    <div class="navbar-container">
+        <a href="index.html" class="navbar-brand">
+            <img src="static/salsa-logo.png" alt="SALSAV Agrivoltaics Logo">
+            <!-- Retained the more descriptive text from the old format -->
+            <span>SALSA Agrivoltaics</span> 
+        </a>
+        <div class="navbar-links" id="navbar-links">
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="navbar-link">Home</a></li>
+                <li class="has-dropdown">
+                    <!-- The href="#" is better for a dropdown toggle -->
+                    <a href="#" class="navbar-link">Research</a>
+                    <ul class="dropdown-content">
+                        <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
+                        <li><a href="research-scaling-up.html">Scaling Up</a></li>
+                        <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                    </ul>
+                </li>
+                <!-- Updated Education to be a dropdown as in the new format -->
+                <li class="has-dropdown">
+                    <a href="education.html" class="navbar-link">Education</a>
+                    <ul class="dropdown-content">
+                        <li><a href="education.html">School Gardens</a></li>
+                        <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
+                        <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                    </ul>
+                </li>
+                <!-- Updated "Sites" to "Learning Labs" and set as active per the new format -->
+                <li><a href="sites.html" class="navbar-link active">Learning Labs</a></li>
+                <li><a href="news.html" class="navbar-link">News</a></li>
+                <li><a href="team.html" class="navbar-link">Team</a></li>
+                <li><a href="#footer" class="navbar-link">Contact</a></li>
+            </ul>
         </div>
-    </nav>
+        <!-- Retained the more complete, accessible button from the old format -->
+        <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu"
+            aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+</nav>
 
     <main>
         <!-- HERO -->
         <section class="hero">
             <div class="container">
-                <h1 class="hero-headline reveal">Harvesting the Sun, Twice.</h1>
+                <h1 class="hero-headline reveal">Semi-arid Lab for Scaling Agrivoltaics</h1>
                 <div class="hero-subheadline reveal" style="transition-delay: 0.2s;">
-                    <span>SALSAV helps you</span>
-                    <div class="typing-container">
-                        <span id="typing-text"></span><span class="typing-cursor"></span>
-                    </div>
+                    <p>Our lab researches and implements agrivoltaic systems to create resilient food, energy, and water solutions in arid regions. We scale this work from local test plots to global partnerships, building a data-driven roadmap for a sustainable future.</p>
                 </div>
             </div>
         </section>
@@ -1072,7 +1078,8 @@
         <section class="orb-section">
             <div class="orb-container" id="orb-container">
                 <div class="orb-video-wrapper">
-                    <video id="orb-video" class="orb-video" src="static/UA_Agrivoltaics_1.mp4" autoplay loop muted
+                    <!-- INSTRUCTION: The video source has been changed to a placeholder as requested. -->
+                    <video id="orb-video" class="orb-video" src="static/jacks-drone-video.mp4" autoplay loop muted
                         playsinline></video>
                 </div>
                 <button class="mute-btn" id="muteBtn" aria-label="Toggle Mute">
@@ -1142,7 +1149,6 @@
                         <h2>The Food-Energy-Water Nexus</h2>
                         <p>Agrivoltaics is a data-driven solution, proven in harsh environments, that turns a single plot of land into a powerhouse of sustainable production. A vision for the future of agriculture, realized today.
                         <br><br>
-                        <a href="javascript:location.reload();">Explore the system again.</a>
                         </p>
                     </div>
                 </section>
@@ -1150,38 +1156,46 @@
         </section>
 
         <!-- RESEARCH PILLARS -->
-        <section class="section pillars-section">
+        <section class="section pillars-section" id="research-section">
             <div class="container">
+                <div class="news-header reveal" style="grid-column: 1 / -1; margin-bottom: 2rem; justify-content: flex-start;">
+                     <h2>Research in Agrivoltaics Systems</h2>
+                </div>
                 <div class="pillars-left">
-                    <div class="pillar-item reveal" data-image="static/ecophysiology-hero.jpg">
-                        <span class="tag">01. Ecophysiology</span>
-                        <h3>The Plant-Panel Symbiosis</h3>
-                        <p>We study the intricate interactions between solar panels and plant life, measuring how shade
-                            and altered microclimates affect crop health, water use, and overall yield. This
-                            foundational science unlocks the secrets to successful co-location.</p>
-                    </div>
-                    <div class="pillar-item reveal" data-image="static/scaling-up-hero.jpg">
-                        <span class="tag">02. Scaling Up</span>
-                        <h3>From Kilowatts to Megawatts</h3>
-                        <p>Taking proven benefits from test plots to utility-scale requires robust engineering and
-                            economic models. We analyze system designs and financial viability to create a clear roadmap
-                            for profitable agrivoltaic projects.</p>
-                    </div>
-                    <div class="pillar-item reveal" data-image="static/scaling-out-card.png">
-                        <span class="tag">03. Scaling Out</span>
-                        <h3>Adapting to Diverse Environments</h3>
-                        <p>An agrivoltaic solution for Arizona's desert differs from one for Colorado's pastures. Our
-                            research spans multiple climates and crop types to develop adaptable, resilient models that
-                            work worldwide.</p>
-                    </div>
+                     <a href="research-ecophysiology.html" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="pillar-item reveal" data-image="static/ecophysiology-hero.jpg">
+                            <span class="tag">01. Ecophysiology</span>
+                            <h3>The Plant-Panel Symbiosis</h3>
+                            <p>The partial shade of solar panels creates a unique growing environment for crops. How does the AV environment affect crop physiology, water use, phenology and yield?</p>
+                        </div>
+                     </a>
+                     <a href="research-scaling-up.html" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="pillar-item reveal" data-image="static/scaling-up-hero.jpg">
+                            <span class="tag">02. Scaling Up</span>
+                            <h3>From Kilowatts to Megawatts</h3>
+                            <p>Taking proven benefits from test plots to utility-scale requires robust engineering and
+                                economic models. We analyze system designs and financial viability to create a clear roadmap
+                                for profitable agrivoltaic projects.</p>
+                        </div>
+                     </a>
+                     <a href="research-scaling-out.html" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="pillar-item reveal" data-image="static/nesrine-from-jacks.jpg">
+                            <span class="tag">03. Scaling Out</span>
+                            <h3>Adapting to Diverse Contexts</h3>
+                            <p>An agrivoltaic solution for Arizona's desert differs from one for Colorado's pastures. Our
+                                research spans multiple climates and crop types to develop adaptable, resilient models that
+                                work worldwide.</p>
+                        </div>
+                     </a>
                 </div>
                 <div class="pillars-right">
                     <div class="pillar-image is-visible" id="pillar-image-ecophysiology-hero"><img
                             src="static/ecophysiology-hero.jpg" alt="Ecophysiology research"></div>
                     <div class="pillar-image" id="pillar-image-scaling-up-hero"><img src="static/scaling-up-hero.jpg"
                             alt="Large-scale agrivoltaics"></div>
-                    <div class="pillar-image" id="pillar-image-scaling-out-card"><img src="static/scaling-out-card.png"
-                            alt="Agrivoltaics in diverse environments"></div>
+                    <!-- INSTRUCTION: The image source has been changed to a placeholder as requested. -->
+                    <div class="pillar-image" id="pillar-image-nesrine-from-jacks"><img src="static/nesrine-from-jacks.jpg"
+                            alt="Agrivoltaics in diverse environments, photo of Nesrine from Jack's Solar Garden"></div>
                 </div>
             </div>
         </section>
@@ -1190,7 +1204,6 @@
         <section class="section researcher-section">
             <div class="container">
                 <div class="researcher-info reveal">
-                    <span class="tag">The SALSAV Team</span>
                     <h2>A climate expert takes you inside the research</h2>
                     <h3>Dr. Greg Barron-Gafford, Lead Investigator</h3>
                     <p>As a Professor at the University of Arizona, Dr. Barron-Gafford leads our multi-disciplinary team
@@ -1198,21 +1211,50 @@
                         for renewable energy and sustainable agriculture.</p>
                 </div>
                 <div class="researcher-video-wrapper reveal" style="transition-delay: 0.2s;">
-                    <video class="researcher-video" src="static/farm_to_table.mp4" controls
-                        poster="static/barron-gafford-poster.jpg"></video>
+                    <!-- INSTRUCTION: The video source and poster have been changed to placeholders as requested. -->
+                    <video class="researcher-video" src="static/b2-drone-video.mp4" controls
+                        poster="static/b2-drone-video-poster.jpg"></video>
                 </div>
             </div>
         </section>
 
-                <!-- FEATURED SITES CAROUSEL (REPLACES PARTNERS CAROUSEL) -->
+                <!-- EDUCATION SECTION -->
+        <section class="section education-section" style="background-color: var(--bg-light-navy);">
+            <div class="container reveal" style="text-align: center;">
+                <h2 style="font-size: clamp(2.2rem, 5vw, 3rem); line-height: 1.2; margin-bottom: 1.5rem;">Developing the Next Generation of Agrivoltaics Leaders</h2>
+                <p class="subtitle" style="max-width: 800px; margin-left: auto; margin-right: auto; margin-bottom: 3rem;">Our educational focus builds capacity at all levels, from K-12 engagement to university-level research and professional training.</p>
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; text-align: left;">
+                     <a href="education.html" style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                         <div style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">School Garden Programs</h3>
+                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Bringing hands-on agrivoltaics learning to K-12 students, inspiring future scientists and innovators.</p>
+                        </div>
+                     </a>
+                     <a href="education-interdisciplinary.html" style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                         <div style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">Interdisciplinary Opportunities</h3>
+                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Fostering collaboration across science, engineering, and policy for graduate and undergraduate students.</p>
+                        </div>
+                     </a>
+                     <a href="education-global-school.html" style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                         <div style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">Global School of Agrivoltaics</h3>
+                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Training workshops and resources for farmers, developers, and policymakers to implement successful projects.</p>
+                        </div>
+                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURED SITES CAROUSEL -->
         <section class="section sites-carousel-section">
             <div class="container">
                 <div class="news-header reveal">
-                    <h2>Our Global Research Sites</h2>
+                    <h2>Our Global SALSA Learning Labs</h2>
                     <a href="sites.html" class="cta-button">View All Sites</a>
                 </div>
                 <p class="subtitle reveal" style="text-align: center; max-width: 800px; margin: -2rem auto 4rem;">
-                    From the arid deserts of Arizona to community gardens in Kenya, our research spans diverse climates to create adaptable, resilient agrivoltaic models.
+                    From the drylands of Arizona to equatorial Kenya, our research spans diverse climates to create adaptable, resilient agrivoltaic models.
                 </p>
             </div>
             
@@ -1241,7 +1283,8 @@
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/kenyaagriv.jpg" alt="Community agrivoltaics in Kenya"></div>
+                            <!-- INSTRUCTION: The image source has been changed to a placeholder as requested. -->
+                            <div class="news-image-wrapper"><img src="static/makueni-site-photo.jpg" alt="Community agrivoltaics in Kenya"></div>
                             <div class="news-card-content">
                                 <span class="tag">Makueni County, Kenya</span>
                                 <h3>Community Agrivoltaics</h3>
@@ -1303,7 +1346,8 @@
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/kenyaagriv.jpg" alt="Community agrivoltaics in Kenya"></div>
+                            <!-- INSTRUCTION: The image source has been changed to a placeholder as requested. -->
+                            <div class="news-image-wrapper"><img src="static/makueni-site-photo.jpg" alt="Community agrivoltaics in Kenya"></div>
                             <div class="news-card-content">
                                 <span class="tag">Makueni County, Kenya</span>
                                 <h3>Community Agrivoltaics</h3>
@@ -1387,7 +1431,7 @@
             </div>
         </section>
 
-        <!-- PARTNERS SECTION -->
+                <!-- PARTNERS SECTION -->
         <section class="partners-section" id="partners-section">
             <div class="container">
                 <div class="section-header reveal">
@@ -1398,28 +1442,42 @@
                 </div>
                 <div class="partners-grid reveal" style="transition-delay: 0.2s;">
                     <a href="https://sgde.arizona.edu/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/uaes.png" alt="UArizona School of Geography, Development & Environment Logo"
-                            class="partner-logo">
+                        <img src="static/uaes.png" alt="UArizona School of Geography, Development & Environment Logo" class="partner-logo">
                     </a>
-                    <a href="https://agnr.umd.edu/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/umav.png"
-                            alt="University of Maryland College of Agriculture & Natural Resources Logo"
-                            class="partner-logo">
+                    <a href="https://biosphere2.org/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/b2-logo-placeholder.png" alt="Biosphere 2 Logo" class="partner-logo">
                     </a>
-                    <a href="https://environmentalscience.arizona.edu/" target="_blank" rel="noopener"
-                        class="partner-logo-link">
-                        <img src="static/uaenv.png" alt="UArizona Environmental Science Logo" class="partner-logo">
+                    <a href="https://fazi.arizona.edu/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/fazi-logo-placeholder.jpg" alt="France-Arizona Institute for Global Grand Challenges Logo" class="partner-logo">
+                    </a>
+                    <a href="https://www.unam.mx/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/unam-logo-placeholder.png" alt="UNAM Logo" class="partner-logo">
+                    </a>
+                    <a href="https://www.um6p.ma/en" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/um6p-logo-placeholder.png" alt="Mohammed VI Polytechnic University Logo" class="partner-logo">
+                    </a>
+                    <a href="https://www.cnrs.fr/en/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/cnrs-logo-placeholder.png" alt="CNRS Logo" class="partner-logo">
+                    </a>
+                    <a href="https://jointinstitute.jnf.org/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/kasser-logo-placeholder.jpg" alt="Kasser Joint Institute for Food, Water, and Energy Security Logo" class="partner-logo">
+                    </a>
+                     <a href="https://www.trbf.org/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/trbf-logo-placeholder.png" alt="Thomas R. Brown Foundations Logo" class="partner-logo">
+                    </a>
+                    <a href="http://www.sec.gob.mx/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/sonora-sec-logo-placeholder.png" alt="Gobierno de Sonora Secretaría de Educación y Cultura Logo" class="partner-logo">
+                    </a>
+                     
+                    <a href="https://www.nrel.gov/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/nrel.png" alt="NREL Transforming Energy Logo" class="partner-logo">
                     </a>
                     <a href="https://www.aes.com/" target="_blank" rel="noopener" class="partner-logo-link">
                         <img src="static/aes.png" alt="AES Corporation Logo" class="partner-logo">
                     </a>
-                    <a href="https://www.nrel.gov/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/nrel.png" alt="NREL Transforming Energy Logo" class="partner-logo">
-                    </a>
                     <a href="https://www.energy.gov/eere/solar/solar-energy-technologies-office" target="_blank"
                         rel="noopener" class="partner-logo-link">
-                        <img src="static/doe.jpg" alt="U.S. Department of Energy Solar Awardee Logo"
-                            class="partner-logo">
+                        <img src="static/doe.jpg" alt="U.S. Department of Energy Solar Awardee Logo" class="partner-logo">
                     </a>
                 </div>
             </div>
@@ -1431,7 +1489,7 @@
                 <h2 class="reveal">Let’s shape the future of energy & agriculture.</h2>
                 <p class="reveal" style="transition-delay: 0.1s;">Our research provides data-driven models that
                     developers, farmers and policymakers can trust.</p>
-                <a href="#footer" class="cta-button reveal" style="transition-delay: 0.2s;">Talk to an Expert</a>
+                <a href="#footer" class="cta-button reveal" style="transition-delay: 0.2s;">Contact Us</a>
             </div>
         </section>
     </main>
@@ -1500,33 +1558,7 @@
                     document.body.style.overflow = isActive ? 'hidden' : '';
                 });
             };
-            const initTypingAnimation = () => {
-                const typingText = document.getElementById('typing-text');
-                if (!typingText) return;
-                const words = ["optimize land use.", "conserve water.", "enhance crop yields.", "create new revenue."];
-                let wordIndex = 0, letterIndex = 0, isDeleting = false;
-                const type = () => {
-                    const currentWord = words[wordIndex];
-                    let speed = isDeleting ? 75 : 150;
-                    if (isDeleting) {
-                        typingText.textContent = currentWord.substring(0, letterIndex - 1);
-                        letterIndex--;
-                        if (letterIndex === 0) {
-                            isDeleting = false;
-                            wordIndex = (wordIndex + 1) % words.length;
-                        }
-                    } else {
-                        typingText.textContent = currentWord.substring(0, letterIndex + 1);
-                        letterIndex++;
-                        if (letterIndex === currentWord.length) {
-                            isDeleting = true;
-                            speed = 2000;
-                        }
-                    }
-                    setTimeout(type, speed);
-                };
-                type();
-            };
+            
             const initOrbScale = () => {
                 const orb = document.getElementById('orb-container');
                 if (!orb) return;
@@ -1771,7 +1803,6 @@
             initScrollReveal();
             initStickyNav();
             initMobileNav();
-            initTypingAnimation();
             initOrbScale();
             initOrbVideo();
             initPillars();
