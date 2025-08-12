@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -250,30 +251,37 @@
 
         /* --- Hero Section --- */
         .hero {
+            height: 90vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
             padding: 8rem 1rem 6rem;
-            background-color: var(--bg-dark);
             position: relative;
             overflow: hidden;
         }
+        
+        .hero-background-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+            z-index: -2;
+        }
 
-        .hero::before {
-            content: '';
+        .hero-overlay {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(ellipse at center, rgba(17, 34, 64, 0.5), transparent 70%);
-            animation: pulse-background 10s infinite ease-in-out;
+            background-color: rgba(10, 25, 47, 0.65);
+            z-index: -1;
         }
-        
-        @keyframes pulse-background {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-
 
         .hero .container {
             position: relative;
@@ -281,264 +289,161 @@
         }
 
         .hero-headline {
-            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-size: clamp(4rem, 8vw, 6.5rem);
             font-weight: 800;
             line-height: 1.1;
-            margin: 0;
+            margin: 0 0 1.5rem;
             color: var(--text-lightest);
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         .hero-subheadline {
-            margin: 2rem auto 0;
-            max-width: 750px;
-            color: var(--text-body);
-            font-size: 1.25rem;
-        }
-
-        .typing-container {
-            border: 2px solid var(--secondary-color);
-            padding: 0.75rem 2.5rem;
-            border-radius: 50px;
-            color: var(--secondary-color);
-            font-weight: 600;
-            font-size: clamp(2rem, 5vw, 3rem);
-            line-height: 1.2;
-            background-color: rgba(232, 122, 36, 0.05);
-        }
-
-        .typing-cursor {
-            display: inline-block;
-            width: 3px;
-            height: 1em;
-            background-color: var(--secondary-color);
-            animation: blink 1s infinite;
-            vertical-align: bottom;
-            margin-left: 4px;
-        }
-
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* --- Orb --- */
-        .orb-section {
-            padding: 6rem 0;
-            background: var(--bg-dark);
-        }
-
-        .orb-container {
-            position: relative;
-            width: 320px;
-            height: 320px;
             margin: 0 auto;
-            transition: transform .5s ease-out;
+            max-width: 800px;
+            color: var(--text-heading);
+            font-size: 1.4rem;
+            line-height: 1.5;
+            font-weight: 400;
+            text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5);
         }
-
-        .orb-video-wrapper {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 0 0 10px rgba(17,34,64,0.5), var(--shadow-glow);
-            animation: pulse-orb 4s infinite ease-in-out;
-        }
-
-        @keyframes pulse-orb {
-            0% { box-shadow: 0 0 0 10px rgba(17,34,64,0.5), 0 0 25px -5px rgba(232, 122, 36, 0.2); }
-            70% { box-shadow: 0 0 0 25px rgba(17,34,64,0), 0 0 35px 0px rgba(232, 122, 36, 0.4); }
-            100% { box-shadow: 0 0 0 10px rgba(17,34,64,0.5), 0 0 25px -5px rgba(232, 122, 36, 0.2); }
-        }
-
-        .orb-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .mute-btn {
+        
+        .hero-video-controls {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: none;
-            background-color: rgba(0, 0, 0, .7);
-            color: #fff;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 2;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all var(--transition-speed) ease;
-            font-size: 1rem;
+            gap: 1rem;
         }
 
-        .mute-btn:hover {
+        .video-control-btn {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--text-lightest);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .video-control-btn:hover {
             background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
             transform: scale(1.1);
         }
 
-        /* --- INTEGRATED: Interactive Journey Section --- */
-        #interactive-journey {
-            /* Define color palette for the animation, adapting to the site's brand */
-            --dark-bg: var(--bg-dark);
-            --mid-bg: var(--bg-light-navy);
-            --text-primary: var(--text-lightest);
-            --text-secondary: var(--text-body);
-            --glow-accent-solar: var(--secondary-color);
-            --glow-accent-crop: #4ade80; /* A vibrant green */
-            --glow-accent-water: #22d3ee; /* A bright cyan */
-            --glow-accent-bio: #facc15; /* A golden yellow */
-            --glow-accent-power: #fb923c; /* A lighter orange */
-            --font-main: var(--font-main);
-            
-            position: relative;
-            padding: 0;
-            background-color: var(--dark-bg);
-            color: var(--text-primary);
-            font-family: var(--font-main);
-            overflow-x: hidden;
-        }
-
-        #interactive-journey * {
-            box-sizing: border-box;
-        }
-
-        #webgl-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            outline: none;
-            z-index: 1; /* Above page background, below content */
-        }
-
-        #progress-indicator {
-            position: fixed;
-            top: 50%;
-            left: 2.5rem;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            z-index: 3; /* Above text content */
-        }
-
-        #interactive-journey .progress-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        #interactive-journey .progress-dot.is-active-dot {
-            background-color: var(--text-primary);
-            transform: scale(1.5);
-        }
-
-        #interactive-journey .scroll-container {
-            position: relative;
-            z-index: 2; /* Above canvas */
-            width: 100%;
-        }
-
-        #interactive-journey .ui-panel {
-            width: 40%;
-            margin-left: 55%;
-            display: flex;
-            flex-direction: column;
-            pointer-events: none;
+        /* --- New Sections (from v2, restyled) --- */
+        .challenge-section {
+            background-color: var(--bg-light-navy);
         }
         
-        #interactive-journey .ui-panel section, #interactive-journey #intro-section, #interactive-journey #outro-section {
-            min-height: 150vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 2rem 3rem;
-            opacity: 0;
-            transition: opacity 0.5s ease-out;
-            pointer-events: none;
+        .challenge-section .news-header,
+        .proof-section .news-header {
+             text-align: center;
+             margin: 0 auto 3rem;
+             max-width: 800px;
+        }
+        
+        .challenge-section .news-header h2,
+        .proof-section .news-header h2 {
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            margin-bottom: 0.5rem;
         }
 
-        #interactive-journey #intro-section, #interactive-journey #outro-section { min-height: 100vh; }
-        
-        #interactive-journey .is-active {
-            opacity: 1 !important;
-            pointer-events: auto !important;
-        }
-        
-        #interactive-journey .content-wrapper {
-            background: rgba(17, 34, 64, 0.85); /* Use --bg-light-navy with alpha */
-            backdrop-filter: blur(10px) saturate(120%);
-            -webkit-backdrop-filter: blur(10px) saturate(120%);
-            border-radius: 20px;
-            padding: 2.5rem;
+        .challenge-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+        .challenge-card {
+            background: var(--bg-dark);
             border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transform: translateX(20px);
-            opacity: 0;
-            transition: opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s;
-        }
-        
-        #interactive-journey .is-active .content-wrapper {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        #interactive-journey h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            height: 100%;
             display: flex;
-            align-items: center;
-        }
-
-        #interactive-journey h2::before {
-            content: '=';
-            font-weight: 300;
-            font-size: 2rem;
-            margin-right: 1rem;
-            color: var(--text-secondary);
-        }
-
-        #interactive-journey p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-        
-        #interactive-journey #intro-section, #interactive-journey #outro-section {
-            width: 100%;
-            margin: 0;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        challenge-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+        .challenge-card img {
+            max-height: 25px;
+            margin-bottom: 1.5rem;
+            filter: brightness(0) invert(1) opacity(0.7);
+        }
+        .challenge-card blockquote {
+            font-size: 1rem;
+            line-height: 1.6;
+            border-left: 3px solid var(--secondary-color);
+            padding-left: 1rem;
+            margin: 0;
             text-align: left;
-        }
-        #interactive-journey #intro-section .content-wrapper, #interactive-journey #outro-section .content-wrapper {
-            max-width: 550px;
+            color: var(--text-body);
+            font-style: italic;
         }
         
-        #interactive-journey #outro-section a { color: var(--glow-accent-solar); text-decoration: none; font-weight: 500; }
+        .what-if-section {
+            background-color: var(--bg-dark);
+            text-align: center;
+        }
+        .what-if-section h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.3;
+        }
+        .what-if-section .highlight {
+            color: var(--secondary-color);
+        }
         
-        @media (max-width: 900px) {
-            #progress-indicator { left: 1.5rem; }
-            #interactive-journey .ui-panel {
-                width: 100%;
-                margin-left: 0;
-            }
-            #interactive-journey .ui-panel section { align-items: center; }
-            #interactive-journey .content-wrapper { max-width: 500px; margin: 0 1rem; }
+        .proof-section {
+            background-color: var(--bg-light-navy);
         }
-        @media (max-width: 768px) {
-            #progress-indicator { display: none; }
-            #interactive-journey .ui-panel section, #interactive-journey #intro-section, #interactive-journey #outro-section { min-height: 70vh; justify-content: flex-end; padding-bottom: 5rem; }
-            #interactive-journey #intro-section, #interactive-journey #outro-section { min-height: 100vh; justify-content: center; }
-            #interactive-journey h2 { font-size: 1.8rem; }
-            #interactive-journey p { font-size: 1rem; }
+        
+        .proof-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
-        /* --- END: Interactive Journey Section --- */
-
+        .proof-card {
+            background-color: var(--bg-dark);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .proof-card .stat-number {
+            font-family: var(--font-main);
+            font-size: clamp(4rem, 10vw, 5.5rem);
+            font-weight: 800;
+            color: var(--secondary-color);
+            line-height: 1;
+        }
+        .proof-card .stat-label {
+            font-size: 1.25rem;
+            color: var(--text-heading);
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .proof-card .stat-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+            color: var(--text-body);
+        }
 
         /* --- Pillars Section --- */
         .pillars-section .container {
@@ -988,7 +893,7 @@
             }
             .researcher-info { text-align: center; }
             .researcher-info p { margin: 0 auto; }
-
+            
             .footer-content {
                 grid-template-columns: 1fr;
                 text-align: center;
@@ -1012,9 +917,6 @@
             
             .hero-headline { font-size: 2.8rem; }
             .hero-subheadline { font-size: 1.1rem; }
-            .typing-container { font-size: 1.8rem; padding: 0.5rem 2rem; }
-
-            .orb-container { width: 280px; height: 280px; }
         }
     </style>
 </head>
@@ -1066,92 +968,99 @@
     <main>
         <!-- HERO -->
         <section class="hero">
+            <video id="heroVideo" class="hero-background-video" src="static/jacks-drone-video.mp4" autoplay loop muted playsinline></video>
+            <div class="hero-overlay"></div>
             <div class="container">
                 <h1 class="hero-headline reveal">Semi-arid Lab for Scaling Agrivoltaics</h1>
                 <div class="hero-subheadline reveal" style="transition-delay: 0.2s;">
                     <p>Our lab researches and implements agrivoltaic systems to create resilient food, energy, and water solutions in arid regions. We scale this work from local test plots to global partnerships, building a data-driven roadmap for a sustainable future.</p>
                 </div>
             </div>
-        </section>
-
-        <!-- ORB -->
-        <section class="orb-section">
-            <div class="orb-container" id="orb-container">
-                <div class="orb-video-wrapper">
-                    <!-- INSTRUCTION: The video source has been changed to a placeholder as requested. -->
-                    <video id="orb-video" class="orb-video" src="static/jacks-drone-video.mp4" autoplay loop muted
-                        playsinline></video>
-                </div>
-                <button class="mute-btn" id="muteBtn" aria-label="Toggle Mute">
+            <div class="hero-video-controls">
+                <button class="video-control-btn" id="playPauseBtn" aria-label="Pause video">
+                    <i class="fa-solid fa-pause"></i>
+                </button>
+                <button class="video-control-btn" id="muteUnmuteBtn" aria-label="Unmute video">
                     <i class="fa-solid fa-volume-xmark"></i>
                 </button>
             </div>
         </section>
 
-        <!-- INTEGRATED: INTERACTIVE JOURNEY -->
-        <section id="interactive-journey">
-            <canvas id="webgl-canvas"></canvas>
-            <nav id="progress-indicator"></nav>
-            <div class="scroll-container">
-                <section id="intro-section">
-                    <div class="content-wrapper">
-                        <h2>The Agrivoltaics Revolution</h2>
-                        <p>Pioneered by researchers like Greg Barron-Gafford at the University of Arizona, agrivoltaics is a symbiotic system for a hotter, drier world—boosting the resilience of our food, water, and energy systems. Scroll to see how.</p>
-                    </div>
-                </section>
-        
-                <div class="ui-panel">
-                    <section id="scene-1">
-                        <div class="content-wrapper">
-                            <h2>Optimized Solar Panels</h2>
-                            <p>Elevated solar arrays create a cooler microclimate. Research by Barron-Gafford's team shows this partial shade not only protects crops but also makes the panels themselves more efficient by mitigating extreme heat.</p>
-                        </div>
-                    </section>
-        
-                    <section id="scene-2">
-                        <div class="content-wrapper">
-                            <h2>Engineered Structure</h2>
-                            <p>The custom framework is raised high enough for modern farm equipment, enabling continued agricultural practices. This design is crucial for the real-world application and economic viability demonstrated in Arizona research sites.</p>
-                        </div>
-                    </section>
-                    
-                    <section id="scene-3">
-                        <div class="content-wrapper">
-                            <h2>Increased Crop Yield</h2>
-                            <p>In the Sonoran Desert, Barron-Gafford's studies found that crops like chiltepin peppers produced three times more fruit, and tomatoes doubled their yield under the protective shade—all while using significantly less water.</p>
-                        </div>
-                    </section>
-        
-                    <section id="scene-4">
-                        <div class="content-wrapper">
-                            <h2>Dual-Use Energy</h2>
-                            <p>The cooler, more efficient panels generate clean, renewable electricity. This power can be used on-farm to power irrigation, or sold to the grid, creating a vital new revenue stream for farmers and strengthening local energy independence.</p>
-                        </div>
-                    </section>
-        
-                    <section id="scene-5">
-                        <div class="content-wrapper">
-                            <h2>Radical Water Savings</h2>
-                            <p>The panel canopy is a powerful tool for water conservation. By reducing sun exposure and wind, soil moisture is preserved, cutting water loss from evaporation. It's a critical advantage in arid regions and a cornerstone of the research.</p>
-                        </div>
-                    </section>
-                    
-                    <section id="scene-6">
-                        <div class="content-wrapper">
-                            <h2>Ecosystem Regeneration</h2>
-                            <p>Agrivoltaic sites can become havens for biodiversity. By planting native, flowering vegetation in and around the arrays, these systems support vital pollinator populations, improve soil health, and create a more resilient, integrated landscape.</p>
-                        </div>
-                    </section>
+        <!-- CHALLENGE SECTION (from V2) -->
+<section class="section challenge-section">
+    <div class="container">
+        <div class="news-header reveal">
+            <span class="tag">The Pressing Need</span>
+            <h2>Major Challenges Across Food, Energy & Water</h2>
+        </div>
+        <div class="news-grid reveal" style="transition-delay: 0.2s;">
+            
+            <a href="https://www.nytimes.com/2021/11/03/travel/jura-wine-climate-change.html" target="_blank" rel="noopener noreferrer" class="challenge-card-link">
+                <div class="challenge-card">
+                    <img src="static/New-York-Times-logo.jpg" alt="The New York Times Logo">
+                    <blockquote>"Climate Change Threatens Wine, and a Way of Life... Extreme weather has ruined grape crops... 'If it continues like this, how will we continue? I really don't know,' said one winegrower."</blockquote>
                 </div>
-                
-                <section id="outro-section">
-                    <div class="content-wrapper">
-                        <h2>The Food-Energy-Water Nexus</h2>
-                        <p>Agrivoltaics is a data-driven solution, proven in harsh environments, that turns a single plot of land into a powerhouse of sustainable production. A vision for the future of agriculture, realized today.
-                        <br><br>
-                        </p>
+            </a>
+            
+            <a href="https://www.cnbc.com/amp/2022/04/03/arizona-farmers-are-slammed-by-water-cuts-in-the-west-amid-drought.html" target="_blank" rel="noopener noreferrer" class="challenge-card-link">
+                <div class="challenge-card">
+                    <img src="static/cnbc_redesign.png" alt="CNBC Logo">
+                    <blockquote>"Empty canals, dead cotton fields: Arizona farmers are getting slammed by water cuts in the West."</blockquote>
+                </div>
+            </a>
+            
+            <a href="https://grist.org/article/california-farmer-solar-panel-water-renewable-nature-conservancy" target="_blank" rel="noopener noreferrer" class="challenge-card-link">
+                <div class="challenge-card">
+                    <img src="static/grist_logo.png" alt="Grist Logo">
+                    <blockquote>"Low on Water, California Farmers Turn to Solar Farming... a state law now requires water regulators to figure out how to balance their accounts so that groundwater levels stop dropping."</blockquote>
+                </div>
+            </a>
+        </div>
+
+        <p class="reveal" style="text-align:center; max-width: 800px; margin: 3rem auto 0; font-size: 1.1rem; color: var(--text-body);">
+            Unfortunately, we've often been "siloed" in the way we think about solutions, pitting land use for energy against land use for food.
+        </p>
+    </div>
+</section>
+
+
+        <!-- WHAT IF SECTION (from V2) -->
+        <section class="section what-if-section">
+            <div class="container">
+                <h2 class="reveal">We are moving beyond siloed solutions by asking a simple question: <span class="highlight">What if we produce our food under solar panels?</span></h2>
+            </div>
+        </section>
+
+        <!-- PROOF SECTION (from V2) -->
+        <section class="section proof-section">
+            <div class="container">
+                <div class="news-header reveal">
+                    <span class="tag">The Evidence is Clear</span>
+                    <h2>Agrivoltaics Radically Increases Food Production</h2>
+                </div>
+                <div class="proof-grid">
+                    <div class="proof-card reveal">
+                        <div class="stat-number" data-target="3113">0%</div>
+                        <h3 class="stat-label">Spinach Yield Increase</h3>
+                        <p class="stat-description">A staggering increase in production, demonstrating how the shade and moderated climate under panels create ideal growing conditions for delicate leafy greens.</p>
                     </div>
-                </section>
+                    <div class="proof-card reveal" style="transition-delay: 0.2s;">
+                        <div class="stat-number" data-target="233">0%</div>
+                        <h3 class="stat-label">Cowpea Yield Increase</h3>
+                        <p class="stat-description">This vital, drought-tolerant crop sees its yield more than double, improving food security with a protein-rich staple food.</p>
+                    </div>
+                    <div class="proof-card reveal" style="transition-delay: 0.4s;">
+                        <div class="stat-number" data-target="287">0%</div>
+                        <h3 class="stat-label">Zucchini Yield Increase</h3>
+                        <p class="stat-description">Nearly triple the yield shows that agrivoltaics benefits a wide variety of common garden vegetables, boosting local food supplies.</p>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 4rem;" class="reveal">
+                    <h3 style="font-size: 1.5rem; font-weight: 500; color: var(--text-heading);">And it achieves this <span style="color: var(--secondary-color); font-weight: 700;">using less water.</span></h3>
+                    <p class="subtitle" style="max-width: 800px; margin: 1rem auto 0;">
+                        The shade from the panels reduces soil and plant temperatures, dramatically decreasing water evaporation and plant stress. Under drought-like conditions with half-irrigation, agrivoltaics still produces a greater yield than fully irrigated crops in full sun, making food production possible where it otherwise might not be.
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -1520,11 +1429,6 @@
         </div>
     </footer>
 
-    <!-- External Libraries for Interactive Journey -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const initScrollReveal = () => {
@@ -1558,35 +1462,77 @@
                     document.body.style.overflow = isActive ? 'hidden' : '';
                 });
             };
-            
-            const initOrbScale = () => {
-                const orb = document.getElementById('orb-container');
-                if (!orb) return;
-                window.addEventListener('scroll', () => {
-                    const rect = orb.getBoundingClientRect();
-                    const viewHeight = window.innerHeight;
-                    if (rect.top < viewHeight && rect.bottom >= 0) {
-                        const scale = Math.min(1.5, 1 + window.scrollY / 1000);
-                        orb.style.transform = `scale(${scale})`;
+
+            const initHeroVideoControls = () => {
+                const video = document.getElementById('heroVideo');
+                const playPauseBtn = document.getElementById('playPauseBtn');
+                const muteUnmuteBtn = document.getElementById('muteUnmuteBtn');
+
+                if (!video || !playPauseBtn || !muteUnmuteBtn) return;
+
+                const playIcon = playPauseBtn.querySelector('i');
+                const muteIcon = muteUnmuteBtn.querySelector('i');
+
+                playPauseBtn.addEventListener('click', () => {
+                    if (video.paused) {
+                        video.play();
+                        playIcon.className = 'fa-solid fa-pause';
+                        playPauseBtn.setAttribute('aria-label', 'Pause video');
+                    } else {
+                        video.pause();
+                        playIcon.className = 'fa-solid fa-play';
+                        playPauseBtn.setAttribute('aria-label', 'Play video');
                     }
-                }, { passive: true });
-            };
-            const initOrbVideo = () => {
-                const orbVideo = document.getElementById('orb-video');
-                const muteBtn = document.getElementById('muteBtn');
-                if (!orbVideo || !muteBtn) return;
-                const icon = muteBtn.querySelector('i');
-                const setIcon = () => {
-                    icon.className = orbVideo.muted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
-                };
-                orbVideo.play().catch(() => { orbVideo.muted = true; setIcon(); });
-                muteBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    orbVideo.muted = !orbVideo.muted;
-                    setIcon();
                 });
-                setIcon();
+
+                muteUnmuteBtn.addEventListener('click', () => {
+                    video.muted = !video.muted;
+                    if (video.muted) {
+                        muteIcon.className = 'fa-solid fa-volume-xmark';
+                        muteUnmuteBtn.setAttribute('aria-label', 'Unmute video');
+                    } else {
+                        muteIcon.className = 'fa-solid fa-volume-high';
+                        muteUnmuteBtn.setAttribute('aria-label', 'Mute video');
+                    }
+                });
             };
+            
+            const initCounters = () => {
+                const stats = document.querySelectorAll('.stat-number');
+                if (stats.length === 0) return;
+
+                const statsObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            const target = +el.getAttribute('data-target');
+                            const duration = 2000;
+                            const frameDuration = 1000 / 60;
+                            const totalFrames = Math.round(duration / frameDuration);
+                            let frame = 0;
+
+                            const counter = setInterval(() => {
+                                frame++;
+                                const progress = frame / totalFrames;
+                                const current = Math.round(target * progress);
+                                el.innerText = current.toLocaleString() + '%';
+
+                                if (frame === totalFrames) {
+                                    clearInterval(counter);
+                                    el.innerText = target.toLocaleString() + '%';
+                                }
+                            }, frameDuration);
+                            
+                            observer.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                stats.forEach(stat => {
+                    statsObserver.observe(stat);
+                });
+            };
+
             const initPillars = () => {
                 const pillarItems = document.querySelectorAll('.pillar-item');
                 const pillarImages = document.querySelectorAll('.pillar-image');
@@ -1663,151 +1609,14 @@
                 });
             };
 
-            const initInteractiveJourney = () => {
-                if (!document.getElementById('webgl-canvas')) return; // Exit if the animation isn't on the page
-
-                gsap.registerPlugin(ScrollTrigger);
-                let scene, camera, renderer, agrivoltaicsGroup;
-                const models = {};
-
-                function init() {
-                    scene = new THREE.Scene();
-                    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                    camera.position.set(0, 60, 120); 
-                    camera.lookAt(0, 0, 0);
-                    renderer = new THREE.WebGLRenderer({
-                        canvas: document.getElementById('webgl-canvas'),
-                        antialias: true,
-                        alpha: true
-                    });
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-                    scene.add(ambientLight);
-                    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-                    directionalLight.position.set(5, 10, 7);
-                    scene.add(directionalLight);
-                    
-                    createAgrivoltaicsSystem();
-                    setupVisibilityToggle();
-                    setupSynchronizedScrollAnimations();
-
-                    const clock = new THREE.Clock();
-                    animate(clock);
-                    window.addEventListener('resize', onWindowResize, false);
-                }
-
-                function createAgrivoltaicsSystem() {
-                    agrivoltaicsGroup = new THREE.Group(); scene.add(agrivoltaicsGroup);
-                    const groundGeo = new THREE.PlaneGeometry(200, 200); const groundMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, transparent: true, opacity: 0 });
-                    const ground = new THREE.Mesh(groundGeo, groundMat); ground.rotation.x = -Math.PI / 2; models.ground = ground; agrivoltaicsGroup.add(ground);
-                    models.panels = new THREE.Group(); models.structures = new THREE.Group();
-                    const panelGeo = new THREE.PlaneGeometry(8, 4); const panelMat = new THREE.MeshStandardMaterial({ color: varToHex('--glow-accent-solar'), emissive: varToHex('--glow-accent-solar'), emissiveIntensity: 0, transparent: true, opacity: 0, side: THREE.DoubleSide });
-                    const poleGeo = new THREE.CylinderGeometry(0.2, 0.2, 10, 8); const poleMat = new THREE.MeshStandardMaterial({ color: 0x888888, emissive: 0x888888, emissiveIntensity: 0, transparent: true, opacity: 0 });
-                    for (let i = -2; i <= 2; i++) { for (let j = -2; j <= 2; j++) { const panel = new THREE.Mesh(panelGeo, panelMat.clone()); panel.position.set(i * 12, 10, j * 12); panel.rotation.x = -Math.PI / 180 * 25; models.panels.add(panel); const pole1 = new THREE.Mesh(poleGeo, poleMat.clone()); pole1.position.set(i * 12 - 3, 5, j * 12); models.structures.add(pole1); const pole2 = new THREE.Mesh(poleGeo, poleMat.clone()); pole2.position.set(i * 12 + 3, 5, j * 12); models.structures.add(pole2); } }
-                    agrivoltaicsGroup.add(models.panels, models.structures);
-                    models.crops = new THREE.Group(); const cropGeo = new THREE.PlaneGeometry(6, 1.5); const cropMat = new THREE.MeshBasicMaterial({ color: varToHex('--glow-accent-crop'), transparent: true, opacity: 0, side: THREE.DoubleSide });
-                    for (let i = -2; i <= 2; i++) { for (let j = -2; j <= 2; j++) { const crop = new THREE.Mesh(cropGeo, cropMat.clone()); crop.position.set(i * 12, 0.1, j * 12 + 2); crop.rotation.x = -Math.PI / 2; crop.scale.set(0, 0, 0); models.crops.add(crop); } }
-                    agrivoltaicsGroup.add(models.crops);
-                    models.electrical = new THREE.Group(); const inverterGeo = new THREE.BoxGeometry(1, 1, 1); const inverterMat = new THREE.MeshStandardMaterial({ color: varToHex('--glow-accent-power'), emissive: varToHex('--glow-accent-power'), emissiveIntensity: 0, transparent: true, opacity: 0 });
-                    const inverter = new THREE.Mesh(inverterGeo, inverterMat); inverter.position.set(0, 0.5, 35); models.electrical.add(inverter);
-                    const cableCurve = new THREE.CatmullRomCurve3([ new THREE.Vector3(0, 9, 0), new THREE.Vector3(0, 5, 20), new THREE.Vector3(0, 1, 34.5) ]); const cableGeo = new THREE.TubeGeometry(cableCurve, 20, 0.1, 8, false); const cableMat = new THREE.MeshBasicMaterial({ color: varToHex('--glow-accent-power'), transparent: true, opacity: 0 }); const cable = new THREE.Mesh(cableGeo, cableMat); models.electrical.add(cable);
-                    const particleCount = 50; const particlesGeo = new THREE.BufferGeometry(); particlesGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(particleCount * 3), 3)); const particleMat = new THREE.PointsMaterial({ size: 0.2, color: 0xffffff, blending: THREE.AdditiveBlending, transparent: true, opacity: 0, depthWrite: false });
-                    models.sparks = new THREE.Points(particlesGeo, particleMat); models.sparks.userData.curve = cableCurve; models.electrical.add(models.sparks); agrivoltaicsGroup.add(models.electrical);
-                    models.water = new THREE.Group(); const pipeGeo = new THREE.CylinderGeometry(0.1, 0.1, 60, 8); const pipeMat = new THREE.MeshBasicMaterial({ color: varToHex('--glow-accent-water'), transparent: true, opacity: 0 });
-                    const pipe = new THREE.Mesh(pipeGeo, pipeMat); pipe.rotation.z = Math.PI / 2; pipe.position.set(0, 0.5, 0); models.water.add(pipe); agrivoltaicsGroup.add(models.water);
-                    const beeCount = 50; const beeGeo = new THREE.BufferGeometry(); const beePosArray = new Float32Array(beeCount * 3); for (let i = 0; i < beeCount; i++) { beePosArray[i*3 + 0] = (Math.random() - 0.5) * 80; beePosArray[i*3 + 1] = Math.random() * 5 + 1; beePosArray[i*3 + 2] = (Math.random() - 0.5) * 80; }
-                    beeGeo.setAttribute('position', new THREE.BufferAttribute(beePosArray, 3)); const beeMat = new THREE.PointsMaterial({ size: 0.3, color: varToHex('--glow-accent-bio'), blending: THREE.AdditiveBlending, transparent: true, opacity: 0, depthWrite: false });
-                    models.bees = new THREE.Points(beeGeo, beeMat); agrivoltaicsGroup.add(models.bees);
-                }
-                
-                function animate(clock) {
-                    const elapsedTime = clock.getElapsedTime(); requestAnimationFrame(() => animate(clock));
-                    if (models.sparks && models.sparks.material.opacity > 0) { const progress = (elapsedTime * 0.1) % 1; const positions = models.sparks.geometry.attributes.position.array; for (let i = 0; i < positions.length; i += 3) { const randomProgress = (progress + Math.random() * 0.05) % 1; const p = models.sparks.userData.curve.getPointAt(randomProgress); positions[i] = p.x; positions[i+1] = p.y; positions[i+2] = p.z; } models.sparks.geometry.attributes.position.needsUpdate = true; }
-                    if (models.bees && models.bees.material.opacity > 0) { const positions = models.bees.geometry.attributes.position.array; for(let i=0; i < positions.length; i+=3) { positions[i+1] += Math.sin(elapsedTime * 0.5 + i) * 0.01; } models.bees.geometry.attributes.position.needsUpdate = true; }
-                    renderer.render(scene, camera);
-                }
-                
-                function setupVisibilityToggle() {
-                    const canvas = document.getElementById('webgl-canvas');
-                    const progressIndicator = document.getElementById('progress-indicator');
-                    
-                    gsap.set([canvas, progressIndicator], { autoAlpha: 0 }); // Start hidden
-
-                    ScrollTrigger.create({
-                        trigger: "#interactive-journey",
-                        start: "top top",
-                        end: "bottom bottom",
-                        onEnter: () => gsap.to([canvas, progressIndicator], { autoAlpha: 1, duration: 0.5 }),
-                        onLeave: () => gsap.to([canvas, progressIndicator], { autoAlpha: 0, duration: 0.5 }),
-                        onEnterBack: () => gsap.to([canvas, progressIndicator], { autoAlpha: 1, duration: 0.5 }),
-                        onLeaveBack: () => gsap.to([canvas, progressIndicator], { autoAlpha: 0, duration: 0.5 }),
-                    });
-                }
-
-                function setupSynchronizedScrollAnimations() {
-                    const sections = gsap.utils.toArray('#interactive-journey #intro-section, #interactive-journey .ui-panel section, #interactive-journey #outro-section');
-                    const progressIndicator = document.getElementById('progress-indicator');
-                    sections.forEach(() => { const dot = document.createElement('div'); dot.classList.add('progress-dot'); progressIndicator.appendChild(dot); });
-                    const dots = gsap.utils.toArray('#interactive-journey .progress-dot');
-                    let currentSection = -1;
-
-                    function setActiveSection(index) {
-                        if (index === currentSection) return;
-                        currentSection = index;
-                        sections.forEach((section, i) => section.classList.toggle('is-active', i === index));
-                        dots.forEach((dot, i) => dot.classList.toggle('is-active-dot', i === index));
-                    }
-
-                    const tl = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: "#interactive-journey .scroll-container",
-                            start: "top top",
-                            end: "bottom bottom",
-                            scrub: 1.5,
-                            onUpdate: self => {
-                                const time = self.animation.time(); const labels = self.animation.labels; const labelTimes = Object.values(labels);
-                                let activeIndex = 0;
-                                for (let i = labelTimes.length - 1; i >= 0; i--) { if (time >= labelTimes[i]) { activeIndex = i; break; } }
-                                setActiveSection(activeIndex);
-                            }
-                        }
-                    });
-                    
-                    tl.addLabel("scene0").to(camera.position, { z: 110, y: 55, ease: "power1.inOut" }).to(models.ground.material, { opacity: 1 }, "<").to({}, { duration: 1 });
-                    tl.addLabel("scene1").to(camera.position, { x: 40, y: 25, z: 50, ease: "power2.inOut" }).to(camera.rotation, { y: Math.PI / 8, ease: "power2.inOut" }, "<").to(models.panels.children.map(p => p.material), { opacity: 0.8, emissiveIntensity: 1, stagger: 0.02 }, "<").to({}, { duration: 1 });
-                    tl.addLabel("scene2").to(camera.position, { x: 20, y: 12, z: 45, ease: "power2.inOut" }).to(models.structures.children.map(p => p.material), { opacity: 0.7, emissiveIntensity: 0.5, stagger: 0.02 }, "<").to({}, { duration: 1 });
-                    tl.addLabel("scene3").to(camera.position, { x: 0, y: 15, z: 45, ease: "power2.inOut" }).to(camera.rotation, { y: 0, x: -Math.PI / 16, ease: "power2.inOut" }, "<").to(models.panels.children.map(p => p.material), { opacity: 0.2, emissiveIntensity: 0.1}, "<").to(models.crops.children.map(c => c.material), { opacity: 1, stagger: 0.05 }, "-=0.5").to(models.crops.children.map(c => c.scale), { x: 1, y: 1, z: 1, stagger: 0.05 }, "<").to({}, { duration: 1 });
-                    tl.addLabel("scene4").to(camera.position, { x: 0, y: 10, z: 60, ease: "power2.inOut" }).to(camera.rotation, { x: 0 }, "<").to(models.electrical.children.map(e => e.material), { opacity: 1, emissiveIntensity: 1 }, "<").to(models.sparks.material, { opacity: 1 }, "<").to({}, { duration: 1 });
-                    tl.addLabel("scene5").to(camera.position, { x: -35, y: 10, z: 40, ease: "power2.inOut" }).to(camera.rotation, { y: -Math.PI / 6 }, "<").to(models.electrical.children.map(e => e.material), { opacity: 0.1, emissiveIntensity: 0.1 }, "<").to(models.sparks.material, { opacity: 0 }, "<").to(models.water.children.map(w => w.material), { opacity: 1 }, "<").to({}, { duration: 1 });
-                    tl.addLabel("scene6").to(camera.position, { x: 0, y: 60, z: 120, ease: "power2.inOut" }).to(camera.rotation, { y: 0, x: -Math.PI / 12 }, "<").to(models.water.children.map(w => w.material), { opacity: 0.1 }, "<").to(models.panels.children.map(p => p.material), { opacity: 0.3, emissiveIntensity: 0.2}, "<").to(models.structures.children.map(p => p.material), { opacity: 0.2, emissiveIntensity: 0.1}, "<").to(models.bees.material, { opacity: 1, duration: 2 }, "<").to({}, { duration: 1 });
-                    tl.addLabel("outro").to(camera.position, { y: 70, z: 160, ease: "power1.in" }).to(agrivoltaicsGroup.scale, { x: 0.8, y: 0.8, z: 0.8, ease: "power1.in" }, "<").to(agrivoltaicsGroup.children.flatMap(group => group.children.map(child => child.material)), { opacity: 0, duration: 1.5}, "<");
-
-                    setActiveSection(0);
-                }
-
-                function onWindowResize() {
-                    if (!camera || !renderer) return;
-                    camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-                    renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                }
-                
-                function varToHex(varName) {
-                    return getComputedStyle(document.getElementById('interactive-journey')).getPropertyValue(varName).trim();
-                }
-
-                init();
-            };
-
             // Initialize all page components
             initScrollReveal();
             initStickyNav();
             initMobileNav();
-            initOrbScale();
-            initOrbVideo();
+            initHeroVideoControls();
+            initCounters();
             initPillars();
             initCarousel();
-            initInteractiveJourney(); // Initialize the new animation
         });
     </script>
 </body>
