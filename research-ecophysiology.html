@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SALSA - Ecophysiology Research</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/main-styles.css">
     <!-- Helper styles for subpages to align with the new theme -->
     <style>
+        :root {
+            --primary-color: #002147;
+            --secondary-color: #E87A24;
+            --secondary-color-dark: #d76d1a;
+            --bg-dark: #0A192F;
+            --bg-light-navy: #112240;
+            --text-heading: #CCD6F6;
+            --text-body: #8892B0;
+            --text-lightest: #E6F1FF;
+            --border-color: rgba(100, 116, 139, 0.3);
+            --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --shadow-glow: 0 0 25px -5px rgba(232, 122, 36, 0.2);
+            --transition-speed: 0.3s;
+        }
+
         .hero-subpage {
             position: relative;
             color: #fff;
@@ -20,23 +40,30 @@
             background-position: center;
             min-height: 40vh;
         }
+
         .hero-subpage::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 25, 47, 0.6);
             z-index: 1;
         }
+
         .hero-subpage .hero-content {
             position: relative;
             z-index: 2;
             max-width: 800px;
         }
+
         .hero-subpage h1 {
             font-size: clamp(2.5rem, 6vw, 3.4rem);
             font-weight: 800;
             color: #fff;
         }
+
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -44,19 +71,26 @@
             align-items: center;
             margin-bottom: 4rem;
         }
+
         .section-header {
             text-align: center;
             margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
+
         .section-header h2 {
             font-size: clamp(2.2rem, 5vw, 2.8rem);
         }
+
         .projects-grid {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 1.5rem;
         }
+
         .btn {
             display: inline-block;
             padding: 0.8rem 2rem;
@@ -67,30 +101,158 @@
             text-align: center;
             border: 2px solid var(--secondary-color);
         }
+
         .btn-secondary {
             background: transparent;
             color: var(--secondary-color);
         }
+
         .btn-secondary:hover {
             background: var(--secondary-color);
             color: #fff;
             transform: translateY(-2px);
         }
-        .news-card a { display: block; height: 100%;}
-        .news-card:hover a { color: var(--text-light); }
-        
-        /* Styles for inline citations */
+
+        /* news-card styles for the Outputs section */
+        .news-card {
+            background: var(--bg-light-navy);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .news-card-link {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .news-image-wrapper {
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .news-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .news-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .news-card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-card-content h3 {
+            font-size: 1.15rem;
+            color: var(--text-heading);
+            margin: 0 0 0.5rem;
+        }
+
+        .news-card-content p {
+            font-size: 0.95rem;
+            color: var(--text-body);
+            flex-grow: 1;
+        }
+
         sup a {
             text-decoration: none;
             color: var(--secondary-color);
             font-weight: 600;
             font-size: 0.8em;
         }
+
         sup a:hover {
             text-decoration: underline;
         }
+
+        /* Styles for the new chart section */
+        .chart-section {
+            background-color: var(--bg-light-navy);
+            padding: 5rem 2rem;
+            border-radius: 16px;
+        }
+
+        .chart-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 0.5rem;
+            background-color: var(--bg-dark);
+            padding: 0.5rem;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .control-group .toggle-btn {
+            padding: 0.5rem 1.25rem;
+            border: none;
+            background-color: transparent;
+            color: var(--text-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-group .toggle-btn.active {
+            background-color: var(--secondary-color);
+            color: var(--text-lightest);
+            box-shadow: 0 2px 8px rgba(232, 122, 36, 0.3);
+        }
+
+        /* Styles for custom legend markers */
+        .custom-marker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 12px;
+            margin-right: 6px;
+        }
+
+        .custom-marker .line {
+            width: 100%;
+        }
+
+        .custom-marker .line.solid {
+            height: 3px;
+        }
+
+        .custom-marker .line.dashed {
+            height: 0;
+            border-top: 3px dashed;
+        }
     </style>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="navbar-container">
@@ -103,7 +265,7 @@
                 <ul class="navbar-menu">
                     <li><a href="index.html" class="navbar-link">Home</a></li>
                     <li class="has-dropdown">
-                        <a href="#" class="navbar-link">Research</a>
+                        <a href="#" class="navbar-link active">Research</a>
                         <ul class="dropdown-content">
                             <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
                             <li><a href="research-scaling-up.html">Scaling Up</a></li>
@@ -135,31 +297,57 @@
 
     <main class="section">
         <div class="container">
-            <div class="content-grid">
-                <div>
-                    <h2>Research Questions</h2>
-                    <p>This research area focuses on the micro-level interactions between plants, soil, and the altered environment created by solar panels. We investigate fundamental questions about how partial shade and changed microclimates affect plant physiology, water use efficiency, and overall crop health and productivity. How do plants adapt their photosynthetic processes? How much water can be saved? Which crops benefit the most from these conditions?</p>
-                </div>
-                <div>
-                    <img src="static/ecophysiology-diagram.jpg" alt="Diagram showing sun, solar panels, and shaded plants with water conservation" style="border-radius: 12px; box-shadow: var(--shadow-md);">
-                </div>
-            </div>
-            
-            <!-- NEW CONTENT SECTION -->
-            <div style="margin-bottom: 4rem;">
+
+            <div style="margin-bottom: 5rem;">
                 <div class="section-header">
                     <h2>The Plant-Panel Symbiosis</h2>
                 </div>
-                
-                <!-- Image Placeholder -->
+
                 <div style="text-align: center; margin-bottom: 2rem;">
-                    <img src="static/field_research.png" alt="Placeholder image of researchers in an agrivoltaic field" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-md);">
+                    <img src="static/field_research.png"
+                        alt="Researchers conducting measurements in an agrivoltaic field at Biosphere 2"
+                        style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-md);">
                 </div>
 
-                <p>Years of field experiments have revealed a remarkable symbiosis between plants and solar panels. In hot, arid climates, the shade provided by panels creates a milder microclimate, buffering crops from extreme heat and light. This protection helps plants avoid the typical "midday depression" of photosynthesis, where they shut down to conserve water, allowing them to remain productive throughout the day.<a href="https://bioengineer.org/agrivoltaics-boosts-photosynthesis-amid-dryland-midday-stress/#:~:text=ADVERTISEMENT" target="_blank" rel="noopener"><sup>[1]</sup></a> The results are striking: in Arizona trials, chiltepin peppers produced three times more fruit and tomatoes doubled their yield under panels, all while using significantly less water.<a href="https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus#:~:text=,production%20was%20twice%20as%20great" target="_blank" rel="noopener"><sup>[2]</sup></a></p>
-                <p>This relationship is mutual. As plants transpire, they release water vapor that acts as a natural evaporative cooler, lowering the temperature of the overlying solar panels. Since panels operate more efficiently when cool, this plant-driven cooling actually boosts electricity production.<a href="https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus#:~:text=In%20addition%20to%20the%20benefits,the%20temperature%20of%20the%20panels" target="_blank" rel="noopener"><sup>[3]</sup></a> The shade also dramatically conserves water by reducing soil evaporation, with some studies showing soil moisture remaining 15% higher under panels even with reduced irrigation.<a href="https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus#:~:text=,when%20irrigating%20every%20other%20day" target="_blank" rel="noopener"><sup>[4]</sup></a> This virtuous cycle creates a win-win-win for food, energy, and water systems.</p>
+                <p>This research pillar focuses on the micro-level interactions between plants, soil, and the altered
+                    environment created by solar panels. We investigate fundamental questions about how partial shade
+                    and changed microclimates affect plant physiology, water use efficiency, and overall crop health and
+                    productivity. How do plants adapt their photosynthetic processes? How much water can be saved? Which
+                    crops benefit the most from these conditions?</p>
+                <p>Years of field experiments have revealed a remarkable symbiosis. In hot, arid climates, the shade
+                    provided by panels creates a milder microclimate, buffering crops from extreme heat and light. This
+                    protection helps plants avoid the typical "midday depression" of photosynthesis, where they shut
+                    down to conserve water, allowing them to remain productive throughout the day.<sup><a
+                            href="https://bioengineer.org/agrivoltaics-boosts-photosynthesis-amid-dryland-midday-stress/"
+                            target="_blank" rel="noopener">[1]</a></sup> The results are striking: in Arizona trials,
+                    chiltepin peppers produced three times more fruit and tomatoes doubled their yield under panels, all
+                    while using significantly less water.<sup><a
+                            href="https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus"
+                            target="_blank" rel="noopener">[2]</a></sup></p>
             </div>
-            <!-- END NEW CONTENT SECTION -->
+
+            <div class="chart-section" style="margin-bottom: 5rem;">
+                <div class="section-header" style="margin-bottom: 2rem;">
+                    <h2>Photosynthesis Throughout the Day</h2>
+                    <p style="color: var(--text-body); font-size: 1.1rem; max-width: 700px; margin: 1rem auto 0;">
+                        Explore how agrivoltaics mitigates the "midday depression" of photosynthesis. In full sun, many
+                        plants shut down during the hottest part of the day. Under panels, they continue to thrive.</p>
+                </div>
+
+                <div class="chart-controls">
+                    <div class="control-group" id="irrigation-toggle">
+                        <button class="toggle-btn active" data-value="full">100% Irrigation</button>
+                        <button class="toggle-btn" data-value="half">50% Irrigation</button>
+                    </div>
+                    <div class="control-group" id="crop-toggle">
+                        <button class="toggle-btn active" data-value="basil">Basil</button>
+                        <button class="toggle-btn" data-value="beans">Beans</button>
+                        <button class="toggle-btn" data-value="tomatoes">Tomatoes</button>
+                    </div>
+                </div>
+
+                <div id="photosynthesisChart"></div>
+            </div>
 
             <div style="margin-bottom: 4rem;">
                 <div class="section-header">
@@ -174,27 +362,51 @@
 
             <div>
                 <div class="section-header">
-                    <h2>Outputs</h2>
+                    <h2>Recent Publications</h2>
                 </div>
-                 <div class="news-grid">
+                <div class="news-grid">
                     <div class="news-card">
-                        <a href="https://www.nature.com/articles/s41893-019-0364-5" target="_blank" aria-label="View Nature Sustainability Publication (2019)">
+                        <a href="https://doi.org/10.1016/j.gecadv.2025.100021" target="_blank" class="news-card-link"
+                            aria-label="View Publication on The long-term suitability of agrivoltaics as a climate adaptation strategy in the southwestern United States">
                             <div class="news-image-wrapper">
-                                <img src="static/output1.png" alt="Cover of Nature Sustainability Publication">
+                                <img src="static/output1.jpg"
+                                    alt="Placeholder image for a publication on agrivoltaics in the southwestern United States">
+                            </div>
+                            <div class="news-card-content">
+                                <h3>The Long-Term Suitability of Agrivoltaics in the Southwestern United States</h3>
+                                <p>This study evaluates land suitability for agrivoltaics in the U.S. Southwest, finding
+                                    that the most suitable land is projected to increase by 54% under future climate
+                                    scenarios, with California and New Mexico seeing the most significant gains.</p>
                             </div>
                         </a>
                     </div>
                     <div class="news-card">
-                        <a href="https://www.researchgate.net/publication/392474399_Agrivoltaics_as_a_climate-smart_and_resilient_solution_for_midday_depression_in_photosynthesis_in_dryland_regions" target="_blank" aria-label="View npj Sustainable Agriculture Publication on ResearchGate">
+                        <a href="https://www.nature.com/articles/s44264-025-00073-1" target="_blank"
+                            class="news-card-link"
+                            aria-label="View npj Sustainable Agriculture Publication on Photosynthesis">
                             <div class="news-image-wrapper">
-                                <img src="static/output2.png" alt="Cover of npj Sustainable Agriculture Publication">
+                                <img src="static/output2.jpg"
+                                    alt="Placeholder image for a drylands photosynthesis publication">
+                            </div>
+                            <div class="news-card-content">
+                                <h3>Midday Depression in Photosynthesis</h3>
+                                <p>Published in npj Sustainable Agriculture, this research presents agrivoltaics as a
+                                    climate-smart solution in drylands, mitigating plant stress to boost resilience.</p>
                             </div>
                         </a>
                     </div>
                     <div class="news-card">
-                        <a href="https://www.energy.gov/eere/solar/articles/new-reports-highlight-best-practices-combining-solar-energy-and-agriculture" target="_blank" aria-label="View NREL Best Practices Report">
+                        <a href="https://doi.org/10.1016/j.rser.2024.115066" target="_blank" class="news-card-link"
+                            aria-label="View Renewable and Sustainable Energy Reviews Publication on Agrivoltaics in East Africa">
                             <div class="news-image-wrapper">
-                                <img src="static/output3.png" alt="Cover of NREL Best Practices Report">
+                                <img src="static/output3.jpg"
+                                    alt="Placeholder image for a publication on agrivoltaics in East Africa">
+                            </div>
+                            <div class="news-card-content">
+                                <h3>Harvesting the Sun Twice: Agrivoltaics in East Africa</h3>
+                                <p>This study in Tanzania and Kenya demonstrates that agrivoltaic systems can generate
+                                    electricity, improve crop yields, and conserve water, enhancing food, energy, and
+                                    water security in the region.</p>
                             </div>
                         </a>
                     </div>
@@ -205,11 +417,11 @@
 
     <footer class="footer" id="footer">
         <div class="container footer-content">
-             <div class="footer-brand">
+            <div class="footer-brand">
                 <h3>SALSA Agrivoltaics</h3>
                 <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
-             </div>
-             <div class="footer-links">
+            </div>
+            <div class="footer-links">
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="index.html">Home</a></li>
@@ -217,19 +429,197 @@
                     <li><a href="news.html">News</a></li>
                     <li><a href="team.html">Team</a></li>
                 </ul>
-             </div>
-             <div class="footer-contact">
+            </div>
+            <div class="footer-contact">
                 <h4>Contact Us</h4>
                 <p>University of Arizona</p>
                 <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
-             </div>
+            </div>
         </div>
         <div class="footer-bottom">
             <p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="js/main.js"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof ApexCharts === 'undefined') {
+                console.error('ApexCharts library not loaded.');
+                return;
+            }
+
+            const photosynthesisData = {
+                full: {
+                    basil: {
+                        control: [{ x: 600, y: 0.5 }, { x: 800, y: 10.1 }, { x: 1000, y: 5.2 }, { x: 1200, y: 0.8 }, { x: 1400, y: 0.9 }, { x: 1600, y: 0.2 }, { x: 1800, y: 0.5 }, { x: 2000, y: 0.1 }],
+                        av: [{ x: 600, y: 0.1 }, { x: 800, y: 4.8 }, { x: 1000, y: 4.9 }, { x: 1200, y: 3.5 }, { x: 1400, y: 2.8 }, { x: 1600, y: 2.2 }, { x: 1800, y: 1.5 }, { x: 2000, y: 0.2 }]
+                    },
+                    beans: {
+                        control: [{ x: 600, y: 1.2 }, { x: 800, y: 12.1 }, { x: 1000, y: 12.5 }, { x: 1200, y: 6.8 }, { x: 1400, y: 2.1 }, { x: 1500, y: -0.9 }, { x: 1600, y: 0.2 }, { x: 1700, y: 1.5 }, { x: 2000, y: -0.2 }],
+                        av: [{ x: 600, y: 0.1 }, { x: 800, y: 7.5 }, { x: 1000, y: 8.1 }, { x: 1200, y: 7.6 }, { x: 1400, y: 5.8 }, { x: 1500, y: 6.0 }, { x: 1600, y: 7.5 }, { x: 1700, y: 6.2 }, { x: 1800, y: 4.0 }, { x: 2000, y: 0.5 }]
+                    },
+                    tomatoes: {
+                        control: [{ x: 600, y: -0.5 }, { x: 800, y: 7.0 }, { x: 1000, y: 9.1 }, { x: 1200, y: 4.9 }, { x: 1400, y: 2.8 }, { x: 1600, y: 2.5 }, { x: 1800, y: 1.2 }, { x: 2000, y: -0.2 }],
+                        av: [{ x: 600, y: -0.8 }, { x: 800, y: 6.5 }, { x: 1000, y: 6.0 }, { x: 1200, y: 5.0 }, { x: 1300, y: 4.5 }, { x: 1400, y: 4.2 }, { x: 1600, y: 3.5 }, { x: 1800, y: 2.1 }, { x: 2000, y: 0.5 }]
+                    }
+                },
+                half: {
+                    basil: {
+                        control: [{ x: 600, y: 0.2 }, { x: 800, y: 7.2 }, { x: 1000, y: 2.5 }, { x: 1200, y: -1.0 }, { x: 1400, y: 0.2 }, { x: 1600, y: 0.0 }, { x: 1800, y: -0.2 }, { x: 2000, y: -1.5 }],
+                        av: [{ x: 600, y: 0.1 }, { x: 800, y: 2.5 }, { x: 1000, y: 3.9 }, { x: 1200, y: 3.2 }, { x: 1400, y: 2.5 }, { x: 1600, y: 1.8 }, { x: 1800, y: 1.2 }, { x: 2000, y: -0.5 }]
+                    },
+                    beans: {
+                        control: [{ x: 600, y: 0.1 }, { x: 800, y: 9.5 }, { x: 1000, y: 11.2 }, { x: 1200, y: 4.5 }, { x: 1300, y: 0.5 }, { x: 1400, y: -1.0 }, { x: 1500, y: -1.2 }, { x: 1600, y: 0.5 }, { x: 1700, y: 1.5 }, { x: 2000, y: -1.8 }],
+                        av: [{ x: 600, y: 0.1 }, { x: 800, y: 7.0 }, { x: 1000, y: 7.2 }, { x: 1200, y: 8.5 }, { x: 1300, y: 7.2 }, { x: 1400, y: 6.0 }, { x: 1600, y: 5.5 }, { x: 1700, y: 2.8 }, { x: 1800, y: 1.5 }, { x: 2000, y: -0.5 }]
+                    },
+                    tomatoes: {
+                        control: [{ x: 600, y: -0.2 }, { x: 800, y: 4.2 }, { x: 1000, y: 5.0 }, { x: 1200, y: 2.5 }, { x: 1400, y: 2.0 }, { x: 1600, y: 1.2 }, { x: 1800, y: 0.8 }, { x: 2000, y: -0.8 }],
+                        av: [{ x: 600, y: -0.1 }, { x: 800, y: 6.2 }, { x: 1000, y: 7.5 }, { x: 1200, y: 7.8 }, { x: 1400, y: 5.2 }, { x: 1600, y: 3.0 }, { x: 1800, y: 1.1 }, { x: 2000, y: -0.2 }]
+                    }
+                }
+            };
+
+            let currentIrrigation = 'full';
+            let currentCrop = 'basil';
+
+            const chartOptions = {
+                series: [],
+                chart: {
+                    height: 400,
+                    type: 'line',
+                    zoom: { enabled: false },
+                    toolbar: { show: false },
+                    fontFamily: 'Inter, sans-serif'
+                },
+                colors: ['#E87A24', '#00A9E0'], // Full Sun (orange), Agrivoltaics (blue)
+                dataLabels: { enabled: false },
+                stroke: {
+                    width: [3, 3],
+                    curve: 'smooth',
+                    dashArray: [0, 5] // Solid for control, dashed for agrivoltaics
+                },
+                markers: {
+                    size: 5,
+                    hover: { size: 7 }
+                },
+                title: {
+                    text: 'Net Photosynthesis vs. Time of Day',
+                    align: 'center',
+                    style: {
+                        color: '#CCD6F6',
+                        fontSize: '18px'
+                    }
+                },
+                xaxis: {
+                    type: 'numeric',
+                    min: 400,
+                    max: 2000,
+                    tickAmount: 8,
+                    labels: {
+                        formatter: (value) => {
+                            const hour = Math.floor(value / 100);
+                            return `${hour}:00`;
+                        },
+                        style: { colors: '#8892B0' }
+                    },
+                    title: {
+                        text: 'Time of Day (hour)',
+                        style: { color: '#8892B0', fontWeight: 500 }
+                    },
+                    axisBorder: { show: false },
+                    axisTicks: { color: '#8892B0' }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Net Photosynthesis (μmol m⁻² s⁻¹)',
+                        style: { color: '#8892B0', fontWeight: 500 }
+                    },
+                    labels: { style: { colors: '#8892B0' } },
+                    min: -3,
+                    max: 14
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    labels: { colors: '#CCD6F6' },
+                    // Correctly configured markers
+                    markers: {
+                        width: 20,
+                        height: 10,
+                        strokeWidth: 0,
+                        radius: 0,
+                        customHTML: [
+                            function () {
+                                return '<span class="custom-marker"><span class="line solid" style="background-color: #E87A24;"></span></span>'
+                            },
+                            function () {
+                                return '<span class="custom-marker"><span class="line dashed" style="border-color: #00A9E0;"></span></span>'
+                            }
+                        ]
+                    }
+                },
+                grid: {
+                    borderColor: 'rgba(100, 116, 139, 0.2)',
+                    strokeDashArray: 4,
+                    yaxis: { lines: { show: true } },
+                    xaxis: { lines: { show: false } }
+                },
+                tooltip: {
+                    theme: 'dark',
+                    x: {
+                        formatter: (value) => {
+                            const hour = Math.floor(value / 100);
+                            const min = (value % 100 / 100 * 60).toFixed(0).padStart(2, '0');
+                            return `${hour}:${min}`;
+                        }
+                    },
+                    y: {
+                        formatter: (value) => `${value.toFixed(2)} μmol m⁻² s⁻¹`
+                    }
+                }
+            };
+
+            const chart = new ApexCharts(document.querySelector("#photosynthesisChart"), chartOptions);
+            chart.render();
+
+            function updateChart() {
+                const data = photosynthesisData[currentIrrigation][currentCrop];
+                chart.updateOptions({
+                    series: [{
+                        name: 'Full sun (Control)',
+                        data: data.control
+                    }, {
+                        name: 'Agrivoltaics',
+                        data: data.av
+                    }],
+                    title: { text: `Net Photosynthesis for ${currentCrop.charAt(0).toUpperCase() + currentCrop.slice(1)}` }
+                });
+            }
+
+            // Setup toggle functionality
+            function setupToggle(containerId, stateUpdater) {
+                const container = document.getElementById(containerId);
+                container.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'BUTTON') {
+                        container.querySelector('.active').classList.remove('active');
+                        e.target.classList.add('active');
+                        stateUpdater(e.target.dataset.value);
+                        updateChart();
+                    }
+                });
+            }
+
+            setupToggle('irrigation-toggle', (value) => currentIrrigation = value);
+            setupToggle('crop-toggle', (value) => currentCrop = value);
+
+            // Initial chart render
+            updateChart();
+        });
+    </script>
+
 </body>
+
 </html>

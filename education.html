@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main-styles.css">
     <style>
+        /* Base and Hero Styles */
         .hero-subpage {
             position: relative;
             color: #fff;
@@ -23,7 +25,7 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.4); /* Slightly lighter overlay */
             z-index: 1;
         }
         .hero-subpage .hero-content {
@@ -31,38 +33,98 @@
             z-index: 2;
             max-width: 800px;
         }
+
+        /* Main Content Styling */
+        .page-content {
+            background-color: #1a2a42;
+            color: #d8e3f0;
+            padding: 2rem 0 5rem 0;
+        }
+        .page-content h2 {
+            color: #fca311;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+        .page-content h3 {
+            color: #fca311;
+            font-size: 1.25rem;
+            /* This margin creates the requested spacing */
+            margin-top: 3rem; 
+            margin-bottom: 1rem;
+        }
+        .page-content a {
+            color: #fca311;
+            font-weight: 600;
+        }
+        .page-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Flex Content Layout */
         .content-flex {
             display: flex;
-            align-items: center;
-            gap: 3rem;
+            align-items: center; /* Vertically center content */
+            gap: 4rem; /* Increased gap */
             flex-wrap: wrap;
-            margin: 4rem 0;
-        }
-        .content-flex.reverse {
-            flex-direction: row-reverse;
+            margin: 5rem 0;
         }
         .content-text {
-            flex: 1 1 45%;
-            min-width: 300px;
+            flex: 1 1 50%;
+            min-width: 320px;
         }
         .content-image {
-            flex: 1 1 45%;
-            min-width: 300px;
+            flex: 1 1 40%;
+            min-width: 320px;
         }
         .content-image img {
             width: 100%;
             height: auto;
             border-radius: 12px;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        sup a {
-            text-decoration: none;
-            color: var(--secondary-color);
-            font-weight: 600;
-            font-size: 0.8em;
+
+        /* List Styling */
+        .content-text ul {
+            list-style: none;
+            padding-left: 0;
         }
-        sup a:hover {
-            text-decoration: underline;
+        .content-text ul li {
+            padding-left: 1.5em;
+            position: relative;
+            margin-bottom: 0.75rem;
+        }
+        .content-text ul li::before {
+            content: '•';
+            color: #fca311;
+            font-weight: bold;
+            display: inline-block;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+        .content-text .info-link {
+            margin-top: 2rem;
+            display: inline-block;
+        }
+
+        /* Participating Schools Section */
+        .schools-section {
+            text-align: center;
+            margin: 6rem 0;
+        }
+        .schools-grid {
+            margin-top: 2.5rem;
+        }
+        .schools-row {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #3a4a60;
+        }
+        .school-item {
+            flex: 1;
+            padding: 0 1rem;
         }
     </style>
 </head>
@@ -112,11 +174,63 @@
         <div class="container">
             <div class="content-flex">
                 <div class="content-image">
-                    <img src="static/scaling-out-card.png" alt="Children in a school garden with fresh vegetables">
+                    <img src="static/scaling-out-card.png" alt="Children proudly showing vegetables harvested from a school garden">
                 </div>
                 <div class="content-text">
                     <h2>School Gardens</h2>
-                    <p>We partner with local schools to bring agrivoltaics into the schoolyard. Through the UArizona Community and School Garden Program and with support from the SCAPES project, we help install small agrivoltaic systems in school gardens.<a href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=Moses%20Thompson" target="_blank" rel="noopener"><sup>[1]</sup></a> Students get to grow vegetables in the shade of solar panels, observing first-hand how it affects growth and soil moisture. This tangible experience gives students a sense of agency in addressing grand challenges like climate change.<a href="https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus#:~:text=Barron,12%20students" target="_blank" rel="noopener"><sup>[2]</sup></a></p>
+                    <p>We partner with local schools to bring agrivoltaics into the schoolyard. Through the UArizona Community and School Garden Program and with support from the SCAPES project, we help install small agrivoltaic systems in school gardens.<sup>[1]</sup> Students get to grow vegetables in the shade of solar panels, observing first-hand how it affects growth and soil moisture. This tangible experience gives students a sense of agency in addressing grand challenges like climate change.<sup>[2]</sup></p>
+                </div>
+            </div>
+
+            <div class="content-flex">
+                <div class="content-text">
+                    <h2>Collective Action for Social Justice and a More Sustainable Community</h2>
+                    <p>The School Garden Workshop connects students in public schools with Tucson’s agricultural legacy by planting, maintaining, and engaging in school gardens. [9] Using gardens as dynamic educational tools, we help cultivate community, connect students with their local food system and use gardens as STEM learning labs. [9] The University of Arizona’s School Garden Workshop (SGW) connects Tucson educators and community organizations with university students eager to participate in the school garden movement. [9] University student interns are matched with underserved school garden placement sites where they support the installation, development and maintenance of a garden program. [9]</p>
+                    
+                    <h3><a href="https://schoolgardens.arizona.edu/school-garden-workshop-goals">School Garden Workshop Goals</a></h3>
+                    <ul>
+                        <li>Enable Tucson teachers and community members to develop and sustain gardens and use them as experiential learning sites. [2]</li>
+                        <li>Connect all students to their communities and the culture and politics of food. [2]</li>
+                        <li>Provide all students with opportunities to develop collaborative decision-making and self-determination. [2]</li>
+                        <li>Encourage a dedication to the environment and social justice. [2]</li>
+                        <li>Support the development of a regional food system that is just and equitable. [2]</li>
+                    </ul>
+                    <p class="info-link">For more information on curriculum, please visit the <a href="https://schoolgardens.arizona.edu/training-garden-based-curriculum-integration">Training for Garden Based Curriculum Integration</a> page.</p>
+                </div>
+                <div class="content-image">
+                    <img src="static/garden.jpg" alt="Students writing on clipboards while observing plants in a lush school garden">
+                </div>
+            </div>
+            
+            <div class="schools-section">
+                <h2><a href="https://schoolgardens.arizona.edu/schools">Participating Schools</a></h2>
+                <p>The School Garden Workshop is proud to partner with numerous schools across Tucson.</p>
+                <div class="schools-grid">
+                    <div class="schools-row">
+                        <div class="school-item">Brichta Infant and Early Learning Center</div>
+                        <div class="school-item">Rincon and University High Schools</div>
+                        <div class="school-item">Blenman Elementary School</div>
+                    </div>
+                    <div class="schools-row">
+                        <div class="school-item">Mansfeld Magnet Middle School</div>
+                        <div class="school-item">Tully Elementary</div>
+                        <div class="school-item">Pueblo Gardens K-8</div>
+                    </div>
+                    <div class="schools-row">
+                        <div class="school-item">Mission View Elementary</div>
+                        <div class="school-item">Tucson High School</div>
+                        <div class="school-item">Roskruge K-8 School</div>
+                    </div>
+                    <div class="schools-row">
+                        <div class="school-item">Ochoa Elementary</div>
+                        <div class="school-item">JB Wright Elementary</div>
+                        <div class="school-item">Drachman Montessori Magnet School</div>
+                    </div>
+                    <div class="schools-row">
+                        <div class="school-item">Davis Bilingual Elementary</div>
+                        <div class="school-item">Manzo Elementary</div>
+                        <div class="school-item"></div>
+                    </div>
                 </div>
             </div>
         </div>
