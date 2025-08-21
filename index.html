@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -990,6 +989,11 @@
         .charts-grid {
             grid-template-columns: 1fr;
         }
+        /* --- FIX: ADDED RULE --- */
+        /* Reduce padding on mobile to give charts more space */
+        .chart-card {
+            padding: 1.5rem 1rem;
+        }
     }
     </style>
 </head>
@@ -1796,7 +1800,22 @@ document.addEventListener('DOMContentLoaded', () => {
         grid: { borderColor: 'rgba(100, 116, 139, 0.2)', strokeDashArray: 4 },
         tooltip: { theme: 'dark', y: { formatter: (val) => val.toFixed(3) } },
         // --- NEW: Initial empty annotations ---
-        annotations: { points: [] } 
+        annotations: { points: [] } ,
+        // --- FIX: ADDED RESPONSIVE OPTIONS ---
+        // This block tells the chart how to behave on smaller screens.
+        responsive: [{
+            breakpoint: 768, // This applies when the screen width is less than 768px.
+            options: {
+                xaxis: {
+                    labels: {
+                        rotate: -45, // Rotate labels to prevent them from overlapping.
+                        style: {
+                            fontSize: '12px' // Use a slightly smaller font on mobile.
+                        }
+                    }
+                }
+            }
+        }]
     };
 
     // --- YIELD CHART ---
