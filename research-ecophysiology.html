@@ -9,7 +9,6 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/main-styles.css">
-    <!-- Helper styles for subpages to align with the new theme -->
     <style>
         :root {
             --primary-color: #002147;
@@ -113,7 +112,6 @@
             transform: translateY(-2px);
         }
 
-        /* news-card styles for the Outputs section */
         .news-card {
             background: var(--bg-light-navy);
             border: 1px solid var(--border-color);
@@ -186,7 +184,6 @@
             text-decoration: underline;
         }
 
-        /* Styles for the new chart section */
         .chart-section {
             background-color: var(--bg-light-navy);
             padding: 5rem 2rem;
@@ -228,7 +225,6 @@
             box-shadow: 0 2px 8px rgba(232, 122, 36, 0.3);
         }
 
-        /* Styles for custom legend markers */
         .custom-marker {
             display: inline-flex;
             align-items: center;
@@ -249,6 +245,105 @@
         .custom-marker .line.dashed {
             height: 0;
             border-top: 3px dashed;
+        }
+
+        /* Styles for 3D Agrivoltaics Visualization */
+        #agrivoltaics-container {
+            position: relative;
+            height: 450px;
+            cursor: grab;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 60%, #FFFFFF 100%);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #agrivoltaics-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #legend-explainer {
+            position: absolute;
+            display: none;
+            opacity: 0;
+            background: rgba(10, 25, 47, 0.9);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: var(--text-body);
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            max-width: 280px;
+            pointer-events: none;
+            z-index: 9;
+            transition: opacity 0.3s ease-in-out;
+            box-shadow: var(--shadow-lg);
+            right: 20px;
+            bottom: 20px;
+            top: auto;
+        }
+
+        #legend-explainer.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        #legend-explainer strong {
+            color: var(--secondary-color);
+            display: block;
+            margin-bottom: 6px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #legend-explainer p {
+            margin: 0;
+        }
+
+        /* Legend Styles */
+        .legend-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 25, 47, 0.85);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .legend-item:hover {
+            background: rgba(232, 122, 36, 0.2);
+        }
+
+        .legend-item.active {
+            background: rgba(232, 122, 36, 0.4);
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -303,13 +398,40 @@
                     <h2>The Plant-Panel Symbiosis</h2>
                 </div>
 
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <img src="static/field_research.png"
-                        alt="Researchers conducting measurements in an agrivoltaic field at Biosphere 2"
-                        style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: var(--shadow-md);">
+                <!-- === START: 3D Visualization Replacement === -->
+                <div id="agrivoltaics-container" role="img"
+                    aria-label="Interactive 3D model of an agrivoltaics system showing solar panels providing shade for crops, conserving water.">
+                    <div class="legend-container" id="legend">
+                        <div class="legend-item" data-type="panel">
+                            <span class="legend-color" style="background-color: #152238;"></span>
+                            <span>Solar Panel</span>
+                        </div>
+                        <div class="legend-item" data-type="crop">
+                            <span class="legend-color" style="background-color: #76B947;"></span>
+                            <span>Crops</span>
+                        </div>
+                        <div class="legend-item" data-type="water">
+                            <span class="legend-color" style="background-color: #67C3DF;"></span>
+                            <span>Water Conservation</span>
+                        </div>
+                        <div class="legend-item" data-type="biodiversity">
+                            <span class="legend-color" style="background-color: #DB7093;"></span>
+                            <span>Biodiversity</span>
+                        </div>
+                        <div class="legend-item" data-type="shade">
+                            <span class="legend-color" style="background-color: #FFFFFF;"></span>
+                            <span>Shaded Area</span>
+                        </div>
+                    </div>
+                    <div id="legend-explainer">
+                        <strong id="explainer-title"></strong>
+                        <p id="explainer-text"></p>
+                    </div>
                 </div>
+                <!-- === END: 3D Visualization Replacement === -->
 
-                <p>This research pillar focuses on the micro-level interactions between plants, soil, and the altered
+                <p style="margin-top: 2rem;">This research pillar focuses on the micro-level interactions between
+                    plants, soil, and the altered
                     environment created by solar panels. We investigate fundamental questions about how partial shade
                     and changed microclimates affect plant physiology, water use efficiency, and overall crop health and
                     productivity. How do plants adapt their photosynthetic processes? How much water can be saved? Which
@@ -366,7 +488,7 @@
                 </div>
                 <div class="news-grid">
                     <div class="news-card">
-                        <a href="https://doi.org/10.1016/j.gecadv.2025.100021" target="_blank" class="news-card-link"
+                        <a href="https://doi.org/10/j.gecadv.2025.100021" target="_blank" class="news-card-link"
                             aria-label="View Publication on The long-term suitability of agrivoltaics as a climate adaptation strategy in the southwestern United States">
                             <div class="news-image-wrapper">
                                 <img src="static/output1.jpg"
@@ -396,7 +518,7 @@
                         </a>
                     </div>
                     <div class="news-card">
-                        <a href="https://doi.org/10.1016/j.rser.2024.115066" target="_blank" class="news-card-link"
+                        <a href="https://doi.org/10/j.rser.2024.115066" target="_blank" class="news-card-link"
                             aria-label="View Renewable and Sustainable Energy Reviews Publication on Agrivoltaics in East Africa">
                             <div class="news-image-wrapper">
                                 <img src="static/output3.jpg"
@@ -443,6 +565,533 @@
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="js/main.js"></script>
+
+    <!-- === START: Agrivoltaics 3D Visualization Script === -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- Theme Colors ---
+        const PALETTE = {
+            GROUND: 0x967969,
+            PANEL: 0x152238,
+            PLANT: 0x76B947,
+            WATER: 0x67C3DF,
+            BIODIVERSITY: 0xDB7093,
+            BEE_BODY: 0xFFC700,
+            BEE_WING: 0xFFFFFF,
+            SUN_LIGHT: 0xFFF0D1,
+            SKY: 0xB1E1FF,
+            HEMI_GROUND: 0x554433,
+            SHADE_HIGHLIGHT: 0xA0D8F3
+        };
+
+        // --- Scene Variables ---
+        let scene, camera, renderer, controls, clock;
+        const interactiveObjects = [];
+        const plantGroups = [];
+        const beeGroups = [];
+        let raycaster, mouse, hoveredObject = null;
+        let selectedType = null;
+        const highlightObjects = new Map();
+        const originalMaterials = new Map();
+
+        // --- DOM Elements ---
+        const container = document.getElementById('agrivoltaics-container');
+        const legendItems = document.querySelectorAll('.legend-item');
+        const legendExplainer = document.getElementById('legend-explainer');
+        const explainerTitle = document.getElementById('explainer-title');
+        const explainerText = document.getElementById('explainer-text');
+
+        function init() {
+            scene = new THREE.Scene();
+            clock = new THREE.Clock();
+
+            camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+            camera.position.set(0, 5, 10);
+            camera.lookAt(0, 1, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+            container.appendChild(renderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.4;
+            controls.enableZoom = false;
+            controls.enablePan = false;
+            controls.maxPolarAngle = Math.PI / 2.1;
+            controls.minPolarAngle = Math.PI / 4;
+            controls.target.set(0, 1, 0);
+
+            setupLighting();
+            createWorld();
+            createSunRays();
+            setupInteractivity();
+            setupLegend();
+        }
+
+        function setupLighting() {
+            const hemiLight = new THREE.HemisphereLight(PALETTE.SKY, PALETTE.HEMI_GROUND, 1.5);
+            scene.add(hemiLight);
+
+            const sunLight = new THREE.DirectionalLight(PALETTE.SUN_LIGHT, 2.0);
+            sunLight.position.set(-10, 10, -5);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 4096;
+            sunLight.shadow.mapSize.height = 4096;
+            sunLight.shadow.camera.top = 8;
+            sunLight.shadow.camera.bottom = -8;
+            sunLight.shadow.camera.left = -12;
+            sunLight.shadow.camera.right = 12;
+            sunLight.shadow.camera.near = 1;
+            sunLight.shadow.camera.far = 30;
+            scene.add(sunLight);
+            scene.userData.sunLight = sunLight;
+        }
+
+        function createWorld() {
+            const groundGeo = new THREE.PlaneGeometry(30, 12);
+            const groundMat = new THREE.MeshStandardMaterial({ color: PALETTE.GROUND });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            const numPairs = 4;
+            const spacing = 4.0;
+            for (let i = 0; i < numPairs; i++) {
+                const x = (i - (numPairs - 1) / 2) * spacing;
+                createPanelPlantPair(x);
+            }
+        }
+        
+        function createSunRays() {
+            const raysGroup = new THREE.Group();
+            const rayMat = new THREE.MeshBasicMaterial({
+                color: 0xFFF5B6,
+                transparent: true,
+                opacity: 0.25
+            });
+            const rayGeom = new THREE.CylinderGeometry(0.03, 0.03, 15, 8);
+            
+            const lightDirection = new THREE.Vector3().copy(scene.userData.sunLight.position).normalize().multiplyScalar(-1);
+
+            for (let i = 0; i < 7; i++) {
+                const ray = new THREE.Mesh(rayGeom, rayMat);
+                
+                ray.position.set(
+                    (Math.random() - 0.5) * 20,
+                    12,
+                    (Math.random() - 0.5) * 8
+                );
+                
+                const targetPosition = new THREE.Vector3().copy(ray.position).add(lightDirection);
+                ray.lookAt(targetPosition);
+                
+                raysGroup.add(ray);
+            }
+            scene.add(raysGroup);
+        }
+
+        function createPanelPlantPair(x) {
+            const panel = createSolarPanel();
+            panel.position.x = x;
+            scene.add(panel);
+            interactiveObjects.push(panel);
+
+            const plants = createPlantGroup();
+            plants.position.set(x, 0, 1.2);
+            scene.add(plants);
+            interactiveObjects.push(plants);
+            plantGroups.push(plants);
+
+            const water = createWater();
+            water.position.set(x + 0.5, 0.01, -0.8);
+            scene.add(water);
+            interactiveObjects.push(water);
+
+            const shade = createShadedArea();
+            shade.position.set(x, 0.1, 1.0);
+            scene.add(shade);
+            interactiveObjects.push(shade);
+
+            const bees = createBiodiversityGroup();
+            bees.position.set(x - 0.5, 1.2, 0.5);
+            scene.add(bees);
+            interactiveObjects.push(bees);
+            beeGroups.push(bees);
+        }
+
+        function createSolarPanel() {
+            const panelGroup = new THREE.Group();
+            panelGroup.userData = {
+                name: 'Solar Panel',
+                info: 'Generates clean electricity while providing crucial shade, creating a cooler microclimate for the crops below.',
+                type: 'panel',
+                isInteractive: true
+            };
+
+            const panelMat = new THREE.MeshStandardMaterial({ color: PALETTE.PANEL, roughness: 0.2, metalness: 0.1 });
+            const panelGeom = new THREE.BoxGeometry(2.8, 0.1, 1.8);
+            const panel = new THREE.Mesh(panelGeom, panelMat);
+            panel.castShadow = true;
+
+            const postMat = new THREE.MeshStandardMaterial({ color: 0x444444 });
+            const postGeom = new THREE.CylinderGeometry(0.06, 0.06, 1.4);
+            const mainPost = new THREE.Mesh(postGeom, postMat);
+            mainPost.position.y = 0.7;
+            mainPost.castShadow = true;
+
+            panel.position.y = 1.4;
+            panel.rotation.x = Math.PI / 7;
+
+            panelGroup.add(panel);
+            panelGroup.add(mainPost);
+
+            return panelGroup;
+        }
+
+        function createPlantGroup() {
+            const group = new THREE.Group();
+            group.userData = {
+                name: 'Crops',
+                info: 'Protected from harsh sun, these crops experience less heat stress and water loss, often leading to increased yields.',
+                type: 'crop',
+                isInteractive: true
+            };
+
+            for (let i = 0; i < 2; i++) {
+                const plant = createPlant();
+                plant.position.x = i * 0.7 - 0.35;
+                plant.scale.setScalar(Math.random() * 0.2 + 0.9);
+                group.add(plant);
+            }
+            return group;
+        }
+
+        function createPlant() {
+            const plant = new THREE.Group();
+            const plantMat = new THREE.MeshStandardMaterial({ color: PALETTE.PLANT, side: THREE.DoubleSide, roughness: 0.8 });
+
+            const stemGeom = new THREE.CylinderGeometry(0.02, 0.03, 0.5);
+            const stem = new THREE.Mesh(stemGeom, plantMat);
+            stem.castShadow = true;
+            stem.position.y = 0.25;
+            plant.add(stem);
+
+            const leafShape = new THREE.Shape();
+            leafShape.moveTo(0, 0);
+            leafShape.bezierCurveTo(0, 0, 0.1, 0.25, 0.2, 0.3);
+            leafShape.bezierCurveTo(0.3, 0.25, 0.4, 0, 0.4, 0);
+            leafShape.bezierCurveTo(0.4, 0, 0.3, -0.25, 0.2, -0.3);
+            leafShape.bezierCurveTo(0.1, -0.25, 0, 0, 0, 0);
+            const leafGeom = new THREE.ShapeGeometry(leafShape);
+
+            for (let j = 0; j < 6; j++) {
+                const leaf = new THREE.Mesh(leafGeom, plantMat);
+                leaf.position.y = (j * 0.08) + 0.1;
+                leaf.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.8;
+                leaf.rotation.y = Math.random() * Math.PI * 2;
+                leaf.castShadow = true;
+                plant.add(leaf);
+            }
+            return plant;
+        }
+
+        function createWater() {
+            const waterGeom = new THREE.CircleGeometry(1.0, 32);
+            const waterMat = new THREE.MeshStandardMaterial({ color: PALETTE.WATER, transparent: true, opacity: 0.75, roughness: 0.1 });
+            const water = new THREE.Mesh(waterGeom, waterMat);
+            water.rotation.x = -Math.PI / 2;
+            water.userData = {
+                name: 'Water Conservation',
+                info: 'The cooler conditions under panels reduce soil and plant evaporation, leading to significant water savings.',
+                type: 'water',
+                isInteractive: true
+            };
+            return water;
+        }
+
+        function createBiodiversityGroup() {
+            const group = new THREE.Group();
+            group.userData = {
+                name: 'Improved Biodiversity',
+                info: 'The shaded, cooler environment creates a habitat for beneficial insects like pollinators, boosting local biodiversity.',
+                type: 'biodiversity',
+                isInteractive: true
+            };
+            for (let i = 0; i < 3; i++) {
+                const bee = createBee();
+                bee.position.set(
+                    (Math.random() - 0.5) * 0.8,
+                    (Math.random() - 0.5) * 0.5,
+                    (Math.random() - 0.5) * 0.8
+                );
+                group.add(bee);
+            }
+            return group;
+        }
+
+        function createBee() {
+            const bee = new THREE.Group();
+            const bodyMat = new THREE.MeshStandardMaterial({ color: PALETTE.BEE_BODY, roughness: 0.6 });
+            const bodyGeom = new THREE.SphereGeometry(0.04, 8, 8);
+            const body = new THREE.Mesh(bodyGeom, bodyMat);
+            body.scale.z = 1.8;
+            bee.add(body);
+
+            const wingMat = new THREE.MeshBasicMaterial({ color: PALETTE.BEE_WING, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
+            const wingGeom = new THREE.PlaneGeometry(0.1, 0.05);
+            const leftWing = new THREE.Mesh(wingGeom, wingMat);
+            leftWing.position.set(-0.03, 0.03, 0);
+            leftWing.rotation.y = Math.PI / 4;
+            bee.add(leftWing);
+
+            const rightWing = leftWing.clone();
+            rightWing.position.x = 0.03;
+            rightWing.rotation.y = -Math.PI / 4;
+            bee.add(rightWing);
+            
+            bee.userData.wings = [leftWing, rightWing];
+            return bee;
+        }
+
+        function createShadedArea() {
+            const shadeGeo = new THREE.PlaneGeometry(2.8, 1.8);
+            const shadeMat = new THREE.MeshBasicMaterial({
+                color: PALETTE.SHADE_HIGHLIGHT,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide
+            });
+            const shade = new THREE.Mesh(shadeGeo, shadeMat);
+            shade.rotation.x = -Math.PI / 2;
+            shade.userData = {
+                name: 'Shaded Area',
+                info: 'Temperature under panels is typically 5-10°C cooler than full sun, creating ideal growing conditions.',
+                type: 'shade',
+                isInteractive: true
+            };
+            return shade;
+        }
+        
+        // === START: MODIFIED INTERACTIVITY LOGIC ===
+
+        function setupInteractivity() {
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+
+            window.addEventListener('resize', onWindowResize);
+            container.addEventListener('mousemove', onMouseMove);
+            container.addEventListener('click', onCanvasClick);
+        }
+        
+        function onWindowResize() {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function onMouseMove(event) {
+            const rect = container.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
+        }
+
+        function onCanvasClick() {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(interactiveObjects, true);
+            if (intersects.length > 0) {
+                const clickedObject = findsInteractiveParent(intersects[0].object);
+                if (clickedObject) {
+                    selectType(clickedObject.userData.type);
+                }
+            }
+        }
+        
+        function selectType(type) {
+            if (selectedType === type) {
+                // Deselect logic
+                selectedType = null;
+                revertAllHighlights();
+                legendExplainer.classList.remove('visible');
+                legendItems.forEach(item => item.classList.remove('active'));
+            } else {
+                // Select logic
+                selectedType = type;
+                highlightType(type);
+                
+                const representativeObject = interactiveObjects.find(obj => obj.userData.type === type);
+                if (representativeObject) {
+                    explainerTitle.textContent = representativeObject.userData.name;
+                    explainerText.textContent = representativeObject.userData.info;
+                    legendExplainer.classList.add('visible');
+                }
+                
+                legendItems.forEach(item => {
+                    item.classList.toggle('active', item.dataset.type === type);
+                });
+            }
+        }
+        
+        function setupLegend() {
+            legendItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    selectType(item.dataset.type);
+                });
+            });
+        }
+        
+        function checkIntersections() {
+            // This function now only handles hover states
+            if (selectedType) {
+                // If something is selected, don't show hover info
+                if (hoveredObject) {
+                    hoveredObject = null;
+                }
+                return;
+            }
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(interactiveObjects, true);
+
+            let currentInteractive = null;
+            if (intersects.length > 0) {
+                currentInteractive = findsInteractiveParent(intersects[0].object);
+            }
+
+            if (currentInteractive) {
+                if (hoveredObject !== currentInteractive) {
+                    hoveredObject = currentInteractive;
+                    explainerTitle.textContent = hoveredObject.userData.name;
+                    explainerText.textContent = hoveredObject.userData.info;
+                    legendExplainer.classList.add('visible');
+                }
+            } else {
+                if (hoveredObject) {
+                    hoveredObject = null;
+                    legendExplainer.classList.remove('visible');
+                }
+            }
+        }
+        
+        // === END: MODIFIED INTERACTIVITY LOGIC ===
+
+        function highlightType(type) {
+            revertAllHighlights();
+            interactiveObjects.forEach(obj => {
+                if (obj.userData.type === type) {
+                    applyHighlight(obj);
+                }
+            });
+        }
+
+        function revertAllHighlights() {
+            highlightObjects.forEach((wireframe) => {
+                if (wireframe.parent) wireframe.parent.remove(wireframe);
+                wireframe.material.dispose();
+            });
+            highlightObjects.clear();
+
+            originalMaterials.forEach((originalProps, mesh) => {
+                if (mesh.material) {
+                    mesh.material.color.copy(originalProps.color);
+                    if (mesh.material.emissive && originalProps.emissive) {
+                        mesh.material.emissive.copy(originalProps.emissive);
+                        mesh.material.emissiveIntensity = originalProps.emissiveIntensity === undefined ? 1.0 : originalProps.emissiveIntensity;
+                    }
+                    mesh.material.needsUpdate = true;
+                }
+            });
+            originalMaterials.clear();
+        }
+
+        function applyHighlight(obj) {
+            const GLOW_COLOR = 0xE87A24;
+            const WIREFRAME_COLOR = 0xFFFFFF;
+
+            obj.traverse(child => {
+                if (child.isMesh && child.material && !originalMaterials.has(child)) {
+                    originalMaterials.set(child, {
+                        color: child.material.color.clone(),
+                        emissive: child.material.emissive ? child.material.emissive.clone() : null,
+                        emissiveIntensity: child.material.emissiveIntensity
+                    });
+
+                    if (child.material.emissive) {
+                        child.material.emissive.setHex(GLOW_COLOR);
+                        child.material.emissiveIntensity = 0.75;
+                        child.material.needsUpdate = true;
+                    }
+                    
+                    const wireframe = new THREE.Mesh(child.geometry, new THREE.MeshBasicMaterial({ color: WIREFRAME_COLOR, wireframe: true }));
+                    wireframe.position.copy(child.position);
+                    wireframe.rotation.copy(child.rotation);
+                    wireframe.scale.copy(child.scale);
+                    wireframe.scale.multiplyScalar(1.03);
+                    child.parent.add(wireframe);
+                    highlightObjects.set(child, wireframe);
+                }
+            });
+        }
+
+        function findsInteractiveParent(object) {
+            let current = object;
+            while (current) {
+                if (current.userData && current.userData.isInteractive) return current;
+                current = current.parent;
+            }
+            return null;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            controls.update();
+
+            plantGroups.forEach((group, index) => {
+                group.rotation.y += Math.sin(elapsedTime * 0.5 + index) * 0.001;
+            });
+
+            beeGroups.forEach((group, i) => {
+                group.position.y = 1.8 + Math.sin(elapsedTime * 1.5 + i) * 0.1;
+                group.rotation.y = elapsedTime * 0.3;
+                
+                group.children.forEach((bee, j) => {
+                    bee.position.y = Math.sin(elapsedTime * 3 + j) * 0.2;
+                    if (bee.userData.wings) {
+                        bee.userData.wings[0].rotation.y = Math.PI / 4 + Math.sin(elapsedTime * 50) * 0.5;
+                        bee.userData.wings[1].rotation.y = -Math.PI / 4 - Math.sin(elapsedTime * 50) * 0.5;
+                    }
+                });
+            });
+
+            checkIntersections();
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+    </script>
+    <!-- === END: Agrivoltaics 3D Visualization Script === -->
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -494,12 +1143,12 @@
                     toolbar: { show: false },
                     fontFamily: 'Inter, sans-serif'
                 },
-                colors: ['#E87A24', '#00A9E0'], // Full Sun (orange), Agrivoltaics (blue)
+                colors: ['#E87A24', '#00A9E0'],
                 dataLabels: { enabled: false },
                 stroke: {
                     width: [3, 3],
                     curve: 'smooth',
-                    dashArray: [0, 5] // Solid for control, dashed for agrivoltaics
+                    dashArray: [0, 5]
                 },
                 markers: {
                     size: 5,
@@ -541,11 +1190,33 @@
                     min: -3,
                     max: 14
                 },
+                // === START: ADDED CODE ===
+                annotations: {
+                    yaxis: [{
+                        y: 0,
+                        borderColor: 'rgba(204, 214, 246, 0.6)', // Using your --text-heading color with transparency
+                        strokeDashArray: 4,
+                        label: {
+                            borderColor: '#CCD6F6',
+                            style: {
+                                color: '#0A192F',      // Dark text for contrast
+                                background: '#CCD6F6', // Light background
+                                fontSize: '11px',
+                                fontWeight: 600,
+                                padding: { left: 5, right: 5, top: 2, bottom: 2 }
+                            },
+                            text: 'Zero Line',
+                            position: 'right',
+                            offsetX: 5, // A little padding from the chart edge
+                            offsetY: -2
+                        }
+                    }]
+                },
+                // === END: ADDED CODE ===
                 legend: {
                     position: 'top',
                     horizontalAlign: 'right',
                     labels: { colors: '#CCD6F6' },
-                    // Correctly configured markers
                     markers: {
                         width: 20,
                         height: 10,
@@ -599,7 +1270,6 @@
                 });
             }
 
-            // Setup toggle functionality
             function setupToggle(containerId, stateUpdater) {
                 const container = document.getElementById(containerId);
                 container.addEventListener('click', (e) => {
@@ -615,11 +1285,9 @@
             setupToggle('irrigation-toggle', (value) => currentIrrigation = value);
             setupToggle('crop-toggle', (value) => currentCrop = value);
 
-            // Initial chart render
             updateChart();
         });
     </script>
-
 </body>
 
 </html>

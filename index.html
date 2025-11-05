@@ -13,7 +13,7 @@
         rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <style>
         :root {
@@ -87,7 +87,10 @@
             letter-spacing: .08em;
         }
 
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             color: var(--text-heading);
             font-weight: 800;
         }
@@ -118,7 +121,7 @@
             padding: 0.75rem 0;
             background-color: rgba(10, 25, 47, 0.85);
             backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px -10px rgba(2,12,27,.7);
+            box-shadow: 0 10px 30px -10px rgba(2, 12, 27, .7);
         }
 
         .navbar-container {
@@ -143,10 +146,12 @@
         }
 
         .navbar-brand img {
-    height: 64px; /* Increased from 48px */
-    border-radius: 8px; /* Added for rounded edges */
-    transition: transform var(--transition-speed) var(--transition-smooth);
-}
+            height: 64px;
+            /* Increased from 48px */
+            border-radius: 8px;
+            /* Added for rounded edges */
+            transition: transform var(--transition-speed) var(--transition-smooth);
+        }
 
         .navbar-brand:hover img {
             transform: rotate(-12deg) scale(1.05);
@@ -171,7 +176,9 @@
             padding: 0.5rem 0;
             transition: color var(--transition-speed) ease;
         }
-        .navbar-link:hover, .navbar-link.active {
+
+        .navbar-link:hover,
+        .navbar-link.active {
             color: var(--secondary-color);
         }
 
@@ -198,7 +205,7 @@
         .dropdown-content {
             display: none;
             position: absolute;
-            top: 100%; 
+            top: 100%;
             padding-top: 10px;
             left: -20px;
             background-color: var(--bg-light-navy);
@@ -261,7 +268,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-background-video {
             position: absolute;
             top: 50%;
@@ -306,7 +313,7 @@
             font-weight: 400;
             text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5);
         }
-        
+
         .hero-video-controls {
             position: absolute;
             bottom: 2rem;
@@ -341,14 +348,14 @@
         .challenge-section {
             background-color: var(--bg-light-navy);
         }
-        
+
         .challenge-section .news-header,
         .proof-section .news-header {
-             text-align: center;
-             margin: 0 auto 3rem;
-             max-width: 800px;
+            text-align: center;
+            margin: 0 auto 3rem;
+            max-width: 800px;
         }
-        
+
         .challenge-section .news-header h2,
         .proof-section .news-header h2 {
             font-size: clamp(2.2rem, 5vw, 3rem);
@@ -356,10 +363,10 @@
         }
 
         .challenge-card-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-}
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
 
         .challenge-card {
             background: var(--bg-dark);
@@ -374,15 +381,18 @@
             align-items: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+
         challenge-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-}
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
         .challenge-card img {
             max-height: 25px;
             margin-bottom: 1.5rem;
             filter: brightness(0) invert(1) opacity(0.7);
         }
+
         .challenge-card blockquote {
             font-size: 1rem;
             line-height: 1.6;
@@ -393,30 +403,33 @@
             color: var(--text-body);
             font-style: italic;
         }
-        
+
         .what-if-section {
             background-color: var(--bg-dark);
             text-align: center;
         }
+
         .what-if-section h2 {
             font-size: clamp(2rem, 5vw, 3.5rem);
             max-width: 900px;
             margin: 0 auto;
             line-height: 1.3;
         }
+
         .what-if-section .highlight {
             color: var(--secondary-color);
         }
-        
+
         .proof-section {
             background-color: var(--bg-light-navy);
         }
-        
+
         .proof-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
+
         .proof-card {
             background-color: var(--bg-dark);
             padding: 2.5rem 2rem;
@@ -425,6 +438,7 @@
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+
         .proof-card .stat-number {
             font-family: var(--font-main);
             font-size: clamp(4rem, 10vw, 5.5rem);
@@ -432,12 +446,14 @@
             color: var(--secondary-color);
             line-height: 1;
         }
+
         .proof-card .stat-label {
             font-size: 1.25rem;
             color: var(--text-heading);
             font-weight: 600;
             margin-top: 1rem;
         }
+
         .proof-card .stat-description {
             font-size: 1rem;
             line-height: 1.6;
@@ -553,7 +569,7 @@
             display: block;
             border-radius: 12px;
         }
-        
+
         /* --- General Carousel & Card Styling --- */
         .carousel-container {
             width: 90%;
@@ -572,7 +588,7 @@
             box-sizing: border-box;
             padding: 0 1rem;
         }
-        
+
         .carousel-nav {
             text-align: right;
             margin-top: 2.5rem;
@@ -598,9 +614,10 @@
             border-color: var(--secondary-color);
             transform: scale(1.05);
         }
-        
+
         /* --- Sites Carousel & News Section --- */
-        .sites-carousel-section, .news-section {
+        .sites-carousel-section,
+        .news-section {
             padding: 8rem 0;
             background: var(--bg-dark);
         }
@@ -613,8 +630,9 @@
             gap: 1.5rem;
             margin-bottom: 3rem;
         }
-        
-        .news-header h2, .sites-carousel-section .news-header h2 {
+
+        .news-header h2,
+        .sites-carousel-section .news-header h2 {
             font-size: clamp(2.2rem, 5vw, 3rem);
             margin: 0;
         }
@@ -624,7 +642,7 @@
             line-height: 1.6;
             color: var(--text-body);
         }
-        
+
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -646,7 +664,7 @@
 
         .news-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 10px 30px -10px rgba(2,12,27,.7);
+            box-shadow: 0 10px 30px -10px rgba(2, 12, 27, .7);
         }
 
         .news-image-wrapper {
@@ -661,6 +679,7 @@
             object-fit: cover;
             transition: transform 0.4s ease;
         }
+
         .news-card:hover img {
             transform: scale(1.05);
         }
@@ -672,16 +691,18 @@
             gap: 0.75rem;
             flex-grow: 1;
         }
-        
-        .news-card-content .tag { margin-bottom: 0.25rem; }
-        
+
+        .news-card-content .tag {
+            margin-bottom: 0.25rem;
+        }
+
         .news-card-content h3 {
             font-size: 1.2rem;
             margin: 0;
             line-height: 1.4;
             flex-grow: 1;
         }
-        
+
         .news-card-content p {
             font-size: 0.95rem;
             color: var(--text-body);
@@ -693,6 +714,7 @@
             padding: 6rem 0;
             background: var(--bg-dark);
         }
+
         .partners-section .section-header {
             text-align: center;
             margin-bottom: 4rem;
@@ -700,14 +722,17 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         .partners-section .section-header h2 {
             font-size: clamp(2rem, 5vw, 2.5rem);
             margin-bottom: 1rem;
         }
+
         .partners-section .section-header .subtitle {
             font-size: 1.15rem;
             color: var(--text-body);
         }
+
         .partners-grid {
             display: flex;
             flex-wrap: wrap;
@@ -715,6 +740,7 @@
             align-items: center;
             gap: 2rem;
         }
+
         .partner-logo-link {
             display: flex;
             justify-content: center;
@@ -727,11 +753,13 @@
             transition: all var(--transition-speed) ease;
             filter: grayscale(100%) opacity(70%);
         }
+
         .partner-logo-link:hover {
             transform: translateY(-8px) scale(1.03);
             filter: grayscale(0%) opacity(100%);
             box-shadow: var(--shadow-glow);
         }
+
         .partner-logo {
             width: 100%;
             height: 100%;
@@ -752,6 +780,7 @@
             box-shadow: var(--shadow-md);
             border: 2px solid transparent;
         }
+
         .cta-button:hover {
             background: var(--secondary-color-dark);
             transform: translateY(-5px) scale(1.03);
@@ -763,10 +792,12 @@
             padding: 8rem 2rem;
             background-color: var(--bg-light-navy);
         }
+
         .cta-section h2 {
             font-size: clamp(2.5rem, 6vw, 3.5rem);
             font-weight: 800;
         }
+
         .cta-section p {
             max-width: 650px;
             margin: 1.5rem auto 2.5rem;
@@ -779,21 +810,25 @@
             color: var(--text-body);
             padding-top: 6rem;
         }
+
         .footer-content {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
             gap: 4rem;
             margin-bottom: 5rem;
         }
+
         .footer-brand h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: var(--text-lightest);
         }
+
         .footer-brand p {
             max-width: 350px;
             line-height: 1.7;
         }
+
         .footer-links h4,
         .footer-contact h4 {
             font-size: 1.1rem;
@@ -802,25 +837,31 @@
             letter-spacing: .05em;
             color: var(--text-lightest);
         }
+
         .footer-links ul {
             list-style: none;
         }
+
         .footer-links ul li {
             margin-bottom: 1rem;
         }
+
         .footer-links a,
         .footer-contact a {
             color: var(--text-body);
             text-decoration: none;
             transition: color var(--transition-speed) ease;
         }
+
         .footer-links a:hover,
         .footer-contact a:hover {
             color: var(--secondary-color);
         }
+
         .footer-contact p {
             margin-bottom: 0.5rem;
         }
+
         .footer-bottom {
             border-top: 1px solid var(--border-color);
             padding: 2.5rem 0;
@@ -837,9 +878,14 @@
 
         /* --- Responsive Design --- */
         @media (max-width: 992px) {
-            html { scroll-padding-top: 90px; }
-            .section { padding: 6rem 0; }
-            
+            html {
+                scroll-padding-top: 90px;
+            }
+
+            .section {
+                padding: 6rem 0;
+            }
+
             .navbar-menu {
                 display: none;
                 flex-direction: column;
@@ -855,10 +901,12 @@
                 transition: transform 0.4s var(--transition-smooth);
                 transform: translateY(-100%);
             }
+
             .navbar-links.active .navbar-menu {
                 display: flex;
                 transform: translateY(0);
             }
+
             .navbar-links.active .navbar-link {
                 font-size: 1.5rem;
             }
@@ -871,11 +919,18 @@
                 grid-template-columns: 1fr;
                 gap: 4rem;
             }
-            .pillars-left, .pillars-right {
+
+            .pillars-left,
+            .pillars-right {
                 position: static;
                 height: auto;
             }
-            .pillar-item { opacity: 1; border-color: var(--border-color); }
+
+            .pillar-item {
+                opacity: 1;
+                border-color: var(--border-color);
+            }
+
             .pillar-image {
                 position: relative;
                 top: 0;
@@ -883,7 +938,8 @@
                 margin-top: -2rem;
                 display: none;
             }
-            .pillar-item.is-visible + .pillar-image {
+
+            .pillar-item.is-visible+.pillar-image {
                 display: block;
             }
 
@@ -891,127 +947,161 @@
                 grid-template-columns: 1fr;
                 gap: 3rem;
             }
-            .researcher-info { text-align: center; }
-            .researcher-info p { margin: 0 auto; }
-            
+
+            .researcher-info {
+                text-align: center;
+            }
+
+            .researcher-info p {
+                margin: 0 auto;
+            }
+
             .footer-content {
                 grid-template-columns: 1fr;
                 text-align: center;
                 gap: 3rem;
             }
-            .footer-brand p { margin: 0 auto; }
+
+            .footer-brand p {
+                margin: 0 auto;
+            }
         }
 
         @media (max-width: 768px) {
-            .container { padding: 0 1.5rem; }
-            .section { padding: 5rem 0; }
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .section {
+                padding: 5rem 0;
+            }
 
             .slide {
                 min-width: 100%;
                 padding: 0 0.5rem;
             }
+
             .carousel-nav {
                 padding-right: 0;
                 text-align: center;
             }
-            
-            .hero-headline { font-size: 2.8rem; }
-            .hero-subheadline { font-size: 1.1rem; }
+
+            .hero-headline {
+                font-size: 2.8rem;
+            }
+
+            .hero-subheadline {
+                font-size: 1.1rem;
+            }
         }
+
         .proof-section .news-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    .irrigation-toggle {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem; /* Reduced margin */
-        flex-wrap: wrap;
-    }
-    .toggle-btn {
-        padding: 0.75rem 1.5rem;
-        border: 2px solid var(--border-color);
-        background-color: transparent;
-        color: var(--text-heading);
-        font-family: var(--font-main);
-        font-size: 0.95rem;
-        font-weight: 600;
-        border-radius: 30px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    .toggle-btn:hover {
-        border-color: var(--secondary-color);
-        color: var(--secondary-color);
-    }
-    .toggle-btn.active {
-        background-color: var(--secondary-color);
-        border-color: var(--secondary-color);
-        color: var(--text-lightest);
-        box-shadow: var(--shadow-glow);
-    }
-    /* NEW: Styles for the star legend note */
-    .chart-legend-note {
-        text-align: center;
-        font-family: var(--font-alt);
-        color: var(--text-body);
-        font-size: 0.9rem;
-        margin-bottom: 3rem;
-    }
-    .chart-legend-note span {
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: #FFD700; /* Gold color for the star */
-        margin-right: 4px;
-        vertical-align: middle;
-    }
-    .charts-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2.5rem;
-    }
-    .chart-card {
-        background-color: var(--bg-light-navy);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 2rem;
-    }
-    .chart-card h3 {
-        color: var(--text-heading);
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-        text-align: center;
-    }
-    /* Make charts responsive */
-    @media (max-width: 992px) {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .irrigation-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            /* Reduced margin */
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background-color: transparent;
+            color: var(--text-heading);
+            font-family: var(--font-main);
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .toggle-btn.active {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: var(--text-lightest);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* NEW: Styles for the star legend note */
+        .chart-legend-note {
+            text-align: center;
+            font-family: var(--font-alt);
+            color: var(--text-body);
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-legend-note span {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #FFD700;
+            /* Gold color for the star */
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
         .charts-grid {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
         }
-        /* --- FIX: ADDED RULE --- */
-        /* Reduce padding on mobile to give charts more space */
+
         .chart-card {
-            padding: 1.5rem 1rem;
+            background-color: var(--bg-light-navy);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
         }
-    }
+
+        .chart-card h3 {
+            color: var(--text-heading);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* Make charts responsive */
+        @media (max-width: 992px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* --- FIX: ADDED RULE --- */
+            /* Reduce padding on mobile to give charts more space */
+            .chart-card {
+                padding: 1.5rem 1rem;
+            }
+        }
     </style>
 </head>
 
 <body>
     <nav class="navbar" id="navbar">
-    <div class="navbar-container">
-        <a href="index.html" class="navbar-brand">
-            <img src="static/salsa-logo.png" alt="SALSAV Agrivoltaics Logo">
-            <!-- Retained the more descriptive text from the old format -->
-            <span>SALSA Agrivoltaics</span> 
-        </a>
-        <div class="navbar-links" id="navbar-links">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <img src="static/salsa-logo.png" alt="SALSAV Agrivoltaics Logo">
+                <!-- Retained the more descriptive text from the old format -->
+                <span>SALSA Agrivoltaics</span>
+            </a>
+            <div class="navbar-links" id="navbar-links">
             <ul class="navbar-menu">
                 <li><a href="index.html" class="navbar-link active">Home</a></li>
                 <li class="has-dropdown">
-                    <!-- The href="#" is better for a dropdown toggle -->
-                    <a href="#" class="navbar-link">Research</a>
+                    <!-- MODIFICATION: Changed href="#" to the desired default page -->
+                    <a href="research-ecophysiology.html" class="navbar-link">Research</a>
                     <ul class="dropdown-content">
                         <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
                         <li><a href="research-scaling-up.html">Scaling Up</a></li>
@@ -1034,23 +1124,26 @@
                 <li><a href="#footer" class="navbar-link">Contact</a></li>
             </ul>
         </div>
-        <!-- Retained the more complete, accessible button from the old format -->
-        <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu"
-            aria-expanded="false">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-    </div>
-</nav>
+            <!-- Retained the more complete, accessible button from the old format -->
+            <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu"
+                aria-expanded="false">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
 
     <main>
         <!-- HERO -->
         <section class="hero">
-            <video id="heroVideo" class="hero-background-video" src="static/jacks-drone-video.mp4" autoplay loop muted playsinline></video>
+            <video id="heroVideo" class="hero-background-video" src="static/jacks-drone-video.mp4" autoplay loop muted
+                playsinline></video>
             <div class="hero-overlay"></div>
             <div class="container">
                 <h1 class="hero-headline reveal">Semi-arid Lab for Scaling Agrivoltaics</h1>
                 <div class="hero-subheadline reveal" style="transition-delay: 0.2s;">
-                    <p>Our lab researches and implements agrivoltaic systems to create resilient food, energy, and water solutions in arid regions. We scale this work from local test plots to global partnerships, building a data-driven roadmap for a sustainable future.</p>
+                    <p>Our lab researches and implements agrivoltaic systems to create resilient food, energy, and water
+                        solutions in arid regions. We scale this work from local test plots to global partnerships,
+                        building a data-driven roadmap for a sustainable future.</p>
                 </div>
             </div>
             <div class="hero-video-controls">
@@ -1064,142 +1157,163 @@
         </section>
 
         <!-- CHALLENGE SECTION (from V2) -->
-<section class="section challenge-section">
-    <div class="container">
-        <div class="news-header reveal">
-            <span class="tag">The Pressing Need</span>
-            <h2>Major Challenges Across Food, Energy & Water</h2>
-        </div>
-        <div class="news-grid reveal" style="transition-delay: 0.2s;">
-            
-            <a href="https://www.wired.com/story/growing-crops-under-solar-panels-now-theres-a-bright-idea/" target="_blank" rel="noopener noreferrer" class="challenge-card-link">
-    <div class="challenge-card">
-        <img src="static/wired.png" alt="WIRED Magazine Logo">
-        <blockquote>"The results were dramatic... Shade from the solar panels led to a major increase in the abundance of several crops. It's a win-win-win for food, water, and renewable energy."</blockquote>
-    </div>
-</a>
-            
-            <a href="https://www.cnbc.com/amp/2022/04/03/arizona-farmers-are-slammed-by-water-cuts-in-the-west-amid-drought.html" target="_blank" rel="noopener noreferrer" class="challenge-card-link">
-                <div class="challenge-card">
-                    <img src="static/cnbc_redesign.png" alt="CNBC Logo">
-                    <blockquote>"Empty canals, dead cotton fields: Arizona farmers are getting slammed by water cuts in the West."</blockquote>
+        <section class="section challenge-section">
+            <div class="container">
+                <div class="news-header reveal">
+                    <span class="tag">The Pressing Need</span>
+                    <h2>Major Challenges Across Food, Energy & Water</h2>
                 </div>
-            </a>
-            
-            <a href="https://grist.org/article/california-farmer-solar-panel-water-renewable-nature-conservancy" target="_blank" rel="noopener noreferrer" class="challenge-card-link">
-                <div class="challenge-card">
-                    <img src="static/grist_logo.png" alt="Grist Logo">
-                    <blockquote>"Low on Water, California Farmers Turn to Solar Farming... a state law now requires water regulators to figure out how to balance their accounts so that groundwater levels stop dropping."</blockquote>
-                </div>
-            </a>
-        </div>
+                <div class="news-grid reveal" style="transition-delay: 0.2s;">
 
-        
-    </div>
-</section>
+                    <a href="https://www.wired.com/story/growing-crops-under-solar-panels-now-theres-a-bright-idea/"
+                        target="_blank" rel="noopener noreferrer" class="challenge-card-link">
+                        <div class="challenge-card">
+                            <img src="static/wired.png" alt="WIRED Magazine Logo">
+                            <blockquote>"The results were dramatic... Shade from the solar panels led to a major
+                                increase in the abundance of several crops. It's a win-win-win for food, water, and
+                                renewable energy."</blockquote>
+                        </div>
+                    </a>
+
+                    <a href="https://www.cnbc.com/amp/2022/04/03/arizona-farmers-are-slammed-by-water-cuts-in-the-west-amid-drought.html"
+                        target="_blank" rel="noopener noreferrer" class="challenge-card-link">
+                        <div class="challenge-card">
+                            <img src="static/cnbc_redesign.png" alt="CNBC Logo">
+                            <blockquote>"Empty canals, dead cotton fields: Arizona farmers are getting slammed by water
+                                cuts in the West."</blockquote>
+                        </div>
+                    </a>
+
+                    <a href="https://grist.org/article/california-farmer-solar-panel-water-renewable-nature-conservancy"
+                        target="_blank" rel="noopener noreferrer" class="challenge-card-link">
+                        <div class="challenge-card">
+                            <img src="static/grist_logo.png" alt="Grist Logo">
+                            <blockquote>"Low on Water, California Farmers Turn to Solar Farming... a state law now
+                                requires water regulators to figure out how to balance their accounts so that
+                                groundwater levels stop dropping."</blockquote>
+                        </div>
+                    </a>
+                </div>
+
+
+            </div>
+        </section>
 
 
         <!-- WHAT IF SECTION (from V2) -->
         <section class="section what-if-section">
             <div class="container">
-                <h2 class="reveal">We are moving beyond siloed solutions by asking a simple question: <span class="highlight">What if we produce our food under solar panels?</span></h2>
+                <h2 class="reveal">We are moving beyond siloed solutions by asking a simple question: <span
+                        class="highlight">What if we produce our food under solar panels?</span></h2>
             </div>
         </section>
 
-       <!-- PROOF SECTION (Interactive Charts) -->
-<section class="section proof-section">
-    <div class="container">
-        <div class="news-header reveal">
-            <span class="tag">The Evidence is Clear</span>
-            <h2>Data-Driven Results: Yield & Water Efficiency</h2>
-           <p class="subtitle" style="max-width: 800px; margin: 1rem auto 0;">
-    Our research shows agrivoltaics not only improves crop yield in harsh conditions but also significantly boosts water use efficiency. The interactive charts below, based on our published data 
-    (<a 
-        href="https://www.nature.com/articles/s44264-025-00073-1" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        title="Agrivoltaics as a climate-smart and resilient solution for midday depression in photosynthesis in dryland regions"
-        style="color: var(--secondary-color); text-decoration: underline; font-weight: 600;"
-    >see publication</a>), 
-    illustrate these dual benefits.
-</p>
-        </div>
+        <!-- PROOF SECTION (Interactive Charts) -->
+        <section class="section proof-section">
+            <div class="container">
+                <div class="news-header reveal">
+                    <span class="tag">The Evidence is Clear</span>
+                    <h2>Data-Driven Results: Yield & Water Efficiency</h2>
+                    <p class="subtitle" style="max-width: 800px; margin: 1rem auto 0;">
+                        Our research shows agrivoltaics not only improves crop yield in harsh conditions but also
+                        significantly boosts water use efficiency. The interactive charts below, based on our published
+                        data
+                        (<a href="https://www.nature.com/articles/s44264-025-00073-1" target="_blank"
+                            rel="noopener noreferrer"
+                            title="Agrivoltaics as a climate-smart and resilient solution for midday depression in photosynthesis in dryland regions"
+                            style="color: var(--secondary-color); text-decoration: underline; font-weight: 600;">see
+                            publication</a>),
+                        illustrate these dual benefits.
+                    </p>
+                </div>
 
-        <!-- Interactive Toggle for Irrigation Levels -->
-        <div class="irrigation-toggle reveal">
-            <button class="toggle-btn active" id="fullIrrigationBtn" data-irrigation="full">Full Irrigation</button>
-            <button class="toggle-btn" id="halfIrrigationBtn" data-irrigation="half">Half Irrigation (Drought Condition)</button>
-        </div>
-        
-        <!-- NEW: Legend for the star annotation -->
-        <div class="chart-legend-note reveal">
-            <span>*</span> Statistically significant difference (P < 0.01) between Agrivoltaics and Full Sun control. Hover over a star for details.
-        </div>
+                <!-- Interactive Toggle for Irrigation Levels -->
+                <div class="irrigation-toggle reveal">
+                    <button class="toggle-btn active" id="fullIrrigationBtn" data-irrigation="full">Full
+                        Irrigation</button>
+                    <button class="toggle-btn" id="halfIrrigationBtn" data-irrigation="half">Half Irrigation (Drought
+                        Condition)</button>
+                </div>
 
-        <!-- Charts Grid -->
-        <div class="charts-grid reveal">
-            <div class="chart-card">
-                <h3>Agricultural Yield per Plant</h3>
-                <div id="yieldChart"></div>
-            </div>
-            <div class="chart-card">
-                <h3>Crop Water Productivity</h3>
-                <div id="productivityChart"></div>
-            </div>
-        </div>
+                <!-- NEW: Legend for the star annotation -->
+                <div class="chart-legend-note reveal">
+                    <span>*</span> Statistically significant difference (P < 0.01) between Agrivoltaics and Full Sun
+                        control. Hover over a star for details. </div>
 
-        <div style="text-align: center; margin-top: 4rem;" class="reveal">
-            <h3 style="font-size: 1.5rem; font-weight: 500; color: var(--text-heading);">A Resilient Solution for a Water-Scarce Future</h3>
-            <p class="subtitle" style="max-width: 800px; margin: 1rem auto 0;">
-                The data demonstrates a clear pattern: the moderated microclimate under solar panels reduces plant stress. Even under simulated drought conditions (half irrigation), agrivoltaic systems produce yields comparable to or greater than fully irrigated crops in traditional open-field agriculture, making food production more resilient and sustainable.
-            </p>
-        </div>
-    </div>
-</section>
+                        <!-- Charts Grid -->
+                        <div class="charts-grid reveal">
+                            <div class="chart-card">
+                                <h3>Agricultural Yield per Plant</h3>
+                                <div id="yieldChart"></div>
+                            </div>
+                            <div class="chart-card">
+                                <h3>Crop Water Productivity</h3>
+                                <div id="productivityChart"></div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 4rem;" class="reveal">
+                            <h3 style="font-size: 1.5rem; font-weight: 500; color: var(--text-heading);">A Resilient
+                                Solution for a Water-Scarce Future</h3>
+                            <p class="subtitle" style="max-width: 800px; margin: 1rem auto 0;">
+                                The data demonstrates a clear pattern: the moderated microclimate under solar panels
+                                reduces plant stress. Even under simulated drought conditions (half irrigation),
+                                agrivoltaic systems produce yields comparable to or greater than fully irrigated crops
+                                in traditional open-field agriculture, making food production more resilient and
+                                sustainable.
+                            </p>
+                        </div>
+                </div>
+        </section>
 
         <!-- RESEARCH PILLARS -->
         <section class="section pillars-section" id="research-section">
             <div class="container">
-                <div class="news-header reveal" style="grid-column: 1 / -1; margin-bottom: 2rem; justify-content: flex-start;">
-                     <h2>Research in Agrivoltaics Systems</h2>
+                <div class="news-header reveal"
+                    style="grid-column: 1 / -1; margin-bottom: 2rem; justify-content: flex-start;">
+                    <h2>Research in Agrivoltaics Systems</h2>
                 </div>
                 <div class="pillars-left">
-     <a href="research-ecophysiology.html" style="text-decoration: none; color: inherit; display: block;">
-        <div class="pillar-item reveal" data-image="static/ecophysiology-hero.jpg">
-            <span class="tag">01. Ecophysiology</span>
-            <h3>The Plant-Panel Symbiosis</h3>
-            <p>The partial shade of solar panels creates a unique growing environment for crops. How does the AV environment affect crop physiology, water use, phenology and yield?</p>
-        </div>
-     </a>
-     <a href="research-scaling-up.html" style="text-decoration: none; color: inherit; display: block;">
-        <div class="pillar-item reveal" data-image="static/scaling-up-hero.jpg">
-            <span class="tag">02. Scaling Up</span>
-            <h3>From Kilowatts to Megawatts</h3>
-            <p>Taking proven benefits from test plots to utility-scale requires robust engineering and
-                economic models. We analyze system designs and financial viability to create a clear roadmap
-                for profitable agrivoltaic projects.</p>
-        </div>
-     </a>
-     <a href="research-scaling-out.html" style="text-decoration: none; color: inherit; display: block;">
-        <!-- The data-image attribute is updated here -->
-        <div class="pillar-item reveal" data-image="static/adapting.jpeg">
-            <span class="tag">03. Scaling Out</span>
-            <h3>Adapting to Diverse Contexts</h3>
-            <p>An agrivoltaic solution for Arizona's desert differs from one for Kenya's highlands. Our
-                research spans multiple climates and crop types to develop adaptable, resilient models that
-                work worldwide.</p>
-        </div>
-     </a>
-</div>
-<div class="pillars-right">
-    <div class="pillar-image is-visible" id="pillar-image-ecophysiology-hero"><img
-            src="static/ecophysiology-hero.jpg" alt="Ecophysiology research"></div>
-    <div class="pillar-image" id="pillar-image-scaling-up-hero"><img src="static/scaling-up-hero.jpg"
-            alt="Large-scale agrivoltaics"></div>
-    <!-- The image source, ID, and alt text are updated here -->
-    <div class="pillar-image" id="pillar-image-adapting"><img src="static/adapting.jpg"
-            alt="Adapting agrivoltaics to diverse global contexts"></div>
-</div>
+                    <a href="research-ecophysiology.html"
+                        style="text-decoration: none; color: inherit; display: block;">
+                        <div class="pillar-item reveal" data-image="static/ecophysiology-hero.jpg">
+                            <span class="tag">01. Ecophysiology</span>
+                            <h3>The Plant-Panel Symbiosis</h3>
+                            <p>The partial shade of solar panels creates a unique growing environment for crops. How
+                                does the AV environment affect crop physiology, water use, phenology and yield?</p>
+                        </div>
+                    </a>
+                    <a href="research-scaling-up.html" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="pillar-item reveal" data-image="static/scaling-up-hero.jpg">
+                            <span class="tag">02. Scaling Up</span>
+                            <h3>From Kilowatts to Megawatts</h3>
+                            <p>Taking proven benefits from test plots to utility-scale requires robust engineering and
+                                economic models. We analyze system designs and financial viability to create a clear
+                                roadmap
+                                for profitable agrivoltaic projects.</p>
+                        </div>
+                    </a>
+                    <a href="research-scaling-out.html" style="text-decoration: none; color: inherit; display: block;">
+                        <!-- The data-image attribute is updated here -->
+                        <div class="pillar-item reveal" data-image="static/adapting.jpeg">
+                            <span class="tag">03. Scaling Out</span>
+                            <h3>Adapting to Diverse Contexts</h3>
+                            <p>An agrivoltaic solution for Arizona's desert differs from one for Kenya's highlands. Our
+                                research spans multiple climates and crop types to develop adaptable, resilient models
+                                that
+                                work worldwide.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="pillars-right">
+                    <div class="pillar-image is-visible" id="pillar-image-ecophysiology-hero"><img
+                            src="static/ecophysiology-hero.jpg" alt="Ecophysiology research"></div>
+                    <div class="pillar-image" id="pillar-image-scaling-up-hero"><img src="static/scaling-up-hero.jpg"
+                            alt="Large-scale agrivoltaics"></div>
+                    <!-- The image source, ID, and alt text are updated here -->
+                    <div class="pillar-image" id="pillar-image-adapting"><img src="static/adapting.jpg"
+                            alt="Adapting agrivoltaics to diverse global contexts"></div>
+                </div>
         </section>
 
         <!-- RESEARCHER SECTION -->
@@ -1213,37 +1327,54 @@
                         for renewable energy and sustainable agriculture.</p>
                 </div>
                 <div class="researcher-video-wrapper reveal" style="transition-delay: 0.2s;">
-                    <!-- INSTRUCTION: The video source and poster have been changed to placeholders as requested. -->
+                    <!-- MODIFICATION: The 'poster' attribute is changed to the new placeholder image -->
                     <video class="researcher-video" src="static/b2-drone-video.mp4" controls
-                        poster="static/b2-drone-video-poster.jpg"></video>
+                        poster="static/greg_video.png"></video>
                 </div>
             </div>
         </section>
 
-                <!-- EDUCATION SECTION -->
+        <!-- EDUCATION SECTION -->
         <section class="section education-section" style="background-color: var(--bg-light-navy);">
             <div class="container reveal" style="text-align: center;">
-                <h2 style="font-size: clamp(2.2rem, 5vw, 3rem); line-height: 1.2; margin-bottom: 1.5rem;">Developing the Next Generation of Agrivoltaics Leaders</h2>
-                <p class="subtitle" style="max-width: 800px; margin-left: auto; margin-right: auto; margin-bottom: 3rem;">Our educational focus builds capacity at all levels, from K-12 engagement to university-level research and professional training.</p>
+                <h2 style="font-size: clamp(2.2rem, 5vw, 3rem); line-height: 1.2; margin-bottom: 1.5rem;">Developing the
+                    Next Generation of Agrivoltaics Leaders</h2>
+                <p class="subtitle"
+                    style="max-width: 800px; margin-left: auto; margin-right: auto; margin-bottom: 3rem;">Our
+                    educational focus builds capacity at all levels, from K-12 engagement to university-level research
+                    and professional training.</p>
                 <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; text-align: left;">
-                     <a href="education.html" style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
-                         <div style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
-                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">School Garden Programs</h3>
-                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Bringing hands-on agrivoltaics learning to K-12 students, inspiring future scientists and innovators.</p>
+                    <a href="education.html"
+                        style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div
+                            style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">School
+                                Garden Programs</h3>
+                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Bringing hands-on
+                                agrivoltaics learning to K-12 students, inspiring future scientists and innovators.</p>
                         </div>
-                     </a>
-                     <a href="education-interdisciplinary.html" style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
-                         <div style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
-                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">Interdisciplinary Opportunities</h3>
-                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Fostering collaboration across science, engineering, and policy for graduate and undergraduate students.</p>
+                    </a>
+                    <a href="education-interdisciplinary.html"
+                        style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div
+                            style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">
+                                Interdisciplinary Opportunities</h3>
+                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Fostering collaboration
+                                across science, engineering, and policy for graduate and undergraduate students.</p>
                         </div>
-                     </a>
-                     <a href="education-global-school.html" style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
-                         <div style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
-                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">Global School of Agrivoltaics</h3>
-                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Training workshops and resources for farmers, developers, and policymakers to implement successful projects.</p>
+                    </a>
+                    <a href="education-global-school.html"
+                        style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div
+                            style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
+                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">Global
+                                School of Agrivoltaics</h3>
+                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Training workshops and
+                                resources for farmers, developers, and policymakers to implement successful projects.
+                            </p>
                         </div>
-                     </a>
+                    </a>
                 </div>
             </div>
         </section>
@@ -1256,146 +1387,173 @@
                     <a href="sites.html" class="cta-button">View All Sites</a>
                 </div>
                 <p class="subtitle reveal" style="text-align: center; max-width: 800px; margin: -2rem auto 4rem;">
-                    From the drylands of Arizona to equatorial Kenya, our research spans diverse climates to create adaptable, resilient agrivoltaic models.
+                    From the drylands of Arizona to equatorial Kenya, our research spans diverse climates to create
+                    adaptable, resilient agrivoltaic models.
                 </p>
             </div>
-            
+
             <div class="carousel-container reveal" style="transition-delay: 0.2s;">
                 <div class="carousel-track">
                     <!-- Original Set of Site Cards -->
                     <div class="slide">
                         <a class="news-card" href="sites.html#arizona-sites-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/biosphere2agriv.jpg" alt="Agrivoltaics research at Biosphere 2"></div>
+                            <div class="news-image-wrapper"><img src="static/biosphere2agriv.jpg"
+                                    alt="Agrivoltaics research at Biosphere 2"></div>
                             <div class="news-card-content">
                                 <span class="tag">Arizona, USA</span>
                                 <h3>Biosphere 2 Laboratory</h3>
-                                <p>The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win' for food, water, and energy.</p>
+                                <p>The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win'
+                                    for food, water, and energy.</p>
                             </div>
                         </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#colorado-site-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/jacksagriv.jpg" alt="Agrivoltaics at Jack's Solar Garden"></div>
+                            <div class="news-image-wrapper"><img src="static/jacksagriv.jpg"
+                                    alt="Agrivoltaics at Jack's Solar Garden"></div>
                             <div class="news-card-content">
                                 <span class="tag">Colorado, USA</span>
                                 <h3>Jack’s Solar Garden</h3>
-                                <p>A nationally-recognized showcase focusing on microclimate benefits and improving pasture quality for livestock grazing.</p>
+                                <p>A nationally-recognized showcase focusing on microclimate benefits and improving
+                                    pasture quality for livestock grazing.</p>
                             </div>
                         </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank">
-                    <!-- IMAGE UPDATED HERE (for the loop) -->
-                    <div class="news-image-wrapper"><img src="static/makueni2.jpg" alt="Community agrivoltaics in Kenya"></div>
-                    <div class="news-card-content">
-                        <span class="tag">Makueni County, Kenya</span>
-                        <h3>Community Agrivoltaics</h3>
-                        <p>A community-focused site providing clean energy and irrigation to tackle food and energy security in a semi-arid region.</p>
-                    </div>
-                </a>
+                            <!-- IMAGE UPDATED HERE (for the loop) -->
+                            <div class="news-image-wrapper"><img src="static/makueni2.jpg"
+                                    alt="Community agrivoltaics in Kenya"></div>
+                            <div class="news-card-content">
+                                <span class="tag">Makueni County, Kenya</span>
+                                <h3>Community Agrivoltaics</h3>
+                                <p>A community-focused site providing clean energy and irrigation to tackle food and
+                                    energy security in a semi-arid region.</p>
+                            </div>
+                        </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#israel-site-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/aravaagriv.jpg" alt="Agrivoltaics in the Arava Desert, Israel"></div>
+                            <div class="news-image-wrapper"><img src="static/aravaagriv.jpg"
+                                    alt="Agrivoltaics in the Arava Desert, Israel"></div>
                             <div class="news-card-content">
                                 <span class="tag">Arava Desert, Israel</span>
                                 <h3>Extreme Climate Research</h3>
-                                <p>Developing robust systems for extreme desert climates, focusing on enhancing crop yields while drastically reducing water needs.</p>
+                                <p>Developing robust systems for extreme desert climates, focusing on enhancing crop
+                                    yields while drastically reducing water needs.</p>
                             </div>
                         </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#morocco-collaboration-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/um6pagriv.jpeg" alt="Green Energy Park in Morocco"></div>
+                            <div class="news-image-wrapper"><img src="static/um6pagriv.jpeg"
+                                    alt="Green Energy Park in Morocco"></div>
                             <div class="news-card-content">
                                 <span class="tag">Ben Guerir, Morocco</span>
                                 <h3>Green Energy Park</h3>
-                                <p>A regional hub for West Africa, focusing on water-saving tech, battery storage, and increasing solar output via crop cooling.</p>
+                                <p>A regional hub for West Africa, focusing on water-saving tech, battery storage, and
+                                    increasing solar output via crop cooling.</p>
                             </div>
                         </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#mexico-collaboration-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/paseagriv.jpg" alt="PASE Agrivoltaics project in Mexico"></div>
+                            <div class="news-image-wrapper"><img src="static/paseagriv.jpg"
+                                    alt="PASE Agrivoltaics project in Mexico"></div>
                             <div class="news-card-content">
                                 <span class="tag">Mexico City, Mexico</span>
                                 <h3>PASE Project at UNAM</h3>
-                                <p>Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable and educational research plot.</p>
+                                <p>Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable
+                                    and educational research plot.</p>
                             </div>
                         </a>
                     </div>
-                    
+
                     <!-- Duplicated Set for Seamless Loop -->
                     <div class="slide">
                         <a class="news-card" href="sites.html#arizona-sites-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/biosphere2agriv.jpg" alt="Agrivoltaics research at Biosphere 2"></div>
+                            <div class="news-image-wrapper"><img src="static/biosphere2agriv.jpg"
+                                    alt="Agrivoltaics research at Biosphere 2"></div>
                             <div class="news-card-content">
                                 <span class="tag">Arizona, USA</span>
                                 <h3>Biosphere 2 Laboratory</h3>
-                                <p>The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win' for food, water, and energy.</p>
+                                <p>The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win'
+                                    for food, water, and energy.</p>
                             </div>
                         </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#colorado-site-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/jacksagriv.jpg" alt="Agrivoltaics at Jack's Solar Garden"></div>
+                            <div class="news-image-wrapper"><img src="static/jacksagriv.jpg"
+                                    alt="Agrivoltaics at Jack's Solar Garden"></div>
                             <div class="news-card-content">
                                 <span class="tag">Colorado, USA</span>
                                 <h3>Jack’s Solar Garden</h3>
-                                <p>A nationally-recognized showcase focusing on microclimate benefits and improving pasture quality for livestock grazing.</p>
+                                <p>A nationally-recognized showcase focusing on microclimate benefits and improving
+                                    pasture quality for livestock grazing.</p>
                             </div>
                         </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank">
                             <!-- INSTRUCTION: The image source has been changed to a placeholder as requested. -->
-                            <div class="news-image-wrapper"><img src="static/makueni-site-photo.jpg" alt="Community agrivoltaics in Kenya"></div>
+                            <div class="news-image-wrapper"><img src="static/makueni-site-photo.jpg"
+                                    alt="Community agrivoltaics in Kenya"></div>
                             <div class="news-card-content">
                                 <span class="tag">Makueni County, Kenya</span>
                                 <h3>Community Agrivoltaics</h3>
-                                <p>A community-focused site providing clean energy and irrigation to tackle food and energy security in a semi-arid region.</p>
+                                <p>A community-focused site providing clean energy and irrigation to tackle food and
+                                    energy security in a semi-arid region.</p>
                             </div>
                         </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#israel-site-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/aravaagriv.jpg" alt="Agrivoltaics in the Arava Desert, Israel"></div>
+                            <div class="news-image-wrapper"><img src="static/aravaagriv.jpg"
+                                    alt="Agrivoltaics in the Arava Desert, Israel"></div>
                             <div class="news-card-content">
                                 <span class="tag">Arava Desert, Israel</span>
                                 <h3>Extreme Climate Research</h3>
-                                <p>Developing robust systems for extreme desert climates, focusing on enhancing crop yields while drastically reducing water needs.</p>
+                                <p>Developing robust systems for extreme desert climates, focusing on enhancing crop
+                                    yields while drastically reducing water needs.</p>
                             </div>
                         </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#morocco-collaboration-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/um6pagriv.jpeg" alt="Green Energy Park in Morocco"></div>
+                            <div class="news-image-wrapper"><img src="static/um6pagriv.jpeg"
+                                    alt="Green Energy Park in Morocco"></div>
                             <div class="news-card-content">
                                 <span class="tag">Ben Guerir, Morocco</span>
                                 <h3>Green Energy Park</h3>
-                                <p>A regional hub for West Africa, focusing on water-saving tech, battery storage, and increasing solar output via crop cooling.</p>
+                                <p>A regional hub for West Africa, focusing on water-saving tech, battery storage, and
+                                    increasing solar output via crop cooling.</p>
                             </div>
                         </a>
                     </div>
                     <div class="slide">
                         <a class="news-card" href="sites.html#mexico-collaboration-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/paseagriv.jpg" alt="PASE Agrivoltaics project in Mexico"></div>
+                            <div class="news-image-wrapper"><img src="static/paseagriv.jpg"
+                                    alt="PASE Agrivoltaics project in Mexico"></div>
                             <div class="news-card-content">
                                 <span class="tag">Mexico City, Mexico</span>
                                 <h3>PASE Project at UNAM</h3>
-                                <p>Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable and educational research plot.</p>
+                                <p>Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable
+                                    and educational research plot.</p>
                             </div>
                         </a>
                     </div>
                 </div>
             </div>
             <div class="carousel-nav reveal" style="transition-delay: 0.2s;">
-                <button class="nav-btn" id="prevBtn" aria-label="Previous slide"><i class="fa-solid fa-arrow-left"></i></button>
-                <button class="nav-btn" id="nextBtn" aria-label="Next slide"><i class="fa-solid fa-arrow-right"></i></button>
+                <button class="nav-btn" id="prevBtn" aria-label="Previous slide"><i
+                        class="fa-solid fa-arrow-left"></i></button>
+                <button class="nav-btn" id="nextBtn" aria-label="Next slide"><i
+                        class="fa-solid fa-arrow-right"></i></button>
             </div>
         </section>
 
-       <!-- NEWS & PUBLICATIONS -->
+        <!-- NEWS & PUBLICATIONS -->
         <section class="news-section" style="padding-top: 0;">
             <div class="container">
                 <div class="news-header reveal">
@@ -1405,7 +1563,8 @@
 
                 <div class="news-grid reveal" style="transition-delay: 0.2s;">
                     <a class="news-card" href="https://doi.org/10.1038/s44264-025-00073-1" target="_blank">
-                        <div class="news-image-wrapper"><img src="static/pub-placeholder.jpg" alt="Agrivoltaics as a climate-smart solution"></div>
+                        <div class="news-image-wrapper"><img src="static/pub-placeholder.jpg"
+                                alt="Agrivoltaics as a climate-smart solution"></div>
                         <div class="news-card-content">
                             <span class="tag">Publication • 2025</span>
                             <h3>Agrivoltaics as a climate-smart solution for midday photosynthesis collapse</h3>
@@ -1413,7 +1572,8 @@
                     </a>
 
                     <a class="news-card" href="https://www.nrel.gov/docs/fy22osti/83566.pdf" target="_blank">
-                        <div class="news-image-wrapper"><img src="static/5cs.jpg" alt="Placeholder image for a report"></div>
+                        <div class="news-image-wrapper"><img src="static/5cs.jpg" alt="Placeholder image for a report">
+                        </div>
                         <div class="news-card-content">
                             <span class="tag">Report • 2022</span>
                             <h3>The 5 Cs of Agrivoltaic Success Factors in the United States</h3>
@@ -1423,7 +1583,8 @@
                     <a class="news-card"
                         href="https://www.wired.com/story/growing-crops-under-solar-panels-now-theres-a-bright-idea/"
                         target="_blank">
-                        <div class="news-image-wrapper"><img src="static/wired1.jpg" alt="Placeholder image for a news article"></div>
+                        <div class="news-image-wrapper"><img src="static/wired1.jpg"
+                                alt="Placeholder image for a news article"></div>
                         <div class="news-card-content">
                             <span class="tag">News • 2021</span>
                             <h3>Wired: Growing Crops Under Solar Panels? Now There’s a Bright Idea</h3>
@@ -1433,7 +1594,7 @@
             </div>
         </section>
 
-                <!-- PARTNERS SECTION -->
+        <!-- PARTNERS SECTION -->
         <section class="partners-section" id="partners-section">
             <div class="container">
                 <div class="section-header reveal">
@@ -1442,34 +1603,40 @@
                         bridges research, industry, and the public sector.</p>
                 </div>
                 <div class="partners-grid reveal" style="transition-delay: 0.2s;">
-                    <a href="https://sgde.arizona.edu/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/uaes.png" alt="UArizona School of Geography, Development & Environment Logo" class="partner-logo">
+                    <a href="https://geography.arizona.edu" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/uaes.png" alt="UArizona School of Geography, Development & Environment Logo"
+                            class="partner-logo">
                     </a>
                     <a href="https://biosphere2.org/" target="_blank" rel="noopener" class="partner-logo-link">
                         <img src="static/b2-logo-placeholder.png" alt="Biosphere 2 Logo" class="partner-logo">
                     </a>
-                    <a href="https://fazi.arizona.edu/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/fazi-logo-placeholder.jpg" alt="France-Arizona Institute for Global Grand Challenges Logo" class="partner-logo">
+                    <a href="https://www.fainstitute.arizona.edu" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/fazi-logo-placeholder.jpg"
+                            alt="France-Arizona Institute for Global Grand Challenges Logo" class="partner-logo">
                     </a>
                     <a href="https://www.unam.mx/" target="_blank" rel="noopener" class="partner-logo-link">
                         <img src="static/unam-logo-placeholder.png" alt="UNAM Logo" class="partner-logo">
                     </a>
                     <a href="https://www.um6p.ma/en" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/um6p-logo-placeholder.png" alt="Mohammed VI Polytechnic University Logo" class="partner-logo">
+                        <img src="static/um6p-logo-placeholder.png" alt="Mohammed VI Polytechnic University Logo"
+                            class="partner-logo">
                     </a>
                     <a href="https://www.cnrs.fr/en/" target="_blank" rel="noopener" class="partner-logo-link">
                         <img src="static/cnrs-logo-placeholder.png" alt="CNRS Logo" class="partner-logo">
                     </a>
                     <a href="https://jointinstitute.jnf.org/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/kasser-logo-placeholder.jpg" alt="Kasser Joint Institute for Food, Water, and Energy Security Logo" class="partner-logo">
+                        <img src="static/kasser-logo-placeholder.jpg"
+                            alt="Kasser Joint Institute for Food, Water, and Energy Security Logo" class="partner-logo">
                     </a>
-                     <a href="https://www.trbf.org/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/trbf-logo-placeholder.png" alt="Thomas R. Brown Foundations Logo" class="partner-logo">
+                    <a href="https://www.trbf.org/" target="_blank" rel="noopener" class="partner-logo-link">
+                        <img src="static/trbf-logo-placeholder.png" alt="Thomas R. Brown Foundations Logo"
+                            class="partner-logo">
                     </a>
                     <a href="http://www.sec.gob.mx/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/sonora-sec-logo-placeholder.png" alt="Gobierno de Sonora Secretaría de Educación y Cultura Logo" class="partner-logo">
+                        <img src="static/sonora-sec-logo-placeholder.png"
+                            alt="Gobierno de Sonora Secretaría de Educación y Cultura Logo" class="partner-logo">
                     </a>
-                     
+
                     <a href="https://www.nrel.gov/" target="_blank" rel="noopener" class="partner-logo-link">
                         <img src="static/nrel.png" alt="NREL Transforming Energy Logo" class="partner-logo">
                     </a>
@@ -1478,7 +1645,8 @@
                     </a>
                     <a href="https://www.energy.gov/eere/solar/solar-energy-technologies-office" target="_blank"
                         rel="noopener" class="partner-logo-link">
-                        <img src="static/doe.jpg" alt="U.S. Department of Energy Solar Awardee Logo" class="partner-logo">
+                        <img src="static/doe.jpg" alt="U.S. Department of Energy Solar Awardee Logo"
+                            class="partner-logo">
                     </a>
                 </div>
             </div>
@@ -1588,7 +1756,7 @@
                     }
                 });
             };
-            
+
             const initCounters = () => {
                 const stats = document.querySelectorAll('.stat-number');
                 if (stats.length === 0) return;
@@ -1614,12 +1782,12 @@
                                     el.innerText = target.toLocaleString() + '%';
                                 }
                             }, frameDuration);
-                            
+
                             observer.unobserve(el);
                         }
                     });
                 }, { threshold: 0.5 });
-                
+
                 stats.forEach(stat => {
                     statsObserver.observe(stat);
                 });
@@ -1629,7 +1797,7 @@
                 const pillarItems = document.querySelectorAll('.pillar-item');
                 const pillarImages = document.querySelectorAll('.pillar-image');
                 if (pillarItems.length === 0 || window.innerWidth <= 992) return;
-                
+
                 const observer = new IntersectionObserver(entries => {
                     entries.forEach(entry => {
                         entry.target.classList.toggle('is-visible', entry.isIntersecting);
@@ -1652,7 +1820,7 @@
                 const nextBtn = document.getElementById('nextBtn');
                 const prevBtn = document.getElementById('prevBtn');
                 if (!nextBtn || !prevBtn) return;
-                
+
                 let currentIndex = 0;
                 let slideWidth = slides[0].getBoundingClientRect().width;
                 const totalVisibleSlides = Math.round(track.parentElement.clientWidth / slideWidth);
@@ -1685,16 +1853,16 @@
                         currentIndex--;
                         track.style.transition = 'transform .5s ease-in-out';
                         moveToSlide(currentIndex);
-                    }, 50); 
+                    }, 50);
                 };
 
                 nextBtn.addEventListener('click', handleNext);
                 prevBtn.addEventListener('click', handlePrev);
-                
+
                 let autoPlayInterval = setInterval(handleNext, 5000);
                 track.parentElement.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
                 track.parentElement.addEventListener('mouseleave', () => autoPlayInterval = setInterval(handleNext, 5000));
-                
+
                 window.addEventListener('resize', () => {
                     slideWidth = slides[0].getBoundingClientRect().width;
                     moveToSlide(currentIndex);
@@ -1712,193 +1880,194 @@
         });
     </script>
     <script>
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof ApexCharts === 'undefined') {
-        console.error('ApexCharts library not loaded. Please ensure the script tag is included.');
-        return;
-    }
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof ApexCharts === 'undefined') {
+                console.error('ApexCharts library not loaded. Please ensure the script tag is included.');
+                return;
+            }
 
-    // --- UPDATED DATA: Now includes `hasStar` property ---
-    const chartData = {
-        yield: {
-            full: {
-                control: [{ x: 'Basil', y: 3.6, hasStar: false }, { x: 'Beans', y: 0.09, hasStar: false }, { x: 'Tomatoes', y: 2.1, hasStar: false }],
-                av:      [{ x: 'Basil', y: 3.9, hasStar: false }, { x: 'Beans', y: 0.10, hasStar: true }, { x: 'Tomatoes', y: 3.2, hasStar: true }]
-            },
-            half: {
-                control: [{ x: 'Basil', y: 2.2, hasStar: false }, { x: 'Beans', y: 0.08, hasStar: false }, { x: 'Tomatoes', y: 1.4, hasStar: false }],
-                av:      [{ x: 'Basil', y: 3.1, hasStar: false }, { x: 'Beans', y: 0.11, hasStar: true }, { x: 'Tomatoes', y: 3.6, hasStar: true }]
-            }
-        },
-        productivity: {
-            full: {
-                control: [{ x: 'Basil', y: 0.40, hasStar: false }, { x: 'Beans', y: 0.010, hasStar: false }, { x: 'Tomatoes', y: 0.22, hasStar: false }],
-                av:      [{ x: 'Basil', y: 0.42, hasStar: false }, { x: 'Beans', y: 0.011, hasStar: true }, { x: 'Tomatoes', y: 0.35, hasStar: true }]
-            },
-            half: {
-                control: [{ x: 'Basil', y: 0.43, hasStar: false }, { x: 'Beans', y: 0.016, hasStar: false }, { x: 'Tomatoes', y: 0.28, hasStar: false }],
-                av:      [{ x: 'Basil', y: 0.60, hasStar: true }, { x: 'Beans', y: 0.025, hasStar: true }, { x: 'Tomatoes', y: 0.70, hasStar: true }]
-            }
-        }
-    };
-    
-    // --- NEW: Function to generate star annotations dynamically ---
-    function generateAnnotations(seriesData) {
-        const points = [];
-        // Only check the agrivoltaics series for stars
-        seriesData.av.forEach(point => {
-            if (point.hasStar) {
-                points.push({
-                    x: point.x,
-                    y: point.y,
-                    seriesIndex: 1, // Always on the 2nd series (Agrivoltaics)
-                    marker: {
-                        size: 8,
-                        fillColor: '#FFD700',
-                        strokeColor: 'var(--bg-light-navy)',
-                        strokeWidth: 2,
-                        shape: 'star',
-                        radius: 2,
+            // --- UPDATED DATA: Now includes `hasStar` property ---
+            const chartData = {
+                yield: {
+                    full: {
+                        control: [{ x: 'Basil', y: 3.6, hasStar: false }, { x: 'Beans', y: 0.09, hasStar: false }, { x: 'Tomatoes', y: 2.1, hasStar: false }],
+                        av: [{ x: 'Basil', y: 3.9, hasStar: false }, { x: 'Beans', y: 0.10, hasStar: true }, { x: 'Tomatoes', y: 3.2, hasStar: true }]
+                    },
+                    half: {
+                        control: [{ x: 'Basil', y: 2.2, hasStar: false }, { x: 'Beans', y: 0.08, hasStar: false }, { x: 'Tomatoes', y: 1.4, hasStar: false }],
+                        av: [{ x: 'Basil', y: 3.1, hasStar: false }, { x: 'Beans', y: 0.11, hasStar: true }, { x: 'Tomatoes', y: 3.6, hasStar: true }]
                     }
-                    // The 'label' object has been completely removed from this configuration
-                });
-            }
-        });
-        return points;
-    }
-
-    const commonOptions = {
-        chart: {
-            type: 'bar',
-            height: 380,
-            toolbar: { show: false },
-            fontFamily: 'Inter, sans-serif',
-        },
-        plotOptions: { bar: { horizontal: false, columnWidth: '60%', borderRadius: 4 } },
-        colors: ['#8892B0', '#E87A24'],
-        dataLabels: { enabled: false }, // Labels on top were too cluttered with stars
-        stroke: { show: true, width: 2, colors: ['transparent'] },
-        xaxis: {
-            labels: { style: { colors: '#8892B0', fontSize: '14px' } },
-            axisBorder: { show: false },
-            axisTicks: { show: false }
-        },
-        yaxis: {
-            labels: {
-                style: { colors: '#8892B0', fontSize: '14px' },
-                formatter: (val) => val < 1 ? val.toFixed(3) : val.toFixed(1)
-            },
-            max: (max) => max * 1.15 // Give space for star at the top
-        },
-        legend: {
-            position: 'top',
-            horizontalAlign: 'right',
-            labels: { colors: '#CCD6F6' },
-            markers: { radius: 12 },
-            offsetY: -5,
-        },
-        grid: { borderColor: 'rgba(100, 116, 139, 0.2)', strokeDashArray: 4 },
-        tooltip: { theme: 'dark', y: { formatter: (val) => val.toFixed(3) } },
-        // --- NEW: Initial empty annotations ---
-        annotations: { points: [] } ,
-        // --- FIX: ADDED RESPONSIVE OPTIONS ---
-        // This block tells the chart how to behave on smaller screens.
-        responsive: [{
-            breakpoint: 768, // This applies when the screen width is less than 768px.
-            options: {
-                xaxis: {
-                    labels: {
-                        rotate: -45, // Rotate labels to prevent them from overlapping.
-                        style: {
-                            fontSize: '12px' // Use a slightly smaller font on mobile.
-                        }
+                },
+                productivity: {
+                    full: {
+                        control: [{ x: 'Basil', y: 0.40, hasStar: false }, { x: 'Beans', y: 0.010, hasStar: false }, { x: 'Tomatoes', y: 0.22, hasStar: false }],
+                        av: [{ x: 'Basil', y: 0.42, hasStar: false }, { x: 'Beans', y: 0.011, hasStar: true }, { x: 'Tomatoes', y: 0.35, hasStar: true }]
+                    },
+                    half: {
+                        control: [{ x: 'Basil', y: 0.43, hasStar: false }, { x: 'Beans', y: 0.016, hasStar: false }, { x: 'Tomatoes', y: 0.28, hasStar: false }],
+                        av: [{ x: 'Basil', y: 0.60, hasStar: true }, { x: 'Beans', y: 0.025, hasStar: true }, { x: 'Tomatoes', y: 0.70, hasStar: true }]
                     }
                 }
+            };
+
+            // --- NEW: Function to generate star annotations dynamically ---
+            function generateAnnotations(seriesData) {
+                const points = [];
+                // Only check the agrivoltaics series for stars
+                seriesData.av.forEach(point => {
+                    if (point.hasStar) {
+                        points.push({
+                            x: point.x,
+                            y: point.y,
+                            seriesIndex: 1, // Always on the 2nd series (Agrivoltaics)
+                            marker: {
+                                size: 8,
+                                fillColor: '#FFD700',
+                                strokeColor: 'var(--bg-light-navy)',
+                                strokeWidth: 2,
+                                shape: 'star',
+                                radius: 2,
+                            }
+                            // The 'label' object has been completely removed from this configuration
+                        });
+                    }
+                });
+                return points;
             }
-        }]
-    };
 
-    // --- YIELD CHART ---
-    const yieldChartOptions = {
-        ...commonOptions,
-        series: [
-            { name: 'Full Sun (Control)', data: chartData.yield.full.control },
-            { name: 'Agrivoltaics', data: chartData.yield.full.av }
-        ],
-        annotations: { points: generateAnnotations(chartData.yield.full) },
-        yaxis: { ...commonOptions.yaxis, title: { text: 'Yield (kg / plant)', style: { color: '#8892B0', fontWeight: 500 } } },
-        tooltip: { ...commonOptions.tooltip, y: { formatter: (val) => val.toFixed(2) + " kg/plant" } }
-    };
-    const yieldChart = new ApexCharts(document.querySelector("#yieldChart"), yieldChartOptions);
-    yieldChart.render();
+            const commonOptions = {
+                chart: {
+                    type: 'bar',
+                    height: 380,
+                    toolbar: { show: false },
+                    fontFamily: 'Inter, sans-serif',
+                },
+                plotOptions: { bar: { horizontal: false, columnWidth: '60%', borderRadius: 4 } },
+                colors: ['#8892B0', '#E87A24'],
+                dataLabels: { enabled: false }, // Labels on top were too cluttered with stars
+                stroke: { show: true, width: 2, colors: ['transparent'] },
+                xaxis: {
+                    labels: { style: { colors: '#8892B0', fontSize: '14px' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    min: 0, // MODIFICATION: Force the y-axis to start at zero
+                    labels: {
+                        style: { colors: '#8892B0', fontSize: '14px' },
+                        formatter: (val) => val < 1 ? val.toFixed(3) : val.toFixed(1)
+                    },
+                    max: (max) => max * 1.15 // Give space for star at the top
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    labels: { colors: '#CCD6F6' },
+                    markers: { radius: 12 },
+                    offsetY: -5,
+                },
+                grid: { borderColor: 'rgba(100, 116, 139, 0.2)', strokeDashArray: 4 },
+                tooltip: { theme: 'dark', y: { formatter: (val) => val.toFixed(3) } },
+                // --- NEW: Initial empty annotations ---
+                annotations: { points: [] },
+                // --- FIX: ADDED RESPONSIVE OPTIONS ---
+                // This block tells the chart how to behave on smaller screens.
+                responsive: [{
+                    breakpoint: 768, // This applies when the screen width is less than 768px.
+                    options: {
+                        xaxis: {
+                            labels: {
+                                rotate: -45, // Rotate labels to prevent them from overlapping.
+                                style: {
+                                    fontSize: '12px' // Use a slightly smaller font on mobile.
+                                }
+                            }
+                        }
+                    }
+                }]
+            };
 
-    // --- PRODUCTIVITY CHART ---
-    const productivityChartOptions = {
-        ...commonOptions,
-        series: [
-            { name: 'Full Sun (Control)', data: chartData.productivity.full.control },
-            { name: 'Agrivoltaics', data: chartData.productivity.full.av }
-        ],
-        annotations: { points: generateAnnotations(chartData.productivity.full) },
-        yaxis: { ...commonOptions.yaxis, title: { text: 'Productivity (kg/m³)', style: { color: '#8892B0', fontWeight: 500 } } },
-        tooltip: { ...commonOptions.tooltip, y: { formatter: (val) => val.toFixed(3) + " kg/m³" } }
-    };
-    const productivityChart = new ApexCharts(document.querySelector("#productivityChart"), productivityChartOptions);
-    productivityChart.render();
-    
-    // --- FULLY REVISED TOGGLE LOGIC ---
-    const fullBtn = document.getElementById('fullIrrigationBtn');
-    const halfBtn = document.getElementById('halfIrrigationBtn');
+            // --- YIELD CHART ---
+            const yieldChartOptions = {
+                ...commonOptions,
+                series: [
+                    { name: 'Full Sun (Control)', data: chartData.yield.full.control },
+                    { name: 'Agrivoltaics', data: chartData.yield.full.av }
+                ],
+                annotations: { points: generateAnnotations(chartData.yield.full) },
+                yaxis: { ...commonOptions.yaxis, title: { text: 'Yield (kg / plant)', style: { color: '#8892B0', fontWeight: 500 } } },
+                tooltip: { ...commonOptions.tooltip, y: { formatter: (val) => val.toFixed(2) + " kg/plant" } }
+            };
+            const yieldChart = new ApexCharts(document.querySelector("#yieldChart"), yieldChartOptions);
+            yieldChart.render();
 
-    function updateCharts(irrigationType) {
-        fullBtn.classList.toggle('active', irrigationType === 'full');
-        halfBtn.classList.toggle('active', irrigationType === 'half');
+            // --- PRODUCTIVITY CHART ---
+            const productivityChartOptions = {
+                ...commonOptions,
+                series: [
+                    { name: 'Full Sun (Control)', data: chartData.productivity.full.control },
+                    { name: 'Agrivoltaics', data: chartData.productivity.full.av }
+                ],
+                annotations: { points: generateAnnotations(chartData.productivity.full) },
+                yaxis: { ...commonOptions.yaxis, title: { text: 'Productivity (kg/m³)', style: { color: '#8892B0', fontWeight: 500 } } },
+                tooltip: { ...commonOptions.tooltip, y: { formatter: (val) => val.toFixed(3) + " kg/m³" } }
+            };
+            const productivityChart = new ApexCharts(document.querySelector("#productivityChart"), productivityChartOptions);
+            productivityChart.render();
 
-        const newYieldData = chartData.yield[irrigationType];
-        const newProductivityData = chartData.productivity[irrigationType];
-        
-        // --- FIX: Use `updateOptions` to preserve all settings, including legend names ---
-        yieldChart.updateOptions({
-            series: [
-                { name: 'Full Sun (Control)', data: newYieldData.control },
-                { name: 'Agrivoltaics', data: newYieldData.av }
-            ],
-            annotations: {
-                points: generateAnnotations(newYieldData)
+            // --- FULLY REVISED TOGGLE LOGIC ---
+            const fullBtn = document.getElementById('fullIrrigationBtn');
+            const halfBtn = document.getElementById('halfIrrigationBtn');
+
+            function updateCharts(irrigationType) {
+                fullBtn.classList.toggle('active', irrigationType === 'full');
+                halfBtn.classList.toggle('active', irrigationType === 'half');
+
+                const newYieldData = chartData.yield[irrigationType];
+                const newProductivityData = chartData.productivity[irrigationType];
+
+                // --- FIX: Use `updateOptions` to preserve all settings, including legend names ---
+                yieldChart.updateOptions({
+                    series: [
+                        { name: 'Full Sun (Control)', data: newYieldData.control },
+                        { name: 'Agrivoltaics', data: newYieldData.av }
+                    ],
+                    annotations: {
+                        points: generateAnnotations(newYieldData)
+                    }
+                });
+
+                productivityChart.updateOptions({
+                    series: [
+                        { name: 'Full Sun (Control)', data: newProductivityData.control },
+                        { name: 'Agrivoltaics', data: newProductivityData.av }
+                    ],
+                    annotations: {
+                        points: generateAnnotations(newProductivityData)
+                    }
+                });
             }
+
+            fullBtn.addEventListener('click', () => updateCharts('full'));
+            halfBtn.addEventListener('click', () => updateCharts('half'));
+
+            // Re-render charts on reveal
+            const chartObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            yieldChart.windowResize();
+                            productivityChart.windowResize();
+                        }, 100);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            const chartContainer = document.querySelector('.charts-grid');
+            if (chartContainer) chartObserver.observe(chartContainer);
         });
-        
-        productivityChart.updateOptions({
-            series: [
-                { name: 'Full Sun (Control)', data: newProductivityData.control },
-                { name: 'Agrivoltaics', data: newProductivityData.av }
-            ],
-            annotations: {
-                points: generateAnnotations(newProductivityData)
-            }
-        });
-    }
-
-    fullBtn.addEventListener('click', () => updateCharts('full'));
-    halfBtn.addEventListener('click', () => updateCharts('half'));
-
-    // Re-render charts on reveal
-    const chartObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    yieldChart.windowResize();
-                    productivityChart.windowResize();
-                }, 100);
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-
-    const chartContainer = document.querySelector('.charts-grid');
-    if (chartContainer) chartObserver.observe(chartContainer);
-});
-</script>
+    </script>
 </body>
 
 </html>

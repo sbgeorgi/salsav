@@ -9,7 +9,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        integrity="sha28512-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="css/main-styles.css">
     <!-- Page-specific styles to fix and theme the Leaflet map -->
     <style>
@@ -22,8 +22,8 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-md);
-            background-color: var(--card-dark-bg);
-            /* Placeholder bg color */
+            background-color: #1a2634;
+            /* Dark blue placeholder for new map */
         }
 
         .section-header {
@@ -35,20 +35,75 @@
             font-size: clamp(2.2rem, 5vw, 2.8rem);
         }
 
-        /* Theme Leaflet Popups for dark mode */
-        .leaflet-popup-content-wrapper,
-        .leaflet-popup-tip {
-            background: var(--card-dark-bg);
+        /* --- Improved Leaflet Popup Theme --- */
+        .leaflet-popup-content-wrapper {
+            background: #2a2a2e; /* FIX: Solid, opaque dark background */
+            border: 1px solid #444; /* Add subtle border for definition */
             color: var(--text-light);
             box-shadow: var(--shadow-lg);
+            border-radius: 8px;
+            padding: 0;
+            /* Remove default padding */
         }
 
-        .leaflet-popup-content b {
+        .leaflet-popup-tip {
+            background: #2a2a2e; /* FIX: Match the wrapper background */
+        }
+
+        .leaflet-popup-content {
+            margin: 0;
+            width: 280px !important;
+            /* Set a fixed width for consistency */
+            font-family: 'Inter', sans-serif;
+        }
+
+        .popup-container img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: block;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .popup-text-content {
+            padding: 1rem;
+        }
+
+        .popup-text-content h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
             color: var(--secondary-color);
+        }
+
+        .popup-text-content p {
+            margin: 0 0 1rem 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+
+        .popup-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--secondary-color);
+            color: var(--button-text-color);
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .popup-link:hover {
+            background-color: var(--secondary-hover-color);
+            color: var(--button-text-color);
         }
 
         .leaflet-container a.leaflet-popup-close-button {
             color: var(--text-muted);
+            padding: 8px 8px 0 0;
         }
 
         .leaflet-container a.leaflet-popup-close-button:hover {
@@ -450,32 +505,78 @@
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        integrity="sha28512-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const map = L.map('map').setView([20, 0], 1.5);
+            const map = L.map('map').setView([20, 0], 2);
 
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
-                subdomains: 'abcd',
-                maxZoom: 20
+            // Switched to a high-contrast dark theme tile layer
+            L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+                maxZoom: 20,
+                attribution: '© <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>, © <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> & © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
             }).addTo(map);
 
             function createRegionIcon(color, initial) {
                 return L.divIcon({
-                    html: `<span style="background-color:${color};width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid #fff;color:white;font-weight:bold;font-size:12px;">${initial}</span>`,
-                    className: '', iconSize: [24, 24], iconAnchor: [12, 12]
+                    html: `<span style="background-color:${color};width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid #fff;color:white;font-weight:bold;font-size:12px;box-shadow: 0 2px 10px rgba(0,0,0,0.5);">${initial}</span>`,
+                    className: '',
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14], // Anchor is the center of the icon
+                    popupAnchor: [0, -20]  // FIX: Anchor for popup, relative to iconAnchor. Moves it up to center correctly.
                 });
             }
 
+            // Expanded data structure for rich popups
             const projectLocations = [
-                { name: "Biosphere 2 & AES Site", anchor: "#arizona-sites-detailed", coords: [32.5786, -110.8539], type: "USA" },
-                { name: "Jack’s Solar Garden", anchor: "#colorado-site-detailed", coords: [40.1748, -105.1000], type: "USA" },
-                { name: "Makueni County Site", anchor: "#kenya-site-detailed", coords: [-2.2833, 37.7333], type: "Africa" },
-                { name: "Arava Desert Initiatives", anchor: "#israel-site-detailed", coords: [29.9000, 35.0000], type: "Middle East" },
-                { name: "Green Energy Park", anchor: "#morocco-collaboration-detailed", coords: [32.2345, -7.9448], type: "Africa" },
-                { name: "PASE Project", anchor: "#mexico-collaboration-detailed", coords: [19.3327, -99.1840], type: "Latin America" }
+                {
+                    title: "Arizona Research Sites",
+                    description: "Home to the first U.S. dryland agrivoltaics site at Biosphere 2 and a new utility-scale research project.",
+                    imageSrc: "static/b2agrivoltaics.jpg",
+                    anchor: "#arizona-sites-detailed",
+                    coords: [32.5786, -110.8539],
+                    type: "USA"
+                },
+                {
+                    title: "Jack’s Solar Garden",
+                    description: "A 1.2 MW community solar farm and nationally recognized agrivoltaics showcase in collaboration with CSU and NREL.",
+                    imageSrc: "static/jacksagriv.jpg",
+                    anchor: "#colorado-site-detailed",
+                    coords: [40.1748, -105.1000],
+                    type: "USA"
+                },
+                {
+                    title: "Makueni Community Agrivoltaics",
+                    description: "The first agrivoltaics site in Kenya built within a community, providing food, water, and power to a local school.",
+                    imageSrc: "static/kenyaagriv.jpg",
+                    anchor: "#kenya-site-detailed",
+                    coords: [-2.2833, 37.7333],
+                    type: "Africa"
+                },
+                {
+                    title: "Arava Desert Initiatives",
+                    description: "Pioneering agrivoltaic systems for extreme desert farming, focusing on water conservation and yield optimization.",
+                    imageSrc: "static/aravaagriv.jpg",
+                    anchor: "#israel-site-detailed",
+                    coords: [29.9000, 35.0000],
+                    type: "Middle East"
+                },
+                {
+                    title: "Green Energy Park",
+                    description: "Building North Africa's first replicated agrivoltaics platform to test crops under semi-arid conditions.",
+                    imageSrc: "static/um6pagriv.jpeg",
+                    anchor: "#morocco-collaboration-detailed",
+                    coords: [32.2345, -7.9448],
+                    type: "Africa"
+                },
+                {
+                    title: "PASE Project",
+                    description: "Mexico’s first full agrivoltaics pilot (PASE) at UNAM, showcasing significant water savings and land-use efficiency.",
+                    imageSrc: "static/paseagriv.jpg",
+                    anchor: "#mexico-collaboration-detailed",
+                    coords: [19.3327, -99.1840],
+                    type: "Latin America"
+                }
             ];
 
             const icons = {
@@ -486,10 +587,21 @@
             };
 
             projectLocations.forEach(loc => {
-                const popupContent = `<b>${loc.name}</b><br><a href="${loc.anchor}" style="color: var(--secondary-color); text-decoration: underline;">View Details</a>`;
+                // Dynamically create the rich popup content
+                const popupContent = `
+                    <div class="popup-container">
+                        <img src="${loc.imageSrc}" alt="${loc.title}">
+                        <div class="popup-text-content">
+                            <h4>${loc.title}</h4>
+                            <p>${loc.description}</p>
+                            <a href="${loc.anchor}" class="popup-link">Learn More</a>
+                        </div>
+                    </div>
+                `;
+
                 L.marker(loc.coords, { icon: icons[loc.type] })
                     .addTo(map)
-                    .bindPopup(popupContent);
+                    .bindPopup(popupContent, { minWidth: 280 });
             });
 
             const legend = L.control({ position: 'bottomright' });
