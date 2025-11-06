@@ -564,820 +564,533 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script src="js/main.js"></script>
+    <script src="js/main.js"></script>
 
-<!-- === START: Agrivoltaics 3D Visualization Script (Fixed highlights, panel grid, blue water) === -->
-<script type="importmap">
-{
-    "imports": {
-        "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
-    }
-}
-</script>
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
-import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
-
-// --- Enhanced Theme Colors ---
-const PALETTE = {
-    GROUND: 0x8B7355,
-    PANEL_FRAME: 0x2C3E50,
-    PANEL_CELLS: 0x1A2A3A,
-    PANEL_GRID: 0xB0BEC5, // simple light grid lines
-    GLASS: 0xB0C4DE,
-    PLANT_PRIMARY: 0x7CB342,
-    PLANT_SECONDARY: 0x558B2F,
-    WATER_BLUE: 0x2196F3, // unified blue for water conservation area
-    WATER_DEEP: 0x1976D2,
-    BIODIVERSITY: 0xE91E63,
-    BEE_BODY: 0xFFCA28,
-    BEE_WING: 0xFFFFFF,
-    SUN_LIGHT: 0xFFF8E1,
-    SKY: 0x87CEEB,
-    HEMI_GROUND: 0x5D4E37,
-    SHADE_HIGHLIGHT: 0x90CAF9,
-    BLOOM: 0xFFD700
-};
-
-// --- Scene Variables ---
-let scene, camera, renderer, controls, composer, clock, fxaaPass;
-const interactiveObjects = [];
-const plantInstances = [];
-const beeInstances = [];
-let raycaster, mouse, hoveredObject = null;
-let selectedType = null;
-
-// Robust highlight tracking (no persistence)
-const originalMaterialMap = new Map(); // mesh -> original material
-const overlayEdgesMap = new Map();     // mesh -> LineSegments overlay
-
-const windSystem = { strength: 0.15, direction: new THREE.Vector2(1, 0) };
-
-// --- DOM Elements ---
-const container = document.getElementById('agrivoltaics-container');
-const legendItems = document.querySelectorAll('.legend-item');
-const legendExplainer = document.getElementById('legend-explainer');
-const explainerTitle = document.getElementById('explainer-title');
-const explainerText = document.getElementById('explainer-text');
-
-if (container) {
-    init().catch(error => {
-        console.error('Failed to initialize 3D scene:', error);
-    });
-} else {
-    console.error('Container element not found');
-}
-
-async function init() {
-    scene = new THREE.Scene();
-    clock = new THREE.Clock();
-
-    camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
-    camera.position.set(0, 6, 12);
-    camera.lookAt(0, 1, 0);
-
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    container.appendChild(renderer.domElement);
-
-    // Initialize controls
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.25;
-    controls.enableZoom = true;
-    controls.minDistance = 4;
-    controls.maxDistance = 20;
-    controls.enablePan = false;
-    controls.maxPolarAngle = Math.PI / 2.1;
-    controls.minPolarAngle = Math.PI / 6;
-    controls.target.set(0, 1.5, 0);
-
-    // Post-processing
-    composer = new EffectComposer(renderer);
-    const renderPass = new RenderPass(scene, camera);
-    composer.addPass(renderPass);
-
-    const bloomPass = new UnrealBloomPass(
-        new THREE.Vector2(container.clientWidth, container.clientHeight),
-        0.4, 0.6, 0.7
-    );
-    composer.addPass(bloomPass);
-
-    fxaaPass = new ShaderPass(FXAAShader);
-    fxaaPass.uniforms['resolution'].value.set(1 / container.clientWidth, 1 / container.clientHeight);
-    composer.addPass(fxaaPass);
-
-    // Scene atmosphere
-    scene.fog = new THREE.FogExp2(PALETTE.SKY, 0.015);
-    scene.background = new THREE.Color(PALETTE.SKY);
-
-    setupLighting();
-    createWorld();
-    createSingleVolumetricRay();
-    createCloudSystem();
-    setupInteractivity();
-    setupLegend();
-
-    animate();
-}
-
-function setupLighting() {
-    const hemiLight = new THREE.HemisphereLight(PALETTE.SKY, PALETTE.HEMI_GROUND, 1.8);
-    scene.add(hemiLight);
-
-    const sunLight = new THREE.DirectionalLight(PALETTE.SUN_LIGHT, 2.5);
-    sunLight.position.set(-15, 12, -8);
-    sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 8192;
-    sunLight.shadow.mapSize.height = 8192;
-    sunLight.shadow.camera.top = 12;
-    sunLight.shadow.camera.bottom = -12;
-    sunLight.shadow.camera.left = -18;
-    sunLight.shadow.camera.right = 18;
-    sunLight.shadow.camera.near = 1;
-    sunLight.shadow.camera.far = 40;
-    sunLight.shadow.bias = -0.0001;
-    scene.add(sunLight);
-    scene.userData.sunLight = sunLight;
-
-    const rimLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
-    rimLight.position.set(5, 5, 10);
-    scene.add(rimLight);
-}
-
-function createWorld() {
-    const groundGeo = new THREE.PlaneGeometry(40, 20, 80, 40);
-    const vertices = groundGeo.attributes.position.array;
-    for (let i = 0; i < vertices.length; i += 3) {
-        const x = vertices[i];
-        const y = vertices[i + 1];
-        vertices[i + 2] = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 0.05;
-    }
-    groundGeo.computeVertexNormals();
-    
-    const groundMat = new THREE.MeshStandardMaterial({ 
-        color: PALETTE.GROUND, 
-        roughness: 0.9,
-        metalness: 0.0
-    });
-    const ground = new THREE.Mesh(groundGeo, groundMat);
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    scene.add(ground);
-
-    const numPairs = 4;
-    const spacing = 4.5;
-    for (let i = 0; i < numPairs; i++) {
-        const x = (i - (numPairs - 1) / 2) * spacing;
-        createPanelPlantPair(x);
-    }
-}
-
-function createSingleVolumetricRay() {
-    const rayMat = new THREE.MeshBasicMaterial({
-        color: PALETTE.SUN_LIGHT,
-        transparent: true,
-        opacity: 0.12,
-        side: THREE.DoubleSide,
-        blending: THREE.AdditiveBlending
-    });
-    
-    const rayGeo = new THREE.PlaneGeometry(3, 25);
-    const ray = new THREE.Mesh(rayGeo, rayMat);
-    ray.position.set(0, 12, -8);
-    ray.rotation.z = 0.1;
-    ray.rotation.x = -0.1;
-    scene.add(ray);
-}
-
-function createCloudSystem() {
-    const cloudMat = new THREE.MeshBasicMaterial({
-        color: 0xFFFFFF,
-        transparent: true,
-        opacity: 0.6,
-        side: THREE.DoubleSide
-    });
-    
-    for (let i = 0; i < 8; i++) {
-        const cloud = new THREE.Group();
-        for (let j = 0; j < 5; j++) {
-            const puffGeo = new THREE.SphereGeometry(Math.random() * 1.5 + 1, 8, 6);
-            const puff = new THREE.Mesh(puffGeo, cloudMat);
-            puff.position.set(
-                (Math.random() - 0.5) * 4,
-                Math.random() * 0.5,
-                (Math.random() - 0.5) * 4
-            );
-            puff.scale.y = 0.6;
-            cloud.add(puff);
-        }
-        cloud.position.set(
-            (Math.random() - 0.5) * 35,
-            8 + Math.random() * 4,
-            (Math.random() - 0.5) * 20
-        );
-        scene.add(cloud);
-    }
-}
-
-function createPanelPlantPair(x) {
-    const panel = createEnhancedSolarPanel();
-    panel.position.x = x;
-    scene.add(panel);
-    interactiveObjects.push(panel);
-
-    const plants = createEnhancedPlantGroup();
-    plants.position.set(x, 0, 1.5);
-    scene.add(plants);
-    interactiveObjects.push(plants);
-    plantInstances.push(plants);
-
-    const water = createEnhancedWater();
-    water.position.set(x + 0.6, 0.02, -0.9);
-    scene.add(water);
-    interactiveObjects.push(water);
-
-    const shade = createEnhancedShadedArea();
-    shade.position.set(x, 0.12, 1.3);
-    scene.add(shade);
-    interactiveObjects.push(shade);
-
-    const bees = createEnhancedBiodiversityGroup();
-    bees.position.set(x - 0.6, 2.5, 0.6);
-    scene.add(bees);
-    interactiveObjects.push(bees);
-    beeInstances.push(bees);
-}
-
-function createEnhancedSolarPanel() {
-    const panelGroup = new THREE.Group();
-    panelGroup.userData = {
-        name: 'Solar Panel',
-        info: 'Generates clean electricity while providing crucial shade, creating a cooler microclimate for crops below.',
-        type: 'panel',
-        isInteractive: true
-    };
-
-    const tilt = Math.PI / 8;
-    const surfaceHeight = 1.5;
-
-    // Frame
-    const frameMat = new THREE.MeshStandardMaterial({ 
-        color: PALETTE.PANEL_FRAME, 
-        roughness: 0.3, 
-        metalness: 0.7 
-    });
-    const frameGeo = new THREE.BoxGeometry(3.2, 0.15, 2.2);
-    const frame = new THREE.Mesh(frameGeo, frameMat);
-    frame.castShadow = true;
-    frame.position.y = surfaceHeight;
-    frame.rotation.x = tilt;
-    panelGroup.add(frame);
-
-    // Cells
-    const cellMat = new THREE.MeshStandardMaterial({ 
-        color: PALETTE.PANEL_CELLS, 
-        roughness: 0.1, 
-        metalness: 0.9 
-    });
-    const cols = 4;
-    const rows = 3;
-    const cellW = 0.7;
-    const cellH = 0.35;
-    const startX = -((cols - 1) * 0.72) / 2;
-    const startZ = -((rows - 1) * 0.37) / 2;
-
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            const cellGeo = new THREE.PlaneGeometry(cellW, cellH);
-            const cell = new THREE.Mesh(cellGeo, cellMat);
-            cell.position.set(
-                startX + c * 0.72,
-                surfaceHeight + 0.075,
-                startZ + r * 0.37
-            );
-            cell.rotation.x = -Math.PI / 2 + tilt;
-            cell.castShadow = true;
-            panelGroup.add(cell);
+    <!-- === START: Agrivoltaics 3D Visualization Script === -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
         }
     }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-    // Simple grid pattern (lines) to look like PV cell boundaries
-    const grid = createPanelGrid(3.0, 2.0, rows, cols, PALETTE.PANEL_GRID);
-    grid.position.set(0, surfaceHeight + 0.081, 0);
-    grid.rotation.x = tilt; // <<< FIX: Corrected rotation for an object already in the XZ plane
-    panelGroup.add(grid);
+        // --- Theme Colors ---
+        const PALETTE = {
+            GROUND: 0x967969,
+            PANEL: 0x152238,
+            PLANT: 0x76B947,
+            WATER: 0x67C3DF,
+            BIODIVERSITY: 0xDB7093,
+            BEE_BODY: 0xFFC700,
+            BEE_WING: 0xFFFFFF,
+            SUN_LIGHT: 0xFFF0D1,
+            SKY: 0xB1E1FF,
+            HEMI_GROUND: 0x554433,
+            SHADE_HIGHLIGHT: 0xA0D8F3
+        };
 
-    // Glass
-    const glassMat = new THREE.MeshPhysicalMaterial({
-        color: PALETTE.GLASS,
-        transparent: true,
-        opacity: 0.12,
-        roughness: 0.05,
-        metalness: 0,
-        transmission: 0.9,
-        thickness: 0.01
-    });
-    const glassGeo = new THREE.BoxGeometry(3.0, 0.02, 2.0);
-    const glass = new THREE.Mesh(glassGeo, glassMat);
-    glass.position.y = surfaceHeight + 0.08;
-    glass.rotation.x = tilt;
-    panelGroup.add(glass);
+        // --- Scene Variables ---
+        let scene, camera, renderer, controls, clock;
+        const interactiveObjects = [];
+        const plantGroups = [];
+        const beeGroups = [];
+        let raycaster, mouse, hoveredObject = null;
+        let selectedType = null;
+        const highlightObjects = new Map();
+        const originalMaterials = new Map();
 
-    // Support
-    const supportMat = new THREE.MeshStandardMaterial({ color: 0x555555 });
-    const supportGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.6);
-    const mainSupport = new THREE.Mesh(supportGeo, supportMat);
-    mainSupport.position.y = 0.8;
-    mainSupport.castShadow = true;
-    panelGroup.add(mainSupport);
+        // --- DOM Elements ---
+        const container = document.getElementById('agrivoltaics-container');
+        const legendItems = document.querySelectorAll('.legend-item');
+        const legendExplainer = document.getElementById('legend-explainer');
+        const explainerTitle = document.getElementById('explainer-title');
+        const explainerText = document.getElementById('explainer-text');
 
-    return panelGroup;
-}
+        function init() {
+            scene = new THREE.Scene();
+            clock = new THREE.Clock();
 
-function createPanelGrid(width, depth, rows, cols, color) {
-    // Creates inner grid lines only (no border), placed as LineSegments slightly above the cells
-    const hw = width / 2;
-    const hd = depth / 2;
-    const positions = [];
-    // Vertical lines (between columns)
-    for (let i = 1; i < cols; i++) {
-        const x = -hw + (i * width) / cols;
-        positions.push(x, 0, -hd,  x, 0, hd);
-    }
-    // Horizontal lines (between rows)
-    for (let j = 1; j < rows; j++) {
-        const z = -hd + (j * depth) / rows;
-        positions.push(-hw, 0, z,  hw, 0, z);
-    }
-    const geom = new THREE.BufferGeometry();
-    geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.85 });
-    const lines = new THREE.LineSegments(geom, mat);
-    lines.renderOrder = 10;
-    lines.material.depthTest = false; // keep on top
-    lines.userData.isPanelGrid = true; // not used for highlight
-    return lines;
-}
+            camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+            camera.position.set(0, 5, 10);
+            camera.lookAt(0, 1, 0);
 
-function createEnhancedPlantGroup() {
-    const group = new THREE.Group();
-    group.userData = {
-        name: 'Crops',
-        info: 'Protected from harsh sun, these crops experience less heat stress and water loss, often leading to increased yields.',
-        type: 'crop',
-        isInteractive: true
-    };
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+            container.appendChild(renderer.domElement);
 
-    for (let i = 0; i < 4; i++) {
-        const plant = createRealisticPlant();
-        plant.position.x = (i % 2) * 0.6 - 0.3;
-        plant.position.z = Math.floor(i / 2) * 0.6 - 0.3;
-        plant.scale.setScalar(Math.random() * 0.3 + 0.85);
-        group.add(plant);
-    }
-    return group;
-}
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.4;
+            controls.enableZoom = false;
+            controls.enablePan = false;
+            controls.maxPolarAngle = Math.PI / 2.1;
+            controls.minPolarAngle = Math.PI / 4;
+            controls.target.set(0, 1, 0);
 
-function createRealisticPlant() {
-    const plant = new THREE.Group();
-    const stemMat = new THREE.MeshStandardMaterial({ 
-        color: 0x4A7C59, 
-        roughness: 0.7 
-    });
-    
-    const stemGeo = new THREE.CylinderGeometry(0.015, 0.025, 0.6, 8);
-    const stem = new THREE.Mesh(stemGeo, stemMat);
-    stem.position.y = 0.3;
-    stem.castShadow = true;
-    plant.add(stem);
-
-    const leafMat = new THREE.MeshStandardMaterial({ 
-        color: PALETTE.PLANT_PRIMARY, 
-        side: THREE.DoubleSide, 
-        roughness: 0.8 
-    });
-    
-    for (let j = 0; j < 8; j++) {
-        const leafShape = new THREE.Shape();
-        leafShape.moveTo(-0.02, 0);
-        leafShape.bezierCurveTo(-0.02, 0.15, 0.1, 0.25, 0.22, 0.3);
-        leafShape.bezierCurveTo(0.35, 0.25, 0.45, 0.15, 0.45, 0);
-        leafShape.bezierCurveTo(0.45, -0.15, 0.35, -0.25, 0.22, -0.3);
-        leafShape.bezierCurveTo(0.1, -0.25, -0.02, -0.15, -0.02, 0);
-        
-        const leafGeom = new THREE.ShapeGeometry(leafShape);
-        const leaf = new THREE.Mesh(leafGeom, leafMat);
-        leaf.position.y = (j * 0.08) + 0.15;
-        leaf.rotation.y = (j / 8) * Math.PI * 2 + Math.random() * 0.5;
-        leaf.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.6;
-        leaf.castShadow = true;
-        plant.add(leaf);
-    }
-
-    const flowerMat = new THREE.MeshStandardMaterial({ color: 0xFFB74D });
-    const flowerGeo = new THREE.SphereGeometry(0.08, 8, 6);
-    const flower = new THREE.Mesh(flowerGeo, flowerMat);
-    flower.position.y = 0.65;
-    flower.scale.y = 0.6;
-    plant.add(flower);
-
-    return plant;
-}
-
-function createEnhancedWater() {
-    const waterGroup = new THREE.Group();
-    waterGroup.userData = {
-        name: 'Water Conservation',
-        info: 'The cooler conditions under panels reduce soil and plant evaporation, leading to significant water savings.',
-        type: 'water',
-        isInteractive: true
-    };
-
-    // Three ripples, unified blue
-    for (let i = 0; i < 3; i++) {
-        const waterGeo = new THREE.CircleGeometry(0.8 + i * 0.22, 48);
-        const waterMat = new THREE.MeshPhysicalMaterial({ 
-            color: i === 2 ? PALETTE.WATER_DEEP : PALETTE.WATER_BLUE,
-            transparent: true,
-            opacity: 0.7 - i * 0.12,
-            roughness: 0.08,
-            metalness: 0,
-            transmission: 0.95,
-            thickness: 0.1
-        });
-        const water = new THREE.Mesh(waterGeo, waterMat);
-        water.rotation.x = -Math.PI / 2;
-        water.position.x = (i - 1) * 0.3;
-        water.position.z = (i - 1) * 0.2;
-        water.userData.isWaterRing = true;
-        waterGroup.add(water);
-    }
-
-    return waterGroup;
-}
-
-function createEnhancedBiodiversityGroup() {
-    const group = new THREE.Group();
-    group.userData = {
-        name: 'Improved Biodiversity',
-        info: 'The shaded, cooler environment creates a habitat for beneficial insects like pollinators, boosting local biodiversity.',
-        type: 'biodiversity',
-        isInteractive: true
-    };
-    for (let i = 0; i < 4; i++) {
-        const bee = createRealisticBee();
-        bee.position.set(
-            (Math.random() - 0.5) * 1.0,
-            (Math.random() - 0.5) * 0.6,
-            (Math.random() - 0.5) * 1.0
-        );
-        group.add(bee);
-    }
-    return group;
-}
-
-function createRealisticBee() {
-    const bee = new THREE.Group();
-    const bodyMat = new THREE.MeshStandardMaterial({ 
-        color: PALETTE.BEE_BODY, 
-        roughness: 0.5 
-    });
-    
-    const headGeo = new THREE.SphereGeometry(0.03, 8, 8);
-    const head = new THREE.Mesh(headGeo, bodyMat);
-    head.position.z = 0.04;
-    bee.add(head);
-
-    const thoraxGeo = new THREE.SphereGeometry(0.035, 8, 8);
-    const thorax = new THREE.Mesh(thoraxGeo, bodyMat);
-    bee.add(thorax);
-
-    const abdomenGeo = new THREE.SphereGeometry(0.032, 8, 8);
-    const abdomen = new THREE.Mesh(abdomenGeo, bodyMat);
-    abdomen.position.z = -0.05;
-    abdomen.scale.z = 1.8;
-    bee.add(abdomen);
-
-    const wingMat = new THREE.MeshPhysicalMaterial({ 
-        color: PALETTE.BEE_WING, 
-        side: THREE.DoubleSide, 
-        transparent: true, 
-        opacity: 0.7,
-        transmission: 0.9
-    });
-    const wingGeo = new THREE.PlaneGeometry(0.12, 0.06);
-    
-    const leftWing = new THREE.Mesh(wingGeo, wingMat);
-    leftWing.position.set(-0.035, 0.02, 0);
-    leftWing.rotation.y = Math.PI / 6;
-    bee.add(leftWing);
-
-    const rightWing = leftWing.clone();
-    rightWing.position.x = 0.035;
-    rightWing.rotation.y = -Math.PI / 6;
-    bee.add(rightWing);
-    
-    bee.userData.wings = [leftWing, rightWing];
-    return bee;
-}
-
-function createEnhancedShadedArea() {
-    const shadeGeo = new THREE.PlaneGeometry(3.0, 2.2);
-    const shadeMat = new THREE.MeshBasicMaterial({
-        color: PALETTE.SHADE_HIGHLIGHT,
-        transparent: true,
-        opacity: 0.25,
-        side: THREE.DoubleSide,
-        blending: THREE.AdditiveBlending
-    });
-    const shade = new THREE.Mesh(shadeGeo, shadeMat);
-    shade.rotation.x = -Math.PI / 2;
-    shade.userData = {
-        name: 'Shaded Area',
-        info: 'Temperature under panels are typically 5-10°C cooler than full sun, creating ideal growing conditions.',
-        type: 'shade',
-        isInteractive: true
-    };
-    return shade;
-}
-
-function setupInteractivity() {
-    raycaster = new THREE.Raycaster();
-    mouse = new THREE.Vector2();
-
-    window.addEventListener('resize', onWindowResize);
-    container.addEventListener('mousemove', onMouseMove);
-    container.addEventListener('click', onCanvasClick);
-}
-
-function onWindowResize() {
-    if (!camera || !renderer || !composer) return;
-    
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    composer.setSize(container.clientWidth, container.clientHeight);
-    if (fxaaPass) {
-        fxaaPass.uniforms['resolution'].value.set(1 / container.clientWidth, 1 / container.clientHeight);
-    }
-}
-
-function onMouseMove(event) {
-    const rect = container.getBoundingClientRect();
-    mouse.x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
-    mouse.y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
-}
-
-function onCanvasClick() {
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(interactiveObjects, true);
-    if (intersects.length > 0) {
-        const clickedObject = findsInteractiveParent(intersects[0].object);
-        if (clickedObject) {
-            selectType(clickedObject.userData.type);
+            setupLighting();
+            createWorld();
+            createSunRays();
+            setupInteractivity();
+            setupLegend();
         }
-    }
-}
 
-function selectType(type) {
-    if (selectedType === type) {
-        selectedType = null;
-        clearAllHighlights();
-        legendExplainer?.classList.remove('visible');
-        legendItems.forEach(item => item.classList.remove('active'));
-        cameraTransition(new THREE.Vector3(0, 6, 12), 1);
-    } else {
-        selectedType = type;
-        highlightType(type);
-        
-        const representativeObject = interactiveObjects.find(obj => obj.userData.type === type);
-        if (representativeObject) {
-            if (explainerTitle) explainerTitle.textContent = representativeObject.userData.name;
-            if (explainerText) explainerText.textContent = representativeObject.userData.info;
-            legendExplainer?.classList.add('visible');
-            
-            const targetPos = representativeObject.position.clone();
-            targetPos.add(new THREE.Vector3(3, 2, 3));
-            cameraTransition(targetPos, 1.5);
+        function setupLighting() {
+            const hemiLight = new THREE.HemisphereLight(PALETTE.SKY, PALETTE.HEMI_GROUND, 1.5);
+            scene.add(hemiLight);
+
+            const sunLight = new THREE.DirectionalLight(PALETTE.SUN_LIGHT, 2.0);
+            sunLight.position.set(-10, 10, -5);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 4096;
+            sunLight.shadow.mapSize.height = 4096;
+            sunLight.shadow.camera.top = 8;
+            sunLight.shadow.camera.bottom = -8;
+            sunLight.shadow.camera.left = -12;
+            sunLight.shadow.camera.right = 12;
+            sunLight.shadow.camera.near = 1;
+            sunLight.shadow.camera.far = 30;
+            scene.add(sunLight);
+            scene.userData.sunLight = sunLight;
         }
-        
-        legendItems.forEach(item => {
-            item.classList.toggle('active', item.dataset.type === type);
-        });
-    }
-}
 
-function cameraTransition(targetPosition, duration = 1.0) {
-    const startPosition = camera.position.clone();
-    const startTime = clock.getElapsedTime();
-    
-    const animateCamera = () => {
-        const elapsed = clock.getElapsedTime() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeProgress = 1 - Math.pow(1 - progress, 3);
-        
-        camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
-        if (controls) controls.update();
-        
-        if (progress < 1) {
-            requestAnimationFrame(animateCamera);
-        }
-    };
-    animateCamera();
-}
+        function createWorld() {
+            const groundGeo = new THREE.PlaneGeometry(30, 12);
+            const groundMat = new THREE.MeshStandardMaterial({ color: PALETTE.GROUND });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
 
-function setupLegend() {
-    legendItems.forEach(item => {
-        item.addEventListener('click', () => {
-            selectType(item.dataset.type);
-        });
-    });
-}
-
-function checkIntersections() {
-    if (selectedType) {
-        if (hoveredObject) {
-            hoveredObject = null;
-            legendExplainer?.classList.remove('visible');
-        }
-        container.style.cursor = 'default';
-        return;
-    }
-
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(interactiveObjects, true);
-
-    let currentInteractive = null;
-    if (intersects.length > 0) {
-        currentInteractive = findsInteractiveParent(intersects[0].object);
-        container.style.cursor = 'pointer';
-    } else {
-        container.style.cursor = 'default';
-    }
-
-    if (currentInteractive) {
-        if (hoveredObject !== currentInteractive) {
-            hoveredObject = currentInteractive;
-            if (explainerTitle) explainerTitle.textContent = hoveredObject.userData.name;
-            if (explainerText) explainerText.textContent = hoveredObject.userData.info;
-            legendExplainer?.classList.add('visible');
-        }
-    } else {
-        if (hoveredObject) {
-            hoveredObject = null;
-            legendExplainer?.classList.remove('visible');
-        }
-    }
-}
-
-function highlightType(type) {
-    clearAllHighlights();
-    interactiveObjects.forEach(obj => {
-        if (obj.userData.type === type) {
-            applyHighlight(obj);
-        }
-    });
-}
-
-// NEW: robust highlight that clones materials and adds edge overlays; fully reverted on clear
-function applyHighlight(root) {
-    const GLOW_COLOR = PALETTE.BLOOM;
-
-    root.traverse(child => {
-        if (!child.visible) return;
-
-        // Only meshes; ignore line-based helpers like grid or outlines
-        if (!child.isMesh) return;
-
-        // Preserve original material once
-        if (!originalMaterialMap.has(child) && child.material) {
-            originalMaterialMap.set(child, child.material);
-            const highlightedMat = child.material.clone();
-            if ('emissive' in highlightedMat && highlightedMat.emissive) {
-                highlightedMat.emissive.setHex(GLOW_COLOR);
-                highlightedMat.emissiveIntensity = 1.2;
+            const numPairs = 4;
+            const spacing = 4.0;
+            for (let i = 0; i < numPairs; i++) {
+                const x = (i - (numPairs - 1) / 2) * spacing;
+                createPanelPlantPair(x);
             }
-            child.material = highlightedMat;
-            child.material.needsUpdate = true;
         }
-
-        // Add a crisp edge overlay (follows mesh transform by attaching as child)
-        if (!overlayEdgesMap.has(child) && child.geometry) {
-            const edgesGeom = new THREE.EdgesGeometry(child.geometry, 25);
-            const edgesMat = new THREE.LineBasicMaterial({
-                color: 0xFFFFFF,
+        
+        function createSunRays() {
+            const raysGroup = new THREE.Group();
+            const rayMat = new THREE.MeshBasicMaterial({
+                color: 0xFFF5B6,
                 transparent: true,
-                opacity: 0.7
+                opacity: 0.25
             });
-            const edges = new THREE.LineSegments(edgesGeom, edgesMat);
-            edges.renderOrder = 999; // draw on top
-            edges.material.depthTest = false;
-            edges.userData.isHighlightOverlay = true;
-            child.add(edges);
-            overlayEdgesMap.set(child, edges);
+            const rayGeom = new THREE.CylinderGeometry(0.03, 0.03, 15, 8);
+            
+            const lightDirection = new THREE.Vector3().copy(scene.userData.sunLight.position).normalize().multiplyScalar(-1);
+
+            for (let i = 0; i < 7; i++) {
+                const ray = new THREE.Mesh(rayGeom, rayMat);
+                
+                ray.position.set(
+                    (Math.random() - 0.5) * 20,
+                    12,
+                    (Math.random() - 0.5) * 8
+                );
+                
+                const targetPosition = new THREE.Vector3().copy(ray.position).add(lightDirection);
+                ray.lookAt(targetPosition);
+                
+                raysGroup.add(ray);
+            }
+            scene.add(raysGroup);
         }
-    });
-}
 
-function clearAllHighlights() {
-    // Remove edge overlays
-    overlayEdgesMap.forEach((edges, mesh) => {
-        if (mesh && edges) {
-            mesh.remove(edges);
-            if (edges.geometry) edges.geometry.dispose();
-            if (edges.material) edges.material.dispose();
+        function createPanelPlantPair(x) {
+            const panel = createSolarPanel();
+            panel.position.x = x;
+            scene.add(panel);
+            interactiveObjects.push(panel);
+
+            const plants = createPlantGroup();
+            plants.position.set(x, 0, 1.2);
+            scene.add(plants);
+            interactiveObjects.push(plants);
+            plantGroups.push(plants);
+
+            const water = createWater();
+            water.position.set(x + 0.5, 0.01, -0.8);
+            scene.add(water);
+            interactiveObjects.push(water);
+
+            const shade = createShadedArea();
+            shade.position.set(x, 0.1, 1.0);
+            scene.add(shade);
+            interactiveObjects.push(shade);
+
+            const bees = createBiodiversityGroup();
+            bees.position.set(x - 0.5, 1.2, 0.5);
+            scene.add(bees);
+            interactiveObjects.push(bees);
+            beeGroups.push(bees);
         }
-    });
-    overlayEdgesMap.clear();
 
-    // Restore original materials and dispose highlight clones
-    originalMaterialMap.forEach((originalMat, mesh) => {
-        if (mesh && mesh.material && mesh.material !== originalMat) {
-            // dispose cloned highlight material
-            if (mesh.material.dispose) mesh.material.dispose();
-            mesh.material = originalMat;
-            mesh.material.needsUpdate = true;
+        function createSolarPanel() {
+            const panelGroup = new THREE.Group();
+            panelGroup.userData = {
+                name: 'Solar Panel',
+                info: 'Generates clean electricity while providing crucial shade, creating a cooler microclimate for the crops below.',
+                type: 'panel',
+                isInteractive: true
+            };
+
+            const panelMat = new THREE.MeshStandardMaterial({ color: PALETTE.PANEL, roughness: 0.2, metalness: 0.1 });
+            const panelGeom = new THREE.BoxGeometry(2.8, 0.1, 1.8);
+            const panel = new THREE.Mesh(panelGeom, panelMat);
+            panel.castShadow = true;
+
+            const postMat = new THREE.MeshStandardMaterial({ color: 0x444444 });
+            const postGeom = new THREE.CylinderGeometry(0.06, 0.06, 1.4);
+            const mainPost = new THREE.Mesh(postGeom, postMat);
+            mainPost.position.y = 0.7;
+            mainPost.castShadow = true;
+
+            panel.position.y = 1.4;
+            panel.rotation.x = Math.PI / 7;
+
+            panelGroup.add(panel);
+            panelGroup.add(mainPost);
+
+            return panelGroup;
         }
-    });
-    originalMaterialMap.clear();
-}
 
-function findsInteractiveParent(object) {
-    let current = object;
-    while (current) {
-        if (current.userData && current.userData.isInteractive) return current;
-        current = current.parent;
-    }
-    return null;
-}
+        function createPlantGroup() {
+            const group = new THREE.Group();
+            group.userData = {
+                name: 'Crops',
+                info: 'Protected from harsh sun, these crops experience less heat stress and water loss, often leading to increased yields.',
+                type: 'crop',
+                isInteractive: true
+            };
 
-function animate() {
-    requestAnimationFrame(animate);
-    const elapsedTime = clock.getElapsedTime();
+            for (let i = 0; i < 2; i++) {
+                const plant = createPlant();
+                plant.position.x = i * 0.7 - 0.35;
+                plant.scale.setScalar(Math.random() * 0.2 + 0.9);
+                group.add(plant);
+            }
+            return group;
+        }
 
-    windSystem.strength = 0.1 + Math.sin(elapsedTime * 0.2) * 0.05;
-    windSystem.direction.set(Math.sin(elapsedTime * 0.3), Math.cos(elapsedTime * 0.25));
+        function createPlant() {
+            const plant = new THREE.Group();
+            const plantMat = new THREE.MeshStandardMaterial({ color: PALETTE.PLANT, side: THREE.DoubleSide, roughness: 0.8 });
 
-    if (controls) controls.update();
+            const stemGeom = new THREE.CylinderGeometry(0.02, 0.03, 0.5);
+            const stem = new THREE.Mesh(stemGeom, plantMat);
+            stem.castShadow = true;
+            stem.position.y = 0.25;
+            plant.add(stem);
 
-    // Animate plants with wind
-    plantInstances.forEach((group, index) => {
-        group.children.forEach((plant, plantIndex) => {
-            plant.rotation.z = Math.sin(elapsedTime * 2 + index + plantIndex) * windSystem.strength * 0.1;
-            plant.children.forEach((leaf, leafIndex) => {
-                if (leaf.isMesh && leaf.geometry && leaf.geometry.type === 'ShapeGeometry') {
-                    leaf.rotation.z = Math.sin(elapsedTime * 3 + leafIndex) * windSystem.strength * 0.2;
+            const leafShape = new THREE.Shape();
+            leafShape.moveTo(0, 0);
+            leafShape.bezierCurveTo(0, 0, 0.1, 0.25, 0.2, 0.3);
+            leafShape.bezierCurveTo(0.3, 0.25, 0.4, 0, 0.4, 0);
+            leafShape.bezierCurveTo(0.4, 0, 0.3, -0.25, 0.2, -0.3);
+            leafShape.bezierCurveTo(0.1, -0.25, 0, 0, 0, 0);
+            const leafGeom = new THREE.ShapeGeometry(leafShape);
+
+            for (let j = 0; j < 6; j++) {
+                const leaf = new THREE.Mesh(leafGeom, plantMat);
+                leaf.position.y = (j * 0.08) + 0.1;
+                leaf.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.8;
+                leaf.rotation.y = Math.random() * Math.PI * 2;
+                leaf.castShadow = true;
+                plant.add(leaf);
+            }
+            return plant;
+        }
+
+        function createWater() {
+            const waterGeom = new THREE.CircleGeometry(1.0, 32);
+            const waterMat = new THREE.MeshStandardMaterial({ color: PALETTE.WATER, transparent: true, opacity: 0.75, roughness: 0.1 });
+            const water = new THREE.Mesh(waterGeom, waterMat);
+            water.rotation.x = -Math.PI / 2;
+            water.userData = {
+                name: 'Water Conservation',
+                info: 'The cooler conditions under panels reduce soil and plant evaporation, leading to significant water savings.',
+                type: 'water',
+                isInteractive: true
+            };
+            return water;
+        }
+
+        function createBiodiversityGroup() {
+            const group = new THREE.Group();
+            group.userData = {
+                name: 'Improved Biodiversity',
+                info: 'The shaded, cooler environment creates a habitat for beneficial insects like pollinators, boosting local biodiversity.',
+                type: 'biodiversity',
+                isInteractive: true
+            };
+            for (let i = 0; i < 3; i++) {
+                const bee = createBee();
+                bee.position.set(
+                    (Math.random() - 0.5) * 0.8,
+                    (Math.random() - 0.5) * 0.5,
+                    (Math.random() - 0.5) * 0.8
+                );
+                group.add(bee);
+            }
+            return group;
+        }
+
+        function createBee() {
+            const bee = new THREE.Group();
+            const bodyMat = new THREE.MeshStandardMaterial({ color: PALETTE.BEE_BODY, roughness: 0.6 });
+            const bodyGeom = new THREE.SphereGeometry(0.04, 8, 8);
+            const body = new THREE.Mesh(bodyGeom, bodyMat);
+            body.scale.z = 1.8;
+            bee.add(body);
+
+            const wingMat = new THREE.MeshBasicMaterial({ color: PALETTE.BEE_WING, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
+            const wingGeom = new THREE.PlaneGeometry(0.1, 0.05);
+            const leftWing = new THREE.Mesh(wingGeom, wingMat);
+            leftWing.position.set(-0.03, 0.03, 0);
+            leftWing.rotation.y = Math.PI / 4;
+            bee.add(leftWing);
+
+            const rightWing = leftWing.clone();
+            rightWing.position.x = 0.03;
+            rightWing.rotation.y = -Math.PI / 4;
+            bee.add(rightWing);
+            
+            bee.userData.wings = [leftWing, rightWing];
+            return bee;
+        }
+
+        function createShadedArea() {
+            const shadeGeo = new THREE.PlaneGeometry(2.8, 1.8);
+            const shadeMat = new THREE.MeshBasicMaterial({
+                color: PALETTE.SHADE_HIGHLIGHT,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide
+            });
+            const shade = new THREE.Mesh(shadeGeo, shadeMat);
+            shade.rotation.x = -Math.PI / 2;
+            shade.userData = {
+                name: 'Shaded Area',
+                info: 'Temperature under panels are typically 5-10°C cooler than full sun, creating ideal growing conditions.',
+                type: 'shade',
+                isInteractive: true
+            };
+            return shade;
+        }
+        
+        // === START: MODIFIED INTERACTIVITY LOGIC ===
+
+        function setupInteractivity() {
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+
+            window.addEventListener('resize', onWindowResize);
+            container.addEventListener('mousemove', onMouseMove);
+            container.addEventListener('click', onCanvasClick);
+        }
+        
+        function onWindowResize() {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function onMouseMove(event) {
+            const rect = container.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
+        }
+
+        function onCanvasClick() {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(interactiveObjects, true);
+            if (intersects.length > 0) {
+                const clickedObject = findsInteractiveParent(intersects[0].object);
+                if (clickedObject) {
+                    selectType(clickedObject.userData.type);
+                }
+            }
+        }
+        
+        function selectType(type) {
+            if (selectedType === type) {
+                // Deselect logic
+                selectedType = null;
+                revertAllHighlights();
+                legendExplainer.classList.remove('visible');
+                legendItems.forEach(item => item.classList.remove('active'));
+            } else {
+                // Select logic
+                selectedType = type;
+                highlightType(type);
+                
+                const representativeObject = interactiveObjects.find(obj => obj.userData.type === type);
+                if (representativeObject) {
+                    explainerTitle.textContent = representativeObject.userData.name;
+                    explainerText.textContent = representativeObject.userData.info;
+                    legendExplainer.classList.add('visible');
+                }
+                
+                legendItems.forEach(item => {
+                    item.classList.toggle('active', item.dataset.type === type);
+                });
+            }
+        }
+        
+        function setupLegend() {
+            legendItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    selectType(item.dataset.type);
+                });
+            });
+        }
+        
+        function checkIntersections() {
+            // This function now only handles hover states
+            if (selectedType) {
+                // If something is selected, don't show hover info
+                if (hoveredObject) {
+                    hoveredObject = null;
+                }
+                return;
+            }
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(interactiveObjects, true);
+
+            let currentInteractive = null;
+            if (intersects.length > 0) {
+                currentInteractive = findsInteractiveParent(intersects[0].object);
+            }
+
+            if (currentInteractive) {
+                if (hoveredObject !== currentInteractive) {
+                    hoveredObject = currentInteractive;
+                    explainerTitle.textContent = hoveredObject.userData.name;
+                    explainerText.textContent = hoveredObject.userData.info;
+                    legendExplainer.classList.add('visible');
+                }
+            } else {
+                if (hoveredObject) {
+                    hoveredObject = null;
+                    legendExplainer.classList.remove('visible');
+                }
+            }
+        }
+        
+        // === END: MODIFIED INTERACTIVITY LOGIC ===
+
+        function highlightType(type) {
+            revertAllHighlights();
+            interactiveObjects.forEach(obj => {
+                if (obj.userData.type === type) {
+                    applyHighlight(obj);
                 }
             });
-        });
-    });
-
-    // Animate bees
-    beeInstances.forEach((group, i) => {
-        group.position.y = 2.5 + Math.sin(elapsedTime * 0.8 + i) * 0.3 + Math.sin(elapsedTime * 2) * 0.1;
-        group.position.x += Math.sin(elapsedTime * 1.5 + i) * 0.002;
-        group.position.z += Math.cos(elapsedTime * 1.3 + i) * 0.002;
-        group.rotation.y = elapsedTime * 0.5 + i;
-        
-        group.children.forEach((bee, j) => {
-            bee.position.y = Math.sin(elapsedTime * 4 + j) * 0.15;
-            bee.position.x = Math.cos(elapsedTime * 3 + j) * 0.1;
-            if (bee.userData.wings) {
-                const wingSpeed = 50;
-                bee.userData.wings[0].rotation.y = Math.PI / 6 + Math.sin(elapsedTime * wingSpeed) * 0.8;
-                bee.userData.wings[1].rotation.y = -Math.PI / 6 - Math.sin(elapsedTime * wingSpeed) * 0.8;
-            }
-        });
-    });
-
-    // Water ripple effect (targets only water rings)
-    scene.traverse(child => {
-        if (child.isMesh && child.userData && child.userData.isWaterRing && child.material) {
-            child.material.opacity = 0.65 + Math.sin(elapsedTime * 2 + child.position.x) * 0.08;
         }
-    });
 
-    checkIntersections();
-    composer.render();
-}
-</script>
-<!-- === END: Agrivoltaics 3D Visualization Script === -->
+        function revertAllHighlights() {
+            highlightObjects.forEach((wireframe) => {
+                if (wireframe.parent) wireframe.parent.remove(wireframe);
+                wireframe.material.dispose();
+            });
+            highlightObjects.clear();
+
+            originalMaterials.forEach((originalProps, mesh) => {
+                if (mesh.material) {
+                    mesh.material.color.copy(originalProps.color);
+                    if (mesh.material.emissive && originalProps.emissive) {
+                        mesh.material.emissive.copy(originalProps.emissive);
+                        mesh.material.emissiveIntensity = originalProps.emissiveIntensity === undefined ? 1.0 : originalProps.emissiveIntensity;
+                    }
+                    mesh.material.needsUpdate = true;
+                }
+            });
+            originalMaterials.clear();
+        }
+
+        function applyHighlight(obj) {
+            const GLOW_COLOR = 0xE87A24;
+            const WIREFRAME_COLOR = 0xFFFFFF;
+
+            obj.traverse(child => {
+                if (child.isMesh && child.material && !originalMaterials.has(child)) {
+                    originalMaterials.set(child, {
+                        color: child.material.color.clone(),
+                        emissive: child.material.emissive ? child.material.emissive.clone() : null,
+                        emissiveIntensity: child.material.emissiveIntensity
+                    });
+
+                    if (child.material.emissive) {
+                        child.material.emissive.setHex(GLOW_COLOR);
+                        child.material.emissiveIntensity = 0.75;
+                        child.material.needsUpdate = true;
+                    }
+                    
+                    const wireframe = new THREE.Mesh(child.geometry, new THREE.MeshBasicMaterial({ color: WIREFRAME_COLOR, wireframe: true }));
+                    wireframe.position.copy(child.position);
+                    wireframe.rotation.copy(child.rotation);
+                    wireframe.scale.copy(child.scale);
+                    wireframe.scale.multiplyScalar(1.03);
+                    child.parent.add(wireframe);
+                    highlightObjects.set(child, wireframe);
+                }
+            });
+        }
+
+        function findsInteractiveParent(object) {
+            let current = object;
+            while (current) {
+                if (current.userData && current.userData.isInteractive) return current;
+                current = current.parent;
+            }
+            return null;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            controls.update();
+
+            plantGroups.forEach((group, index) => {
+                group.rotation.y += Math.sin(elapsedTime * 0.5 + index) * 0.001;
+            });
+
+            beeGroups.forEach((group, i) => {
+                group.position.y = 1.8 + Math.sin(elapsedTime * 1.5 + i) * 0.1;
+                group.rotation.y = elapsedTime * 0.3;
+                
+                group.children.forEach((bee, j) => {
+                    bee.position.y = Math.sin(elapsedTime * 3 + j) * 0.2;
+                    if (bee.userData.wings) {
+                        bee.userData.wings[0].rotation.y = Math.PI / 4 + Math.sin(elapsedTime * 50) * 0.5;
+                        bee.userData.wings[1].rotation.y = -Math.PI / 4 - Math.sin(elapsedTime * 50) * 0.5;
+                    }
+                });
+            });
+
+            checkIntersections();
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+    </script>
+    <!-- === END: Agrivoltaics 3D Visualization Script === -->
 
 
     <script>
