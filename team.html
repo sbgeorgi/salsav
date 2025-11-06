@@ -55,6 +55,7 @@
             /* Match main section background */
         }
 
+        /* MODIFIED: .pi-profile is now an <a> tag */
         .pi-profile {
             display: flex;
             align-items: center;
@@ -63,6 +64,14 @@
             background: var(--card-dark-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
+            text-decoration: none; /* Remove underline from link */
+            color: inherit; /* Prevent all text from turning blue */
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+
+        .pi-profile:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
         }
 
         .pi-image {
@@ -80,20 +89,18 @@
             height: 100%;
             object-fit: cover;
         }
-
+        
+        /* MODIFIED: Style h3 directly, not a nested 'a' */
         .pi-details h3 {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-        }
-
-        .pi-details h3 a {
             color: var(--text-light);
-            text-decoration: none;
             transition: color var(--transition-speed);
         }
 
-        .pi-details h3 a:hover {
+        /* MODIFIED: Change h3 color when the card (link) is hovered */
+        .pi-profile:hover .pi-details h3 {
             color: var(--secondary-color);
         }
 
@@ -129,7 +136,8 @@
             gap: 2rem;
             margin-bottom: 5rem;
         }
-
+        
+        /* MODIFIED: .researcher-card is now an <a> tag */
         .researcher-card {
             background: var(--card-dark-bg);
             border: 1px solid var(--border-color);
@@ -139,6 +147,8 @@
             transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
             display: flex;
             flex-direction: column;
+            text-decoration: none; /* Remove underline from link */
+            color: inherit; /* Prevent all text from turning blue */
         }
 
         .researcher-card:hover {
@@ -162,13 +172,16 @@
             object-fit: cover;
         }
 
-        .researcher-card h4 a {
+        /* MODIFIED: Style h4 directly, not a nested 'a' */
+        .researcher-card h4 {
             color: var(--text-light);
             font-size: 1.25rem;
             font-weight: 700;
+            transition: color var(--transition-speed);
         }
-
-        .researcher-card h4 a:hover {
+        
+        /* MODIFIED: Change h4 color when the card (link) is hovered */
+        .researcher-card:hover h4 {
             color: var(--secondary-color);
         }
 
@@ -302,18 +315,18 @@
                 <div class="section-header">
                     <h2>Principal Investigator</h2>
                 </div>
-                <div class="pi-profile">
+                <a href="https://geography.arizona.edu/person/greg-barron-gafford" target="_blank" rel="noopener"
+                    class="pi-profile">
                     <div class="pi-image">
                         <img src="static/greg.png" alt="Photo of Dr. Greg Barron-Gafford">
                     </div>
                     <div class="pi-details">
-                        <h3><a href="https://geography.arizona.edu/person/greg-barron-gafford" target="_blank"
-                                rel="noopener">Dr. Greg Barron-Gafford</a></h3>
+                        <h3>Dr. Greg Barron-Gafford</h3>
                         <p class="pi-title">Professor, SGDE; Biosphere 2, UArizona</p>
                         <p class="pi-description">Leads SALSA. Research in biogeography, plant ecology, climate change
                             impacts, and agrivoltaics. Pioneering FEW nexus solutions.</p>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
 
@@ -326,123 +339,127 @@
 
             <div class="team-grid">
                 <!-- Christine Lamanna -->
-                <div class="researcher-card">
+                <a href="https://scholar.google.com/citations?user=OH-dAScAAAAJ&hl=en" target="_blank"
+                    rel="noopener" class="researcher-card">
                     <div class="researcher-image-container"><img src="static/christine.jpg"
                             alt="Photo of Dr. Christine Lamanna"></div>
-                    <h4><a href="https://scholar.google.com/citations?user=OH-dAScAAAAJ&hl=en" target="_blank"
-                            rel="noopener">Dr. Christine Lamanna</a></h4>
+                    <h4>Dr. Christine Lamanna</h4>
                     <p class="researcher-title">Research Scientist - AgriFood Systems</p>
                     <p class="researcher-description">Focuses on climate change adaptation in agriculture and
                         agroforestry. Uses evidence synthesis to inform policy for smallholder farmers.</p>
-                </div>
+                </a>
                 <!-- Andrea Gerlak -->
-                <div class="researcher-card">
+                <a href="https://udallcenter.arizona.edu/people/andrea-k-gerlak" target="_blank" rel="noopener"
+                    class="researcher-card">
                     <div class="researcher-image-container"><img src="static/andrea.png"
                             alt="Photo of Dr. Andrea Gerlak"></div>
-                    <h4><a href="https://udallcenter.arizona.edu/people/andrea-k-gerlak" target="_blank"
-                            rel="noopener">Dr. Andrea Gerlak</a></h4>
+                    <h4>Dr. Andrea Gerlak</h4>
                     <p class="researcher-title">Professor, SGDE; Director, Udall Center, UArizona</p>
                     <p class="researcher-description">Focuses on water governance, environmental policy, equity,
                         institutional change, and adaptation. Co-PI on the AZ Utility-scale Agrivoltaics Learning Lab,
                         leading socio-politcal research.</p>
-                </div>
+                </a>
                 <!-- Jordan Macknick -->
-                <div class="researcher-card">
-                    <div class="researcher-image-container"><img src="static/jordan.png" alt="Photo of Jordan Macknick">
+                <a href="https://www.nrel.gov/research/staff/jordan-macknick.html" target="_blank" rel="noopener"
+                    class="researcher-card">
+                    <div class="researcher-image-container"><img src="static/jordan.png"
+                            alt="Photo of Jordan Macknick">
                     </div>
-                    <h4><a href="https://www.nrel.gov/research/staff/jordan-macknick.html" target="_blank"
-                            rel="noopener">Jordan Macknick</a></h4>
+                    <h4>Jordan Macknick</h4>
                     <p class="researcher-title">Lead Energy-Water-Land Analyst, NREL</p>
                     <p class="researcher-description">Expert in environmental impacts of energy tech, energy-ecology
                         synergies, and agrivoltaics. Leads NREL's InSPIRE project.</p>
-                </div>
+                </a>
                 <!-- Mary Werner -->
-                <div class="researcher-card">
+                <a href="https://geography.arizona.edu/people/mary-werner" target="_blank" rel="noopener"
+                    class="researcher-card">
                     <div class="researcher-image-container"><img src="static/mary.png" alt="Photo of Mary Werner"></div>
-                    <h4><a href="https://geography.arizona.edu/people/mary-werner" target="_blank" rel="noopener">Mary
-                            Werner</a></h4>
+                    <h4>Mary Werner</h4>
                     <p class="researcher-title">Research Program Admin, SGDE, UArizona</p>
                     <p class="researcher-description">Manages research programs and administrative aspects within the
                         Barron-Gafford lab and SGDE.</p>
-                </div>
+                </a>
                 <!-- Holly Andrews -->
-                <div class="researcher-card">
+                <a href="https://geography.arizona.edu/person/holly-andrews" target="_blank" rel="noopener"
+                    class="researcher-card">
                     <div class="researcher-image-container"><img src="static/holly.png"
                             alt="Photo of Dr. Holly Andrews"></div>
-                    <h4><a href="https://geography.arizona.edu/person/holly-andrews" target="_blank" rel="noopener">Dr.
-                            Holly Andrews</a></h4>
+                    <h4>Dr. Holly Andrews</h4>
                     <p class="researcher-title">Assistant Professor, Louisiana State University / Former SALSA
                         Postdoctoral Researcher</p>
                     <p class="researcher-description">Leads research on biosphere-atmosphere interactions and soil
                         characterization across agrivoltaic projects</p>
-                </div>
+                </a>
                 <!-- Tali Neesham-McTiernan -->
-                <div class="researcher-card">
+                <a href="https://geography.arizona.edu/people/tali-neesham-mctiernan" target="_blank"
+                    rel="noopener" class="researcher-card">
                     <div class="researcher-image-container"><img src="static/tali-new.jpg"
                             alt="Photo of Tali Neesham-McTiernan"></div>
-                    <h4><a href="https://geography.arizona.edu/people/tali-neesham-mctiernan" target="_blank"
-                            rel="noopener">Tali Neesham-McTiernan</a></h4>
+                    <h4>Tali Neesham-McTiernan</h4>
                     <p class="researcher-title">PhD Candidate, SGDE & B2, UArizona</p>
                     <p class="researcher-description">Merges biophysical and social sciences to map areas suitable for
                         agrivoltaics and capture the potential for agrivoltaics to create safer farm working conditions
                     </p>
-                </div>
+                </a>
                 <!-- Kai Lepley -->
-                <div class="researcher-card">
+                <a href="https://geography.arizona.edu/people/kai-lepley" target="_blank" rel="noopener"
+                    class="researcher-card">
                     <div class="researcher-image-container"><img src="static/kai.jpg" alt="Photo of Kai Lepley"></div>
-                    <h4><a href="https://geography.arizona.edu/people/kai-lepley" target="_blank" rel="noopener">Kai
-                            Lepley</a></h4>
+                    <h4>Kai Lepley</h4>
                     <p class="researcher-title">PhD Graduate Research Assistant / PhD Candidate</p>
                     <p class="researcher-description">Kai is exploring our agrivoltaics work using classic plant
                         physiological instruments and novel ground-based remote sensing tools for tracking plant
                         phenology and growth.</p>
-                </div>
+                </a>
                 <!-- Patrick Murphy -->
-                <div class="researcher-card">
-                    <div class="researcher-image-container"><img src="static/patrick.png" alt="Photo of Patrick Murphy">
+                <a href="https://kmap.arizona.edu/people/murphyp" target="_blank" rel="noopener"
+                    class="researcher-card">
+                    <div class="researcher-image-container"><img src="static/patrick.png"
+                            alt="Photo of Patrick Murphy">
                     </div>
-                    <h4><a href="https://kmap.arizona.edu/people/murphyp" target="_blank" rel="noopener">Patrick
-                            Murphy</a></h4>
+                    <h4>Patrick Murphy</h4>
                     <p class="researcher-title">Research Specialist, SGDE & B2, UArizona</p>
                     <p class="researcher-description">Contributes to research efforts within the Barron-Gafford lab at
                         Biosphere 2, focusing on agrivoltaics and related ecological studies.</p>
-                </div>
+                </a>
                 <!-- Ingrid Holstrom -->
-                <div class="researcher-card">
-                    <div class="researcher-image-container"><img src="static/ingrid.jpg" alt="Photo of Ingrid Holstrom">
+                <a href="#" target="_blank" rel="noopener" class="researcher-card">
+                    <div class="researcher-image-container"><img src="static/ingrid.jpg"
+                            alt="Photo of Ingrid Holstrom">
                     </div>
-                    <h4><a href="#" target="_blank" rel="noopener">Ingrid Holstrom</a></h4>
+                    <h4>Ingrid Holstrom</h4>
                     <p class="researcher-title">Research Professional</p>
                     <p class="researcher-description">Coordinates field research, manages environmental monitoring
                         datasets for agrivoltaic sites in Arizona</p>
-                </div>
+                </a>
                 <!-- Alyssa Salazar -->
-                <div class="researcher-card">
-                    <div class="researcher-image-container"><img src="static/alyssa.png" alt="Photo of Alyssa Salazar">
+                <a href="https://biosphere2.org/person/alyssa-salazar" target="_blank" rel="noopener"
+                    class="researcher-card">
+                    <div class="researcher-image-container"><img src="static/alyssa.png"
+                            alt="Photo of Alyssa Salazar">
                     </div>
-                    <h4><a href="https://biosphere2.org/person/alyssa-salazar" target="_blank" rel="noopener">Alyssa
-                            Salazar</a></h4>
+                    <h4>Alyssa Salazar</h4>
                     <p class="researcher-title">Research Associate</p>
                     <p class="researcher-description">Contributes to research at the School of Geography, Development, &
                         Environment and Biosphere 2, focusing on agrivoltaics. [3]</p>
-                </div>
+                </a>
                 <!-- Nesrine Rouini -->
-                <div class="researcher-card">
+                <a href="#" target="_blank" rel="noopener" class="researcher-card">
                     <div class="researcher-image-container"><img src="static/nesrine1.jpg"
                             alt="Photo of Nesrine Rouini"></div>
-                    <h4><a href="#" target="_blank" rel="noopener">Nesrine Rouini</a></h4>
+                    <h4>Nesrine Rouini</h4>
                     <p class="researcher-title">Senior Research Specialist and Graduate Student</p>
                     <p class="researcher-description">Leads field plant ecophysiological research across Arizona and
                         Colorado and manages undergraduate Research Assistants</p>
-                </div>
+                </a>
                 <!-- Zoe Gineris -->
-                <div class="researcher-card">
+                <a href="#" target="_blank" rel="noopener" class="researcher-card">
                     <div class="researcher-image-container"><img src="static/zoe1.jpg" alt="Photo of Zoe Gineris"></div>
-                    <h4><a href="#" target="_blank" rel="noopener">Zoe Gineris</a></h4>
+                    <h4>Zoe Gineris</h4>
                     <p class="researcher-title">Undergraduate Research Assistant</p>
                     <p class="researcher-description">Leads Honors Thesis project on how soil moisture differentially
                         impacts rates of decomposition within agrivoltaic systems</p>
-                </div>
+                </a>
             </div>
 
             <div class="section-header">
@@ -452,45 +469,45 @@
             </div>
             <div class="team-grid">
                 <!-- Carrie Seay-Fleming -->
-                <div class="researcher-card">
+                <a href="https://geography.arizona.edu/person/carrie-seay-fleming" target="_blank"
+                    rel="noopener" class="researcher-card">
                     <div class="researcher-image-container"><img src="static/carrie.png"
                             alt="Photo of Dr. Carrie Seay-Fleming"></div>
-                    <h4><a href="https://geography.arizona.edu/person/carrie-seay-fleming" target="_blank"
-                            rel="noopener">Dr. Carrie Seay-Fleming</a></h4>
+                    <h4>Dr. Carrie Seay-Fleming</h4>
                     <p class="researcher-title">Postdoctoral Research Assoc., Udall Center & SGDE, UArizona</p>
                     <p class="researcher-description">Environmental sociologist focusing on food system transformations,
                         land-use conflict, and social aspects of solar development.</p>
-                </div>
+                </a>
                 <!-- Tyler Swanson -->
-                <div class="researcher-card">
+                <a href="https://geography.arizona.edu/person/tyler-swanson" target="_blank" rel="noopener"
+                    class="researcher-card">
                     <div class="researcher-image-container"><img src="static/tyler.png" alt="Photo of Tyler Swanson">
                     </div>
-                    <h4><a href="https://geography.arizona.edu/person/tyler-swanson" target="_blank"
-                            rel="noopener">Tyler Swanson</a></h4>
+                    <h4>Tyler Swanson</h4>
                     <p class="researcher-title">Graduate Research Assistant, Udall Center & SGDE, UArizona</p>
                     <p class="researcher-description">M.A. student studying social aspects of agrivoltaics, agritourism,
                         and energy policy for sustainable rural development.</p>
-                </div>
+                </a>
                 <!-- Caleb Ortega -->
-                <div class="researcher-card">
+                <a href="https://biosphere2.org/person/caleb-ortega" target="_blank" rel="noopener"
+                    class="researcher-card">
                     <div class="researcher-image-container"><img src="static/caleb.png" alt="Photo of Caleb Ortega">
                     </div>
-                    <h4><a href="https://biosphere2.org/person/caleb-ortega" target="_blank" rel="noopener">Caleb
-                            Ortega</a></h4>
+                    <h4>Caleb Ortega</h4>
                     <p class="researcher-title">Program Coordinator, B2 & SGDE, UArizona</p>
                     <p class="researcher-description">Coordinates UA Community and School Garden Program. Supports
                         agrivoltaics research at Biosphere 2 and local schools.</p>
-                </div>
+                </a>
                 <!-- Isaiah Barnett-Moreno -->
-                <div class="researcher-card">
+                <a href="https://biosphere2.org/person/isaiah-barnett-moreno" target="_blank"
+                    rel="noopener" class="researcher-card">
                     <div class="researcher-image-container"><img src="static/isaiah.png"
                             alt="Photo of Isaiah Barnett-Moreno"></div>
-                    <h4><a href="https://biosphere2.org/person/isaiah-barnett-moreno" target="_blank"
-                            rel="noopener">Isaiah Barnett-Moreno</a></h4>
+                    <h4>Isaiah Barnett-Moreno</h4>
                     <p class="researcher-title">Undergrad Research Asst. & Farm Manager, UArizona/PCC</p>
                     <p class="researcher-description">Manages research farm operations, involved in agrivoltaics
                         research at Biosphere 2, and works with aquaponics for food accessibility.</p>
-                </div>
+                </a>
             </div>
 
             <div class="table-container">
