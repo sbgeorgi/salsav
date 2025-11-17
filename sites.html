@@ -9,7 +9,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha28512-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="css/main-styles.css">
     <!-- Page-specific styles to fix and theme the Leaflet map -->
     <style>
@@ -302,12 +302,12 @@
                     </div>
                     <div class="alternating-item">
                         <div class="alternating-item__text">
-                            <h3>Jack’s Solar Garden &amp; NREL InSPIRE Program</h3>
+                            <h3>Jack's Solar Garden &amp; NREL InSPIRE Program</h3>
                             <p>In Colorado, agrivoltaics research is carried out via a multi-institution consortium,
                                 primarily with Colorado State University (CSU) and the National Renewable Energy
                                 Laboratory (NREL).<sup class='citation-link'><a
                                         href='https://www.nrel.gov/news/detail/program/2021/future-of-agriculture-combined-with-renewable-energy-finds-success-at-jacks-solar-garden'
-                                        target='_blank' rel='noopener'>[NREL]</a></sup> Jack’s Solar Garden is a
+                                        target='_blank' rel='noopener'>[NREL]</a></sup> Jack's Solar Garden is a
                                 1.2&nbsp;MW community solar farm with 3,276 panels that serves as a nationally
                                 recognized agrivoltaics showcase.<sup class='citation-link'><a
                                         href='https://www.agrisolarclearinghouse.org/case-study-jacks-solar-garden/'
@@ -381,17 +381,17 @@
                     <div class="alternating-item">
                         <div class="alternating-item__text">
                             <h3>Arava Desert Initiatives</h3>
-                            <p>In Israel’s southern Arava Valley, the Kasser Joint Institute and the Arava Institute
+                            <p>In Israel's southern Arava Valley, the Kasser Joint Institute and the Arava Institute
                                 partner with the University of Arizona to pioneer agrivoltaic systems for extreme desert
                                 farming.<sup class='citation-link'><a href='https://jointinstitute.jnf.org/agrivoltaics'
-                                        target='_blank' rel='noopener'>[KJI]</a></sup> Pilot plots at Kibbutz Ketura’s
+                                        target='_blank' rel='noopener'>[KJI]</a></sup> Pilot plots at Kibbutz Ketura's
                                 solar park—established in 2020—combine fixed-tilt and tracking PV canopies over
                                 vegetables and forage, recording up to 50 % cuts in irrigation demand and cooler midday
                                 leaf temperatures without yield loss.<sup class='citation-link'><a
                                         href='https://arava.org/wp-content/uploads/2024/01/2022%E2%80%932023_Arava_Institute-Annual_Report.pdf'
                                         target='_blank' rel='noopener'>[Arava Report]</a></sup> These findings echo
                                 UArizona desert trials that doubled tomato yields and boosted water-use efficiency by 65
-                                %, highlighting agrivoltaics’ promise for hyper-arid regions.<sup
+                                %, highlighting agrivoltaics' promise for hyper-arid regions.<sup
                                     class='citation-link'><a
                                         href='https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus'
                                         target='_blank' rel='noopener'>[UA News]</a></sup></p>
@@ -419,7 +419,7 @@
                                         rel='noopener'>[GEP]</a></sup><sup class='citation-link'><a
                                         href='https://um6p.ma/en/green-energy-park-expanded-collaboration-china-renewable-energy-and-ai'
                                         target='_blank' rel='noopener'>[UM6P News]</a></sup> A fixed-tilt chess-board
-                                canopy was installed on UM6P’s experimental farm in 2023 to test cereals and vegetables
+                                canopy was installed on UM6P's experimental farm in 2023 to test cereals and vegetables
                                 under semi-arid conditions, following a design study presented at the 2023 Maghreb PV
                                 conference.<sup class='citation-link'><a
                                         href='https://indico.marwan.ma/event/52/contributions/866/attachments/210/324/Abstract.pdf'
@@ -447,8 +447,8 @@
                     <div class="alternating-item">
                         <div class="alternating-item__text">
                             <h3>PASE Project and Northern Mexico Research</h3>
-                            <p>Mexico’s first full agrivoltaics pilot—the Parcela Agrovoltaica Sostenible y Educacional
-                                (PASE)—was inaugurated in 2022 at UNAM-FMVZ’s Topilejo farm in Mexico City, in alliance
+                            <p>Mexico's first full agrivoltaics pilot—the Parcela Agrovoltaica Sostenible y Educacional
+                                (PASE)—was inaugurated in 2022 at UNAM-FMVZ's Topilejo farm in Mexico City, in alliance
                                 with UArizona and SECTEI.<sup class='citation-link'><a
                                         href='https://unamglobal.unam.mx/global_tv/instalan-en-la-unam-la-primera-parcela-agrovoltaica-de-mexico/'
                                         target='_blank' rel='noopener'>[UNAM Global]</a></sup><sup
@@ -505,16 +505,17 @@
     </footer>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha28512-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const map = L.map('map').setView([20, 0], 2);
 
-            // Switched to a high-contrast dark theme tile layer
-            L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
-                maxZoom: 20,
-                attribution: '© <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>, © <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> & © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+            // Using CartoDB Dark Matter tiles - free, no API key required, maintains dark aesthetic
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20
             }).addTo(map);
 
             function createRegionIcon(color, initial) {
@@ -538,7 +539,7 @@
                     type: "USA"
                 },
                 {
-                    title: "Jack’s Solar Garden",
+                    title: "Jack's Solar Garden",
                     description: "A 1.2 MW community solar farm and nationally recognized agrivoltaics showcase in collaboration with CSU and NREL.",
                     imageSrc: "static/jacksagriv.jpg",
                     anchor: "#colorado-site-detailed",
@@ -571,7 +572,7 @@
                 },
                 {
                     title: "PASE Project",
-                    description: "Mexico’s first full agrivoltaics pilot (PASE) at UNAM, showcasing significant water savings and land-use efficiency.",
+                    description: "Mexico's first full agrivoltaics pilot (PASE) at UNAM, showcasing significant water savings and land-use efficiency.",
                     imageSrc: "static/paseagriv.jpg",
                     anchor: "#mexico-collaboration-detailed",
                     coords: [19.3327, -99.1840],
