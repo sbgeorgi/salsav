@@ -247,104 +247,159 @@
             border-top: 3px dashed;
         }
 
-        /* Styles for 3D Agrivoltaics Visualization */
+        /* === UPDATED CSS FOR THE 3D COMPONENT === */
         #agrivoltaics-container {
             position: relative;
-            height: 450px;
+            height: 500px;
             cursor: grab;
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             overflow: hidden;
-            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 60%, #FFFFFF 100%);
+            background: linear-gradient(135deg, #89CFF0 0%, #B4DFF5 100%);
             -webkit-tap-highlight-color: transparent;
+        }
+
+        #agrivoltaics-container:active {
+            cursor: grabbing;
         }
 
         #agrivoltaics-container canvas {
             display: block;
             width: 100%;
             height: 100%;
+            outline: none;
         }
 
+        /* Glassmorphism Tooltip */
         #legend-explainer {
             position: absolute;
             display: none;
             opacity: 0;
-            background: rgba(10, 25, 47, 0.9);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            color: var(--text-body);
-            padding: 12px 18px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            background: rgba(16, 33, 62, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--text-lightest);
+            padding: 18px 22px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            line-height: 1.5;
-            max-width: 280px;
+            max-width: 320px;
             pointer-events: none;
-            z-index: 9;
-            transition: opacity 0.3s ease-in-out;
-            box-shadow: var(--shadow-lg);
-            right: 20px;
-            bottom: 20px;
-            top: auto;
+            z-index: 20;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            right: 24px;
+            bottom: 24px;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         #legend-explainer.visible {
             display: block;
             opacity: 1;
+            transform: translateY(0);
         }
 
         #legend-explainer strong {
             color: var(--secondary-color);
             display: block;
-            margin-bottom: 6px;
-            font-size: 16px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         #legend-explainer p {
             margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #E6F1FF;
         }
 
-        /* Legend Styles */
+        /* Glassmorphism Legend */
         .legend-container {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(10, 25, 47, 0.85);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
+            top: 24px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            backdrop-filter: blur(5px);
-            z-index: 10;
+            gap: 12px;
+            z-index: 15;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            min-width: 200px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: background 0.2s;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            user-select: none;
+            border: 1px solid transparent;
         }
 
         .legend-item:hover {
-            background: rgba(232, 122, 36, 0.2);
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-2px);
         }
 
         .legend-item.active {
-            background: rgba(232, 122, 36, 0.4);
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(232, 122, 36, 0.4);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .legend-item span {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #0A192F;
+        }
+
+        .legend-item.active span {
+            color: #fff;
         }
 
         .legend-color {
             width: 16px;
             height: 16px;
             border-radius: 50%;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
         }
+        
+        .legend-item.active .legend-color {
+            box-shadow: 0 0 0 2px #fff;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #89CFF0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            transition: opacity 0.5s;
+        }
+        .loader {
+            width: 48px; height: 48px;
+            border: 5px solid #fff;
+            border-bottom-color: var(--secondary-color);
+            border-radius: 50%;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 
@@ -401,9 +456,14 @@
                 <!-- === START: 3D Visualization Replacement === -->
                 <div id="agrivoltaics-container" role="img"
                     aria-label="Interactive 3D model of an agrivoltaics system showing solar panels providing shade for crops, conserving water.">
+                    
+                    <div class="loading-overlay" id="loader">
+                        <div class="loader"></div>
+                    </div>
+
                     <div class="legend-container" id="legend">
                         <div class="legend-item" data-type="panel">
-                            <span class="legend-color" style="background-color: #152238;"></span>
+                            <span class="legend-color" style="background-color: #0B2545;"></span>
                             <span>Solar Panel</span>
                         </div>
                         <div class="legend-item" data-type="crop">
@@ -411,8 +471,8 @@
                             <span>Crops</span>
                         </div>
                         <div class="legend-item" data-type="water">
-                            <span class="legend-color" style="background-color: #67C3DF;"></span>
-                            <span>Water Conservation</span>
+                            <span class="legend-color" style="background-color: #4FA4F4;"></span>
+                            <span>Water Savings</span>
                         </div>
                         <div class="legend-item" data-type="biodiversity">
                             <span class="legend-color" style="background-color: #DB7093;"></span>
@@ -420,7 +480,7 @@
                         </div>
                         <div class="legend-item" data-type="shade">
                             <span class="legend-color" style="background-color: #FFFFFF;"></span>
-                            <span>Shaded Area</span>
+                            <span>Microclimate</span>
                         </div>
                     </div>
                     <div id="legend-explainer">
@@ -579,516 +639,819 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // --- Theme Colors ---
-        const PALETTE = {
-            GROUND: 0x967969,
-            PANEL: 0x152238,
-            PLANT: 0x76B947,
-            WATER: 0x67C3DF,
-            BIODIVERSITY: 0xDB7093,
-            BEE_BODY: 0xFFC700,
-            BEE_WING: 0xFFFFFF,
-            SUN_LIGHT: 0xFFF0D1,
-            SKY: 0xB1E1FF,
-            HEMI_GROUND: 0x554433,
-            SHADE_HIGHLIGHT: 0xA0D8F3
+        // --- Configuration ---
+        const CONFIG = {
+            shadowBias: -0.0005,
+            plantCount: 6,
+            windSpeed: 1.2,
+            // Adjusted Sun Position to cast a clear diagonal shadow
+            sunPos: new THREE.Vector3(-12, 18, 8), 
+            colors: {
+                panel: 0x0B2545,
+                panelFrame: 0x334455,
+                stem: 0x4A6B3C,
+                leaf: 0x76B947,
+                leafDark: 0x5A9632,
+                cornStalk: 0x8FB359,
+                beanLeaf: 0x5A9632,
+                tomatoLeaf: 0x4A7A29,
+                water: 0x4FA4F4,
+                bee: 0xF7C849,
+                highlight: 0xE87A24
+            }
         };
 
-        // --- Scene Variables ---
+        // --- Scene Globals ---
         let scene, camera, renderer, controls, clock;
+        let raycaster, mouse;
         const interactiveObjects = [];
-        const plantGroups = [];
-        const beeGroups = [];
-        let raycaster, mouse, hoveredObject = null;
+        let hoveredObject = null;
         let selectedType = null;
-        const highlightObjects = new Map();
-        const originalMaterials = new Map();
+        
+        // Animation collections
+        const windAffectedObjects = [];
+        const bees = [];
+        const dustParticles = [];
 
-        // --- DOM Elements ---
+        // DOM Elements
         const container = document.getElementById('agrivoltaics-container');
+        const explainer = document.getElementById('legend-explainer');
+        const loader = document.getElementById('loader');
         const legendItems = document.querySelectorAll('.legend-item');
-        const legendExplainer = document.getElementById('legend-explainer');
-        const explainerTitle = document.getElementById('explainer-title');
-        const explainerText = document.getElementById('explainer-text');
+        const legendContainer = document.getElementById('legend');
 
+        // --- Procedural Texture Generation ---
+        function createSolarTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#0B2545';
+            ctx.fillRect(0, 0, 512, 512);
+            
+            ctx.strokeStyle = '#3a4f6a';
+            ctx.lineWidth = 2;
+            const cols = 6; const rows = 10;
+            const cw = 512/cols; const rh = 512/rows;
+            
+            for(let i=0; i<=cols; i++) {
+                ctx.beginPath(); ctx.moveTo(i*cw, 0); ctx.lineTo(i*cw, 512); ctx.stroke();
+            }
+            for(let i=0; i<=rows; i++) {
+                ctx.beginPath(); ctx.moveTo(0, i*rh); ctx.lineTo(512, i*rh); ctx.stroke();
+            }
+
+            ctx.strokeStyle = '#8899aa';
+            ctx.lineWidth = 1;
+            for(let i=0; i<cols; i++) {
+                const center = i*cw + cw/2;
+                ctx.beginPath(); ctx.moveTo(center - cw*0.15, 0); ctx.lineTo(center - cw*0.15, 512); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(center + cw*0.15, 0); ctx.lineTo(center + cw*0.15, 512); ctx.stroke();
+            }
+
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.colorSpace = THREE.SRGBColorSpace;
+            return tex;
+        }
+
+        function createSoilTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024; canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+            
+            // Rich earth gradient
+            const grd = ctx.createLinearGradient(0, 0, 1024, 1024);
+            grd.addColorStop(0, "#966F4B");
+            grd.addColorStop(1, "#755130");
+            ctx.fillStyle = grd;
+            ctx.fillRect(0,0,1024,1024);
+            
+            // Multi-layer noise for non-repetitive look
+            for(let i=0; i<150000; i++) {
+                const x = Math.random()*1024;
+                const y = Math.random()*1024;
+                const s = Math.random() * 3;
+                ctx.fillStyle = Math.random() > 0.6 ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.15)';
+                ctx.fillRect(x, y, s, s);
+            }
+            
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.wrapT = THREE.RepeatWrapping;
+            tex.repeat.set(2, 2);
+            tex.colorSpace = THREE.SRGBColorSpace;
+            return tex;
+        }
+
+        // --- Initialization ---
         function init() {
             scene = new THREE.Scene();
-            clock = new THREE.Clock();
+            scene.background = new THREE.Color(0x89CFF0);
+            scene.fog = new THREE.FogExp2(0x89CFF0, 0.02);
 
-            camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
-            camera.position.set(0, 5, 10);
-            camera.lookAt(0, 1, 0);
+            clock = new THREE.Clock();
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+            camera.position.set(5, 5, 12);
+            camera.lookAt(0, 0, 0);
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.outputColorSpace = THREE.SRGBColorSpace;
+            renderer.toneMappingExposure = 1.15;
             container.appendChild(renderer.domElement);
 
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
+            controls.minDistance = 5;
+            controls.maxDistance = 20;
+            controls.maxPolarAngle = Math.PI / 2 - 0.05; 
             controls.autoRotate = true;
             controls.autoRotateSpeed = 0.4;
-            controls.enableZoom = false;
-            controls.enablePan = false;
-            controls.maxPolarAngle = Math.PI / 2.1;
-            controls.minPolarAngle = Math.PI / 4;
-            controls.target.set(0, 1, 0);
 
             setupLighting();
-            createWorld();
-            createSunRays();
-            setupInteractivity();
-            setupLegend();
+            createGround();
+            createSystem();
+            createAtmosphere();
+
+            container.addEventListener('mousemove', onMouseMove);
+            container.addEventListener('click', onCanvasClick);
+            container.addEventListener('mousedown', () => controls.autoRotate = false);
+            window.addEventListener('resize', onResize);
+
+            setupLegendUI();
+            
+            setTimeout(() => {
+                loader.style.opacity = 0;
+                setTimeout(() => loader.remove(), 500);
+            }, 500);
+
+            animate();
         }
 
         function setupLighting() {
-            const hemiLight = new THREE.HemisphereLight(PALETTE.SKY, PALETTE.HEMI_GROUND, 1.5);
+            const hemiLight = new THREE.HemisphereLight(0xffffff, 0x755130, 0.7);
             scene.add(hemiLight);
 
-            const sunLight = new THREE.DirectionalLight(PALETTE.SUN_LIGHT, 2.0);
-            sunLight.position.set(-10, 10, -5);
+            const sunLight = new THREE.DirectionalLight(0xfffaf0, 2.2);
+            sunLight.position.copy(CONFIG.sunPos);
             sunLight.castShadow = true;
-            sunLight.shadow.mapSize.width = 4096;
-            sunLight.shadow.mapSize.height = 4096;
-            sunLight.shadow.camera.top = 8;
-            sunLight.shadow.camera.bottom = -8;
-            sunLight.shadow.camera.left = -12;
-            sunLight.shadow.camera.right = 12;
-            sunLight.shadow.camera.near = 1;
-            sunLight.shadow.camera.far = 30;
+            
+            const mapSize = 2048;
+            sunLight.shadow.mapSize.width = mapSize;
+            sunLight.shadow.mapSize.height = mapSize;
+            sunLight.shadow.bias = CONFIG.shadowBias;
+            
+            const d = 12;
+            sunLight.shadow.camera.left = -d;
+            sunLight.shadow.camera.right = d;
+            sunLight.shadow.camera.top = d;
+            sunLight.shadow.camera.bottom = -d;
+            
             scene.add(sunLight);
-            scene.userData.sunLight = sunLight;
+
+            const rimLight = new THREE.SpotLight(0x4FA4F4, 4);
+            rimLight.position.set(10, 2, -5);
+            rimLight.lookAt(0, 1, 0);
+            scene.add(rimLight);
         }
 
-        function createWorld() {
-            const groundGeo = new THREE.PlaneGeometry(30, 12);
-            const groundMat = new THREE.MeshStandardMaterial({ color: PALETTE.GROUND });
-            const ground = new THREE.Mesh(groundGeo, groundMat);
+        function createGround() {
+            const geometry = new THREE.CircleGeometry(30, 64);
+            const material = new THREE.MeshStandardMaterial({ 
+                map: createSoilTexture(),
+                roughness: 0.9, 
+                metalness: 0.1
+            });
+            const ground = new THREE.Mesh(geometry, material);
             ground.rotation.x = -Math.PI / 2;
             ground.receiveShadow = true;
             scene.add(ground);
-
-            const numPairs = 4;
-            const spacing = 4.0;
-            for (let i = 0; i < numPairs; i++) {
-                const x = (i - (numPairs - 1) / 2) * spacing;
-                createPanelPlantPair(x);
-            }
         }
-        
-        function createSunRays() {
-            const raysGroup = new THREE.Group();
-            const rayMat = new THREE.MeshBasicMaterial({
-                color: 0xFFF5B6,
-                transparent: true,
-                opacity: 0.25
-            });
-            const rayGeom = new THREE.CylinderGeometry(0.03, 0.03, 15, 8);
+
+        function createSystem() {
+            const rows = 3;
+            const spacing = 4.5;
             
-            const lightDirection = new THREE.Vector3().copy(scene.userData.sunLight.position).normalize().multiplyScalar(-1);
-
-            for (let i = 0; i < 7; i++) {
-                const ray = new THREE.Mesh(rayGeom, rayMat);
-                
-                ray.position.set(
-                    (Math.random() - 0.5) * 20,
-                    12,
-                    (Math.random() - 0.5) * 8
-                );
-                
-                const targetPosition = new THREE.Vector3().copy(ray.position).add(lightDirection);
-                ray.lookAt(targetPosition);
-                
-                raysGroup.add(ray);
-            }
-            scene.add(raysGroup);
-        }
-
-        function createPanelPlantPair(x) {
-            const panel = createSolarPanel();
-            panel.position.x = x;
-            scene.add(panel);
-            interactiveObjects.push(panel);
-
-            const plants = createPlantGroup();
-            plants.position.set(x, 0, 1.2);
-            scene.add(plants);
-            interactiveObjects.push(plants);
-            plantGroups.push(plants);
-
-            const water = createWater();
-            water.position.set(x + 0.5, 0.01, -0.8);
-            scene.add(water);
-            interactiveObjects.push(water);
-
-            const shade = createShadedArea();
-            shade.position.set(x, 0.1, 1.0);
-            scene.add(shade);
-            interactiveObjects.push(shade);
-
-            const bees = createBiodiversityGroup();
-            bees.position.set(x - 0.5, 1.2, 0.5);
-            scene.add(bees);
-            interactiveObjects.push(bees);
-            beeGroups.push(bees);
-        }
-
-        function createSolarPanel() {
-            const panelGroup = new THREE.Group();
-            panelGroup.userData = {
-                name: 'Solar Panel',
-                info: 'Generates clean electricity while providing crucial shade, creating a cooler microclimate for the crops below.',
-                type: 'panel',
-                isInteractive: true
-            };
-
-            const panelMat = new THREE.MeshStandardMaterial({ color: PALETTE.PANEL, roughness: 0.2, metalness: 0.1 });
-            const panelGeom = new THREE.BoxGeometry(2.8, 0.1, 1.8);
-            const panel = new THREE.Mesh(panelGeom, panelMat);
-            panel.castShadow = true;
-
-            const postMat = new THREE.MeshStandardMaterial({ color: 0x444444 });
-            const postGeom = new THREE.CylinderGeometry(0.06, 0.06, 1.4);
-            const mainPost = new THREE.Mesh(postGeom, postMat);
-            mainPost.position.y = 0.7;
-            mainPost.castShadow = true;
-
-            panel.position.y = 1.4;
-            panel.rotation.x = Math.PI / 7;
-
-            panelGroup.add(panel);
-            panelGroup.add(mainPost);
-
-            return panelGroup;
-        }
-
-        function createPlantGroup() {
-            const group = new THREE.Group();
-            group.userData = {
-                name: 'Crops',
-                info: 'Protected from harsh sun, these crops experience less heat stress and water loss, often leading to increased yields.',
-                type: 'crop',
-                isInteractive: true
-            };
-
-            for (let i = 0; i < 2; i++) {
-                const plant = createPlant();
-                plant.position.x = i * 0.7 - 0.35;
-                plant.scale.setScalar(Math.random() * 0.2 + 0.9);
-                group.add(plant);
-            }
-            return group;
-        }
-
-        function createPlant() {
-            const plant = new THREE.Group();
-            const plantMat = new THREE.MeshStandardMaterial({ color: PALETTE.PLANT, side: THREE.DoubleSide, roughness: 0.8 });
-
-            const stemGeom = new THREE.CylinderGeometry(0.02, 0.03, 0.5);
-            const stem = new THREE.Mesh(stemGeom, plantMat);
-            stem.castShadow = true;
-            stem.position.y = 0.25;
-            plant.add(stem);
-
-            const leafShape = new THREE.Shape();
-            leafShape.moveTo(0, 0);
-            leafShape.bezierCurveTo(0, 0, 0.1, 0.25, 0.2, 0.3);
-            leafShape.bezierCurveTo(0.3, 0.25, 0.4, 0, 0.4, 0);
-            leafShape.bezierCurveTo(0.4, 0, 0.3, -0.25, 0.2, -0.3);
-            leafShape.bezierCurveTo(0.1, -0.25, 0, 0, 0, 0);
-            const leafGeom = new THREE.ShapeGeometry(leafShape);
-
-            for (let j = 0; j < 6; j++) {
-                const leaf = new THREE.Mesh(leafGeom, plantMat);
-                leaf.position.y = (j * 0.08) + 0.1;
-                leaf.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.8;
-                leaf.rotation.y = Math.random() * Math.PI * 2;
-                leaf.castShadow = true;
-                plant.add(leaf);
-            }
-            return plant;
-        }
-
-        function createWater() {
-            const waterGeom = new THREE.CircleGeometry(1.0, 32);
-            const waterMat = new THREE.MeshStandardMaterial({ color: PALETTE.WATER, transparent: true, opacity: 0.75, roughness: 0.1 });
-            const water = new THREE.Mesh(waterGeom, waterMat);
-            water.rotation.x = -Math.PI / 2;
-            water.userData = {
-                name: 'Water Conservation',
-                info: 'The cooler conditions under panels reduce soil and plant evaporation, leading to significant water savings.',
-                type: 'water',
-                isInteractive: true
-            };
-            return water;
-        }
-
-        function createBiodiversityGroup() {
-            const group = new THREE.Group();
-            group.userData = {
-                name: 'Improved Biodiversity',
-                info: 'The shaded, cooler environment creates a habitat for beneficial insects like pollinators, boosting local biodiversity.',
-                type: 'biodiversity',
-                isInteractive: true
-            };
-            for (let i = 0; i < 3; i++) {
-                const bee = createBee();
-                bee.position.set(
-                    (Math.random() - 0.5) * 0.8,
-                    (Math.random() - 0.5) * 0.5,
-                    (Math.random() - 0.5) * 0.8
-                );
-                group.add(bee);
-            }
-            return group;
-        }
-
-        function createBee() {
-            const bee = new THREE.Group();
-            const bodyMat = new THREE.MeshStandardMaterial({ color: PALETTE.BEE_BODY, roughness: 0.6 });
-            const bodyGeom = new THREE.SphereGeometry(0.04, 8, 8);
-            const body = new THREE.Mesh(bodyGeom, bodyMat);
-            body.scale.z = 1.8;
-            bee.add(body);
-
-            const wingMat = new THREE.MeshBasicMaterial({ color: PALETTE.BEE_WING, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
-            const wingGeom = new THREE.PlaneGeometry(0.1, 0.05);
-            const leftWing = new THREE.Mesh(wingGeom, wingMat);
-            leftWing.position.set(-0.03, 0.03, 0);
-            leftWing.rotation.y = Math.PI / 4;
-            bee.add(leftWing);
-
-            const rightWing = leftWing.clone();
-            rightWing.position.x = 0.03;
-            rightWing.rotation.y = -Math.PI / 4;
-            bee.add(rightWing);
+            // Shadow placement calculations
+            const shadowOffsetX = 1.7;
+            const shadowOffsetZ = -1.15;
             
-            bee.userData.wings = [leftWing, rightWing];
-            return bee;
+            // Variety of crops
+            const cropTypes = ['tomato', 'corn', 'bean'];
+            const cropInfo = {
+                'corn': 'Corn (Maize) grows significantly taller under partial shade, benefiting from reduced heat stress.',
+                'tomato': 'Tomatoes often double their fruit yield in agrivoltaic systems due to cooler microclimates.',
+                'bean': 'Beans and other legumes thrive in the dappled light, maintaining soil nitrogen levels.'
+            };
+
+            for(let i=0; i<rows; i++) {
+                const zPos = (i - 1) * spacing;
+                const group = new THREE.Group();
+                group.position.z = zPos;
+                
+                // Panels
+                const panel = createSmartPanel();
+                group.add(panel);
+                
+                // Crops - Cycle through types
+                const type = cropTypes[i % cropTypes.length];
+                const crops = createSpecificCropRow(type);
+                crops.position.set(shadowOffsetX, 0, shadowOffsetZ);
+                group.add(crops);
+                
+                // Water effect
+                const water = createWaterEffect();
+                water.position.set(shadowOffsetX, 0.02, shadowOffsetZ);
+                group.add(water);
+
+                // Microclimate
+                const shade = createShadowVolume();
+                shade.position.set(shadowOffsetX, 0.75, shadowOffsetZ);
+                group.add(shade);
+                
+                // Sunbeams
+                const beams = createSunBeams();
+                group.add(beams);
+
+                // Biodiversity (Middle row)
+                if(i === 1) {
+                    const bio = createBiodiversity();
+                    bio.position.set(shadowOffsetX, 1.5, shadowOffsetZ);
+                    group.add(bio);
+                    addToInteractive(bio, 'biodiversity', 'Biodiversity Boost', 'Pollinators thrive in the sheltered microclimate, boosting ecosystem health.');
+                }
+
+                // Register Interactions
+                addToInteractive(panel, 'panel', 'Solar PV Array', 'Generates renewable energy while shielding crops from excessive solar radiation.');
+                addToInteractive(crops, 'crop', 'Protected ' + type.charAt(0).toUpperCase() + type.slice(1), cropInfo[type]);
+                addToInteractive(water, 'water', 'Water Conservation', 'Soil moisture evaporation is reduced by up to 40% due to panel shading.');
+                addToInteractive(shade, 'shade', 'Microclimate Buffer', 'Temperatures are 5-10°C cooler under panels during the day, preventing midday photosynthesis shutdown.');
+
+                scene.add(group);
+            }
         }
 
-        function createShadedArea() {
-            const shadeGeo = new THREE.PlaneGeometry(2.8, 1.8);
-            const shadeMat = new THREE.MeshBasicMaterial({
-                color: PALETTE.SHADE_HIGHLIGHT,
-                transparent: true,
-                opacity: 0.3,
+        function createSmartPanel() {
+            const group = new THREE.Group();
+            
+            const postGeo = new THREE.CylinderGeometry(0.08, 0.08, 2.5);
+            const postMat = new THREE.MeshStandardMaterial({color: 0x555555, roughness: 0.8});
+            const post = new THREE.Mesh(postGeo, postMat);
+            post.position.y = 1.25;
+            post.castShadow = true;
+            group.add(post);
+
+            const panelGeo = new THREE.BoxGeometry(3.5, 0.05, 1.8);
+            const panelMat = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,
+                map: createSolarTexture(),
+                metalness: 0.6,
+                roughness: 0.2,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1,
                 side: THREE.DoubleSide
             });
-            const shade = new THREE.Mesh(shadeGeo, shadeMat);
-            shade.rotation.x = -Math.PI / 2;
-            shade.userData = {
-                name: 'Shaded Area',
-                info: 'Temperature under panels are typically 5-10°C cooler than full sun, creating ideal growing conditions.',
-                type: 'shade',
-                isInteractive: true
+            const panel = new THREE.Mesh(panelGeo, panelMat);
+            panel.position.set(0, 2.6, 0);
+            panel.rotation.x = Math.PI / 6; // 30 degree tilt
+            panel.castShadow = true;
+            group.add(panel);
+
+            return group;
+        }
+        
+        function createSunBeams() {
+            const beamGroup = new THREE.Group();
+            const sunPos = CONFIG.sunPos;
+
+            const len = 30;
+            const beamGeo = new THREE.CylinderGeometry(0.4, 0.4, len, 16, 1, true);
+            beamGeo.translate(0, len / 2, 0); 
+
+            const beamMat = new THREE.MeshBasicMaterial({
+                color: 0xFFF5D6,
+                transparent: true,
+                opacity: 0.05,
+                depthWrite: false,
+                side: THREE.DoubleSide,
+                blending: THREE.AdditiveBlending
+            });
+
+            for(let i=0; i<3; i++) {
+                const beam = new THREE.Mesh(beamGeo, beamMat);
+                const ox = (Math.random() - 0.5) * 3.0;
+                const oz = (Math.random() - 0.5) * 1.5;
+                beam.position.set(ox, 0, oz);
+                const s = 0.5 + Math.random() * 0.5;
+                beam.scale.set(s, 1, s);
+                beamGroup.add(beam);
+            }
+
+            beamGroup.position.set(0, 2.6, 0);
+            beamGroup.lookAt(sunPos);
+            beamGroup.rotateX(Math.PI / 2);
+
+            return beamGroup;
+        }
+
+        function createSpecificCropRow(type) {
+            const rowGroup = new THREE.Group();
+            const count = 8; // More dense than before
+            
+            for(let i=0; i<count; i++) {
+                let plant;
+                const xOffset = (i / (count - 1)) * 2.8 - 1.4 + (Math.random()*0.2);
+                const zOffset = (Math.random() - 0.5) * 0.8;
+
+                if(type === 'corn') {
+                    plant = createCornPlant();
+                } else if (type === 'tomato') {
+                    plant = createTomatoPlant();
+                } else {
+                    plant = createBeanPlant();
+                }
+
+                plant.position.set(xOffset, 0, zOffset);
+                
+                // Random rotation and phase
+                plant.rotation.y = Math.random() * Math.PI * 2;
+                plant.userData.baseRotation = plant.rotation.clone();
+                plant.userData.phase = Math.random() * Math.PI * 2;
+                
+                rowGroup.add(plant);
+                windAffectedObjects.push(plant);
+            }
+            return rowGroup;
+        }
+
+        // --- CROP FACTORY ---
+
+        function createCornPlant() {
+            const group = new THREE.Group();
+            
+            // Stalk
+            const stalkGeo = new THREE.CylinderGeometry(0.03, 0.05, 1.6, 6);
+            stalkGeo.translate(0, 0.8, 0);
+            const stalk = new THREE.Mesh(stalkGeo, new THREE.MeshStandardMaterial({color: CONFIG.colors.cornStalk}));
+            stalk.castShadow = true;
+            group.add(stalk);
+
+            // Leaves
+            const leafShape = new THREE.Shape();
+            leafShape.moveTo(0,0);
+            leafShape.quadraticCurveTo(0.05, 0.3, 0, 0.6); // Long narrow leaf
+            leafShape.quadraticCurveTo(-0.05, 0.3, 0, 0);
+            const leafGeo = new THREE.ShapeGeometry(leafShape);
+
+            for(let i=0; i<6; i++) {
+                const leaf = new THREE.Mesh(leafGeo, new THREE.MeshStandardMaterial({color: CONFIG.colors.leafDark, side: THREE.DoubleSide}));
+                leaf.position.y = 0.3 + (i * 0.2);
+                leaf.rotation.z = Math.PI / 4;
+                leaf.rotation.y = (i / 6) * Math.PI * 4; // Spiral up
+                leaf.rotation.x = -Math.PI/4; // Droop out
+                leaf.scale.setScalar(1.5);
+                leaf.castShadow = true;
+                group.add(leaf);
+            }
+            
+            // Tassel (top)
+            const tasselGeo = new THREE.ConeGeometry(0.05, 0.2, 5);
+            const tassel = new THREE.Mesh(tasselGeo, new THREE.MeshStandardMaterial({color: 0xEEDD82})); // Yellowish
+            tassel.position.y = 1.7;
+            group.add(tassel);
+
+            // Scale variance
+            group.scale.setScalar(1.0 + Math.random()*0.3);
+            return group;
+        }
+
+        function createTomatoPlant() {
+            const group = new THREE.Group();
+            
+            // Bushy stem structure
+            const mainStemGeo = new THREE.CylinderGeometry(0.02, 0.04, 0.8, 5);
+            mainStemGeo.translate(0, 0.4, 0);
+            const stemMat = new THREE.MeshStandardMaterial({color: CONFIG.colors.stem});
+            const stem = new THREE.Mesh(mainStemGeo, stemMat);
+            stem.castShadow = true;
+            group.add(stem);
+
+            // Jagged Leaf
+            const leafShape = new THREE.Shape();
+            leafShape.moveTo(0,0);
+            leafShape.lineTo(0.1, 0.05);
+            leafShape.lineTo(0.15, 0.15);
+            leafShape.lineTo(0.05, 0.2);
+            leafShape.lineTo(0, 0.3); // Tip
+            leafShape.lineTo(-0.05, 0.2);
+            leafShape.lineTo(-0.15, 0.15);
+            leafShape.lineTo(-0.1, 0.05);
+            leafShape.lineTo(0,0);
+            const leafGeo = new THREE.ShapeGeometry(leafShape);
+            const leafMat = new THREE.MeshStandardMaterial({color: CONFIG.colors.tomatoLeaf, side: THREE.DoubleSide});
+
+            for(let i=0; i<12; i++) {
+                const leaf = new THREE.Mesh(leafGeo, leafMat);
+                leaf.position.set((Math.random()-0.5)*0.3, 0.1 + Math.random()*0.6, (Math.random()-0.5)*0.3);
+                leaf.rotation.set(Math.random(), Math.random()*Math.PI*2, Math.random());
+                leaf.scale.setScalar(1.2);
+                leaf.castShadow = true;
+                group.add(leaf);
+            }
+
+            // Tomatoes
+            const fruitGeo = new THREE.SphereGeometry(0.05, 8, 8);
+            const fruitMat = new THREE.MeshStandardMaterial({color: 0xFF3333, roughness: 0.2});
+            for(let i=0; i<4; i++) {
+                const fruit = new THREE.Mesh(fruitGeo, fruitMat);
+                fruit.position.set((Math.random()-0.5)*0.3, 0.3 + Math.random()*0.4, (Math.random()-0.5)*0.3);
+                group.add(fruit);
+            }
+
+            group.scale.setScalar(1.2 + Math.random()*0.3);
+            return group;
+        }
+
+        function createBeanPlant() {
+            const group = new THREE.Group();
+            
+            // Short dense bush
+            const stemGeo = new THREE.CylinderGeometry(0.01, 0.02, 0.5, 4);
+            stemGeo.translate(0, 0.25, 0);
+            const stem = new THREE.Mesh(stemGeo, new THREE.MeshStandardMaterial({color: CONFIG.colors.stem}));
+            group.add(stem);
+
+            // Heart/Round Leaf
+            const leafShape = new THREE.Shape();
+            leafShape.moveTo(0,0);
+            leafShape.bezierCurveTo(0.15, 0.1, 0.15, 0.25, 0, 0.35);
+            leafShape.bezierCurveTo(-0.15, 0.25, -0.15, 0.1, 0, 0);
+            const leafGeo = new THREE.ShapeGeometry(leafShape);
+            const leafMat = new THREE.MeshStandardMaterial({color: CONFIG.colors.beanLeaf, side: THREE.DoubleSide});
+
+            for(let i=0; i<8; i++) {
+                const leaf = new THREE.Mesh(leafGeo, leafMat);
+                leaf.position.set((Math.random()-0.5)*0.25, 0.1 + Math.random()*0.3, (Math.random()-0.5)*0.25);
+                leaf.rotation.x = -Math.PI/3; // angled up
+                leaf.rotation.y = Math.random() * Math.PI * 2;
+                leaf.scale.setScalar(1.0);
+                leaf.castShadow = true;
+                group.add(leaf);
+            }
+            
+            // Bean Pods
+            const podGeo = new THREE.CapsuleGeometry(0.015, 0.15, 2, 6);
+            const podMat = new THREE.MeshStandardMaterial({color: 0xDDEEAA}); // Pale green/yellow
+            for(let i=0; i<3; i++) {
+                const pod = new THREE.Mesh(podGeo, podMat);
+                pod.position.set((Math.random()-0.5)*0.2, 0.2 + Math.random()*0.2, (Math.random()-0.5)*0.2);
+                pod.rotation.z = Math.PI / 2; // Hanging
+                group.add(pod);
+            }
+
+            group.scale.setScalar(1.1 + Math.random()*0.2);
+            return group;
+        }
+
+
+        function createWaterEffect() {
+            const geo = new THREE.CircleGeometry(0.8, 32);
+            const mat = new THREE.MeshPhysicalMaterial({
+                color: CONFIG.colors.water,
+                transparent: true,
+                opacity: 0.4,
+                roughness: 0.1,
+                transmission: 0.5,
+                thickness: 0.5
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.rotation.x = -Math.PI/2;
+            
+            const ringGeo = new THREE.RingGeometry(0.8, 0.85, 32);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: CONFIG.colors.water, 
+                transparent: true, 
+                opacity: 0.6,
+                side: THREE.DoubleSide
+            });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            mesh.add(ring);
+            
+            mesh.userData.animate = (time) => {
+                const s = 1 + (Math.sin(time * 2) * 0.05);
+                ring.scale.setScalar(s);
+                ring.material.opacity = 0.6 - (s-1)*5;
             };
-            return shade;
+            
+            return mesh;
+        }
+
+        function createBiodiversity() {
+            const group = new THREE.Group();
+            const bodyGeo = new THREE.CapsuleGeometry(0.03, 0.08, 4, 8);
+            const wingGeo = new THREE.PlaneGeometry(0.08, 0.04);
+            const bodyMat = new THREE.MeshStandardMaterial({color: CONFIG.colors.bee});
+            const wingMat = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.7, side: THREE.DoubleSide});
+
+            for(let i=0; i<3; i++) {
+                const bee = new THREE.Group();
+                const body = new THREE.Mesh(bodyGeo, bodyMat);
+                body.rotation.x = Math.PI/2;
+                bee.add(body);
+                
+                const w1 = new THREE.Mesh(wingGeo, wingMat);
+                w1.position.set(0.03, 0.02, 0);
+                bee.add(w1);
+                const w2 = new THREE.Mesh(wingGeo, wingMat);
+                w2.position.set(-0.03, 0.02, 0);
+                bee.add(w2);
+                
+                bee.userData = {
+                    speed: 0.5 + Math.random() * 0.5,
+                    offset: Math.random() * 100,
+                    wings: [w1, w2]
+                };
+                group.add(bee);
+                bees.push(bee);
+            }
+            return group;
+        }
+
+        function createShadowVolume() {
+            const geo = new THREE.BoxGeometry(3.2, 1.5, 2.0);
+            const mat = new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.1,
+                visible: false
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            
+            const glassGeo = new THREE.BoxGeometry(3.18, 1.48, 1.98);
+            const glassMat = new THREE.MeshBasicMaterial({
+                color: CONFIG.colors.highlight,
+                transparent: true,
+                opacity: 0.15,
+                side: THREE.DoubleSide,
+                depthWrite: false,
+                visible: false
+            });
+            const glass = new THREE.Mesh(glassGeo, glassMat);
+            glass.userData.isGlass = true;
+            mesh.add(glass);
+
+            return mesh;
+        }
+
+        function createAtmosphere() {
+            const particlesGeo = new THREE.BufferGeometry();
+            const count = 250;
+            const posArray = new Float32Array(count * 3);
+            for(let i=0; i<count*3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 25;
+            }
+            particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const mat = new THREE.PointsMaterial({
+                size: 0.06,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.3,
+                blending: THREE.AdditiveBlending
+            });
+            const particles = new THREE.Points(particlesGeo, mat);
+            scene.add(particles);
+            dustParticles.push(particles);
+        }
+
+        function addToInteractive(mesh, type, name, desc) {
+            mesh.userData.interactive = true;
+            mesh.userData.type = type;
+            mesh.userData.name = name;
+            mesh.userData.desc = desc;
+            interactiveObjects.push(mesh);
+        }
+
+        // --- INTERACTION LOGIC ---
+
+        function setupLegendUI() {
+            legendItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent bubble to container (which resets)
+                    const type = item.getAttribute('data-type');
+                    toggleSelection(type);
+                });
+            });
+            // Also stop propagation on legend container click
+            legendContainer.addEventListener('click', (e) => e.stopPropagation());
+        }
+
+        function toggleSelection(type) {
+            if (selectedType === type) {
+                resetSelection();
+            } else {
+                applySelection(type);
+            }
+        }
+
+        function applySelection(type) {
+            if(selectedType) {
+                resetSelectionVisuals(selectedType);
+            }
+            
+            selectedType = type;
+            
+            legendItems.forEach(item => {
+                if(item.getAttribute('data-type') === type) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            interactiveObjects.forEach(obj => {
+                if(obj.userData.type === type) {
+                    highlightObject(obj, true);
+                    updateExplainer(obj.userData.name, obj.userData.desc);
+                }
+            });
+
+            controls.autoRotate = false;
+        }
+
+        function resetSelection() {
+            if(selectedType) {
+                resetSelectionVisuals(selectedType);
+            }
+            selectedType = null;
+            explainer.classList.remove('visible');
+            
+            setTimeout(() => {
+                if(!selectedType) controls.autoRotate = true;
+            }, 2000);
         }
         
-        // === START: MODIFIED INTERACTIVITY LOGIC ===
-
-        function setupInteractivity() {
-            raycaster = new THREE.Raycaster();
-            mouse = new THREE.Vector2();
-
-            window.addEventListener('resize', onWindowResize);
-            container.addEventListener('mousemove', onMouseMove);
-            container.addEventListener('click', onCanvasClick);
+        function resetSelectionVisuals(type) {
+             legendItems.forEach(item => item.classList.remove('active'));
+             interactiveObjects.forEach(obj => {
+                 if(obj.userData.type === type) {
+                     highlightObject(obj, false);
+                 }
+             });
         }
-        
-        function onWindowResize() {
+
+        function highlightObject(object, active) {
+            object.traverse((child) => {
+                if(child.isMesh) {
+                    if(active) {
+                        if(child.userData.orgEmissive === undefined) {
+                            child.userData.orgEmissive = child.material.emissive ? child.material.emissive.getHex() : 0x000000;
+                        }
+                        if(child.material.emissive) {
+                            child.material.emissive.setHex(CONFIG.colors.highlight);
+                            child.material.emissiveIntensity = 0.6;
+                        }
+                    } else {
+                        if(child.userData.orgEmissive !== undefined && child.material.emissive) {
+                            child.material.emissive.setHex(child.userData.orgEmissive);
+                            child.material.emissiveIntensity = 0; 
+                        }
+                    }
+
+                    if(object.userData.type === 'shade') {
+                        if(child.userData.isGlass) {
+                             child.material.visible = active;
+                        } else if(child.material.wireframe) {
+                            child.material.visible = active; 
+                            child.material.opacity = active ? 0.5 : 0;
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateExplainer(title, text) {
+            document.getElementById('explainer-title').textContent = title;
+            document.getElementById('explainer-text').textContent = text;
+            explainer.classList.add('visible');
+        }
+
+        function onMouseMove(event) {
+            if (selectedType) return;
+
+            const rect = container.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children, true);
+            
+            let found = null;
+            for(let hit of intersects) {
+                let curr = hit.object;
+                while(curr) {
+                    if(curr.userData.interactive) {
+                        found = curr;
+                        break;
+                    }
+                    curr = curr.parent;
+                }
+                if(found) break;
+            }
+
+            if(found) {
+                container.style.cursor = 'pointer';
+                if(hoveredObject !== found) {
+                    if(hoveredObject) highlightObject(hoveredObject, false);
+                    hoveredObject = found;
+                    highlightObject(found, true);
+                    updateExplainer(found.userData.name, found.userData.desc);
+                }
+            } else {
+                container.style.cursor = 'grab';
+                if(hoveredObject) {
+                    highlightObject(hoveredObject, false);
+                    explainer.classList.remove('visible');
+                    hoveredObject = null;
+                }
+            }
+        }
+
+        function onCanvasClick(event) {
+            const rect = container.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children, true);
+            
+            let found = null;
+            for(let hit of intersects) {
+                let curr = hit.object;
+                while(curr) {
+                    if(curr.userData.interactive) {
+                        found = curr; break;
+                    }
+                    curr = curr.parent;
+                }
+                if(found) break;
+            }
+            
+            if(found) {
+                toggleSelection(found.userData.type);
+            } else {
+                resetSelection();
+            }
+        }
+
+        function onResize() {
             camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(container.clientWidth, container.clientHeight);
         }
 
-        function onMouseMove(event) {
-            const rect = container.getBoundingClientRect();
-            mouse.x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
-            mouse.y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
-        }
-
-        function onCanvasClick() {
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(interactiveObjects, true);
-            if (intersects.length > 0) {
-                const clickedObject = findsInteractiveParent(intersects[0].object);
-                if (clickedObject) {
-                    selectType(clickedObject.userData.type);
-                }
-            }
-        }
-        
-        function selectType(type) {
-            if (selectedType === type) {
-                // Deselect logic
-                selectedType = null;
-                revertAllHighlights();
-                legendExplainer.classList.remove('visible');
-                legendItems.forEach(item => item.classList.remove('active'));
-            } else {
-                // Select logic
-                selectedType = type;
-                highlightType(type);
-                
-                const representativeObject = interactiveObjects.find(obj => obj.userData.type === type);
-                if (representativeObject) {
-                    explainerTitle.textContent = representativeObject.userData.name;
-                    explainerText.textContent = representativeObject.userData.info;
-                    legendExplainer.classList.add('visible');
-                }
-                
-                legendItems.forEach(item => {
-                    item.classList.toggle('active', item.dataset.type === type);
-                });
-            }
-        }
-        
-        function setupLegend() {
-            legendItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    selectType(item.dataset.type);
-                });
-            });
-        }
-        
-        function checkIntersections() {
-            // This function now only handles hover states
-            if (selectedType) {
-                // If something is selected, don't show hover info
-                if (hoveredObject) {
-                    hoveredObject = null;
-                }
-                return;
-            }
-
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(interactiveObjects, true);
-
-            let currentInteractive = null;
-            if (intersects.length > 0) {
-                currentInteractive = findsInteractiveParent(intersects[0].object);
-            }
-
-            if (currentInteractive) {
-                if (hoveredObject !== currentInteractive) {
-                    hoveredObject = currentInteractive;
-                    explainerTitle.textContent = hoveredObject.userData.name;
-                    explainerText.textContent = hoveredObject.userData.info;
-                    legendExplainer.classList.add('visible');
-                }
-            } else {
-                if (hoveredObject) {
-                    hoveredObject = null;
-                    legendExplainer.classList.remove('visible');
-                }
-            }
-        }
-        
-        // === END: MODIFIED INTERACTIVITY LOGIC ===
-
-        function highlightType(type) {
-            revertAllHighlights();
-            interactiveObjects.forEach(obj => {
-                if (obj.userData.type === type) {
-                    applyHighlight(obj);
-                }
-            });
-        }
-
-        function revertAllHighlights() {
-            highlightObjects.forEach((wireframe) => {
-                if (wireframe.parent) wireframe.parent.remove(wireframe);
-                wireframe.material.dispose();
-            });
-            highlightObjects.clear();
-
-            originalMaterials.forEach((originalProps, mesh) => {
-                if (mesh.material) {
-                    mesh.material.color.copy(originalProps.color);
-                    if (mesh.material.emissive && originalProps.emissive) {
-                        mesh.material.emissive.copy(originalProps.emissive);
-                        mesh.material.emissiveIntensity = originalProps.emissiveIntensity === undefined ? 1.0 : originalProps.emissiveIntensity;
-                    }
-                    mesh.material.needsUpdate = true;
-                }
-            });
-            originalMaterials.clear();
-        }
-
-        function applyHighlight(obj) {
-            const GLOW_COLOR = 0xE87A24;
-            const WIREFRAME_COLOR = 0xFFFFFF;
-
-            obj.traverse(child => {
-                if (child.isMesh && child.material && !originalMaterials.has(child)) {
-                    originalMaterials.set(child, {
-                        color: child.material.color.clone(),
-                        emissive: child.material.emissive ? child.material.emissive.clone() : null,
-                        emissiveIntensity: child.material.emissiveIntensity
-                    });
-
-                    if (child.material.emissive) {
-                        child.material.emissive.setHex(GLOW_COLOR);
-                        child.material.emissiveIntensity = 0.75;
-                        child.material.needsUpdate = true;
-                    }
-                    
-                    const wireframe = new THREE.Mesh(child.geometry, new THREE.MeshBasicMaterial({ color: WIREFRAME_COLOR, wireframe: true }));
-                    wireframe.position.copy(child.position);
-                    wireframe.rotation.copy(child.rotation);
-                    wireframe.scale.copy(child.scale);
-                    wireframe.scale.multiplyScalar(1.03);
-                    child.parent.add(wireframe);
-                    highlightObjects.set(child, wireframe);
-                }
-            });
-        }
-
-        function findsInteractiveParent(object) {
-            let current = object;
-            while (current) {
-                if (current.userData && current.userData.isInteractive) return current;
-                current = current.parent;
-            }
-            return null;
-        }
-
         function animate() {
             requestAnimationFrame(animate);
-            const elapsedTime = clock.getElapsedTime();
-
+            const time = clock.getElapsedTime();
             controls.update();
 
-            plantGroups.forEach((group, index) => {
-                group.rotation.y += Math.sin(elapsedTime * 0.5 + index) * 0.001;
+            windAffectedObjects.forEach((obj, idx) => {
+                // Simple sway for entire plant group
+                const wind = Math.sin(time * CONFIG.windSpeed + idx + obj.position.x) * 0.08;
+                obj.rotation.z = wind;
+                obj.rotation.x = wind * 0.5;
             });
 
-            beeGroups.forEach((group, i) => {
-                group.position.y = 1.8 + Math.sin(elapsedTime * 1.5 + i) * 0.1;
-                group.rotation.y = elapsedTime * 0.3;
-                
-                group.children.forEach((bee, j) => {
-                    bee.position.y = Math.sin(elapsedTime * 3 + j) * 0.2;
-                    if (bee.userData.wings) {
-                        bee.userData.wings[0].rotation.y = Math.PI / 4 + Math.sin(elapsedTime * 50) * 0.5;
-                        bee.userData.wings[1].rotation.y = -Math.PI / 4 - Math.sin(elapsedTime * 50) * 0.5;
-                    }
-                });
+            bees.forEach((bee, idx) => {
+                const t = time * bee.userData.speed + bee.userData.offset;
+                bee.position.x = Math.sin(t) * 1.5 + 1.7; 
+                bee.position.z = Math.cos(t) * Math.sin(t) * 1.5 - 1.15; 
+                bee.position.y = 1.5 + Math.cos(t * 2) * 0.2;
+                bee.lookAt(
+                    Math.sin(t + 0.1) * 1.5 + 1.7,
+                    1.5 + Math.cos((t + 0.1) * 2) * 0.2,
+                    Math.cos(t + 0.1) * Math.sin(t + 0.1) * 1.5 - 1.15
+                );
+                bee.userData.wings[0].rotation.z = Math.sin(time * 50) * 0.5;
+                bee.userData.wings[1].rotation.z = -Math.sin(time * 50) * 0.5;
             });
 
-            checkIntersections();
+            dustParticles.forEach(p => { p.rotation.y = time * 0.05; });
+            interactiveObjects.forEach(obj => {
+                 if(obj.userData.type === 'water' && obj.userData.animate) obj.userData.animate(time);
+            });
+
             renderer.render(scene, camera);
         }
 
         init();
-        animate();
     </script>
     <!-- === END: Agrivoltaics 3D Visualization Script === -->
 
@@ -1190,29 +1553,27 @@
                     min: -3,
                     max: 14
                 },
-                // === START: ADDED CODE ===
                 annotations: {
                     yaxis: [{
                         y: 0,
-                        borderColor: 'rgba(204, 214, 246, 0.6)', // Using your --text-heading color with transparency
+                        borderColor: 'rgba(204, 214, 246, 0.6)',
                         strokeDashArray: 4,
                         label: {
                             borderColor: '#CCD6F6',
                             style: {
-                                color: '#0A192F',      // Dark text for contrast
-                                background: '#CCD6F6', // Light background
+                                color: '#0A192F',
+                                background: '#CCD6F6',
                                 fontSize: '11px',
                                 fontWeight: 600,
                                 padding: { left: 5, right: 5, top: 2, bottom: 2 }
                             },
                             text: 'Zero Line',
                             position: 'right',
-                            offsetX: 5, // A little padding from the chart edge
+                            offsetX: 5,
                             offsetY: -2
                         }
                     }]
                 },
-                // === END: ADDED CODE ===
                 legend: {
                     position: 'top',
                     horizontalAlign: 'right',
