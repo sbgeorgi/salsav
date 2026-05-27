@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALSA - Interdisciplinary Opportunities</title>
+    <title data-cms-key="meta.title">SALSA - Interdisciplinary Opportunities</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main-styles.css">
     <style>
@@ -77,38 +77,40 @@
             text-decoration: underline;
         }
     </style>
+    <link rel="stylesheet" href="css/modern-system.css">
+    <link rel="stylesheet" href="css/cms-editor.css">
 </head>
-<body>
+<body data-cms-page="education-interdisciplinary">
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-brand">
-                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
-                <span>AGRIVOLTAICS</span>
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo" data-cms-attr-alt="education.img_1.alt">
+                <span data-cms-key="nav.brand">AGRIVOLTAICS</span>
             </a>
-            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu" data-cms-attr-aria-label="global.nav.toggle_aria">☰</button>
             <div class="navbar-links">
                 <ul class="navbar-menu">
-                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li><a href="index.html" class="navbar-link" data-cms-key="global.nav.home">Home</a></li>
                     <li class="has-dropdown">
-                        <a href="#" class="navbar-link">Research</a>
+                        <a href="#" class="navbar-link" data-cms-key="global.nav.research">Research</a>
                         <ul class="dropdown-content">
-                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
-                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
-                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                            <li><a href="research-ecophysiology.html" data-cms-key="global.nav.research.ecophysiology">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html" data-cms-key="global.nav.research.scaling_up">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html" data-cms-key="global.nav.research.scaling_out">Scaling Out</a></li>
                         </ul>
                     </li>
                     <li class="has-dropdown">
-                        <a href="education.html" class="navbar-link active">Education</a>
+                        <a href="education.html" class="navbar-link active" data-cms-key="global.nav.education">Education</a>
                         <ul class="dropdown-content">
-                            <li><a href="education.html">School Gardens</a></li>
-                            <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
-                            <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                            <li><a href="education.html" data-cms-key="global.nav.education.school_gardens">School Gardens</a></li>
+                            <li><a href="education-global-school.html" data-cms-key="global.nav.education.global_school">Global School of Agrivoltaics</a></li>
+                            <li><a href="education-interdisciplinary.html" data-cms-key="global.nav.education.interdisciplinary">Interdisciplinary Opportunities</a></li>
                         </ul>
                     </li>
-                    <li><a href="sites.html" class="navbar-link">Learning Labs</a></li>
-                    <li><a href="news.html" class="navbar-link">News</a></li>
-                    <li><a href="team.html" class="navbar-link">Team</a></li>
-                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                    <li><a href="sites.html" class="navbar-link" data-cms-key="global.nav.learning_labs">Learning Labs</a></li>
+                    <li><a href="news.html" class="navbar-link" data-cms-key="global.nav.news">News</a></li>
+                    <li><a href="team.html" class="navbar-link" data-cms-key="global.nav.team">Team</a></li>
+                    <li><a href="#footer" class="navbar-link" data-cms-key="global.nav.contact">Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -116,62 +118,67 @@
 
     <header class="hero hero-subpage" style="background-image: url('static/education_interdisciplinary.jpg');">
         <div class="hero-content">
-            <h1>Interdisciplinary Opportunities</h1>
+            <h1 data-cms-key="hero.headline" data-cms-block-id="education-interdisciplinary_hero_headline" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-interdisciplinary.hero">Interdisciplinary Opportunities</h1>
         </div>
     </header>
 
-    <main class="page-content" style="padding-top: 1rem;">
+    <main class="page-content" style="padding-top: 1rem;" data-cms-canvas="education-interdisciplinary.main" data-cms-grid="12">
         <div class="container">
             <div class="content-flex">
                 <div class="content-image">
-                    <img src="static/interdisciplinary.jpg" alt="University students collaborating on a project">
+                    <img src="static/interdisciplinary.jpg" alt="University students collaborating on a project" data-cms-attr-alt="hero.img_1.alt">
                 </div>
                 <div class="content-text">
-                    <h2>University-Level Engagement</h2>
-                    <p>At the university level, SALSA provides rich research and training opportunities for students from a wide range of disciplines, including Geography, Environmental Science, Engineering, and Public Policy. Our team involves students in cutting-edge research, such as mapping agrivoltaic suitability with GIS or conducting surveys of farmer attitudes.<sup><a href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=Andrea%20Gerlak%2C%20UArizona%20professor%20in,new%20research%20results%20become%20available" target="_blank" rel="noopener">[1]</a></sup> This hands-on, interdisciplinary training produces graduates who are uniquely equipped to tackle sustainability challenges.</p>
+                    <h2 data-cms-key="hero.heading_1" data-cms-block-id="education-interdisciplinary_hero_heading_1" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-interdisciplinary.hero">University-Level Engagement</h2>
+                    <p data-cms-key="hero.text_1" data-cms-block-id="education-interdisciplinary_hero_text_1" data-cms-block-type="textBlock" data-cms-parent-canvas="education-interdisciplinary.hero">At the university level, SALSA provides rich research and training opportunities for students from a wide range of disciplines, including Geography, Environmental Science, Engineering, and Public Policy. Our team involves students in cutting-edge research, such as mapping agrivoltaic suitability with GIS or conducting surveys of farmer attitudes.<sup><a href="https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels#:~:text=Andrea%20Gerlak%2C%20UArizona%20professor%20in,new%20research%20results%20become%20available" target="_blank" rel="noopener">[1]</a></sup> This hands-on, interdisciplinary training produces graduates who are uniquely equipped to tackle sustainability challenges.</p>
                 </div>
             </div>
 
             <div class="content-flex reverse">
                 <div class="content-image">
-                    <img src="static/gregteam1.jpeg" alt="Professor Greg Barron-Gafford with summer research students">
+                    <img src="static/gregteam1.jpeg" alt="Professor Greg Barron-Gafford with summer research students" data-cms-attr-alt="hero.img_2.alt">
                 </div>
                 <div class="content-text">
-                    <h2>Summer Research & Mentorship</h2>
-                    <p>With support from partners like the <strong>National Science Foundation (NSF)</strong>, SALSA offers immersive summer research experiences for undergraduate students. These programs allow students to conduct meaningful, hands-on research at our key sites, including the <strong>Biosphere 2 Agrivoltaics Learning Lab</strong> and our large-scale PV demonstration facility.</p>
-                    <p>Student-led projects have explored diverse topics, from testing the viability of sunflowers in low-light agrivoltaic environments to documenting how solar installations can reduce dust from fallow agricultural fields. This vital work, paired with dedicated mentorship from team members and partners like <strong>Holly Andrews (LSU)</strong>, <strong>Nesrine Rouini</strong>, and <strong>Ingrid Holstrom</strong>, provides life-changing experiences that prepare the next generation of agrivoltaics innovators.</p>
+                    <h2 data-cms-key="hero.heading_2" data-cms-block-id="education-interdisciplinary_hero_heading_2" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-interdisciplinary.hero">Summer Research & Mentorship</h2>
+                    <p data-cms-key="hero.text_2" data-cms-block-id="education-interdisciplinary_hero_text_2" data-cms-block-type="textBlock" data-cms-parent-canvas="education-interdisciplinary.hero">With support from partners like the <strong>National Science Foundation (NSF)</strong>, SALSA offers immersive summer research experiences for undergraduate students. These programs allow students to conduct meaningful, hands-on research at our key sites, including the <strong>Biosphere 2 Agrivoltaics Learning Lab</strong> and our large-scale PV demonstration facility.</p>
+                    <p data-cms-key="hero.text_3" data-cms-block-id="education-interdisciplinary_hero_text_3" data-cms-block-type="textBlock" data-cms-parent-canvas="education-interdisciplinary.hero">Student-led projects have explored diverse topics, from testing the viability of sunflowers in low-light agrivoltaic environments to documenting how solar installations can reduce dust from fallow agricultural fields. This vital work, paired with dedicated mentorship from team members and partners like <strong>Holly Andrews (LSU)</strong>, <strong>Nesrine Rouini</strong>, and <strong>Ingrid Holstrom</strong>, provides life-changing experiences that prepare the next generation of agrivoltaics innovators.</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="footer" id="footer">
+    <footer class="footer" id="footer" data-cms-canvas="education-interdisciplinary.footer" data-cms-grid="12">
         <div class="container footer-content">
              <div class="footer-brand">
-                <h3>SALSA Agrivoltaics</h3>
-                <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
+                <h3 data-cms-key="global.footer.brand.title" data-cms-block-id="education-interdisciplinary_global_footer_brand_title" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-interdisciplinary.hero">SALSA Agrivoltaics</h3>
+                <p data-cms-key="global.footer.brand.description" data-cms-block-id="education-interdisciplinary_global_footer_brand_description" data-cms-block-type="textBlock" data-cms-parent-canvas="education-interdisciplinary.hero">A project of the University of Arizona, pioneering food-energy-water solutions.</p>
              </div>
              <div class="footer-links">
-                <h4>Quick Links</h4>
+                <h4 data-cms-key="global.footer.quick_links.heading" data-cms-block-id="education-interdisciplinary_global_footer_quick_links_heading" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-interdisciplinary.hero">Quick Links</h4>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="sites.html">Sites</a></li>
-                    <li><a href="news.html">News</a></li>
-                    <li><a href="team.html">Team</a></li>
+                    <li><a href="index.html" data-cms-key="global.footer.home">Home</a></li>
+                    <li><a href="sites.html" data-cms-key="global.footer.sites">Sites</a></li>
+                    <li><a href="news.html" data-cms-key="global.footer.news">News</a></li>
+                    <li><a href="team.html" data-cms-key="global.footer.team">Team</a></li>
                 </ul>
              </div>
              <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p>University of Arizona</p>
-                <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
+                <h4 data-cms-key="global.footer.contact.heading" data-cms-block-id="education-interdisciplinary_global_footer_contact_heading" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-interdisciplinary.hero">Contact Us</h4>
+                <p data-cms-key="global.footer.contact.organization" data-cms-block-id="education-interdisciplinary_global_footer_contact_organization" data-cms-block-type="textBlock" data-cms-parent-canvas="education-interdisciplinary.hero">University of Arizona</p>
+                <p data-cms-key="global.footer.contact.email" data-cms-block-id="education-interdisciplinary_global_footer_contact_email" data-cms-block-type="textBlock" data-cms-parent-canvas="education-interdisciplinary.hero"><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
              </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
+            <p data-cms-key="global.footer.copyright" data-cms-block-id="education-interdisciplinary_global_footer_copyright" data-cms-block-type="textBlock" data-cms-parent-canvas="education-interdisciplinary.hero">© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
 
+    <script defer src="js/cms-config.js"></script>
+    <script defer src="js/cms-pantry.js"></script>
+    <script defer src="js/cms-core.js"></script>
+    <script defer src="js/cms-live-layout.js"></script>
+    <script defer src="js/cms-editor.js"></script>
 </body>
 </html>

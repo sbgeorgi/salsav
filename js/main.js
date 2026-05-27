@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    document.body.removeAttribute('data-nav-open');
 
     // --- Navbar Scroll Effect ---
     const navbar = document.querySelector('.navbar');
@@ -20,13 +21,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const navbarLinks = document.querySelector('.navbar-links');
 
     if (mobileToggle && navbarLinks) {
+        const dropdownToggles = navbarLinks.querySelectorAll('.has-dropdown > a');
+        const setMenuState = (isOpen) => {
+            navbarLinks.classList.toggle('active', isOpen);
+            mobileToggle.setAttribute('aria-expanded', String(isOpen));
+            if (isOpen) {
+                document.body.dataset.navOpen = 'true';
+            } else {
+                document.body.removeAttribute('data-nav-open');
+            }
+            if (!isOpen) {
+                dropdownToggles.forEach(toggle => {
+                    toggle.parentElement.classList.remove('open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                });
+            }
+        };
+
+        if (!navbarLinks.id) {
+            navbarLinks.id = 'navbar-links';
+        }
+        mobileToggle.setAttribute('aria-controls', navbarLinks.id);
+        mobileToggle.setAttribute('aria-expanded', 'false');
         mobileToggle.addEventListener('click', () => {
-            navbarLinks.classList.toggle('active');
+            setMenuState(!navbarLinks.classList.contains('active'));
         });
 
         // --- Dropdown Toggle on Mobile ---
-        const dropdownToggles = navbarLinks.querySelectorAll('.has-dropdown > a');
         dropdownToggles.forEach(toggle => {
+            toggle.setAttribute('aria-expanded', 'false');
             toggle.addEventListener('click', (e) => {
                 if (window.innerWidth < 992) {
                     // Prevent navigation on first click to open dropdown
@@ -37,12 +60,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     dropdownToggles.forEach(otherToggle => {
                         if (otherToggle !== toggle) {
                             otherToggle.parentElement.classList.remove('open');
+                            otherToggle.setAttribute('aria-expanded', 'false');
                         }
                     });
                     toggle.parentElement.classList.toggle('open');
+                    toggle.setAttribute('aria-expanded', String(toggle.parentElement.classList.contains('open')));
                 }
             });
         });
+
+        navbarLinks.querySelectorAll('.navbar-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 992 && !link.parentElement.classList.contains('has-dropdown')) {
+                    setMenuState(false);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                setMenuState(false);
+            }
+        });
+
+        window.addEventListener('pagehide', () => setMenuState(false));
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 992) {
+                setMenuState(false);
+            }
+        }, { passive: true });
     }
 
     // --- Active Nav Link Highlighter ---
@@ -64,6 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Special case for research landing page
     if (currentLocation.startsWith('research-')) {
-         document.querySelector('.navbar-menu a[href="#"]').classList.add('active');
+         document.querySelector('.navbar-menu a[href="#"]')?.classList.add('active');
     }
 });

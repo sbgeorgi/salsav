@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALSA - Global School of Agrivoltaics</title>
+    <title data-cms-key="meta.title">SALSA - Global School of Agrivoltaics</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main-styles.css">
     <style>
@@ -65,38 +65,40 @@
             text-decoration: underline;
         }
     </style>
+    <link rel="stylesheet" href="css/modern-system.css">
+    <link rel="stylesheet" href="css/cms-editor.css">
 </head>
-<body>
+<body data-cms-page="education-global-school">
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-brand">
-                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
-                <span>AGRIVOLTAICS</span>
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo" data-cms-attr-alt="education.img_1.alt">
+                <span data-cms-key="nav.brand">AGRIVOLTAICS</span>
             </a>
-            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu" data-cms-attr-aria-label="global.nav.toggle_aria">☰</button>
             <div class="navbar-links">
                 <ul class="navbar-menu">
-                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li><a href="index.html" class="navbar-link" data-cms-key="global.nav.home">Home</a></li>
                     <li class="has-dropdown">
-                        <a href="#" class="navbar-link">Research</a>
+                        <a href="#" class="navbar-link" data-cms-key="global.nav.research">Research</a>
                         <ul class="dropdown-content">
-                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
-                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
-                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                            <li><a href="research-ecophysiology.html" data-cms-key="global.nav.research.ecophysiology">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html" data-cms-key="global.nav.research.scaling_up">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html" data-cms-key="global.nav.research.scaling_out">Scaling Out</a></li>
                         </ul>
                     </li>
                     <li class="has-dropdown">
-                        <a href="education.html" class="navbar-link">Education</a>
+                        <a href="education.html" class="navbar-link" data-cms-key="global.nav.education">Education</a>
                         <ul class="dropdown-content">
-                            <li><a href="education.html">School Gardens</a></li>
-                            <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
-                            <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                            <li><a href="education.html" data-cms-key="global.nav.education.school_gardens">School Gardens</a></li>
+                            <li><a href="education-global-school.html" data-cms-key="global.nav.education.global_school">Global School of Agrivoltaics</a></li>
+                            <li><a href="education-interdisciplinary.html" data-cms-key="global.nav.education.interdisciplinary">Interdisciplinary Opportunities</a></li>
                         </ul>
                     </li>
-                    <li><a href="sites.html" class="navbar-link">Learning Labs</a></li>
-                    <li><a href="news.html" class="navbar-link">News</a></li>
-                    <li><a href="team.html" class="navbar-link">Team</a></li>
-                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                    <li><a href="sites.html" class="navbar-link" data-cms-key="global.nav.learning_labs">Learning Labs</a></li>
+                    <li><a href="news.html" class="navbar-link" data-cms-key="global.nav.news">News</a></li>
+                    <li><a href="team.html" class="navbar-link" data-cms-key="global.nav.team">Team</a></li>
+                    <li><a href="#footer" class="navbar-link" data-cms-key="global.nav.contact">Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -104,51 +106,56 @@
 
     <header class="hero hero-subpage" style="background-image: url('static/education_globalbanner.png');">
         <div class="hero-content">
-            <h1>Global School of Agrivoltaics</h1>
+            <h1 data-cms-key="hero.headline" data-cms-block-id="education-global-school_hero_headline" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-global-school.hero">Global School of Agrivoltaics</h1>
         </div>
     </header>
 
-    <main class="page-content">
+    <main class="page-content" data-cms-canvas="education-global-school.main" data-cms-grid="12">
         <div class="container">
             <div class="content-flex reverse">
                  <div class="content-text">
-                    <h2>Global School of Agrivoltaics</h2>
-                    <p>Through workshops, training programs, and online courses, we connect people across different countries to share knowledge and best practices - creating the <a href="https://www.agrivoltaicsinternational.org/global-school-of-agrivoltaics.html" target="_blank" rel="noopener">Global School of Agrivoltaics</a>. We have also participated in events like the <strong>AgriVoltaics World Conference</strong> to teach the fundamentals of agrivoltaic design, operation, and policy.<a href="#" target="_blank" rel="noopener"><sup>[3]</sup></a> This knowledge exchange accelerates the adoption of best practices worldwide, creating a community of trained individuals who can adapt agrivoltaics to their local needs.</p>
+                    <h2 data-cms-key="hero.heading_1" data-cms-block-id="education-global-school_hero_heading_1" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-global-school.hero">Global School of Agrivoltaics</h2>
+                    <p data-cms-key="hero.text_1" data-cms-block-id="education-global-school_hero_text_1" data-cms-block-type="textBlock" data-cms-parent-canvas="education-global-school.hero">Through workshops, training programs, and online courses, we connect people across different countries to share knowledge and best practices - creating the <a href="https://www.agrivoltaicsinternational.org/global-school-of-agrivoltaics.html" target="_blank" rel="noopener">Global School of Agrivoltaics</a>. We have also participated in events like the <strong>AgriVoltaics World Conference</strong> to teach the fundamentals of agrivoltaic design, operation, and policy.<a href="#" target="_blank" rel="noopener"><sup>[3]</sup></a> This knowledge exchange accelerates the adoption of best practices worldwide, creating a community of trained individuals who can adapt agrivoltaics to their local needs.</p>
                 </div>
                 <div class="content-image">
-                    <img src="static/placeholder-global-school-workshop.jpeg" alt="Diverse group of people in an agrivoltaics workshop">
+                    <img src="static/placeholder-global-school-workshop.jpeg" alt="Diverse group of people in an agrivoltaics workshop" data-cms-attr-alt="hero.img_1.alt">
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="footer" id="footer">
+    <footer class="footer" id="footer" data-cms-canvas="education-global-school.footer" data-cms-grid="12">
         <div class="container footer-content">
              <div class="footer-brand">
-                <h3>SALSA Agrivoltaics</h3>
-                <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
+                <h3 data-cms-key="global.footer.brand.title" data-cms-block-id="education-global-school_global_footer_brand_title" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-global-school.hero">SALSA Agrivoltaics</h3>
+                <p data-cms-key="global.footer.brand.description" data-cms-block-id="education-global-school_global_footer_brand_description" data-cms-block-type="textBlock" data-cms-parent-canvas="education-global-school.hero">A project of the University of Arizona, pioneering food-energy-water solutions.</p>
              </div>
              <div class="footer-links">
-                <h4>Quick Links</h4>
+                <h4 data-cms-key="global.footer.quick_links.heading" data-cms-block-id="education-global-school_global_footer_quick_links_heading" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-global-school.hero">Quick Links</h4>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="sites.html">Sites</a></li>
-                    <li><a href="news.html">News</a></li>
-                    <li><a href="team.html">Team</a></li>
+                    <li><a href="index.html" data-cms-key="global.footer.home">Home</a></li>
+                    <li><a href="sites.html" data-cms-key="global.footer.sites">Sites</a></li>
+                    <li><a href="news.html" data-cms-key="global.footer.news">News</a></li>
+                    <li><a href="team.html" data-cms-key="global.footer.team">Team</a></li>
                 </ul>
              </div>
              <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p>University of Arizona</p>
-                <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
+                <h4 data-cms-key="global.footer.contact.heading" data-cms-block-id="education-global-school_global_footer_contact_heading" data-cms-block-type="headingBlock" data-cms-parent-canvas="education-global-school.hero">Contact Us</h4>
+                <p data-cms-key="global.footer.contact.organization" data-cms-block-id="education-global-school_global_footer_contact_organization" data-cms-block-type="textBlock" data-cms-parent-canvas="education-global-school.hero">University of Arizona</p>
+                <p data-cms-key="global.footer.contact.email" data-cms-block-id="education-global-school_global_footer_contact_email" data-cms-block-type="textBlock" data-cms-parent-canvas="education-global-school.hero"><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
              </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
+            <p data-cms-key="global.footer.copyright" data-cms-block-id="education-global-school_global_footer_copyright" data-cms-block-type="textBlock" data-cms-parent-canvas="education-global-school.hero">© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
 
+    <script defer src="js/cms-config.js"></script>
+    <script defer src="js/cms-pantry.js"></script>
+    <script defer src="js/cms-core.js"></script>
+    <script defer src="js/cms-live-layout.js"></script>
+    <script defer src="js/cms-editor.js"></script>
 </body>
 </html>

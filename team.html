@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALSA - Our Team</title>
+    <title data-cms-key="meta.title">SALSA - Our Team</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
         rel="stylesheet">
@@ -264,39 +264,41 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="css/modern-system.css">
+    <link rel="stylesheet" href="css/cms-editor.css">
 </head>
 
-<body>
+<body data-cms-page="team">
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-brand">
-                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
-                <span>AGRIVOLTAICS</span>
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo" data-cms-attr-alt="team.img_1.alt">
+                <span data-cms-key="nav.brand">AGRIVOLTAICS</span>
             </a>
-            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu" data-cms-attr-aria-label="global.nav.toggle_aria">☰</button>
             <div class="navbar-links">
                 <ul class="navbar-menu">
-                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li><a href="index.html" class="navbar-link" data-cms-key="global.nav.home">Home</a></li>
                     <li class="has-dropdown">
-                        <a href="#" class="navbar-link">Research</a>
+                        <a href="#" class="navbar-link" data-cms-key="global.nav.research">Research</a>
                         <ul class="dropdown-content">
-                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
-                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
-                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                            <li><a href="research-ecophysiology.html" data-cms-key="global.nav.research.ecophysiology">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html" data-cms-key="global.nav.research.scaling_up">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html" data-cms-key="global.nav.research.scaling_out">Scaling Out</a></li>
                         </ul>
                     </li>
                     <li class="has-dropdown">
-                        <a href="education.html" class="navbar-link">Education</a>
+                        <a href="education.html" class="navbar-link" data-cms-key="global.nav.education">Education</a>
                         <ul class="dropdown-content">
-                            <li><a href="education.html">School Gardens</a></li>
-                            <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
-                            <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                            <li><a href="education.html" data-cms-key="global.nav.education.school_gardens">School Gardens</a></li>
+                            <li><a href="education-global-school.html" data-cms-key="global.nav.education.global_school">Global School of Agrivoltaics</a></li>
+                            <li><a href="education-interdisciplinary.html" data-cms-key="global.nav.education.interdisciplinary">Interdisciplinary Opportunities</a></li>
                         </ul>
                     </li>
-                    <li><a href="sites.html" class="navbar-link">Learning Labs</a></li>
-                    <li><a href="news.html" class="navbar-link">News</a></li>
-                    <li><a href="team.html" class="navbar-link">Team</a></li>
-                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                    <li><a href="sites.html" class="navbar-link" data-cms-key="global.nav.learning_labs">Learning Labs</a></li>
+                    <li><a href="news.html" class="navbar-link" data-cms-key="global.nav.news">News</a></li>
+                    <li><a href="team.html" class="navbar-link" data-cms-key="global.nav.team">Team</a></li>
+                    <li><a href="#footer" class="navbar-link" data-cms-key="global.nav.contact">Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -304,26 +306,26 @@
 
     <header class="hero hero-subpage" style="background-image: url('static/team-photo.jpg');">
         <div class="hero-content">
-            <h1>Our Team</h1>
+            <h1 data-cms-key="hero.headline" data-cms-block-id="team_hero_headline" data-cms-block-type="headingBlock" data-cms-parent-canvas="team.hero">Our Team</h1>
         </div>
     </header>
 
-    <main class="section">
+    <main class="section" data-cms-canvas="team.main" data-cms-grid="12">
         <!-- PI Section -->
         <div class="pi-section-wrapper">
             <div class="container">
                 <div class="section-header">
-                    <h2>Principal Investigator</h2>
+                    <h2 data-cms-key="hero.heading_1" data-cms-block-id="team_hero_heading_1" data-cms-block-type="headingBlock" data-cms-parent-canvas="team.hero">Principal Investigator</h2>
                 </div>
                 <a href="https://geography.arizona.edu/person/greg-barron-gafford" target="_blank" rel="noopener"
-                    class="pi-profile">
+                    class="pi-profile" data-cms-block-id="team_dr_greg_barron_gafford" data-cms-block-type="teamMember" data-cms-parent-canvas="team.principal_investigator">
                     <div class="pi-image">
-                        <img src="static/greg.png" alt="Photo of Dr. Greg Barron-Gafford">
+                        <img src="static/greg.png" alt="Photo of Dr. Greg Barron-Gafford" data-cms-attr-alt="hero.img_1.alt">
                     </div>
                     <div class="pi-details">
-                        <h3>Dr. Greg Barron-Gafford</h3>
-                        <p class="pi-title">Professor, SGDE; Biosphere 2, UArizona</p>
-                        <p class="pi-description">Leads SALSA. Research in biogeography, plant ecology, climate change
+                        <h3 data-cms-key="hero.heading_2">Dr. Greg Barron-Gafford</h3>
+                        <p class="pi-title" data-cms-key="hero.title_1">Professor, SGDE; Biosphere 2, UArizona</p>
+                        <p class="pi-description" data-cms-key="hero.description_1">Leads SALSA. Research in biogeography, plant ecology, climate change
                             impacts, and agrivoltaics. Pioneering FEW nexus solutions.</p>
                     </div>
                 </a>
@@ -332,187 +334,187 @@
 
         <div class="container">
             <div class="section-header contributors-header">
-                <h2>Key Contributors</h2>
-                <p class="subtitle">Meet the dedicated researchers, students, and collaborators driving the SALSA
+                <h2 data-cms-key="hero.heading_3">Key Contributors</h2>
+                <p class="subtitle" data-cms-key="hero.subheadline">Meet the dedicated researchers, students, and collaborators driving the SALSA
                     initiatives at the University of Arizona and our partner institutions.</p>
             </div>
 
-            <div class="team-grid">
+            <div class="team-grid" data-cms-list="team.key_contributors" data-cms-list-type="teamMembers" data-cms-canvas="team.key_contributors" data-cms-grid="12">
                 <!-- Christine Lamanna -->
                 <a href="https://scholar.google.com/citations?user=OH-dAScAAAAJ&hl=en" target="_blank"
-                    rel="noopener" class="researcher-card">
+                    rel="noopener" class="researcher-card" data-cms-block-id="team_dr_christine_lamanna" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
                     <div class="researcher-image-container"><img src="static/christine.jpg"
-                            alt="Photo of Dr. Christine Lamanna"></div>
-                    <h4>Dr. Christine Lamanna</h4>
-                    <p class="researcher-title">Research Scientist - AgriFood Systems</p>
-                    <p class="researcher-description">Focuses on climate change adaptation in agriculture and
+                            alt="Photo of Dr. Christine Lamanna" data-cms-attr-alt="hero.img_2.alt"></div>
+                    <h4 data-cms-key="hero.heading_4">Dr. Christine Lamanna</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_2">Research Scientist - AgriFood Systems</p>
+                    <p class="researcher-description" data-cms-key="hero.description_2">Focuses on climate change adaptation in agriculture and
                         agroforestry. Uses evidence synthesis to inform policy for smallholder farmers.</p>
                 </a>
                 <!-- Andrea Gerlak -->
                 <a href="https://udallcenter.arizona.edu/people/andrea-k-gerlak" target="_blank" rel="noopener"
-                    class="researcher-card">
+                    class="researcher-card" data-cms-block-id="team_dr_andrea_gerlak" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
                     <div class="researcher-image-container"><img src="static/andrea.png"
-                            alt="Photo of Dr. Andrea Gerlak"></div>
-                    <h4>Dr. Andrea Gerlak</h4>
-                    <p class="researcher-title">Professor, SGDE; Director, Udall Center, UArizona</p>
-                    <p class="researcher-description">Focuses on water governance, environmental policy, equity,
+                            alt="Photo of Dr. Andrea Gerlak" data-cms-attr-alt="hero.img_3.alt"></div>
+                    <h4 data-cms-key="hero.heading_5">Dr. Andrea Gerlak</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_3">Professor, SGDE; Director, Udall Center, UArizona</p>
+                    <p class="researcher-description" data-cms-key="hero.description_3">Focuses on water governance, environmental policy, equity,
                         institutional change, and adaptation. Co-PI on the AZ Utility-scale Agrivoltaics Learning Lab,
                         leading socio-politcal research.</p>
                 </a>
                 <!-- Jordan Macknick -->
                 <a href="https://www.nrel.gov/research/staff/jordan-macknick.html" target="_blank" rel="noopener"
-                    class="researcher-card">
+                    class="researcher-card" data-cms-block-id="team_jordan_macknick" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
                     <div class="researcher-image-container"><img src="static/jordan.png"
-                            alt="Photo of Jordan Macknick">
+                            alt="Photo of Jordan Macknick" data-cms-attr-alt="hero.img_4.alt">
                     </div>
-                    <h4>Jordan Macknick</h4>
-                    <p class="researcher-title">Lead Energy-Water-Land Analyst, NREL</p>
-                    <p class="researcher-description">Expert in environmental impacts of energy tech, energy-ecology
+                    <h4 data-cms-key="hero.heading_6">Jordan Macknick</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_4">Lead Energy-Water-Land Analyst, NREL</p>
+                    <p class="researcher-description" data-cms-key="hero.description_4">Expert in environmental impacts of energy tech, energy-ecology
                         synergies, and agrivoltaics. Leads NREL's InSPIRE project.</p>
                 </a>
                 <!-- Mary Werner -->
                 <a href="https://geography.arizona.edu/people/mary-werner" target="_blank" rel="noopener"
-                    class="researcher-card">
-                    <div class="researcher-image-container"><img src="static/mary.png" alt="Photo of Mary Werner"></div>
-                    <h4>Mary Werner</h4>
-                    <p class="researcher-title">Research Program Admin, SGDE, UArizona</p>
-                    <p class="researcher-description">Manages research programs and administrative aspects within the
+                    class="researcher-card" data-cms-block-id="team_mary_werner" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
+                    <div class="researcher-image-container"><img src="static/mary.png" alt="Photo of Mary Werner" data-cms-attr-alt="hero.img_5.alt"></div>
+                    <h4 data-cms-key="hero.heading_7">Mary Werner</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_5">Research Program Admin, SGDE, UArizona</p>
+                    <p class="researcher-description" data-cms-key="hero.description_5">Manages research programs and administrative aspects within the
                         Barron-Gafford lab and SGDE.</p>
                 </a>
                 <!-- Holly Andrews -->
                 <a href="https://geography.arizona.edu/person/holly-andrews" target="_blank" rel="noopener"
-                    class="researcher-card">
+                    class="researcher-card" data-cms-block-id="team_dr_holly_andrews" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
                     <div class="researcher-image-container"><img src="static/holly.png"
-                            alt="Photo of Dr. Holly Andrews"></div>
-                    <h4>Dr. Holly Andrews</h4>
-                    <p class="researcher-title">Assistant Professor, Louisiana State University / Former SALSA
+                            alt="Photo of Dr. Holly Andrews" data-cms-attr-alt="hero.img_6.alt"></div>
+                    <h4 data-cms-key="hero.heading_8">Dr. Holly Andrews</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_6">Assistant Professor, Louisiana State University / Former SALSA
                         Postdoctoral Researcher</p>
-                    <p class="researcher-description">Leads research on biosphere-atmosphere interactions and soil
+                    <p class="researcher-description" data-cms-key="hero.description_6">Leads research on biosphere-atmosphere interactions and soil
                         characterization across agrivoltaic projects</p>
                 </a>
                 <!-- Tali Neesham-McTiernan -->
                 <a href="https://geography.arizona.edu/people/tali-neesham-mctiernan" target="_blank"
-                    rel="noopener" class="researcher-card">
+                    rel="noopener" class="researcher-card" data-cms-block-id="team_tali_neesham_mctiernan" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
                     <div class="researcher-image-container"><img src="static/tali-new.jpg"
-                            alt="Photo of Tali Neesham-McTiernan"></div>
-                    <h4>Tali Neesham-McTiernan</h4>
-                    <p class="researcher-title">PhD Candidate, SGDE & B2, UArizona</p>
-                    <p class="researcher-description">Merges biophysical and social sciences to map areas suitable for
+                            alt="Photo of Tali Neesham-McTiernan" data-cms-attr-alt="team.img_2.alt"></div>
+                    <h4 data-cms-key="hero.heading_9">Tali Neesham-McTiernan</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_7">PhD Candidate, SGDE & B2, UArizona</p>
+                    <p class="researcher-description" data-cms-key="hero.description_7">Merges biophysical and social sciences to map areas suitable for
                         agrivoltaics and capture the potential for agrivoltaics to create safer farm working conditions
                     </p>
                 </a>
                 <!-- Kai Lepley -->
                 <a href="https://geography.arizona.edu/people/kai-lepley" target="_blank" rel="noopener"
-                    class="researcher-card">
-                    <div class="researcher-image-container"><img src="static/kai.jpg" alt="Photo of Kai Lepley"></div>
-                    <h4>Kai Lepley</h4>
-                    <p class="researcher-title">PhD Graduate Research Assistant / PhD Candidate</p>
-                    <p class="researcher-description">Kai is exploring our agrivoltaics work using classic plant
+                    class="researcher-card" data-cms-block-id="team_kai_lepley" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
+                    <div class="researcher-image-container"><img src="static/kai.jpg" alt="Photo of Kai Lepley" data-cms-attr-alt="team.img_3.alt"></div>
+                    <h4 data-cms-key="hero.heading_10">Kai Lepley</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_8">PhD Graduate Research Assistant / PhD Candidate</p>
+                    <p class="researcher-description" data-cms-key="hero.description_8">Kai is exploring our agrivoltaics work using classic plant
                         physiological instruments and novel ground-based remote sensing tools for tracking plant
                         phenology and growth.</p>
                 </a>
                 <!-- Patrick Murphy -->
                 <a href="https://kmap.arizona.edu/people/murphyp" target="_blank" rel="noopener"
-                    class="researcher-card">
+                    class="researcher-card" data-cms-block-id="team_patrick_murphy" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
                     <div class="researcher-image-container"><img src="static/patrick.png"
-                            alt="Photo of Patrick Murphy">
+                            alt="Photo of Patrick Murphy" data-cms-attr-alt="research.img_1.alt">
                     </div>
-                    <h4>Patrick Murphy</h4>
-                    <p class="researcher-title">Research Specialist, SGDE & B2, UArizona</p>
-                    <p class="researcher-description">Contributes to research efforts within the Barron-Gafford lab at
+                    <h4 data-cms-key="hero.heading_11">Patrick Murphy</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_9">Research Specialist, SGDE & B2, UArizona</p>
+                    <p class="researcher-description" data-cms-key="hero.description_9">Contributes to research efforts within the Barron-Gafford lab at
                         Biosphere 2, focusing on agrivoltaics and related ecological studies.</p>
                 </a>
                 <!-- Ingrid Holstrom -->
-                <a href="#" target="_blank" rel="noopener" class="researcher-card">
+                <a href="#" target="_blank" rel="noopener" class="researcher-card" data-cms-block-id="team_ingrid_holstrom" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
                     <div class="researcher-image-container"><img src="static/ingrid.jpg"
-                            alt="Photo of Ingrid Holstrom">
+                            alt="Photo of Ingrid Holstrom" data-cms-attr-alt="research.img_2.alt">
                     </div>
-                    <h4>Ingrid Holstrom</h4>
-                    <p class="researcher-title">Research Professional</p>
-                    <p class="researcher-description">Coordinates field research, manages environmental monitoring
+                    <h4 data-cms-key="hero.heading_12">Ingrid Holstrom</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_10">Research Professional</p>
+                    <p class="researcher-description" data-cms-key="hero.description_10">Coordinates field research, manages environmental monitoring
                         datasets for agrivoltaic sites in Arizona</p>
                 </a>
                 <!-- Alyssa Salazar -->
                 <a href="https://biosphere2.org/person/alyssa-salazar" target="_blank" rel="noopener"
-                    class="researcher-card">
+                    class="researcher-card" data-cms-block-id="team_alyssa_salazar" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
                     <div class="researcher-image-container"><img src="static/alyssa.png"
-                            alt="Photo of Alyssa Salazar">
+                            alt="Photo of Alyssa Salazar" data-cms-attr-alt="sites.img_1.alt">
                     </div>
-                    <h4>Alyssa Salazar</h4>
-                    <p class="researcher-title">Research Associate</p>
-                    <p class="researcher-description">Contributes to research at the School of Geography, Development, &
+                    <h4 data-cms-key="hero.heading_13">Alyssa Salazar</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_11">Research Associate</p>
+                    <p class="researcher-description" data-cms-key="hero.description_11">Contributes to research at the School of Geography, Development, &
                         Environment and Biosphere 2, focusing on agrivoltaics. [3]</p>
                 </a>
                 <!-- Nesrine Rouini -->
-                <a href="#" target="_blank" rel="noopener" class="researcher-card">
+                <a href="#" target="_blank" rel="noopener" class="researcher-card" data-cms-block-id="team_nesrine_rouini" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
                     <div class="researcher-image-container"><img src="static/nesrine1.jpg"
-                            alt="Photo of Nesrine Rouini"></div>
-                    <h4>Nesrine Rouini</h4>
-                    <p class="researcher-title">Senior Research Specialist and Graduate Student</p>
-                    <p class="researcher-description">Leads field plant ecophysiological research across Arizona and
+                            alt="Photo of Nesrine Rouini" data-cms-attr-alt="education.img_1.alt"></div>
+                    <h4 data-cms-key="hero.heading_14">Nesrine Rouini</h4>
+                    <p class="researcher-title" data-cms-key="hero.title_12">Senior Research Specialist and Graduate Student</p>
+                    <p class="researcher-description" data-cms-key="hero.description_12">Leads field plant ecophysiological research across Arizona and
                         Colorado and manages undergraduate Research Assistants</p>
                 </a>
                 <!-- Zoe Gineris -->
-                <a href="#" target="_blank" rel="noopener" class="researcher-card">
-                    <div class="researcher-image-container"><img src="static/zoe1.jpg" alt="Photo of Zoe Gineris"></div>
-                    <h4>Zoe Gineris</h4>
-                    <p class="researcher-title">Undergraduate Research Assistant</p>
-                    <p class="researcher-description">Leads Honors Thesis project on how soil moisture differentially
+                <a href="#" target="_blank" rel="noopener" class="researcher-card" data-cms-block-id="team_zoe_gineris" data-cms-block-type="teamMember" data-cms-parent-canvas="team.key_contributors">
+                    <div class="researcher-image-container"><img src="static/zoe1.jpg" alt="Photo of Zoe Gineris" data-cms-attr-alt="education.img_2.alt"></div>
+                    <h4 data-cms-key="education.heading_1">Zoe Gineris</h4>
+                    <p class="researcher-title" data-cms-key="education.title_1">Undergraduate Research Assistant</p>
+                    <p class="researcher-description" data-cms-key="education.description_1">Leads Honors Thesis project on how soil moisture differentially
                         impacts rates of decomposition within agrivoltaic systems</p>
                 </a>
             </div>
 
             <div class="section-header">
-                <h2>SALSA Alumni</h2>
-                <p class="subtitle">We're proud of our former team members who continue to make an impact in their
+                <h2 data-cms-key="education.heading_2">SALSA Alumni</h2>
+                <p class="subtitle" data-cms-key="education.subheadline_1">We're proud of our former team members who continue to make an impact in their
                     fields.</p>
             </div>
-            <div class="team-grid">
+            <div class="team-grid" data-cms-list="team.alumni" data-cms-list-type="teamMembers" data-cms-canvas="team.alumni" data-cms-grid="12">
                 <!-- Carrie Seay-Fleming -->
                 <a href="https://geography.arizona.edu/person/carrie-seay-fleming" target="_blank"
-                    rel="noopener" class="researcher-card">
+                    rel="noopener" class="researcher-card" data-cms-block-id="team_dr_carrie_seay_fleming" data-cms-block-type="teamMember" data-cms-parent-canvas="team.alumni">
                     <div class="researcher-image-container"><img src="static/carrie.png"
-                            alt="Photo of Dr. Carrie Seay-Fleming"></div>
-                    <h4>Dr. Carrie Seay-Fleming</h4>
-                    <p class="researcher-title">Postdoctoral Research Assoc., Udall Center & SGDE, UArizona</p>
-                    <p class="researcher-description">Environmental sociologist focusing on food system transformations,
+                            alt="Photo of Dr. Carrie Seay-Fleming" data-cms-attr-alt="education.img_3.alt"></div>
+                    <h4 data-cms-key="education.heading_3">Dr. Carrie Seay-Fleming</h4>
+                    <p class="researcher-title" data-cms-key="education.title_2">Postdoctoral Research Assoc., Udall Center & SGDE, UArizona</p>
+                    <p class="researcher-description" data-cms-key="education.description_2">Environmental sociologist focusing on food system transformations,
                         land-use conflict, and social aspects of solar development.</p>
                 </a>
                 <!-- Tyler Swanson -->
                 <a href="https://geography.arizona.edu/person/tyler-swanson" target="_blank" rel="noopener"
-                    class="researcher-card">
-                    <div class="researcher-image-container"><img src="static/tyler.png" alt="Photo of Tyler Swanson">
+                    class="researcher-card" data-cms-block-id="team_tyler_swanson" data-cms-block-type="teamMember" data-cms-parent-canvas="team.alumni">
+                    <div class="researcher-image-container"><img src="static/tyler.png" alt="Photo of Tyler Swanson" data-cms-attr-alt="education.img_4.alt">
                     </div>
-                    <h4>Tyler Swanson</h4>
-                    <p class="researcher-title">Graduate Research Assistant, Udall Center & SGDE, UArizona</p>
-                    <p class="researcher-description">M.A. student studying social aspects of agrivoltaics, agritourism,
+                    <h4 data-cms-key="education.heading_4">Tyler Swanson</h4>
+                    <p class="researcher-title" data-cms-key="education.title_3">Graduate Research Assistant, Udall Center & SGDE, UArizona</p>
+                    <p class="researcher-description" data-cms-key="education.description_3">M.A. student studying social aspects of agrivoltaics, agritourism,
                         and energy policy for sustainable rural development.</p>
                 </a>
                 <!-- Caleb Ortega -->
                 <a href="https://biosphere2.org/person/caleb-ortega" target="_blank" rel="noopener"
-                    class="researcher-card">
-                    <div class="researcher-image-container"><img src="static/caleb.png" alt="Photo of Caleb Ortega">
+                    class="researcher-card" data-cms-block-id="team_caleb_ortega" data-cms-block-type="teamMember" data-cms-parent-canvas="team.alumni">
+                    <div class="researcher-image-container"><img src="static/caleb.png" alt="Photo of Caleb Ortega" data-cms-attr-alt="education.img_5.alt">
                     </div>
-                    <h4>Caleb Ortega</h4>
-                    <p class="researcher-title">Program Coordinator, B2 & SGDE, UArizona</p>
-                    <p class="researcher-description">Coordinates UA Community and School Garden Program. Supports
+                    <h4 data-cms-key="education.heading_5">Caleb Ortega</h4>
+                    <p class="researcher-title" data-cms-key="education.title_4">Program Coordinator, B2 & SGDE, UArizona</p>
+                    <p class="researcher-description" data-cms-key="education.description_4">Coordinates UA Community and School Garden Program. Supports
                         agrivoltaics research at Biosphere 2 and local schools.</p>
                 </a>
                 <!-- Isaiah Barnett-Moreno -->
                 <a href="https://biosphere2.org/person/isaiah-barnett-moreno" target="_blank"
-                    rel="noopener" class="researcher-card">
+                    rel="noopener" class="researcher-card" data-cms-block-id="team_isaiah_barnett_moreno" data-cms-block-type="teamMember" data-cms-parent-canvas="team.alumni">
                     <div class="researcher-image-container"><img src="static/isaiah.png"
-                            alt="Photo of Isaiah Barnett-Moreno"></div>
-                    <h4>Isaiah Barnett-Moreno</h4>
-                    <p class="researcher-title">Undergrad Research Asst. & Farm Manager, UArizona/PCC</p>
-                    <p class="researcher-description">Manages research farm operations, involved in agrivoltaics
+                            alt="Photo of Isaiah Barnett-Moreno" data-cms-attr-alt="education.img_6.alt"></div>
+                    <h4 data-cms-key="education.heading_6">Isaiah Barnett-Moreno</h4>
+                    <p class="researcher-title" data-cms-key="education.title_5">Undergrad Research Asst. & Farm Manager, UArizona/PCC</p>
+                    <p class="researcher-description" data-cms-key="education.description_5">Manages research farm operations, involved in agrivoltaics
                         research at Biosphere 2, and works with aquaponics for food accessibility.</p>
                 </a>
             </div>
 
             <div class="table-container">
                 <div class="section-header" style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.8rem;">Team Summary</h3>
+                    <h3 style="font-size: 1.8rem;" data-cms-key="education.heading_7">Team Summary</h3>
                 </div>
                 <table class="project-table">
                     <thead>
@@ -522,68 +524,68 @@
                             <th>Area of Expertise / Role</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody data-cms-list="team.summary" data-cms-list-type="teamSummaryRows" data-cms-canvas="team.summary" data-cms-grid="12">
+                        <tr data-cms-block-id="summary_dr_greg_barron_gafford" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Dr. Greg Barron-Gafford</td>
                             <td>UArizona (SGDE, Biosphere 2)</td>
                             <td>Agrivoltaics, Biogeography, Plant Ecology, FEW Nexus</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_dr_christine_lamanna" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Dr. Christine Lamanna</td>
                             <td>AgriFood Systems</td>
                             <td>Climate Change Adaptation, Agroforestry, Evidence Synthesis</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_dr_andrea_gerlak" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Dr. Andrea Gerlak</td>
                             <td>UArizona (SGDE, Udall Center)</td>
                             <td>Water Governance, Environmental Policy, Socio-political Research</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_jordan_macknick" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Jordan Macknick</td>
                             <td>NREL</td>
                             <td>Energy-Water-Land Analysis, Agrivoltaics (InSPIRE)</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_mary_werner" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Mary Werner</td>
                             <td>UArizona (SGDE)</td>
                             <td>Research Program Administration</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_dr_holly_andrews" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Dr. Holly Andrews</td>
                             <td>Louisiana State University</td>
                             <td>Biosphere-Atmosphere Interactions, Soil Characterization</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_tali_neesham_mctiernan" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Tali Neesham-McTiernan</td>
                             <td>UArizona (SGDE, Biosphere 2)</td>
                             <td>Agrivoltaics Mapping, Biophysical & Social Science Modeling</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_patrick_murphy" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Patrick Murphy</td>
                             <td>UArizona (SGDE, Biosphere 2)</td>
                             <td>Research Support, Agrivoltaics Lab</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_ingrid_holstrom" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Ingrid Holstrom</td>
                             <td>UArizona</td>
                             <td>Research Professional, Field Research Coordination</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_nesrine_rouini" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Nesrine Rouini</td>
                             <td>UArizona</td>
                             <td>Senior Research Specialist, Plant Ecophysiology</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_zoe_gineris" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Zoe Gineris</td>
                             <td>UArizona</td>
                             <td>Undergraduate Research, Decomposition & Soil Moisture</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_alyssa_salazar" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Alyssa Salazar</td>
                             <td>UArizona (SGDE, Biosphere 2)</td>
                             <td>Agrivoltaics Research, Crop Phenology</td>
                         </tr>
-                        <tr>
+                        <tr data-cms-block-id="summary_kai_lepley" data-cms-block-type="teamSummaryRow" data-cms-parent-canvas="team.summary">
                             <td>Kai Lepley</td>
                             <td>UArizona (SGDE)</td>
                             <td>Agrivoltaics, Plant Phenology, Remote Sensing</td>
@@ -594,34 +596,39 @@
         </div>
     </main>
 
-    <footer class="footer" id="footer">
+    <footer class="footer" id="footer" data-cms-canvas="team.footer" data-cms-grid="12">
         <div class="container footer-content">
             <div class="footer-brand">
-                <h3>SALSA Agrivoltaics</h3>
-                <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
+                <h3 data-cms-key="global.footer.brand.title">SALSA Agrivoltaics</h3>
+                <p data-cms-key="global.footer.brand.description">A project of the University of Arizona, pioneering food-energy-water solutions.</p>
             </div>
             <div class="footer-links">
-                <h4>Quick Links</h4>
+                <h4 data-cms-key="global.footer.quick_links.heading">Quick Links</h4>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="sites.html">Sites</a></li>
-                    <li><a href="news.html">News</a></li>
-                    <li><a href="team.html">Team</a></li>
+                    <li><a href="index.html" data-cms-key="global.footer.home">Home</a></li>
+                    <li><a href="sites.html" data-cms-key="global.footer.sites">Sites</a></li>
+                    <li><a href="news.html" data-cms-key="global.footer.news">News</a></li>
+                    <li><a href="team.html" data-cms-key="global.footer.team">Team</a></li>
                 </ul>
             </div>
             <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p>University of Arizona</p>
-                <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
+                <h4 data-cms-key="global.footer.contact.heading">Contact Us</h4>
+                <p data-cms-key="global.footer.contact.organization">University of Arizona</p>
+                <p data-cms-key="global.footer.contact.email"><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
+            <p data-cms-key="global.footer.copyright">© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
 
+    <script defer src="js/cms-config.js"></script>
+    <script defer src="js/cms-pantry.js"></script>
+    <script defer src="js/cms-core.js"></script>
+    <script defer src="js/cms-live-layout.js"></script>
+    <script defer src="js/cms-editor.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <title>SALSAV Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/cms-editor.css">
+  <script defer src="js/cms-config.js"></script>
+  <script defer src="js/cms-pantry.js"></script>
+</head>
+<body class="salsav-cms-admin-page">
+  <main class="salsav-cms-admin-shell">
+    <header class="salsav-cms-admin-header">
+      <div class="salsav-cms-admin-brand">
+        <img src="static/salsa-logo.png" alt="SALSAV logo">
+        <div>
+          <h1>SALSAV Admin</h1>
+          <p class="salsav-cms-admin-note">Static direct-Pantry CMS. Log in here, then edit directly on the live public pages.</p>
+        </div>
+      </div>
+      <div class="salsav-cms-admin-actions salsav-cms-admin-hidden" id="sessionActions">
+        <a class="salsav-cms-button salsav-cms-button-primary" href="index.html">Open live site</a>
+        <a class="salsav-cms-button" href="news.html">Edit news live</a>
+        <a class="salsav-cms-button" href="team.html">Edit team live</a>
+        <button class="salsav-cms-button" type="button" id="logoutButton">Logout</button>
+      </div>
+    </header>
+
+    <section class="salsav-cms-admin-panel salsav-cms-warning">
+      Direct Pantry editing exposes the Pantry ID in frontend code by design. This mode is not secure against technical users and relies on the owner-accepted static risk.
+    </section>
+
+    <section class="salsav-cms-admin-panel salsav-cms-login-card" id="loginPanel">
+      <h2 id="loginTitle">SALSAV Admin</h2>
+      <p class="salsav-cms-admin-note" id="loginSubtitle">Sign in to edit website copy on the live pages.</p>
+      <form class="salsav-cms-login-form" id="loginForm">
+        <label>Username<input class="salsav-cms-admin-input" type="text" id="usernameInput" autocomplete="username" required></label>
+        <label>Password<input class="salsav-cms-admin-input" type="password" id="passwordInput" autocomplete="current-password" required></label>
+        <button class="salsav-cms-button salsav-cms-button-primary" type="submit">Log in</button>
+        <p class="salsav-cms-admin-note" id="loginMessage" role="status"></p>
+      </form>
+    </section>
+
+    <section class="salsav-cms-admin-grid salsav-cms-admin-hidden" id="sessionPanel">
+      <aside class="salsav-cms-admin-panel">
+        <h2>Live Editing</h2>
+        <p class="salsav-cms-admin-note">Use the floating toolbar on public pages. Modes are Text, Move, Resize, Blocks, and Preview. Article and team member buttons appear directly on their live pages.</p>
+        <div class="salsav-cms-admin-actions">
+          <a class="salsav-cms-button salsav-cms-button-primary" href="index.html">Open Home</a>
+          <a class="salsav-cms-button" href="news.html">News</a>
+          <a class="salsav-cms-button" href="team.html">Team</a>
+        </div>
+      </aside>
+
+      <section class="salsav-cms-admin-panel">
+        <h2>Seed And Recovery</h2>
+        <p class="salsav-cms-admin-note">Use these only for recovery or initial setup. Day-to-day editing happens on the live site.</p>
+        <div class="salsav-cms-admin-actions">
+          <button class="salsav-cms-button salsav-cms-button-primary" type="button" id="importSeedButton">Import seed content</button>
+          <button class="salsav-cms-button" type="button" id="exportButton">Export current JSON</button>
+          <button class="salsav-cms-button" type="button" id="copyJsonButton">Copy JSON</button>
+        </div>
+        <h3 style="margin-top:1rem;">Audit Log</h3>
+        <div class="salsav-cms-log-list" id="auditLog"></div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      let currentContent = null;
+      function $(id) { return document.getElementById(id); }
+      function sessionKey() { return window.SALSAV_CMS_CONFIG.sessionKey; }
+      function showMessage(message, isError) {
+        $("loginMessage").textContent = message;
+        $("loginMessage").style.color = isError ? "#ffb4a8" : "#b9f6ca";
+      }
+      async function sha256(text) {
+        const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+        return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+      }
+      function readSession() {
+        try {
+          const session = JSON.parse(sessionStorage.getItem(sessionKey()) || "null");
+          if (!session || Date.now() > Number(session.expiresAt)) return null;
+          return session;
+        } catch (error) {
+          return null;
+        }
+      }
+      function setSession(auth) {
+        const hours = Number(auth.sessionHours || 8);
+        sessionStorage.setItem(sessionKey(), JSON.stringify({ username: auth.username, createdAt: Date.now(), expiresAt: Date.now() + hours * 60 * 60 * 1000 }));
+      }
+      async function loadAuthUi() {
+        try {
+          const payload = await window.SALSAVPantry.getAuth();
+          if (payload.ui) {
+            $("loginTitle").textContent = payload.ui.loginTitle || "SALSAV Admin";
+            $("loginSubtitle").textContent = payload.ui.loginSubtitle || "Sign in to edit website copy on the live pages.";
+          }
+          return payload;
+        } catch (error) {
+          showMessage(error.message, true);
+          return null;
+        }
+      }
+      async function login(event) {
+        event.preventDefault();
+        const payload = await loadAuthUi();
+        const auth = payload && payload.auth;
+        if (!auth || !auth.enabled) return showMessage("Admin auth basket is unavailable or disabled.", true);
+        const hash = await sha256($("passwordInput").value);
+        if ($("usernameInput").value.trim() !== auth.username || hash !== auth.passwordSha256) return showMessage("Username or password did not match Pantry auth.", true);
+        setSession(auth);
+        $("passwordInput").value = "";
+        await showSession();
+      }
+      async function showSession() {
+        $("loginPanel").classList.add("salsav-cms-admin-hidden");
+        $("sessionPanel").classList.remove("salsav-cms-admin-hidden");
+        $("sessionActions").classList.remove("salsav-cms-admin-hidden");
+        currentContent = await window.SALSAVPantry.getContent().catch(() => ({}));
+        renderAudit();
+      }
+      async function renderAudit() {
+        const audit = await window.SALSAVPantry.getAudit();
+        const events = Array.isArray(audit.events) ? audit.events.slice().reverse() : [];
+        $("auditLog").innerHTML = events.length ? "" : "<p class=\"salsav-cms-admin-note\">No audit events yet.</p>";
+        events.slice(0, 80).forEach((event) => {
+          const item = document.createElement("div");
+          item.className = "salsav-cms-log-item";
+          item.textContent = `${event.at || ""} ${event.type || ""} ${event.pageId || ""} ${event.label || event.fieldKey || ""}`;
+          $("auditLog").appendChild(item);
+        });
+      }
+      async function importSeed() {
+        if (!confirm("Replace remote Pantry site content with cms/seed-content.json?")) return;
+        const response = await fetch("cms/seed-content.json", { cache: "no-store" });
+        if (!response.ok) throw new Error("Unable to fetch seed content.");
+        currentContent = await window.SALSAVPantry.saveContent(await response.json());
+        await window.SALSAVPantry.appendAudit({ type: "seed_imported", source: "admin.html", at: new Date().toISOString() });
+        await renderAudit();
+      }
+      function exportJson() {
+        const blob = new Blob([JSON.stringify(currentContent || {}, null, 2)], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "salsav-site-content.json";
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
+      document.addEventListener("DOMContentLoaded", async () => {
+        $("loginForm").addEventListener("submit", login);
+        $("logoutButton").addEventListener("click", () => { sessionStorage.removeItem(sessionKey()); window.location.reload(); });
+        $("importSeedButton").addEventListener("click", () => importSeed().catch((error) => alert(error.message)));
+        $("exportButton").addEventListener("click", exportJson);
+        $("copyJsonButton").addEventListener("click", () => navigator.clipboard.writeText(JSON.stringify(currentContent || {}, null, 2)));
+        await loadAuthUi();
+        if (readSession()) await showSession();
+      });
+    })();
+  </script>
+</body>
+</html>

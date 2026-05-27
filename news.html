@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALSA - News & Publications</title>
+    <title data-cms-key="meta.title">SALSA - News & Publications</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/main-styles.css">
 
@@ -74,460 +74,462 @@
             margin: 0 0.5em;
         }
     </style>
+    <link rel="stylesheet" href="css/modern-system.css">
+    <link rel="stylesheet" href="css/cms-editor.css">
 </head>
-<body>
+<body data-cms-page="news">
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-brand">
-                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
-                <span>AGRIVOLTAICS</span>
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo" data-cms-attr-alt="news.img_1.alt">
+                <span data-cms-key="nav.brand">AGRIVOLTAICS</span>
             </a>
-            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu" data-cms-attr-aria-label="global.nav.toggle_aria">☰</button>
             <div class="navbar-links">
                 <ul class="navbar-menu">
-                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li><a href="index.html" class="navbar-link" data-cms-key="global.nav.home">Home</a></li>
                     <li class="has-dropdown">
-                        <a href="#" class="navbar-link">Research</a>
+                        <a href="#" class="navbar-link" data-cms-key="global.nav.research">Research</a>
                         <ul class="dropdown-content">
-                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
-                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
-                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                            <li><a href="research-ecophysiology.html" data-cms-key="global.nav.research.ecophysiology">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html" data-cms-key="global.nav.research.scaling_up">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html" data-cms-key="global.nav.research.scaling_out">Scaling Out</a></li>
                         </ul>
                     </li>
                     <li class="has-dropdown">
-                        <a href="education.html" class="navbar-link">Education</a>
+                        <a href="education.html" class="navbar-link" data-cms-key="global.nav.education">Education</a>
                         <ul class="dropdown-content">
-                            <li><a href="education.html">School Gardens</a></li>
-                            <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
-                            <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                            <li><a href="education.html" data-cms-key="global.nav.education.school_gardens">School Gardens</a></li>
+                            <li><a href="education-global-school.html" data-cms-key="global.nav.education.global_school">Global School of Agrivoltaics</a></li>
+                            <li><a href="education-interdisciplinary.html" data-cms-key="global.nav.education.interdisciplinary">Interdisciplinary Opportunities</a></li>
                         </ul>
                     </li>
-                    <li><a href="sites.html" class="navbar-link">Learning Labs</a></li>
-                    <li><a href="news.html" class="navbar-link">News</a></li>
-                    <li><a href="team.html" class="navbar-link">Team</a></li>
-                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                    <li><a href="sites.html" class="navbar-link" data-cms-key="global.nav.learning_labs">Learning Labs</a></li>
+                    <li><a href="news.html" class="navbar-link" data-cms-key="global.nav.news">News</a></li>
+                    <li><a href="team.html" class="navbar-link" data-cms-key="global.nav.team">Team</a></li>
+                    <li><a href="#footer" class="navbar-link" data-cms-key="global.nav.contact">Contact</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <header class="hero hero-subpage" style="background-image: url('static/news-hero.jpg');">
+    <header class="hero hero-subpage" style="background-image: url('static/news-images/Advancing Agrivoltaics.jpg');">
         <div class="hero-content">
-            <h1>News & Publications</h1>
+            <h1 data-cms-key="hero.headline" data-cms-block-id="news_hero_headline" data-cms-block-type="headingBlock" data-cms-parent-canvas="news.hero">News & Publications</h1>
         </div>
     </header>
 
-    <main class="section">
+    <main class="section" data-cms-canvas="news.main" data-cms-grid="12">
         <div class="container">
             <div class="filters">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="paper">Publications</button>
-                <button class="filter-btn" data-filter="video">Videos</button>
-                <button class="filter-btn" data-filter="article">Press</button>
+                <button class="filter-btn active" data-filter="all" data-cms-key="hero.cta_1" data-cms-block-id="news_hero_cta_1" data-cms-block-type="buttonBlock" data-cms-parent-canvas="news.hero">All</button>
+                <button class="filter-btn" data-filter="paper" data-cms-key="hero.cta_2" data-cms-block-id="news_hero_cta_2" data-cms-block-type="buttonBlock" data-cms-parent-canvas="news.hero">Publications</button>
+                <button class="filter-btn" data-filter="video" data-cms-key="hero.cta_3" data-cms-block-id="news_hero_cta_3" data-cms-block-type="buttonBlock" data-cms-parent-canvas="news.hero">Videos</button>
+                <button class="filter-btn" data-filter="article" data-cms-key="hero.cta_4" data-cms-block-id="news_hero_cta_4" data-cms-block-type="buttonBlock" data-cms-parent-canvas="news.hero">Press</button>
             </div>
             
-            <div class="news-grid" id="news-grid-container">
+            <div class="news-grid" id="news-grid-container" data-cms-list="news.articles" data-cms-list-type="newsArticles" data-cms-canvas="news.articles" data-cms-grid="12">
                 <!-- Cards are sorted by date, newest first, with new content integrated -->
-                <a href="https://indianaagconnection.com/news/solar-panels-and-farming-unite-in-southwest-heat" target="_blank" class="news-card" data-category="article">
+                <a href="https://indianaagconnection.com/news/solar-panels-and-farming-unite-in-southwest-heat" target="_blank" class="news-card" data-category="article" data-cms-block-id="news_2025_07_11_indiana_ag_connection_solar_panels_and_farming_unite_in_southwest_heat" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/indianaagconnection.jpg" alt="Preview of Solar Panels and Farming Unite" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/indianaagconnection.jpg" alt="Preview of Solar Panels and Farming Unite" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="hero.img_1.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">article</span>
-                        <h3>Solar Panels and Farming Unite in Southwest Heat</h3>
+                        <span class="tag" data-cms-key="hero.tag_1">article</span>
+                        <h3 data-cms-key="hero.heading_1">Solar Panels and Farming Unite in Southwest Heat</h3>
                         <div class="news-card-meta">
-                            <span>Indiana Ag Connection</span>
-                            <span>July 11, 2025</span>
+                            <span data-cms-key="hero.label_1">Indiana Ag Connection</span>
+                            <span data-cms-key="hero.label_2">July 11, 2025</span>
                         </div>
-                        <p>Highlights agrivoltaics' success in hot, arid regions, emphasizing water conservation, improved crop yields, enhanced panel performance, and farmworker protection.</p>
+                        <p data-cms-key="hero.text_1">Highlights agrivoltaics' success in hot, arid regions, emphasizing water conservation, improved crop yields, enhanced panel performance, and farmworker protection.</p>
                     </div>
                 </a>
 
-                <a href="https://insideclimatenews.org/news/10072025/agrivoltaic-solar-southwest-farmland/" target="_blank" class="news-card" data-category="article">
+                <a href="https://insideclimatenews.org/news/10072025/agrivoltaic-solar-southwest-farmland/" target="_blank" class="news-card" data-category="article" data-cms-block-id="news_2025_07_10_inside_climate_news_in_the_sweltering_southwest_planting_solar_panels_in_farmland_can_help_b" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/insideclimatenews.jpg" alt="Preview of Sweltering Southwest agrivoltaics" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/insideclimatenews.jpg" alt="Preview of Sweltering Southwest agrivoltaics" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="hero.img_2.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">article</span>
-                        <h3>In the Sweltering Southwest, Planting Solar Panels in Farmland Can Help Both Photovoltaics and Crops</h3>
+                        <span class="tag" data-cms-key="hero.tag_2">article</span>
+                        <h3 data-cms-key="hero.heading_2">In the Sweltering Southwest, Planting Solar Panels in Farmland Can Help Both Photovoltaics and Crops</h3>
                         <div class="news-card-meta">
-                            <span>Inside Climate News</span>
-                            <span>July 10, 2025</span>
+                            <span data-cms-key="hero.label_3">Inside Climate News</span>
+                            <span data-cms-key="hero.label_4">July 10, 2025</span>
                         </div>
-                        <p>Comprehensive report on agrivoltaics benefits (irrigation, cooling, safety) and challenges (costs, attitudes), featuring Barron-Gafford's research.</p>
+                        <p data-cms-key="hero.text_2">Comprehensive report on agrivoltaics benefits (irrigation, cooling, safety) and challenges (costs, attitudes), featuring Barron-Gafford's research.</p>
                     </div>
                 </a>
 
-                <a href="https://www.nature.com/articles/s44264-025-00073-1" target="_blank" class="news-card" data-category="paper">
+                <a href="https://www.nature.com/articles/s44264-025-00073-1" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2025_06_05_npj_sustainable_agriculture_agrivoltaics_as_a_climate_smart_and_resilient_solution_for_midday_depres" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2025-06-05-agrivoltaics-as-a-climate-smart-and-resilient-so.jpg" alt="Preview of Agrivoltaics as a climate-smart and resilient solution" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2025-06-05-agrivoltaics-as-a-climate-smart-and-resilient-so.jpg" alt="Preview of Agrivoltaics as a climate-smart and resilient solution" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="hero.img_3.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Agrivoltaics as a climate-smart and resilient solution for midday depression in photosynthesis in dryland regions</h3>
+                        <span class="tag" data-cms-key="hero.tag_3">paper</span>
+                        <h3 data-cms-key="hero.heading_3">Agrivoltaics as a climate-smart and resilient solution for midday depression in photosynthesis in dryland regions</h3>
                         <div class="news-card-meta">
-                            <span>npj Sustainable Agriculture</span>
+                            <span data-cms-key="hero.label_5">npj Sustainable Agriculture</span>
                             <span>June 05, 2025</span>
                         </div>
-                        <p>SALSAv pilot demonstrated that partial shade eliminated midday photosynthesis slumps, giving equal or higher daily carbon uptake and yields across peppers, kale & beans.</p>
+                        <p data-cms-key="hero.text_3">SALSAv pilot demonstrated that partial shade eliminated midday photosynthesis slumps, giving equal or higher daily carbon uptake and yields across peppers, kale & beans.</p>
                     </div>
                 </a>
                 
-                <a href="https://crfs.arizona.edu/news/exploring-crop-nutrients-in-agrivoltaic-systems" target="_blank" class="news-card" data-category="article">
+                <a href="https://crfs.arizona.edu/news/exploring-crop-nutrients-in-agrivoltaic-systems" target="_blank" class="news-card" data-category="article" data-cms-block-id="news_2025_04_15_ua_crfs_blog_exploring_crop_nutrients_in_agrivoltaic_systems" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2025-04-15-exploring-crop-nutrients-in-agrivoltaic-systems.jpg" alt="Preview of Exploring Crop Nutrients in Agrivoltaic Systems" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2025-04-15-exploring-crop-nutrients-in-agrivoltaic-systems.jpg" alt="Preview of Exploring Crop Nutrients in Agrivoltaic Systems" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="hero.img_4.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">article</span>
-                        <h3>Exploring Crop Nutrients in Agrivoltaic Systems</h3>
+                        <span class="tag" data-cms-key="hero.tag_4">article</span>
+                        <h3 data-cms-key="hero.heading_4">Exploring Crop Nutrients in Agrivoltaic Systems</h3>
                         <div class="news-card-meta">
-                            <span>UA CRFS Blog</span>
-                            <span>April 15, 2025</span>
+                            <span data-cms-key="hero.label_6">UA CRFS Blog</span>
+                            <span data-cms-key="hero.label_7">April 15, 2025</span>
                         </div>
-                        <p>SALSAv study shows PV-shade alters soil moisture & nutrient dynamics, with implications for produce quality.</p>
+                        <p data-cms-key="hero.text_4">SALSAv study shows PV-shade alters soil moisture & nutrient dynamics, with implications for produce quality.</p>
                     </div>
                 </a>
 
-                <a href="https://washington.office.cnrs.fr/interview-with-greg-barron-gafford-university-of-arizona-and-alexandra-langlais-universite-de-rennes-agrivoltaics-an-interdisciplinary-and-international-response-to-climate-challenges/" target="_blank" class="news-card" data-category="article">
+                <a href="https://washington.office.cnrs.fr/interview-with-greg-barron-gafford-university-of-arizona-and-alexandra-langlais-universite-de-rennes-agrivoltaics-an-interdisciplinary-and-international-response-to-climate-challenges/" target="_blank" class="news-card" data-category="article" data-cms-block-id="news_2024_11_25_cnrs_washington_interview_with_greg_barron_gafford_university_of_arizona_and_alexandra_l" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/office.cnrs.jpg" alt="Preview of interdisciplinary interview" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/office.cnrs.jpg" alt="Preview of interdisciplinary interview" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_1.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">article</span>
-                        <h3>Interview with Greg Barron-Gafford (University of Arizona) and Alexandra Langlais (Université de Rennes)</h3>
+                        <span class="tag" data-cms-key="hero.tag_5">article</span>
+                        <h3 data-cms-key="hero.heading_5">Interview with Greg Barron-Gafford (University of Arizona) and Alexandra Langlais (Université de Rennes)</h3>
                         <div class="news-card-meta">
-                            <span>CNRS Washington</span>
-                            <span>November 25, 2024</span>
+                            <span data-cms-key="hero.label_8">CNRS Washington</span>
+                            <span data-cms-key="hero.label_9">November 25, 2024</span>
                         </div>
-                        <p>Discusses interdisciplinary collaboration (science and law) to reduce land-use conflict and protect farmers in arid regions.</p>
+                        <p data-cms-key="hero.text_5">Discusses interdisciplinary collaboration (science and law) to reduce land-use conflict and protect farmers in arid regions.</p>
                     </div>
                 </a>
 
-                <a href="https://podcasts.apple.com/es/podcast/dual-use-solar-exploring-the-synergy-of-crops/id1582667621?i=1000665127734" target="_blank" class="news-card" data-category="video">
+                <a href="https://podcasts.apple.com/es/podcast/dual-use-solar-exploring-the-synergy-of-crops/id1582667621?i=1000665127734" target="_blank" class="news-card" data-category="video" data-cms-block-id="news_2024_08_13_clean_power_hour_podcast_dual_use_solar_exploring_the_synergy_of_crops_and_clean_energy" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/Dual-Use_Solar.jpg" alt="Preview of Clean Power Hour Podcast" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/Dual-Use_Solar.jpg" alt="Preview of Clean Power Hour Podcast" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_2.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">video</span>
-                        <h3>Dual-Use Solar: Exploring the Synergy of Crops and Clean Energy</h3>
+                        <span class="tag" data-cms-key="hero.tag_6">video</span>
+                        <h3 data-cms-key="hero.heading_6">Dual-Use Solar: Exploring the Synergy of Crops and Clean Energy</h3>
                         <div class="news-card-meta">
-                            <span>Clean Power Hour Podcast</span>
-                            <span>August 13, 2024</span>
+                            <span data-cms-key="hero.label_10">Clean Power Hour Podcast</span>
+                            <span data-cms-key="hero.label_11">August 13, 2024</span>
                         </div>
-                        <p>Barron-Gafford discusses the 3% panel efficiency increase from cooling, water conservation, crop yields, and the international research network.</p>
+                        <p data-cms-key="hero.text_6">Barron-Gafford discusses the 3% panel efficiency increase from cooling, water conservation, crop yields, and the international research network.</p>
                     </div>
                 </a>
                 
-                <a href="https://udallcenter.arizona.edu/news/uarizona-researchers-on-the-rise-at-2024-agrivoltaics-world-conference" target="_blank" class="news-card" data-category="article">
+                <a href="https://udallcenter.arizona.edu/news/uarizona-researchers-on-the-rise-at-2024-agrivoltaics-world-conference" target="_blank" class="news-card" data-category="article" data-cms-block-id="news_2024_07_02_udall_center_news_growing_knowledge_u_of_a_researchers_share_findings_at_2024_agrivoltaics" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2024-07-02-growing-knowledge-u-of-a-researchers-share-findi.jpg" alt="Preview of Growing Knowledge: U of A Researchers Share Findings" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2024-07-02-growing-knowledge-u-of-a-researchers-share-findi.jpg" alt="Preview of Growing Knowledge: U of A Researchers Share Findings" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_3.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">article</span>
-                        <h3>Growing Knowledge: U of A Researchers Share Findings at 2024 Agrivoltaics World Conference</h3>
+                        <span class="tag" data-cms-key="hero.tag_7">article</span>
+                        <h3 data-cms-key="hero.heading_7">Growing Knowledge: U of A Researchers Share Findings at 2024 Agrivoltaics World Conference</h3>
                         <div class="news-card-meta">
-                            <span>Udall Center News</span>
-                            <span>July 02, 2024</span>
+                            <span data-cms-key="hero.label_12">Udall Center News</span>
+                            <span data-cms-key="hero.label_13">July 02, 2024</span>
                         </div>
-                        <p>Conference recap—team reports physiological data showing crop heat-stress relief under PV arrays.</p>
+                        <p data-cms-key="hero.text_7">Conference recap—team reports physiological data showing crop heat-stress relief under PV arrays.</p>
                     </div>
                 </a>
 
-                <a href="https://www.researchgate.net/publication/383322934_Advancing_Agrivoltaics_through_a_Systematic_Design_Framework_Guidelines_for_Integration_and_Informed_Decision-Making" target="_blank" class="news-card" data-category="paper">
+                <a href="https://www.researchgate.net/publication/383322934_Advancing_Agrivoltaics_through_a_Systematic_Design_Framework_Guidelines_for_Integration_and_Informed_Decision-Making" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2024_07_01_preprint_advancing_agrivoltaics_through_a_systematic_design_framework" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/Advancing Agrivoltaics.jpg" alt="Preview of Systematic Design Framework" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/Advancing Agrivoltaics.jpg" alt="Preview of Systematic Design Framework" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_4.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Advancing Agrivoltaics through a Systematic Design Framework</h3>
+                        <span class="tag" data-cms-key="hero.tag_8">paper</span>
+                        <h3 data-cms-key="challenge.heading_1">Advancing Agrivoltaics through a Systematic Design Framework</h3>
                         <div class="news-card-meta">
-                            <span>Preprint</span>
-                            <span>July 2024</span>
+                            <span data-cms-key="challenge.label_1">Preprint</span>
+                            <span data-cms-key="challenge.label_2">July 2024</span>
                         </div>
-                        <p>Develops a first-of-its-kind open-source agrivoltaic design model with solar, crop, economic, and optimization modules to inform design guidelines.</p>
+                        <p data-cms-key="challenge.text_1">Develops a first-of-its-kind open-source agrivoltaic design model with solar, crop, economic, and optimization modules to inform design guidelines.</p>
                     </div>
                 </a>
                 
-                <a href="https://asu.elsevierpure.com/en/publications/sonoran-desert-photovoltaics-laboratory-and-growing-green-a-netwo" target="_blank" class="news-card" data-category="paper">
+                <a href="https://asu.elsevierpure.com/en/publications/sonoran-desert-photovoltaics-laboratory-and-growing-green-a-netwo" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2024_06_01_conference_paper_sonoran_desert_photovoltaics_laboratory_and_growing_green_a_networked_re" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/Sonoran Desert.jpg" alt="Preview of Sonoran Desert Photovoltaics Laboratory" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/Sonoran Desert.jpg" alt="Preview of Sonoran Desert Photovoltaics Laboratory" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_5.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Sonoran Desert Photovoltaics Laboratory and Growing Green: A Networked Regional Approach to Agrivoltaics Citizen Science</h3>
+                        <span class="tag" data-cms-key="challenge.tag_1">paper</span>
+                        <h3 data-cms-key="challenge.heading_2">Sonoran Desert Photovoltaics Laboratory and Growing Green: A Networked Regional Approach to Agrivoltaics Citizen Science</h3>
                         <div class="news-card-meta">
-                            <span>Conference Paper</span>
+                            <span data-cms-key="challenge.label_3">Conference Paper</span>
                             <span>June 2024</span>
                         </div>
-                        <p>Describes a multi-generational collaboration for small-scale agrivoltaics sites, involving K-12 students and teachers in citizen science.</p>
+                        <p data-cms-key="challenge.text_2">Describes a multi-generational collaboration for small-scale agrivoltaics sites, involving K-12 students and teachers in citizen science.</p>
                     </div>
                 </a>
 
-                <a href="https://peer.asee.org/board-346-plants-power-and-people-using-agrivoltaics-engineering-to-create-a-network-of-k-12-teachers-and-students-contributing-to-sustainable-energy-transitions.pdf" target="_blank" class="news-card" data-category="paper">
+                <a href="https://peer.asee.org/board-346-plants-power-and-people-using-agrivoltaics-engineering-to-create-a-network-of-k-12-teachers-and-students-contributing-to-sustainable-energy-transitions.pdf" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2024_06_01_asee_conference_paper_plants_power_and_people_using_agrivoltaics_engineering_to_create_a_netwo" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/Plants, Power, and People.jpg" alt="Preview of Plants, Power, and People" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/Plants, Power, and People.jpg" alt="Preview of Plants, Power, and People" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="sites.img_1.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Plants, Power, and People: Using Agrivoltaics Engineering to Create a Network of K-12 Teachers and Students</h3>
+                        <span class="tag" data-cms-key="challenge.tag_2">paper</span>
+                        <h3 data-cms-key="challenge.heading_3">Plants, Power, and People: Using Agrivoltaics Engineering to Create a Network of K-12 Teachers and Students</h3>
                         <div class="news-card-meta">
-                            <span>ASEE Conference Paper</span>
+                            <span data-cms-key="challenge.label_4">ASEE Conference Paper</span>
                             <span>June 2024</span>
                         </div>
-                        <p>Details an NSF-funded Research Experience for Teachers (RET) program that engages K-12 STEM teachers and students in authentic agrivoltaics research.</p>
+                        <p data-cms-key="challenge.text_3">Details an NSF-funded Research Experience for Teachers (RET) program that engages K-12 STEM teachers and students in authentic agrivoltaics research.</p>
                     </div>
                 </a>
                 
-                <a href="https://www.youtube.com/watch?v=0K8-hHv9dpQ" target="_blank" class="news-card" data-category="video">
+                <a href="https://www.youtube.com/watch?v=0K8-hHv9dpQ" target="_blank" class="news-card" data-category="video" data-cms-block-id="news_2024_03_25_solar_farm_summit_2024_youtube_state_of_u_s_agrivoltaics_deployment_and_farmer_s_forum" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2024-03-25-state-of-us-agrivoltaics-deployment-farmers-foru.jpg" alt="Preview of State of U.S. Agrivoltaics Deployment & Farmer’s Forum" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2024-03-25-state-of-us-agrivoltaics-deployment-farmers-foru.jpg" alt="Preview of State of U.S. Agrivoltaics Deployment & Farmer’s Forum" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="sites.img_2.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">video</span>
-                        <h3>State of U.S. Agrivoltaics Deployment & Farmer’s Forum</h3>
+                        <span class="tag" data-cms-key="challenge.tag_3">video</span>
+                        <h3 data-cms-key="challenge.heading_4">State of U.S. Agrivoltaics Deployment & Farmer’s Forum</h3>
                         <div class="news-card-meta">
-                            <span>Solar Farm Summit 2024 (YouTube)</span>
-                            <span>March 25, 2024</span>
+                            <span data-cms-key="challenge.label_5">Solar Farm Summit 2024 (YouTube)</span>
+                            <span data-cms-key="challenge.label_6">March 25, 2024</span>
                         </div>
-                        <p>NREL status update + farmer panel on scale-up hurdles, economics and labour safety in large PV farms.</p>
+                        <p data-cms-key="challenge.text_4">NREL status update + farmer panel on scale-up hurdles, economics and labour safety in large PV farms.</p>
                     </div>
                 </a>
 
-                <a href="https://consensus.app/papers/agrivoltaic-system-design-tools-for-managing-tradeoffs-barron%E2%80%90gafford-warmann/416103f3bf765ef3b825d4e8a67e08e1/" target="_blank" class="news-card" data-category="paper">
+                <a href="https://consensus.app/papers/agrivoltaic-system-design-tools-for-managing-tradeoffs-barron%E2%80%90gafford-warmann/416103f3bf765ef3b825d4e8a67e08e1/" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2024_03_01_environmental_research_letters_agrivoltaic_system_design_tools_for_managing_trade_offs_between_energy_p" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/Agrivoltaic system design.jpg" alt="Preview of agrivoltaic system design tools" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/Agrivoltaic system design.jpg" alt="Preview of agrivoltaic system design tools" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="sites.img_3.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Agrivoltaic system design tools for managing trade-offs between energy production, crop productivity and water consumption</h3>
+                        <span class="tag" data-cms-key="challenge.tag_4">paper</span>
+                        <h3 data-cms-key="challenge.heading_5">Agrivoltaic system design tools for managing trade-offs between energy production, crop productivity and water consumption</h3>
                         <div class="news-card-meta">
-                            <span>Environmental Research Letters</span>
+                            <span data-cms-key="challenge.label_7">Environmental Research Letters</span>
                             <span>March 2024</span>
                         </div>
-                        <p>Develops an open-source model, predicting 30-40% water reduction and Land Equivalent Ratio > 2, providing decision support tools.</p>
+                        <p data-cms-key="challenge.text_5">Develops an open-source model, predicting 30-40% water reduction and Land Equivalent Ratio > 2, providing decision support tools.</p>
                     </div>
                 </a>
 
-                <a href="https://www.ers.usda.gov/sites/default/files/_laserfiche/publications/108221/EIB-264.pdf" target="_blank" class="news-card" data-category="paper">
+                <a href="https://www.ers.usda.gov/sites/default/files/_laserfiche/publications/108221/EIB-264.pdf" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2024_01_15_usda_ers_trends_insights_and_future_prospects_for_cea_and_agrivoltaics_systems_ei" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2024-01-15-trends-insights-and-future-prospects-for-cea-agr.jpg" alt="Preview of Trends, Insights, and Future Prospects for CEA & Agrivoltaics" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2024-01-15-trends-insights-and-future-prospects-for-cea-agr.jpg" alt="Preview of Trends, Insights, and Future Prospects for CEA & Agrivoltaics" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="sites.img_4.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Trends, Insights, and Future Prospects for CEA & Agrivoltaics Systems (EIB-264)</h3>
+                        <span class="tag" data-cms-key="sites.tag_1">paper</span>
+                        <h3 data-cms-key="sites.heading_1">Trends, Insights, and Future Prospects for CEA & Agrivoltaics Systems (EIB-264)</h3>
                         <div class="news-card-meta">
-                            <span>USDA ERS</span>
-                            <span>January 15, 2024</span>
+                            <span data-cms-key="sites.label_1">USDA ERS</span>
+                            <span data-cms-key="sites.label_2">January 15, 2024</span>
                         </div>
-                        <p>National outlook on investment, adoption rates and policy levers for controlled-environment ag and agrivoltaics.</p>
+                        <p data-cms-key="sites.text_1">National outlook on investment, adoption rates and policy levers for controlled-environment ag and agrivoltaics.</p>
                     </div>
                 </a>
                 
-                <a href="https://ideas.repec.org/a/eee/enepol/v205y2025ics0301421525001892.html" target="_blank" class="news-card" data-category="paper">
+                <a href="https://ideas.repec.org/a/eee/enepol/v205y2025ics0301421525001892.html" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2024_01_01_energy_policy_designing_for_dual_use_solar_an_examination_of_the_agrivoltaic_policy_la" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/repec.jpg" alt="Preview of dual-use solar policy landscape" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/repec.jpg" alt="Preview of dual-use solar policy landscape" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="sites.img_5.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Designing for Dual-Use Solar: An Examination of the Agrivoltaic Policy Landscape in the United States</h3>
+                        <span class="tag" data-cms-key="sites.tag_2">paper</span>
+                        <h3 data-cms-key="sites.heading_2">Designing for Dual-Use Solar: An Examination of the Agrivoltaic Policy Landscape in the United States</h3>
                         <div class="news-card-meta">
-                            <span>Energy Policy</span>
-                            <span>January 2024</span>
+                            <span data-cms-key="sites.label_3">Energy Policy</span>
+                            <span data-cms-key="sites.label_4">January 2024</span>
                         </div>
-                        <p>A policy review of existing U.S. federal and state agrivoltaics policies, categorizing approaches and discussing proposed federal legislation.</p>
+                        <p data-cms-key="sites.text_2">A policy review of existing U.S. federal and state agrivoltaics policies, categorizing approaches and discussing proposed federal legislation.</p>
                     </div>
                 </a>
                 
-                <a href="https://www.youtube.com/watch?v=PUmq1lTQJ98" target="_blank" class="news-card" data-category="video">
+                <a href="https://www.youtube.com/watch?v=PUmq1lTQJ98" target="_blank" class="news-card" data-category="video" data-cms-block-id="news_2023_11_12_uarizona_youtube_biosphere_2_agrivoltaics_walk_through" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2023-11-12-biosphere-2-agrivoltaics-walk-through.jpg" alt="Preview of Biosphere 2 Agrivoltaics Walk-through" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2023-11-12-biosphere-2-agrivoltaics-walk-through.jpg" alt="Preview of Biosphere 2 Agrivoltaics Walk-through" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="sites.img_6.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">video</span>
-                        <h3>Biosphere 2 Agrivoltaics Walk-through</h3>
+                        <span class="tag" data-cms-key="sites.tag_3">video</span>
+                        <h3 data-cms-key="sites.heading_3">Biosphere 2 Agrivoltaics Walk-through</h3>
                         <div class="news-card-meta">
-                            <span>UArizona YouTube</span>
-                            <span>November 12, 2023</span>
+                            <span data-cms-key="sites.label_5">UArizona YouTube</span>
+                            <span data-cms-key="sites.label_6">November 12, 2023</span>
                         </div>
-                        <p>Field tour of Biosphere 2 plots; explains instrumentation and crop responses under PV shade.</p>
+                        <p data-cms-key="sites.text_3">Field tour of Biosphere 2 plots; explains instrumentation and crop responses under PV shade.</p>
                     </div>
                 </a>
                 
-                <a href="https://www.sciencedirect.com/science/article/pii/S2666386423003028" target="_blank" class="news-card" data-category="paper">
+                <a href="https://www.sciencedirect.com/science/article/pii/S2666386423003028" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2023_11_10_curr_opin_env_sustainability_knowns_uncertainties_and_challenges_in_agrivoltaics_to_sustainably_meet_" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2023-11-10-knowns-uncertainties-and-challenges-in-agrivolta.jpg" alt="Preview of Knowns, uncertainties, and challenges in agrivoltaics" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2023-11-10-knowns-uncertainties-and-challenges-in-agrivolta.jpg" alt="Preview of Knowns, uncertainties, and challenges in agrivoltaics" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_6.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Knowns, uncertainties, and challenges in agrivoltaics to sustainably meet FEW goals</h3>
+                        <span class="tag" data-cms-key="challenge.tag_5">paper</span>
+                        <h3 data-cms-key="challenge.heading_6">Knowns, uncertainties, and challenges in agrivoltaics to sustainably meet FEW goals</h3>
                         <div class="news-card-meta">
-                            <span>Curr. Opin. Env. Sustainability</span>
-                            <span>November 10, 2023</span>
+                            <span data-cms-key="challenge.label_8">Curr. Opin. Env. Sustainability</span>
+                            <span data-cms-key="challenge.label_9">November 10, 2023</span>
                         </div>
-                        <p>Peer-reviewed meta-analysis highlighting UA/Biosphere-2 micro-climate & labor-safety datasets as highest-quality evidence; lists research gaps.</p>
+                        <p data-cms-key="challenge.text_6">Peer-reviewed meta-analysis highlighting UA/Biosphere-2 micro-climate & labor-safety datasets as highest-quality evidence; lists research gaps.</p>
                     </div>
                 </a>
                 
-                <a href="https://ideas.repec.org/a/eee/enepol/v181y2023ics0301421523002793.html" target="_blank" class="news-card" data-category="paper">
+                <a href="https://ideas.repec.org/a/eee/enepol/v181y2023ics0301421523002793.html" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2023_07_01_energy_policy_from_niche_innovation_to_mainstream_markets_drivers_and_challenges_of_in" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/niche-innovation.jpg" alt="Preview of niche-innovation to mainstream markets" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/niche-innovation.jpg" alt="Preview of niche-innovation to mainstream markets" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_7.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>From niche-innovation to mainstream markets: Drivers and challenges of industry adoption of agrivoltaics in the U.S.</h3>
+                        <span class="tag" data-cms-key="challenge.tag_6">paper</span>
+                        <h3 data-cms-key="challenge.heading_7">From niche-innovation to mainstream markets: Drivers and challenges of industry adoption of agrivoltaics in the U.S.</h3>
                         <div class="news-card-meta">
-                            <span>Energy Policy</span>
+                            <span data-cms-key="challenge.label_10">Energy Policy</span>
                             <span>July 2023</span>
                         </div>
-                        <p>Examines socio-political landscape for agrivoltaic development, identifying drivers and challenges of industry adoption and policy for mainstreaming.</p>
+                        <p data-cms-key="challenge.text_7">Examines socio-political landscape for agrivoltaic development, identifying drivers and challenges of industry adoption and policy for mainstreaming.</p>
                     </div>
                 </a>
 
-                <a href="https://www.youtube.com/watch?v=hq_6bDaCoYM" target="_blank" class="news-card" data-category="video">
+                <a href="https://www.youtube.com/watch?v=hq_6bDaCoYM" target="_blank" class="news-card" data-category="video" data-cms-block-id="news_2023_02_20_agrisolar_clearinghouse_webinar_made_in_the_shade_growing_crops_under_solar_panels" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2023-02-20-webinar-made-in-the-shade-growing-crops-under-so.jpg" alt="Preview of WEBINAR: Made in the Shade – Growing Crops under Solar Panels" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2023-02-20-webinar-made-in-the-shade-growing-crops-under-so.jpg" alt="Preview of WEBINAR: Made in the Shade – Growing Crops under Solar Panels" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_8.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">video</span>
-                        <h3>WEBINAR: Made in the Shade – Growing Crops under Solar Panels</h3>
+                        <span class="tag" data-cms-key="challenge.tag_7">video</span>
+                        <h3 data-cms-key="challenge.heading_8">WEBINAR: Made in the Shade – Growing Crops under Solar Panels</h3>
                         <div class="news-card-meta">
-                            <span>AgriSolar Clearinghouse</span>
-                            <span>February 20, 2023</span>
+                            <span data-cms-key="challenge.label_11">AgriSolar Clearinghouse</span>
+                            <span data-cms-key="challenge.label_12">February 20, 2023</span>
                         </div>
-                        <p>45-min webinar where Dr. Barron-Gafford shares yield, water-use & panel-cooling data and best-practice tips.</p>
+                        <p data-cms-key="challenge.text_8">45-min webinar where Dr. Barron-Gafford shares yield, water-use & panel-cooling data and best-practice tips.</p>
                     </div>
                 </a>
                 
-                <a href="https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites" target="_blank" class="news-card" data-category="article">
+                <a href="https://news.arizona.edu/news/uarizona-researchers-awarded-12m-explore-farming-existing-solar-power-sites" target="_blank" class="news-card" data-category="article" data-cms-block-id="news_2023_02_15_ua_news_uarizona_researchers_awarded_1_2_m_to_explore_farming_at_existing_solar_" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2023-02-15-uarizona-researchers-awarded-12-m-to-explore-far.jpg" alt="Preview of UArizona researchers awarded $1.2 M to explore farming" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2023-02-15-uarizona-researchers-awarded-12-m-to-explore-far.jpg" alt="Preview of UArizona researchers awarded $1.2 M to explore farming" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_9.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">article</span>
-                        <h3>UArizona researchers awarded $1.2 M to explore farming at existing solar sites</h3>
+                        <span class="tag" data-cms-key="challenge.tag_8">article</span>
+                        <h3 data-cms-key="challenge.heading_9">UArizona researchers awarded $1.2 M to explore farming at existing solar sites</h3>
                         <div class="news-card-meta">
-                            <span>UA News</span>
-                            <span>February 15, 2023</span>
+                            <span data-cms-key="challenge.label_13">UA News</span>
+                            <span data-cms-key="challenge.label_14">February 15, 2023</span>
                         </div>
-                        <p>DOE FARMS grant funds Barron-Gafford team to retrofit commercial PV farms for crop & grazing trials.</p>
+                        <p data-cms-key="challenge.text_9">DOE FARMS grant funds Barron-Gafford team to retrofit commercial PV farms for crop & grazing trials.</p>
                     </div>
                 </a>
                 
-                <a href="https://www.nrel.gov/docs/fy22osti/83566.pdf" target="_blank" class="news-card" data-category="paper">
+                <a href="https://www.nrel.gov/docs/fy22osti/83566.pdf" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2022_08_01_nrel_tech_rep_83566_the_5_cs_of_agrivoltaic_success_factors_in_the_united_states" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2022-08-01-the-5-cs-of-agrivoltaic-success-factors-in-the-u.jpg" alt="Preview of The 5 Cs of Agrivoltaic Success Factors in the United States" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2022-08-01-the-5-cs-of-agrivoltaic-success-factors-in-the-u.jpg" alt="Preview of The 5 Cs of Agrivoltaic Success Factors in the United States" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_10.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>The 5 Cs of Agrivoltaic Success Factors in the United States</h3>
+                        <span class="tag" data-cms-key="challenge.tag_9">paper</span>
+                        <h3 data-cms-key="challenge.heading_10">The 5 Cs of Agrivoltaic Success Factors in the United States</h3>
                         <div class="news-card-meta">
-                            <span>NREL (Tech. Rep. 83566)</span>
-                            <span>August 01, 2022</span>
+                            <span data-cms-key="challenge.label_15">NREL (Tech. Rep. 83566)</span>
+                            <span data-cms-key="challenge.label_16">August 01, 2022</span>
                         </div>
-                        <p>Synthesises lessons from 20+ InSPIRE sites into design rubric—Crops, Climates, Configuration, Constraints, Community—for developers & regulators.</p>
+                        <p data-cms-key="challenge.text_10">Synthesises lessons from 20+ InSPIRE sites into design rubric—Crops, Climates, Configuration, Constraints, Community—for developers & regulators.</p>
                     </div>
                 </a>
                 
-                <a href="https://science.osti.gov/-/media/sbir/pdf/Market-Research/SETO---Agrivoltaics-August-2022-Public.pdf" target="_blank" class="news-card" data-category="paper">
+                <a href="https://science.osti.gov/-/media/sbir/pdf/Market-Research/SETO---Agrivoltaics-August-2022-Public.pdf" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2022_08_01_us_doe_seto_doe_sbir_market_research_study_agrivoltaics" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2022-08-01-doe-sbir-market-research-study-agrivoltaics.jpg" alt="Preview of DOE SBIR Market-Research Study: Agrivoltaics" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2022-08-01-doe-sbir-market-research-study-agrivoltaics.jpg" alt="Preview of DOE SBIR Market-Research Study: Agrivoltaics" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_11.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>DOE SBIR Market-Research Study: Agrivoltaics</h3>
+                        <span class="tag" data-cms-key="challenge.tag_10">paper</span>
+                        <h3 data-cms-key="challenge.heading_11">DOE SBIR Market-Research Study: Agrivoltaics</h3>
                         <div class="news-card-meta">
-                            <span>US DOE SETO</span>
-                            <span>August 01, 2022</span>
+                            <span data-cms-key="challenge.label_17">US DOE SETO</span>
+                            <span data-cms-key="challenge.label_18">August 01, 2022</span>
                         </div>
-                        <p>Maps federal SBIR/STTR funding flows and sizes the U.S. market; flags SALSAv as a “flagship semi-arid test-bed.”</p>
+                        <p data-cms-key="challenge.text_11">Maps federal SBIR/STTR funding flows and sizes the U.S. market; flags SALSAv as a “flagship semi-arid test-bed.”</p>
                     </div>
                 </a>
 
-                <a href="https://www.youtube.com/watch?v=2-JRFR0he2U" target="_blank" class="news-card" data-category="video">
+                <a href="https://www.youtube.com/watch?v=2-JRFR0he2U" target="_blank" class="news-card" data-category="video" data-cms-block-id="news_2022_01_27_youtube_video_agrivoltaics_as_a_climate_smart_conservation_cropping_practice" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/Climate-Smart Conservation.jpg" alt="Preview of Climate-Smart Conservation Cropping Practice" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/Climate-Smart Conservation.jpg" alt="Preview of Climate-Smart Conservation Cropping Practice" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="challenge.img_12.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">video</span>
-                        <h3>Agrivoltaics as a Climate-Smart Conservation Cropping Practice</h3>
+                        <span class="tag" data-cms-key="challenge.tag_11">video</span>
+                        <h3 data-cms-key="challenge.heading_12">Agrivoltaics as a Climate-Smart Conservation Cropping Practice</h3>
                         <div class="news-card-meta">
-                            <span>YouTube Video</span>
-                            <span>January 27, 2022</span>
+                            <span data-cms-key="challenge.label_19">YouTube Video</span>
+                            <span data-cms-key="challenge.label_20">January 27, 2022</span>
                         </div>
-                        <p>Features Barron-Gafford discussing benefits of agrivoltaics, including extended growing seasons, reduced water use, and engagement with policymakers.</p>
+                        <p data-cms-key="challenge.text_12">Features Barron-Gafford discussing benefits of agrivoltaics, including extended growing seasons, reduced water use, and engagement with policymakers.</p>
                     </div>
                 </a>
                 
-                <a href="https://www.wired.com/story/growing-crops-under-solar-panels-now-theres-a-bright-idea/" target="_blank" class="news-card" data-category="article">
+                <a href="https://www.wired.com/story/growing-crops-under-solar-panels-now-theres-a-bright-idea/" target="_blank" class="news-card" data-category="article" data-cms-block-id="news_2021_10_14_wired_growing_crops_under_solar_panels_now_there_s_a_bright_idea" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2021-10-14-growing-crops-under-solar-panels-now-theres-a-bri.jpg" alt="Preview of Growing Crops Under Solar Panels? Now There’s a Bright Idea" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2021-10-14-growing-crops-under-solar-panels-now-theres-a-bri.jpg" alt="Preview of Growing Crops Under Solar Panels? Now There’s a Bright Idea" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="sites.img_7.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">article</span>
-                        <h3>Growing Crops Under Solar Panels? Now There’s a Bright Idea</h3>
+                        <span class="tag" data-cms-key="challenge.tag_12">article</span>
+                        <h3 data-cms-key="challenge.heading_13">Growing Crops Under Solar Panels? Now There’s a Bright Idea</h3>
                         <div class="news-card-meta">
-                            <span>WIRED</span>
-                            <span>October 14, 2021</span>
+                            <span data-cms-key="challenge.label_21">WIRED</span>
+                            <span data-cms-key="challenge.label_22">October 14, 2021</span>
                         </div>
-                        <p>Popular feature on Barron-Gafford’s “salsa garden” trials—up to 50 % water savings and cooler panels boosting efficiency.</p>
+                        <p data-cms-key="challenge.text_13">Popular feature on Barron-Gafford’s “salsa garden” trials—up to 50 % water savings and cooler panels boosting efficiency.</p>
                     </div>
                 </a>
                 
-                <a href="https://portal.nifa.usda.gov/web/crisprojectpages/1027532-designing-agrivoltaics-for-sustainably-intensifying-food-and-energy-production.html" target="_blank" class="news-card" data-category="article">
+                <a href="https://portal.nifa.usda.gov/web/crisprojectpages/1027532-designing-agrivoltaics-for-sustainably-intensifying-food-and-energy-production.html" target="_blank" class="news-card" data-category="article" data-cms-block-id="news_2021_08_15_usda_nifa_designing_agrivoltaics_for_sustainably_intensifying_food_and_energy_prod" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2021-08-15-designing-agrivoltaics-for-sustainably-intensify.jpg" alt="Preview of Designing Agrivoltaics for Sustainably Intensifying Food & Energy Production" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2021-08-15-designing-agrivoltaics-for-sustainably-intensify.jpg" alt="Preview of Designing Agrivoltaics for Sustainably Intensifying Food & Energy Production" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="sites.img_8.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">article</span>
-                        <h3>Designing Agrivoltaics for Sustainably Intensifying Food & Energy Production</h3>
+                        <span class="tag" data-cms-key="challenge.tag_13">article</span>
+                        <h3 data-cms-key="challenge.heading_14">Designing Agrivoltaics for Sustainably Intensifying Food & Energy Production</h3>
                         <div class="news-card-meta">
-                            <span>USDA-NIFA</span>
-                            <span>August 15, 2021</span>
+                            <span data-cms-key="challenge.label_23">USDA-NIFA</span>
+                            <span data-cms-key="challenge.label_24">August 15, 2021</span>
                         </div>
-                        <p>Multi-institution (UI, CSU, UA) award building coupled PV–crop model validated at three solar farms, incl. SALSAv.</p>
+                        <p data-cms-key="challenge.text_14">Multi-institution (UI, CSU, UA) award building coupled PV–crop model validated at three solar farms, incl. SALSAv.</p>
                     </div>
                 </a>
                 
-                <a href="https://www.researchgate.net/publication/356456642_Agrivoltaic_Modules_Co-Designed_for_Electrical_and_Crop_Productivity" target="_blank" class="news-card" data-category="paper">
+                <a href="https://www.researchgate.net/publication/356456642_Agrivoltaic_Modules_Co-Designed_for_Electrical_and_Crop_Productivity" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2021_06_01_conference_paper_agrivoltaic_modules_co_designed_for_electrical_and_crop_productivity" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/modules.jpg" alt="Preview of co-designed modules" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/modules.jpg" alt="Preview of co-designed modules" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="news.img_2.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Agrivoltaic Modules Co-Designed for Electrical and Crop Productivity</h3>
+                        <span class="tag" data-cms-key="challenge.tag_14">paper</span>
+                        <h3 data-cms-key="challenge.heading_15">Agrivoltaic Modules Co-Designed for Electrical and Crop Productivity</h3>
                         <div class="news-card-meta">
-                            <span>Conference Paper</span>
-                            <span>June 2021</span>
+                            <span data-cms-key="challenge.label_25">Conference Paper</span>
+                            <span data-cms-key="challenge.label_26">June 2021</span>
                         </div>
-                        <p>Investigates shifting sunlight usage by crops through controlled solar PV module coverage, exploring modeling for co-optimization of electrical and crop productivity.</p>
+                        <p data-cms-key="challenge.text_15">Investigates shifting sunlight usage by crops through controlled solar PV module coverage, exploring modeling for co-optimization of electrical and crop productivity.</p>
                     </div>
                 </a>
 
-                <a href="https://www.nature.com/articles/s41893-019-0364-5" target="_blank" class="news-card" data-category="paper">
+                <a href="https://www.nature.com/articles/s41893-019-0364-5" target="_blank" class="news-card" data-category="paper" data-cms-block-id="news_2019_09_02_nature_sustainability_agrivoltaics_provide_mutual_benefits_across_the_food_energy_water_nexus_" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                     <div class="news-image-wrapper">
-                        <img src="static/news-images/2019-09-02-agrivoltaics-provide-mutual-benefits-across-the-f.jpg" alt="Preview of Agrivoltaics provide mutual benefits across the food–energy–water nexus" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';">
+                        <img src="static/news-images/2019-09-02-agrivoltaics-provide-mutual-benefits-across-the-f.jpg" alt="Preview of Agrivoltaics provide mutual benefits across the food–energy–water nexus" loading="lazy" onerror="this.onerror=null;this.src='static/salsa-logo.png';" data-cms-attr-alt="news.img_3.alt">
                     </div>
                     <div class="news-card-content">
-                        <span class="tag">paper</span>
-                        <h3>Agrivoltaics provide mutual benefits across the food–energy–water nexus in drylands</h3>
+                        <span class="tag" data-cms-key="challenge.tag_15">paper</span>
+                        <h3 data-cms-key="challenge.heading_16">Agrivoltaics provide mutual benefits across the food–energy–water nexus in drylands</h3>
                         <div class="news-card-meta">
-                            <span>Nature Sustainability</span>
-                            <span>September 02, 2019</span>
+                            <span data-cms-key="sites.label_7">Nature Sustainability</span>
+                            <span data-cms-key="sites.label_8">September 02, 2019</span>
                         </div>
-                        <p>Arizona field trial shows PV shade cut plant drought stress, boosted fruit yields and cooled panels, confirming the “win–win-win” food-water-energy model.</p>
+                        <p data-cms-key="sites.text_4">Arizona field trial shows PV shade cut plant drought stress, boosted fruit yields and cooled panels, confirming the “win–win-win” food-water-energy model.</p>
                     </div>
                 </a>
             </div>
         </div>
     </main>
 
-    <footer class="footer" id="footer">
+    <footer class="footer" id="footer" data-cms-canvas="news.footer" data-cms-grid="12">
         <div class="container footer-content">
-             <div class="footer-brand"><h3>SALSA Agrivoltaics</h3><p>A project of the University of Arizona, pioneering food-energy-water solutions.</p></div>
-             <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="sites.html">Sites</a></li><li><a href="news.html">News</a></li><li><a href="team.html">Team</a></li></ul></div>
-             <div class="footer-contact"><h4>Contact Us</h4><p>University of Arizona</p><p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p></div>
+             <div class="footer-brand"><h3 data-cms-key="global.footer.brand.title">SALSA Agrivoltaics</h3><p data-cms-key="global.footer.brand.description">A project of the University of Arizona, pioneering food-energy-water solutions.</p></div>
+             <div class="footer-links"><h4 data-cms-key="global.footer.quick_links.heading">Quick Links</h4><ul><li><a href="index.html" data-cms-key="global.footer.home">Home</a></li><li><a href="sites.html" data-cms-key="global.footer.sites">Sites</a></li><li><a href="news.html" data-cms-key="global.footer.news">News</a></li><li><a href="team.html" data-cms-key="global.footer.team">Team</a></li></ul></div>
+             <div class="footer-contact"><h4 data-cms-key="global.footer.contact.heading">Contact Us</h4><p data-cms-key="global.footer.contact.organization">University of Arizona</p><p data-cms-key="global.footer.contact.email"><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p></div>
         </div>
-        <div class="footer-bottom"><p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p></div>
+        <div class="footer-bottom"><p data-cms-key="global.footer.copyright">© 2024 SALSA Agrivoltaics. All Rights Reserved.</p></div>
     </footer>
 
     <!-- Load main.js for standard navbar functionality -->
@@ -562,5 +564,10 @@
         });
     });
     </script>
+    <script defer src="js/cms-config.js"></script>
+    <script defer src="js/cms-pantry.js"></script>
+    <script defer src="js/cms-core.js"></script>
+    <script defer src="js/cms-live-layout.js"></script>
+    <script defer src="js/cms-editor.js"></script>
 </body>
 </html>

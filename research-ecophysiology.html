@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALSA - Ecophysiology Research</title>
+    <title data-cms-key="meta.title">SALSA - Ecophysiology Research</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
         rel="stylesheet">
@@ -270,7 +270,7 @@
             outline: none;
         }
 
-        /* Glassmorphism Tooltip */
+        /* Glassmorphism Tooltip - Updated for Following Behavior */
         #legend-explainer {
             position: absolute;
             display: none;
@@ -287,16 +287,17 @@
             pointer-events: none;
             z-index: 20;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            right: 24px;
-            bottom: 24px;
-            transform: translateY(10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            
+            /* Logic for floating tooltip from new script */
+            top: 0;
+            left: 0;
+            transform: translate3d(var(--tx, 0), var(--ty, 0), 0);
+            transition: opacity 0.3s ease; /* No transform transition for snappy follow */
         }
 
         #legend-explainer.visible {
             display: block;
             opacity: 1;
-            transform: translateY(0);
         }
 
         #legend-explainer strong {
@@ -336,6 +337,13 @@
         }
 
         .legend-item {
+            /* Button reset */
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            /* Layout */
             display: flex;
             align-items: center;
             gap: 12px;
@@ -375,10 +383,25 @@
             height: 16px;
             border-radius: 50%;
             box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+            display: inline-block;
         }
         
         .legend-item.active .legend-color {
             box-shadow: 0 0 0 2px #fff;
+        }
+
+        .three-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: rgba(0, 33, 71, 0.7);
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 6px 12px;
+            border-radius: 20px;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
         }
 
         /* Loading State */
@@ -391,7 +414,15 @@
             align-items: center;
             z-index: 50;
             transition: opacity 0.5s;
+            flex-direction: column;
+            gap: 1rem;
         }
+        
+        .loading-overlay.is-ready {
+            opacity: 0;
+            pointer-events: none;
+        }
+
         .loader {
             width: 48px; height: 48px;
             border: 5px solid #fff;
@@ -399,41 +430,50 @@
             border-radius: 50%;
             animation: rotation 1s linear infinite;
         }
+        
+        .loader-label {
+            color: #002147;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
+    <link rel="stylesheet" href="css/modern-system.css">
+    <link rel="stylesheet" href="css/cms-editor.css">
 </head>
 
-<body>
+<body data-cms-page="research-ecophysiology">
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-brand">
-                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
-                <span>AGRIVOLTAICS</span>
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo" data-cms-attr-alt="research.img_1.alt">
+                <span data-cms-key="nav.brand">AGRIVOLTAICS</span>
             </a>
-            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu" data-cms-attr-aria-label="global.nav.toggle_aria">☰</button>
             <div class="navbar-links">
                 <ul class="navbar-menu">
-                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li><a href="index.html" class="navbar-link" data-cms-key="global.nav.home">Home</a></li>
                     <li class="has-dropdown">
-                        <a href="#" class="navbar-link active">Research</a>
+                        <a href="#" class="navbar-link active" data-cms-key="global.nav.research">Research</a>
                         <ul class="dropdown-content">
-                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
-                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
-                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                            <li><a href="research-ecophysiology.html" data-cms-key="global.nav.research.ecophysiology">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html" data-cms-key="global.nav.research.scaling_up">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html" data-cms-key="global.nav.research.scaling_out">Scaling Out</a></li>
                         </ul>
                     </li>
                     <li class="has-dropdown">
-                        <a href="education.html" class="navbar-link">Education</a>
+                        <a href="education.html" class="navbar-link" data-cms-key="global.nav.education">Education</a>
                         <ul class="dropdown-content">
-                            <li><a href="education.html">School Gardens</a></li>
-                            <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
-                            <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                            <li><a href="education.html" data-cms-key="global.nav.education.school_gardens">School Gardens</a></li>
+                            <li><a href="education-global-school.html" data-cms-key="global.nav.education.global_school">Global School of Agrivoltaics</a></li>
+                            <li><a href="education-interdisciplinary.html" data-cms-key="global.nav.education.interdisciplinary">Interdisciplinary Opportunities</a></li>
                         </ul>
                     </li>
-                    <li><a href="sites.html" class="navbar-link">Learning Labs</a></li>
-                    <li><a href="news.html" class="navbar-link">News</a></li>
-                    <li><a href="team.html" class="navbar-link">Team</a></li>
-                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                    <li><a href="sites.html" class="navbar-link" data-cms-key="global.nav.learning_labs">Learning Labs</a></li>
+                    <li><a href="news.html" class="navbar-link" data-cms-key="global.nav.news">News</a></li>
+                    <li><a href="team.html" class="navbar-link" data-cms-key="global.nav.team">Team</a></li>
+                    <li><a href="#footer" class="navbar-link" data-cms-key="global.nav.contact">Contact</a></li>
                 </ul>
             </div>
         </div>
@@ -441,62 +481,71 @@
 
     <header class="hero hero-subpage" style="background-image: url('static/ecophysiology-hero.jpg');">
         <div class="hero-content">
-            <h1>Ecophysiology in Agrivoltaic Systems</h1>
+            <h1 data-cms-key="hero.headline" data-cms-block-id="research-ecophysiology_hero_headline" data-cms-block-type="headingBlock" data-cms-parent-canvas="research-ecophysiology.hero">Ecophysiology in Agrivoltaic Systems</h1>
         </div>
     </header>
 
-    <main class="section">
+    <main class="section" data-cms-canvas="research-ecophysiology.main" data-cms-grid="12">
         <div class="container">
 
             <div style="margin-bottom: 5rem;">
                 <div class="section-header">
-                    <h2>The Plant-Panel Symbiosis</h2>
+                    <h2 data-cms-key="hero.heading_1" data-cms-block-id="research-ecophysiology_hero_heading_1" data-cms-block-type="headingBlock" data-cms-parent-canvas="research-ecophysiology.hero">The Plant-Panel Symbiosis</h2>
                 </div>
 
                 <!-- === START: 3D Visualization Replacement === -->
-                <div id="agrivoltaics-container" role="img"
-                    aria-label="Interactive 3D model of an agrivoltaics system showing solar panels providing shade for crops, conserving water.">
+                <div id="agrivoltaics-container" role="img" aria-label="Interactive 3D model of an agrivoltaics system showing solar panels providing shade for crops, conserving water." data-cms-attr-aria-label="hero.div_1.aria_label">
                     
-                    <div class="loading-overlay" id="loader">
-                        <div class="loader"></div>
+                    <div class="loading-overlay" id="loader" aria-live="polite" aria-label="Loading interactive model" data-cms-attr-aria-label="hero.div_2.aria_label">
+                        <div class="loader" aria-hidden="true"></div>
+                        <div class="loader-label">Loading 3D model…</div>
                     </div>
-
-                    <div class="legend-container" id="legend">
-                        <div class="legend-item" data-type="panel">
-                            <span class="legend-color" style="background-color: #0B2545;"></span>
-                            <span>Solar Panel</span>
-                        </div>
-                        <div class="legend-item" data-type="crop">
-                            <span class="legend-color" style="background-color: #76B947;"></span>
-                            <span>Crops</span>
-                        </div>
-                        <div class="legend-item" data-type="water">
-                            <span class="legend-color" style="background-color: #4FA4F4;"></span>
-                            <span>Water Savings</span>
-                        </div>
-                        <div class="legend-item" data-type="biodiversity">
-                            <span class="legend-color" style="background-color: #DB7093;"></span>
-                            <span>Biodiversity</span>
-                        </div>
-                        <div class="legend-item" data-type="shade">
-                            <span class="legend-color" style="background-color: #FFFFFF;"></span>
-                            <span>Microclimate</span>
-                        </div>
+          
+                    <div class="three-hint" aria-hidden="true">
+                      Drag to explore • Click legend to focus
                     </div>
-                    <div id="legend-explainer">
-                        <strong id="explainer-title"></strong>
-                        <p id="explainer-text"></p>
+          
+                    <div class="legend-container" id="legend" aria-label="Interactive legend" data-cms-attr-aria-label="hero.div_3.aria_label">
+                      <button class="legend-item" type="button" data-type="panel" data-cms-key="hero.cta_1" data-cms-block-id="research-ecophysiology_hero_cta_1" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">
+                        <span class="legend-color" style="background-color:#0B2545;"></span>
+                        <span>Solar Panel</span>
+                      </button>
+          
+                      <button class="legend-item" type="button" data-type="crop" data-cms-key="hero.cta_2" data-cms-block-id="research-ecophysiology_hero_cta_2" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">
+                        <span class="legend-color" style="background-color:#76B947;"></span>
+                        <span>Crops</span>
+                      </button>
+          
+                      <button class="legend-item" type="button" data-type="water" data-cms-key="hero.cta_3" data-cms-block-id="research-ecophysiology_hero_cta_3" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">
+                        <span class="legend-color" style="background-color:#4FA4F4;"></span>
+                        <span>Water Savings</span>
+                      </button>
+          
+                      <button class="legend-item" type="button" data-type="biodiversity" data-cms-key="hero.cta_4" data-cms-block-id="research-ecophysiology_hero_cta_4" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">
+                        <span class="legend-color" style="background-color:#DB7093;"></span>
+                        <span>Biodiversity</span>
+                      </button>
+          
+                      <button class="legend-item" type="button" data-type="shade" data-cms-key="hero.cta_5" data-cms-block-id="research-ecophysiology_hero_cta_5" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">
+                        <span class="legend-color" style="background-color:#FFFFFF;"></span>
+                        <span>Microclimate</span>
+                      </button>
+                    </div>
+          
+                    <div id="legend-explainer" aria-live="polite" aria-atomic="true">
+                      <strong id="explainer-title"></strong>
+                      <p id="explainer-text"></p>
                     </div>
                 </div>
                 <!-- === END: 3D Visualization Replacement === -->
 
-                <p style="margin-top: 2rem;">This research pillar focuses on the micro-level interactions between
+                <p style="margin-top: 2rem;" data-cms-key="hero.text_1" data-cms-block-id="research-ecophysiology_hero_text_1" data-cms-block-type="textBlock" data-cms-parent-canvas="research-ecophysiology.hero">This research pillar focuses on the micro-level interactions between
                     plants, soil, and the altered
                     environment created by solar panels. We investigate fundamental questions about how partial shade
                     and changed microclimates affect plant physiology, water use efficiency, and overall crop health and
                     productivity. How do plants adapt their photosynthetic processes? How much water can be saved? Which
                     crops benefit the most from these conditions?</p>
-                <p>Years of field experiments have revealed a remarkable symbiosis. In hot, arid climates, the shade
+                <p data-cms-key="hero.text_2" data-cms-block-id="research-ecophysiology_hero_text_2" data-cms-block-type="textBlock" data-cms-parent-canvas="research-ecophysiology.hero">Years of field experiments have revealed a remarkable symbiosis. In hot, arid climates, the shade
                     provided by panels creates a milder microclimate, buffering crops from extreme heat and light. This
                     protection helps plants avoid the typical "midday depression" of photosynthesis, where they shut
                     down to conserve water, allowing them to remain productive throughout the day.<sup><a
@@ -510,21 +559,21 @@
 
             <div class="chart-section" style="margin-bottom: 5rem;">
                 <div class="section-header" style="margin-bottom: 2rem;">
-                    <h2>Photosynthesis Throughout the Day</h2>
-                    <p style="color: var(--text-body); font-size: 1.1rem; max-width: 700px; margin: 1rem auto 0;">
+                    <h2 data-cms-key="hero.heading_2" data-cms-block-id="research-ecophysiology_hero_heading_2" data-cms-block-type="headingBlock" data-cms-parent-canvas="research-ecophysiology.hero">Photosynthesis Throughout the Day</h2>
+                    <p style="color: var(--text-body); font-size: 1.1rem; max-width: 700px; margin: 1rem auto 0;" data-cms-key="hero.text_3" data-cms-block-id="research-ecophysiology_hero_text_3" data-cms-block-type="textBlock" data-cms-parent-canvas="research-ecophysiology.hero">
                         Explore how agrivoltaics mitigates the "midday depression" of photosynthesis. In full sun, many
                         plants shut down during the hottest part of the day. Under panels, they continue to thrive.</p>
                 </div>
 
                 <div class="chart-controls">
                     <div class="control-group" id="irrigation-toggle">
-                        <button class="toggle-btn active" data-value="full">100% Irrigation</button>
-                        <button class="toggle-btn" data-value="half">50% Irrigation</button>
+                        <button class="toggle-btn active" data-value="full" data-cms-key="hero.cta_6" data-cms-block-id="research-ecophysiology_hero_cta_6" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">100% Irrigation</button>
+                        <button class="toggle-btn" data-value="half" data-cms-key="hero.cta_7" data-cms-block-id="research-ecophysiology_hero_cta_7" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">50% Irrigation</button>
                     </div>
                     <div class="control-group" id="crop-toggle">
-                        <button class="toggle-btn active" data-value="basil">Basil</button>
-                        <button class="toggle-btn" data-value="beans">Beans</button>
-                        <button class="toggle-btn" data-value="tomatoes">Tomatoes</button>
+                        <button class="toggle-btn active" data-value="basil" data-cms-key="hero.cta_8" data-cms-block-id="research-ecophysiology_hero_cta_8" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">Basil</button>
+                        <button class="toggle-btn" data-value="beans" data-cms-key="hero.cta_9" data-cms-block-id="research-ecophysiology_hero_cta_9" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">Beans</button>
+                        <button class="toggle-btn" data-value="tomatoes" data-cms-key="hero.cta_10" data-cms-block-id="research-ecophysiology_hero_cta_10" data-cms-block-type="buttonBlock" data-cms-parent-canvas="research-ecophysiology.hero">Tomatoes</button>
                     </div>
                 </div>
 
@@ -533,60 +582,60 @@
 
             <div style="margin-bottom: 4rem;">
                 <div class="section-header">
-                    <h2>Projects & Sites</h2>
+                    <h2 data-cms-key="hero.heading_3" data-cms-block-id="research-ecophysiology_hero_heading_3" data-cms-block-type="headingBlock" data-cms-parent-canvas="research-ecophysiology.hero">Projects & Sites</h2>
                 </div>
-                <div class="projects-grid">
-                    <a href="sites.html#arizona-sites-detailed" class="btn btn-secondary">B2</a>
-                    <a href="sites.html#colorado-site-detailed" class="btn btn-secondary">Jack's</a>
-                    <a href="sites.html#arizona-sites-detailed" class="btn btn-secondary">FARMS</a>
+                <div class="projects-grid" data-cms-list="generic_1" data-cms-list-type="genericBlocks" data-cms-canvas="research-ecophysiology.generic_1" data-cms-grid="12">
+                    <a href="sites.html#arizona-sites-detailed" class="btn btn-secondary" data-cms-key="pillars.link_1">B2</a>
+                    <a href="sites.html#colorado-site-detailed" class="btn btn-secondary" data-cms-key="pillars.link_2">Jack's</a>
+                    <a href="sites.html#arizona-sites-detailed" class="btn btn-secondary" data-cms-key="pillars.link_3">FARMS</a>
                 </div>
             </div>
 
             <div>
                 <div class="section-header">
-                    <h2>Recent Publications</h2>
+                    <h2 data-cms-key="pillars.heading_1" data-cms-block-id="research-ecophysiology_pillars_heading_1" data-cms-block-type="headingBlock" data-cms-parent-canvas="research-ecophysiology.hero">Recent Publications</h2>
                 </div>
-                <div class="news-grid">
-                    <div class="news-card">
+                <div class="news-grid" data-cms-list="generic_2" data-cms-list-type="genericBlocks" data-cms-canvas="research-ecophysiology.generic_2" data-cms-grid="12">
+                    <div class="news-card" data-cms-block-id="research-ecophysiology_block_1" data-cms-block-type="genericBlock" data-cms-parent-canvas="research-ecophysiology.generic_2">
                         <a href="https://doi.org/10/j.gecadv.2025.100021" target="_blank" class="news-card-link"
-                            aria-label="View Publication on The long-term suitability of agrivoltaics as a climate adaptation strategy in the southwestern United States">
+                            aria-label="View Publication on The long-term suitability of agrivoltaics as a climate adaptation strategy in the southwestern United States" data-cms-attr-aria-label="pillars.a_1.aria_label" data-cms-block-id="news_item_item_the_long_term_suitability_of_agrivoltaics_in_the_southwestern_united_sta" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper">
                                 <img src="static/output1.jpg"
-                                    alt="Placeholder image for a publication on agrivoltaics in the southwestern United States">
+                                    alt="Placeholder image for a publication on agrivoltaics in the southwestern United States" data-cms-attr-alt="pillars.img_1.alt">
                             </div>
                             <div class="news-card-content">
-                                <h3>The Long-Term Suitability of Agrivoltaics in the Southwestern United States</h3>
-                                <p>This study evaluates land suitability for agrivoltaics in the U.S. Southwest, finding
+                                <h3 data-cms-key="pillars.heading_2">The Long-Term Suitability of Agrivoltaics in the Southwestern United States</h3>
+                                <p data-cms-key="pillars.text_1">This study evaluates land suitability for agrivoltaics in the U.S. Southwest, finding
                                     that the most suitable land is projected to increase by 54% under future climate
                                     scenarios, with California and New Mexico seeing the most significant gains.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="news-card">
+                    <div class="news-card" data-cms-block-id="research-ecophysiology_block_2" data-cms-block-type="genericBlock" data-cms-parent-canvas="research-ecophysiology.generic_2">
                         <a href="https://www.nature.com/articles/s44264-025-00073-1" target="_blank"
                             class="news-card-link"
-                            aria-label="View npj Sustainable Agriculture Publication on Photosynthesis">
+                            aria-label="View npj Sustainable Agriculture Publication on Photosynthesis" data-cms-attr-aria-label="sites.a_1.aria_label" data-cms-block-id="news_item_item_midday_depression_in_photosynthesis" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper">
                                 <img src="static/output2.jpg"
-                                    alt="Placeholder image for a drylands photosynthesis publication">
+                                    alt="Placeholder image for a drylands photosynthesis publication" data-cms-attr-alt="sites.img_1.alt">
                             </div>
                             <div class="news-card-content">
-                                <h3>Midday Depression in Photosynthesis</h3>
-                                <p>Published in npj Sustainable Agriculture, this research presents agrivoltaics as a
+                                <h3 data-cms-key="pillars.heading_3">Midday Depression in Photosynthesis</h3>
+                                <p data-cms-key="pillars.text_2">Published in npj Sustainable Agriculture, this research presents agrivoltaics as a
                                     climate-smart solution in drylands, mitigating plant stress to boost resilience.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="news-card">
+                    <div class="news-card" data-cms-block-id="research-ecophysiology_block_3" data-cms-block-type="genericBlock" data-cms-parent-canvas="research-ecophysiology.generic_2">
                         <a href="https://doi.org/10/j.rser.2024.115066" target="_blank" class="news-card-link"
-                            aria-label="View Renewable and Sustainable Energy Reviews Publication on Agrivoltaics in East Africa">
+                            aria-label="View Renewable and Sustainable Energy Reviews Publication on Agrivoltaics in East Africa" data-cms-attr-aria-label="sites.a_2.aria_label" data-cms-block-id="news_item_item_harvesting_the_sun_twice_agrivoltaics_in_east_africa" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper">
                                 <img src="static/output3.jpg"
-                                    alt="Placeholder image for a publication on agrivoltaics in East Africa">
+                                    alt="Placeholder image for a publication on agrivoltaics in East Africa" data-cms-attr-alt="sites.img_2.alt">
                             </div>
                             <div class="news-card-content">
-                                <h3>Harvesting the Sun Twice: Agrivoltaics in East Africa</h3>
-                                <p>This study in Tanzania and Kenya demonstrates that agrivoltaic systems can generate
+                                <h3 data-cms-key="pillars.heading_4">Harvesting the Sun Twice: Agrivoltaics in East Africa</h3>
+                                <p data-cms-key="pillars.text_3">This study in Tanzania and Kenya demonstrates that agrivoltaic systems can generate
                                     electricity, improve crop yields, and conserve water, enhancing food, energy, and
                                     water security in the region.</p>
                             </div>
@@ -597,861 +646,1213 @@
         </div>
     </main>
 
-    <footer class="footer" id="footer">
+    <footer class="footer" id="footer" data-cms-canvas="research-ecophysiology.footer" data-cms-grid="12">
         <div class="container footer-content">
             <div class="footer-brand">
-                <h3>SALSA Agrivoltaics</h3>
-                <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
+                <h3 data-cms-key="global.footer.brand.title">SALSA Agrivoltaics</h3>
+                <p data-cms-key="global.footer.brand.description">A project of the University of Arizona, pioneering food-energy-water solutions.</p>
             </div>
             <div class="footer-links">
-                <h4>Quick Links</h4>
+                <h4 data-cms-key="global.footer.quick_links.heading">Quick Links</h4>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="sites.html">Sites</a></li>
-                    <li><a href="news.html">News</a></li>
-                    <li><a href="team.html">Team</a></li>
+                    <li><a href="index.html" data-cms-key="global.footer.home">Home</a></li>
+                    <li><a href="sites.html" data-cms-key="global.footer.sites">Sites</a></li>
+                    <li><a href="news.html" data-cms-key="global.footer.news">News</a></li>
+                    <li><a href="team.html" data-cms-key="global.footer.team">Team</a></li>
                 </ul>
             </div>
             <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p>University of Arizona</p>
-                <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
+                <h4 data-cms-key="global.footer.contact.heading">Contact Us</h4>
+                <p data-cms-key="global.footer.contact.organization">University of Arizona</p>
+                <p data-cms-key="global.footer.contact.email"><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
+            <p data-cms-key="global.footer.copyright">© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="js/main.js"></script>
 
-    <!-- === START: Agrivoltaics 3D Visualization Script === -->
+    <!-- === START: Agrivoltaics 3D Visualization Script (Upgraded Animation + Post FX) === -->
     <script type="importmap">
     {
-        "imports": {
-            "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
-        }
+      "imports": {
+        "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
+      }
     }
     </script>
+  
     <script type="module">
-        import * as THREE from 'three';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-        // --- Configuration ---
-        const CONFIG = {
-            shadowBias: -0.0005,
-            plantCount: 6,
-            windSpeed: 1.2,
-            // Adjusted Sun Position to cast a clear diagonal shadow
-            sunPos: new THREE.Vector3(-12, 18, 8), 
-            colors: {
-                panel: 0x0B2545,
-                panelFrame: 0x334455,
-                stem: 0x4A6B3C,
-                leaf: 0x76B947,
-                leafDark: 0x5A9632,
-                cornStalk: 0x8FB359,
-                beanLeaf: 0x5A9632,
-                tomatoLeaf: 0x4A7A29,
-                water: 0x4FA4F4,
-                bee: 0xF7C849,
-                highlight: 0xE87A24
-            }
+      import * as THREE from 'three';
+      import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  
+      // Postprocessing (modern, subtle, performance-friendly)
+      import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+      import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+      import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+      import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
+      import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
+  
+      // --- Configuration ---
+      const CONFIG = {
+        shadowBias: -0.00035,
+        windSpeed: 1.25,
+        sunPos: new THREE.Vector3(-12, 18, 8),
+  
+        // UX / motion
+        prefersReducedMotion: window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false,
+  
+        colors: {
+          panel: 0x0B2545,
+          panelFrame: 0x334455,
+          stem: 0x4A6B3C,
+          leaf: 0x76B947,
+          leafDark: 0x5A9632,
+          cornStalk: 0x8FB359,
+          beanLeaf: 0x5A9632,
+          tomatoLeaf: 0x4A7A29,
+          water: 0x4FA4F4,
+          bee: 0xF7C849,
+          highlight: 0xE87A24
+        },
+  
+        post: {
+          bloomStrength: 0.22,
+          bloomRadius: 0.75,
+          bloomThreshold: 0.55,
+          outlineEdgeStrength: 2.2,
+          outlineEdgeGlow: 0.25,
+          outlinePulse: 0.35
+        }
+      };
+  
+      // --- Scene Globals ---
+      let scene, camera, renderer, controls, clock;
+      let composer, outlinePass, bloomPass;
+      let raycaster, pointer;
+  
+      const interactiveRoots = [];
+      const windPlants = [];
+      const bees = [];
+      const dust = [];
+  
+      let hoveredRoot = null;
+      let selectedType = null;
+      let selectedRoot = null;
+  
+      // DOM Elements
+      const container = document.getElementById('agrivoltaics-container');
+      const explainer = document.getElementById('legend-explainer');
+      const loader = document.getElementById('loader');
+      const legendItems = Array.from(document.querySelectorAll('.legend-item'));
+      const legendContainer = document.getElementById('legend');
+  
+      // --- Utilities ---
+      const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+      const lerp = (a, b, t) => a + (b - a) * t;
+  
+      function setExplainer(title, text) {
+        document.getElementById('explainer-title').textContent = title;
+        document.getElementById('explainer-text').textContent = text;
+        explainer.classList.add('visible');
+      }
+  
+      function hideExplainer() {
+        explainer.classList.remove('visible');
+      }
+  
+      function setExplainerToCursor(clientX, clientY) {
+        // Only "float" when hovering (not selected); clamp to container bounds.
+        const rect = container.getBoundingClientRect();
+        const pad = 16;
+        const x = clamp(clientX - rect.left + 18, pad, rect.width - pad);
+        const y = clamp(clientY - rect.top + 18, pad, rect.height - pad);
+  
+        explainer.style.setProperty('--tx', `${x}px`);
+        explainer.style.setProperty('--ty', `${y}px`);
+        explainer.dataset.mode = 'follow';
+      }
+  
+      function pinExplainer() {
+        explainer.dataset.mode = 'pinned';
+      }
+  
+      function gatherMeshes(root) {
+        const meshes = [];
+        root.traverse(obj => { if (obj.isMesh) meshes.push(obj); });
+        return meshes;
+      }
+  
+      // --- Procedural textures ---
+      function createSolarTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512; canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+  
+        ctx.fillStyle = '#0B2545';
+        ctx.fillRect(0, 0, 512, 512);
+  
+        ctx.strokeStyle = '#3a4f6a';
+        ctx.lineWidth = 2;
+        const cols = 6, rows = 10;
+        const cw = 512 / cols, rh = 512 / rows;
+  
+        for (let i = 0; i <= cols; i++) {
+          ctx.beginPath(); ctx.moveTo(i * cw, 0); ctx.lineTo(i * cw, 512); ctx.stroke();
+        }
+        for (let i = 0; i <= rows; i++) {
+          ctx.beginPath(); ctx.moveTo(0, i * rh); ctx.lineTo(512, i * rh); ctx.stroke();
+        }
+  
+        // subtle "busbars"
+        ctx.strokeStyle = 'rgba(200,220,255,0.25)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < cols; i++) {
+          const c = i * cw + cw / 2;
+          ctx.beginPath(); ctx.moveTo(c - cw * 0.18, 0); ctx.lineTo(c - cw * 0.18, 512); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(c + cw * 0.18, 0); ctx.lineTo(c + cw * 0.18, 512); ctx.stroke();
+        }
+  
+        // glint band
+        const grad = ctx.createLinearGradient(0, 0, 512, 512);
+        grad.addColorStop(0.0, 'rgba(255,255,255,0)');
+        grad.addColorStop(0.45, 'rgba(255,255,255,0)');
+        grad.addColorStop(0.55, 'rgba(255,255,255,0.18)');
+        grad.addColorStop(0.65, 'rgba(255,255,255,0)');
+        grad.addColorStop(1.0, 'rgba(255,255,255,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 512);
+  
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.anisotropy = 8;
+        return tex;
+      }
+  
+      function createSoilTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1024; canvas.height = 1024;
+        const ctx = canvas.getContext('2d');
+  
+        const grd = ctx.createLinearGradient(0, 0, 1024, 1024);
+        grd.addColorStop(0, "#9B7250");
+        grd.addColorStop(1, "#6F4B2D");
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, 1024, 1024);
+  
+        // multi-scale speckle
+        for (let i = 0; i < 140000; i++) {
+          const x = Math.random() * 1024;
+          const y = Math.random() * 1024;
+          const s = Math.random() * 2.4 + 0.2;
+          const light = Math.random() > 0.65;
+          ctx.fillStyle = light ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.14)';
+          ctx.fillRect(x, y, s, s);
+        }
+  
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(2.25, 2.25);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.anisotropy = 8;
+        return tex;
+      }
+  
+      function createSkyGradientTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1024; canvas.height = 1024;
+        const ctx = canvas.getContext('2d');
+  
+        const g = ctx.createLinearGradient(0, 0, 0, 1024);
+        g.addColorStop(0, '#EAF6FF');
+        g.addColorStop(0.45, '#9ED6FF');
+        g.addColorStop(1, '#5FB8FF');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 1024, 1024);
+  
+        // soft clouds
+        for (let i = 0; i < 180; i++) {
+          const x = Math.random() * 1024;
+          const y = Math.random() * 520;
+          const r = 30 + Math.random() * 120;
+          const a = 0.02 + Math.random() * 0.06;
+          const rg = ctx.createRadialGradient(x, y, 0, x, y, r);
+          rg.addColorStop(0, `rgba(255,255,255,${a})`);
+          rg.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = rg;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+  
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        return tex;
+      }
+  
+      // --- Initialization ---
+      function init() {
+        scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x89CFF0, 0.022);
+  
+        clock = new THREE.Clock();
+  
+        raycaster = new THREE.Raycaster();
+        pointer = new THREE.Vector2();
+  
+        camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 120);
+        camera.position.set(6.2, 5.2, 12.8);
+        camera.lookAt(0, 1.2, 0);
+  
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.08;
+        renderer.physicallyCorrectLights = true;
+  
+        container.appendChild(renderer.domElement);
+  
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.06;
+        controls.minDistance = 5.2;
+        controls.maxDistance = 22;
+        controls.maxPolarAngle = Math.PI / 2 - 0.06;
+        controls.autoRotate = !CONFIG.prefersReducedMotion;
+        controls.autoRotateSpeed = 0.42;
+        controls.enablePan = false;
+  
+        setupPostFX();
+        setupLighting();
+        createEnvironment();
+        createGround();
+        createSystem();
+        createAtmosphere();
+  
+        // Pointer interactions
+        container.addEventListener('pointermove', onPointerMove, { passive: true });
+        container.addEventListener('pointerdown', () => { controls.autoRotate = false; }, { passive: true });
+        container.addEventListener('click', onCanvasClick);
+  
+        window.addEventListener('resize', onResize);
+  
+        setupLegendUI();
+  
+        // Fade loader after first render
+        requestAnimationFrame(() => {
+          loader?.classList.add('is-ready');
+          setTimeout(() => loader?.remove(), 520);
+        });
+  
+        animate();
+      }
+  
+      function setupPostFX() {
+        composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+  
+        // Bloom
+        bloomPass = new UnrealBloomPass(
+          new THREE.Vector2(container.clientWidth, container.clientHeight),
+          CONFIG.post.bloomStrength,
+          CONFIG.post.bloomRadius,
+          CONFIG.post.bloomThreshold
+        );
+        composer.addPass(bloomPass);
+  
+        // Outline for hovered/selected
+        outlinePass = new OutlinePass(
+          new THREE.Vector2(container.clientWidth, container.clientHeight),
+          scene,
+          camera
+        );
+        outlinePass.edgeStrength = CONFIG.post.outlineEdgeStrength;
+        outlinePass.edgeGlow = CONFIG.post.outlineEdgeGlow;
+        outlinePass.edgeThickness = 1.0;
+        outlinePass.visibleEdgeColor.setHex(CONFIG.colors.highlight);
+        outlinePass.hiddenEdgeColor.setHex(0x0a192f);
+        composer.addPass(outlinePass);
+  
+        // SMAA for crisp edges
+        const smaa = new SMAAPass(container.clientWidth, container.clientHeight);
+        composer.addPass(smaa);
+      }
+  
+      function setupLighting() {
+        const hemi = new THREE.HemisphereLight(0xffffff, 0x6b4b2d, 0.55);
+        scene.add(hemi);
+  
+        const sun = new THREE.DirectionalLight(0xfffbf2, 3.1);
+        sun.position.copy(CONFIG.sunPos);
+        sun.castShadow = true;
+  
+        sun.shadow.mapSize.set(2048, 2048);
+        sun.shadow.bias = CONFIG.shadowBias;
+  
+        const d = 14;
+        sun.shadow.camera.left = -d;
+        sun.shadow.camera.right = d;
+        sun.shadow.camera.top = d;
+        sun.shadow.camera.bottom = -d;
+        sun.shadow.camera.near = 1;
+        sun.shadow.camera.far = 60;
+        scene.add(sun);
+  
+        // Cool rim fill (adds dimensionality)
+        const rim = new THREE.SpotLight(0x6cc7ff, 18, 45, Math.PI * 0.18, 0.55, 1.2);
+        rim.position.set(12, 4, -10);
+        rim.target.position.set(0, 1, 0);
+        scene.add(rim);
+        scene.add(rim.target);
+  
+        // Warm bounce (subtle)
+        const bounce = new THREE.PointLight(0xffb07c, 6, 24, 2);
+        bounce.position.set(-6, 1.2, 6);
+        scene.add(bounce);
+      }
+  
+      function createEnvironment() {
+        // Sky dome
+        const skyGeo = new THREE.SphereGeometry(60, 48, 48);
+        const skyMat = new THREE.MeshBasicMaterial({
+          map: createSkyGradientTexture(),
+          side: THREE.BackSide,
+          depthWrite: false
+        });
+        const sky = new THREE.Mesh(skyGeo, skyMat);
+        scene.add(sky);
+      }
+  
+      function createGround() {
+        const geometry = new THREE.CircleGeometry(30, 80);
+        const material = new THREE.MeshStandardMaterial({
+          map: createSoilTexture(),
+          roughness: 0.95,
+          metalness: 0.02
+        });
+        const ground = new THREE.Mesh(geometry, material);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+  
+        // Soft "shade patch" plane to visually sell microclimate (no interaction)
+        const shadeGeo = new THREE.PlaneGeometry(18, 10);
+        const shadeMat = new THREE.MeshBasicMaterial({
+          transparent: true,
+          opacity: 0.16,
+          color: 0x0a192f,
+          depthWrite: false
+        });
+        const shade = new THREE.Mesh(shadeGeo, shadeMat);
+        shade.rotation.x = -Math.PI / 2;
+        shade.position.set(1.6, 0.01, -1.2);
+        scene.add(shade);
+      }
+  
+      function createSystem() {
+        const rows = 3;
+        const spacing = 4.55;
+  
+        // Shadow placement offsets
+        const shadowOffsetX = 1.7;
+        const shadowOffsetZ = -1.15;
+  
+        const cropTypes = ['tomato', 'corn', 'bean'];
+        const cropInfo = {
+          corn: 'Corn (Maize) grows significantly taller under partial shade, benefiting from reduced heat stress.',
+          tomato: 'Tomatoes often double their fruit yield in agrivoltaic systems due to cooler microclimates.',
+          bean: 'Beans and other legumes thrive in the dappled light, maintaining soil nitrogen levels.'
         };
-
-        // --- Scene Globals ---
-        let scene, camera, renderer, controls, clock;
-        let raycaster, mouse;
-        const interactiveObjects = [];
-        let hoveredObject = null;
-        let selectedType = null;
-        
-        // Animation collections
-        const windAffectedObjects = [];
-        const bees = [];
-        const dustParticles = [];
-
-        // DOM Elements
-        const container = document.getElementById('agrivoltaics-container');
-        const explainer = document.getElementById('legend-explainer');
-        const loader = document.getElementById('loader');
-        const legendItems = document.querySelectorAll('.legend-item');
-        const legendContainer = document.getElementById('legend');
-
-        // --- Procedural Texture Generation ---
-        function createSolarTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512; canvas.height = 512;
-            const ctx = canvas.getContext('2d');
-            
-            ctx.fillStyle = '#0B2545';
-            ctx.fillRect(0, 0, 512, 512);
-            
-            ctx.strokeStyle = '#3a4f6a';
-            ctx.lineWidth = 2;
-            const cols = 6; const rows = 10;
-            const cw = 512/cols; const rh = 512/rows;
-            
-            for(let i=0; i<=cols; i++) {
-                ctx.beginPath(); ctx.moveTo(i*cw, 0); ctx.lineTo(i*cw, 512); ctx.stroke();
-            }
-            for(let i=0; i<=rows; i++) {
-                ctx.beginPath(); ctx.moveTo(0, i*rh); ctx.lineTo(512, i*rh); ctx.stroke();
-            }
-
-            ctx.strokeStyle = '#8899aa';
-            ctx.lineWidth = 1;
-            for(let i=0; i<cols; i++) {
-                const center = i*cw + cw/2;
-                ctx.beginPath(); ctx.moveTo(center - cw*0.15, 0); ctx.lineTo(center - cw*0.15, 512); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(center + cw*0.15, 0); ctx.lineTo(center + cw*0.15, 512); ctx.stroke();
-            }
-
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.colorSpace = THREE.SRGBColorSpace;
-            return tex;
+  
+        for (let i = 0; i < rows; i++) {
+          const zPos = (i - 1) * spacing;
+          const group = new THREE.Group();
+          group.position.z = zPos;
+  
+          // Panel assembly
+          const panelRoot = createSmartPanel();
+          group.add(panelRoot);
+  
+          // Crops
+          const type = cropTypes[i % cropTypes.length];
+          const cropsRoot = createSpecificCropRow(type);
+          cropsRoot.position.set(shadowOffsetX, 0, shadowOffsetZ);
+          group.add(cropsRoot);
+  
+          // Water effect
+          const waterRoot = createWaterEffect();
+          waterRoot.position.set(shadowOffsetX, 0.02, shadowOffsetZ);
+          group.add(waterRoot);
+  
+          // Microclimate volume
+          const microRoot = createMicroclimateVolume();
+          microRoot.position.set(shadowOffsetX, 0.78, shadowOffsetZ);
+          group.add(microRoot);
+  
+          // Sun shafts
+          const beams = createSunBeams();
+          group.add(beams);
+  
+          // Biodiversity (middle row)
+          if (i === 1) {
+            const bioRoot = createBiodiversity();
+            bioRoot.position.set(shadowOffsetX, 1.5, shadowOffsetZ);
+            group.add(bioRoot);
+            addInteractive(bioRoot, 'biodiversity', 'Biodiversity Boost', 'Pollinators thrive in the sheltered microclimate, boosting ecosystem health.');
+          }
+  
+          // Register interactions
+          addInteractive(panelRoot, 'panel', 'Solar PV Array', 'Generates renewable energy while shielding crops from excessive solar radiation.');
+          addInteractive(cropsRoot, 'crop', 'Protected ' + type.charAt(0).toUpperCase() + type.slice(1), cropInfo[type]);
+          addInteractive(waterRoot, 'water', 'Water Conservation', 'Soil moisture evaporation is reduced by up to 40% due to panel shading.');
+          addInteractive(microRoot, 'shade', 'Microclimate Buffer', 'Temperatures are 5-10°C cooler under panels during the day, preventing midday photosynthesis shutdown.');
+  
+          scene.add(group);
         }
-
-        function createSoilTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 1024; canvas.height = 1024;
-            const ctx = canvas.getContext('2d');
-            
-            // Rich earth gradient
-            const grd = ctx.createLinearGradient(0, 0, 1024, 1024);
-            grd.addColorStop(0, "#966F4B");
-            grd.addColorStop(1, "#755130");
-            ctx.fillStyle = grd;
-            ctx.fillRect(0,0,1024,1024);
-            
-            // Multi-layer noise for non-repetitive look
-            for(let i=0; i<150000; i++) {
-                const x = Math.random()*1024;
-                const y = Math.random()*1024;
-                const s = Math.random() * 3;
-                ctx.fillStyle = Math.random() > 0.6 ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.15)';
-                ctx.fillRect(x, y, s, s);
-            }
-            
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.wrapS = THREE.RepeatWrapping;
-            tex.wrapT = THREE.RepeatWrapping;
-            tex.repeat.set(2, 2);
-            tex.colorSpace = THREE.SRGBColorSpace;
-            return tex;
+      }
+  
+      function createSmartPanel() {
+        const root = new THREE.Group();
+  
+        const postGeo = new THREE.CylinderGeometry(0.085, 0.085, 2.55, 18);
+        const postMat = new THREE.MeshStandardMaterial({ color: 0x5a5f66, roughness: 0.85, metalness: 0.15 });
+        const post = new THREE.Mesh(postGeo, postMat);
+        post.position.y = 1.275;
+        post.castShadow = true;
+        root.add(post);
+  
+        const braceGeo = new THREE.CylinderGeometry(0.04, 0.04, 1.7, 14);
+        const brace = new THREE.Mesh(braceGeo, postMat);
+        brace.position.set(0.0, 2.15, 0.0);
+        brace.rotation.z = Math.PI * 0.45;
+        brace.castShadow = true;
+        root.add(brace);
+  
+        const panelGeo = new THREE.BoxGeometry(3.55, 0.06, 1.85);
+        const panelMat = new THREE.MeshPhysicalMaterial({
+          color: 0xffffff,
+          map: createSolarTexture(),
+          metalness: 0.35,
+          roughness: 0.18,
+          clearcoat: 1.0,
+          clearcoatRoughness: 0.08,
+          reflectivity: 0.55,
+          side: THREE.DoubleSide
+        });
+  
+        const panel = new THREE.Mesh(panelGeo, panelMat);
+        panel.position.set(0, 2.62, 0);
+        panel.rotation.x = Math.PI / 6;
+        panel.castShadow = true;
+        root.add(panel);
+  
+        // Thin frame to catch highlights
+        const frameGeo = new THREE.BoxGeometry(3.62, 0.08, 1.92);
+        const frameMat = new THREE.MeshStandardMaterial({
+          color: CONFIG.colors.panelFrame,
+          roughness: 0.65,
+          metalness: 0.35
+        });
+        const frame = new THREE.Mesh(frameGeo, frameMat);
+        frame.position.copy(panel.position);
+        frame.rotation.copy(panel.rotation);
+        frame.castShadow = true;
+        root.add(frame);
+  
+        // "glint" animation driver
+        root.userData.glintPhase = Math.random() * Math.PI * 2;
+        root.userData.panelMesh = panel;
+  
+        return root;
+      }
+  
+      function createSunBeams() {
+        const beamGroup = new THREE.Group();
+        const sunPos = CONFIG.sunPos;
+  
+        const len = 30;
+        const beamGeo = new THREE.CylinderGeometry(0.42, 0.42, len, 18, 1, true);
+        beamGeo.translate(0, len / 2, 0);
+  
+        const beamMat = new THREE.MeshBasicMaterial({
+          color: 0xfff2c9,
+          transparent: true,
+          opacity: 0.048,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+          blending: THREE.AdditiveBlending
+        });
+  
+        for (let i = 0; i < 3; i++) {
+          const beam = new THREE.Mesh(beamGeo, beamMat.clone());
+          const ox = (Math.random() - 0.5) * 3.1;
+          const oz = (Math.random() - 0.5) * 1.6;
+          beam.position.set(ox, 0, oz);
+          const s = 0.48 + Math.random() * 0.6;
+          beam.scale.set(s, 1, s);
+          beam.userData.phase = Math.random() * Math.PI * 2;
+          beamGroup.add(beam);
         }
-
-        // --- Initialization ---
-        function init() {
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x89CFF0);
-            scene.fog = new THREE.FogExp2(0x89CFF0, 0.02);
-
-            clock = new THREE.Clock();
-            raycaster = new THREE.Raycaster();
-            mouse = new THREE.Vector2();
-
-            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-            camera.position.set(5, 5, 12);
-            camera.lookAt(0, 0, 0);
-
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.15;
-            container.appendChild(renderer.domElement);
-
-            controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.minDistance = 5;
-            controls.maxDistance = 20;
-            controls.maxPolarAngle = Math.PI / 2 - 0.05; 
-            controls.autoRotate = true;
-            controls.autoRotateSpeed = 0.4;
-
-            setupLighting();
-            createGround();
-            createSystem();
-            createAtmosphere();
-
-            container.addEventListener('mousemove', onMouseMove);
-            container.addEventListener('click', onCanvasClick);
-            container.addEventListener('mousedown', () => controls.autoRotate = false);
-            window.addEventListener('resize', onResize);
-
-            setupLegendUI();
-            
-            setTimeout(() => {
-                loader.style.opacity = 0;
-                setTimeout(() => loader.remove(), 500);
-            }, 500);
-
-            animate();
+  
+        beamGroup.position.set(0, 2.62, 0);
+        beamGroup.lookAt(sunPos);
+        beamGroup.rotateX(Math.PI / 2);
+        return beamGroup;
+      }
+  
+      function createSpecificCropRow(type) {
+        const row = new THREE.Group();
+        const count = 9;
+  
+        for (let i = 0; i < count; i++) {
+          let plant;
+          const x = (i / (count - 1)) * 3.0 - 1.5 + (Math.random() * 0.16 - 0.08);
+          const z = (Math.random() - 0.5) * 0.85;
+  
+          if (type === 'corn') plant = createCornPlant();
+          else if (type === 'tomato') plant = createTomatoPlant();
+          else plant = createBeanPlant();
+  
+          plant.position.set(x, 0, z);
+          plant.rotation.y = Math.random() * Math.PI * 2;
+  
+          // wind metadata
+          plant.userData.wind = {
+            phase: Math.random() * Math.PI * 2,
+            amp: 0.055 + Math.random() * 0.05,
+            speed: 0.9 + Math.random() * 0.9
+          };
+  
+          row.add(plant);
+          windPlants.push(plant);
         }
-
-        function setupLighting() {
-            const hemiLight = new THREE.HemisphereLight(0xffffff, 0x755130, 0.7);
-            scene.add(hemiLight);
-
-            const sunLight = new THREE.DirectionalLight(0xfffaf0, 2.2);
-            sunLight.position.copy(CONFIG.sunPos);
-            sunLight.castShadow = true;
-            
-            const mapSize = 2048;
-            sunLight.shadow.mapSize.width = mapSize;
-            sunLight.shadow.mapSize.height = mapSize;
-            sunLight.shadow.bias = CONFIG.shadowBias;
-            
-            const d = 12;
-            sunLight.shadow.camera.left = -d;
-            sunLight.shadow.camera.right = d;
-            sunLight.shadow.camera.top = d;
-            sunLight.shadow.camera.bottom = -d;
-            
-            scene.add(sunLight);
-
-            const rimLight = new THREE.SpotLight(0x4FA4F4, 4);
-            rimLight.position.set(10, 2, -5);
-            rimLight.lookAt(0, 1, 0);
-            scene.add(rimLight);
+  
+        return row;
+      }
+  
+      // --- Crop factory ---
+      function createCornPlant() {
+        const group = new THREE.Group();
+  
+        const stalkGeo = new THREE.CylinderGeometry(0.03, 0.055, 1.62, 10);
+        stalkGeo.translate(0, 0.81, 0);
+        const stalk = new THREE.Mesh(stalkGeo, new THREE.MeshStandardMaterial({ color: CONFIG.colors.cornStalk, roughness: 0.9 }));
+        stalk.castShadow = true;
+        group.add(stalk);
+  
+        const leafShape = new THREE.Shape();
+        leafShape.moveTo(0, 0);
+        leafShape.quadraticCurveTo(0.055, 0.33, 0, 0.68);
+        leafShape.quadraticCurveTo(-0.055, 0.33, 0, 0);
+        const leafGeo = new THREE.ShapeGeometry(leafShape);
+  
+        const leafMat = new THREE.MeshStandardMaterial({
+          color: CONFIG.colors.leafDark,
+          side: THREE.DoubleSide,
+          roughness: 0.82
+        });
+  
+        for (let i = 0; i < 6; i++) {
+          const leaf = new THREE.Mesh(leafGeo, leafMat);
+          leaf.position.y = 0.32 + (i * 0.2);
+          leaf.rotation.z = Math.PI / 3.2;
+          leaf.rotation.y = (i / 6) * Math.PI * 4.1;
+          leaf.rotation.x = -Math.PI / 3.8;
+          leaf.scale.setScalar(1.55);
+          leaf.castShadow = true;
+          leaf.userData.leaf = true;
+          leaf.userData.leafPhase = Math.random() * Math.PI * 2;
+          group.add(leaf);
         }
-
-        function createGround() {
-            const geometry = new THREE.CircleGeometry(30, 64);
-            const material = new THREE.MeshStandardMaterial({ 
-                map: createSoilTexture(),
-                roughness: 0.9, 
-                metalness: 0.1
-            });
-            const ground = new THREE.Mesh(geometry, material);
-            ground.rotation.x = -Math.PI / 2;
-            ground.receiveShadow = true;
-            scene.add(ground);
+  
+        const tasselGeo = new THREE.ConeGeometry(0.055, 0.22, 8);
+        const tassel = new THREE.Mesh(tasselGeo, new THREE.MeshStandardMaterial({ color: 0xEEDC8A, roughness: 0.95 }));
+        tassel.position.y = 1.72;
+        tassel.castShadow = true;
+        group.add(tassel);
+  
+        group.scale.setScalar(1.0 + Math.random() * 0.28);
+        return group;
+      }
+  
+      function createTomatoPlant() {
+        const group = new THREE.Group();
+  
+        const stemGeo = new THREE.CylinderGeometry(0.02, 0.042, 0.86, 8);
+        stemGeo.translate(0, 0.43, 0);
+        const stemMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.stem, roughness: 0.92 });
+        const stem = new THREE.Mesh(stemGeo, stemMat);
+        stem.castShadow = true;
+        group.add(stem);
+  
+        const leafShape = new THREE.Shape();
+        leafShape.moveTo(0, 0);
+        leafShape.lineTo(0.1, 0.05);
+        leafShape.lineTo(0.16, 0.17);
+        leafShape.lineTo(0.05, 0.22);
+        leafShape.lineTo(0, 0.33);
+        leafShape.lineTo(-0.05, 0.22);
+        leafShape.lineTo(-0.16, 0.17);
+        leafShape.lineTo(-0.1, 0.05);
+        leafShape.lineTo(0, 0);
+  
+        const leafGeo = new THREE.ShapeGeometry(leafShape);
+        const leafMat = new THREE.MeshStandardMaterial({
+          color: CONFIG.colors.tomatoLeaf,
+          side: THREE.DoubleSide,
+          roughness: 0.85
+        });
+  
+        for (let i = 0; i < 12; i++) {
+          const leaf = new THREE.Mesh(leafGeo, leafMat);
+          leaf.position.set((Math.random() - 0.5) * 0.34, 0.12 + Math.random() * 0.66, (Math.random() - 0.5) * 0.34);
+          leaf.rotation.set(Math.random() * 0.9, Math.random() * Math.PI * 2, Math.random() * 0.9);
+          leaf.scale.setScalar(1.2);
+          leaf.castShadow = true;
+          leaf.userData.leaf = true;
+          leaf.userData.leafPhase = Math.random() * Math.PI * 2;
+          group.add(leaf);
         }
-
-        function createSystem() {
-            const rows = 3;
-            const spacing = 4.5;
-            
-            // Shadow placement calculations
-            const shadowOffsetX = 1.7;
-            const shadowOffsetZ = -1.15;
-            
-            // Variety of crops
-            const cropTypes = ['tomato', 'corn', 'bean'];
-            const cropInfo = {
-                'corn': 'Corn (Maize) grows significantly taller under partial shade, benefiting from reduced heat stress.',
-                'tomato': 'Tomatoes often double their fruit yield in agrivoltaic systems due to cooler microclimates.',
-                'bean': 'Beans and other legumes thrive in the dappled light, maintaining soil nitrogen levels.'
-            };
-
-            for(let i=0; i<rows; i++) {
-                const zPos = (i - 1) * spacing;
-                const group = new THREE.Group();
-                group.position.z = zPos;
-                
-                // Panels
-                const panel = createSmartPanel();
-                group.add(panel);
-                
-                // Crops - Cycle through types
-                const type = cropTypes[i % cropTypes.length];
-                const crops = createSpecificCropRow(type);
-                crops.position.set(shadowOffsetX, 0, shadowOffsetZ);
-                group.add(crops);
-                
-                // Water effect
-                const water = createWaterEffect();
-                water.position.set(shadowOffsetX, 0.02, shadowOffsetZ);
-                group.add(water);
-
-                // Microclimate
-                const shade = createShadowVolume();
-                shade.position.set(shadowOffsetX, 0.75, shadowOffsetZ);
-                group.add(shade);
-                
-                // Sunbeams
-                const beams = createSunBeams();
-                group.add(beams);
-
-                // Biodiversity (Middle row)
-                if(i === 1) {
-                    const bio = createBiodiversity();
-                    bio.position.set(shadowOffsetX, 1.5, shadowOffsetZ);
-                    group.add(bio);
-                    addToInteractive(bio, 'biodiversity', 'Biodiversity Boost', 'Pollinators thrive in the sheltered microclimate, boosting ecosystem health.');
-                }
-
-                // Register Interactions
-                addToInteractive(panel, 'panel', 'Solar PV Array', 'Generates renewable energy while shielding crops from excessive solar radiation.');
-                addToInteractive(crops, 'crop', 'Protected ' + type.charAt(0).toUpperCase() + type.slice(1), cropInfo[type]);
-                addToInteractive(water, 'water', 'Water Conservation', 'Soil moisture evaporation is reduced by up to 40% due to panel shading.');
-                addToInteractive(shade, 'shade', 'Microclimate Buffer', 'Temperatures are 5-10°C cooler under panels during the day, preventing midday photosynthesis shutdown.');
-
-                scene.add(group);
-            }
+  
+        const fruitGeo = new THREE.SphereGeometry(0.052, 12, 12);
+        const fruitMat = new THREE.MeshStandardMaterial({ color: 0xFF3A3A, roughness: 0.25, metalness: 0.05 });
+        for (let i = 0; i < 4; i++) {
+          const fruit = new THREE.Mesh(fruitGeo, fruitMat);
+          fruit.position.set((Math.random() - 0.5) * 0.32, 0.32 + Math.random() * 0.4, (Math.random() - 0.5) * 0.32);
+          fruit.castShadow = true;
+          group.add(fruit);
         }
-
-        function createSmartPanel() {
-            const group = new THREE.Group();
-            
-            const postGeo = new THREE.CylinderGeometry(0.08, 0.08, 2.5);
-            const postMat = new THREE.MeshStandardMaterial({color: 0x555555, roughness: 0.8});
-            const post = new THREE.Mesh(postGeo, postMat);
-            post.position.y = 1.25;
-            post.castShadow = true;
-            group.add(post);
-
-            const panelGeo = new THREE.BoxGeometry(3.5, 0.05, 1.8);
-            const panelMat = new THREE.MeshPhysicalMaterial({
-                color: 0xffffff,
-                map: createSolarTexture(),
-                metalness: 0.6,
-                roughness: 0.2,
-                clearcoat: 1.0,
-                clearcoatRoughness: 0.1,
-                side: THREE.DoubleSide
-            });
-            const panel = new THREE.Mesh(panelGeo, panelMat);
-            panel.position.set(0, 2.6, 0);
-            panel.rotation.x = Math.PI / 6; // 30 degree tilt
-            panel.castShadow = true;
-            group.add(panel);
-
-            return group;
+  
+        group.scale.setScalar(1.18 + Math.random() * 0.28);
+        return group;
+      }
+  
+      function createBeanPlant() {
+        const group = new THREE.Group();
+  
+        const stemGeo = new THREE.CylinderGeometry(0.012, 0.022, 0.55, 7);
+        stemGeo.translate(0, 0.275, 0);
+        const stem = new THREE.Mesh(stemGeo, new THREE.MeshStandardMaterial({ color: CONFIG.colors.stem, roughness: 0.92 }));
+        stem.castShadow = true;
+        group.add(stem);
+  
+        const leafShape = new THREE.Shape();
+        leafShape.moveTo(0, 0);
+        leafShape.bezierCurveTo(0.16, 0.1, 0.16, 0.27, 0, 0.38);
+        leafShape.bezierCurveTo(-0.16, 0.27, -0.16, 0.1, 0, 0);
+  
+        const leafGeo = new THREE.ShapeGeometry(leafShape);
+        const leafMat = new THREE.MeshStandardMaterial({
+          color: CONFIG.colors.beanLeaf,
+          side: THREE.DoubleSide,
+          roughness: 0.86
+        });
+  
+        for (let i = 0; i < 9; i++) {
+          const leaf = new THREE.Mesh(leafGeo, leafMat);
+          leaf.position.set((Math.random() - 0.5) * 0.27, 0.1 + Math.random() * 0.34, (Math.random() - 0.5) * 0.27);
+          leaf.rotation.x = -Math.PI / 3.1;
+          leaf.rotation.y = Math.random() * Math.PI * 2;
+          leaf.castShadow = true;
+          leaf.userData.leaf = true;
+          leaf.userData.leafPhase = Math.random() * Math.PI * 2;
+          group.add(leaf);
         }
-        
-        function createSunBeams() {
-            const beamGroup = new THREE.Group();
-            const sunPos = CONFIG.sunPos;
-
-            const len = 30;
-            const beamGeo = new THREE.CylinderGeometry(0.4, 0.4, len, 16, 1, true);
-            beamGeo.translate(0, len / 2, 0); 
-
-            const beamMat = new THREE.MeshBasicMaterial({
-                color: 0xFFF5D6,
-                transparent: true,
-                opacity: 0.05,
-                depthWrite: false,
-                side: THREE.DoubleSide,
-                blending: THREE.AdditiveBlending
-            });
-
-            for(let i=0; i<3; i++) {
-                const beam = new THREE.Mesh(beamGeo, beamMat);
-                const ox = (Math.random() - 0.5) * 3.0;
-                const oz = (Math.random() - 0.5) * 1.5;
-                beam.position.set(ox, 0, oz);
-                const s = 0.5 + Math.random() * 0.5;
-                beam.scale.set(s, 1, s);
-                beamGroup.add(beam);
-            }
-
-            beamGroup.position.set(0, 2.6, 0);
-            beamGroup.lookAt(sunPos);
-            beamGroup.rotateX(Math.PI / 2);
-
-            return beamGroup;
+  
+        const podGeo = new THREE.CapsuleGeometry(0.015, 0.16, 3, 8);
+        const podMat = new THREE.MeshStandardMaterial({ color: 0xDDEEAA, roughness: 0.75 });
+        for (let i = 0; i < 3; i++) {
+          const pod = new THREE.Mesh(podGeo, podMat);
+          pod.position.set((Math.random() - 0.5) * 0.22, 0.22 + Math.random() * 0.22, (Math.random() - 0.5) * 0.22);
+          pod.rotation.z = Math.PI / 2;
+          pod.castShadow = true;
+          group.add(pod);
         }
-
-        function createSpecificCropRow(type) {
-            const rowGroup = new THREE.Group();
-            const count = 8; // More dense than before
-            
-            for(let i=0; i<count; i++) {
-                let plant;
-                const xOffset = (i / (count - 1)) * 2.8 - 1.4 + (Math.random()*0.2);
-                const zOffset = (Math.random() - 0.5) * 0.8;
-
-                if(type === 'corn') {
-                    plant = createCornPlant();
-                } else if (type === 'tomato') {
-                    plant = createTomatoPlant();
-                } else {
-                    plant = createBeanPlant();
-                }
-
-                plant.position.set(xOffset, 0, zOffset);
-                
-                // Random rotation and phase
-                plant.rotation.y = Math.random() * Math.PI * 2;
-                plant.userData.baseRotation = plant.rotation.clone();
-                plant.userData.phase = Math.random() * Math.PI * 2;
-                
-                rowGroup.add(plant);
-                windAffectedObjects.push(plant);
-            }
-            return rowGroup;
+  
+        group.scale.setScalar(1.08 + Math.random() * 0.22);
+        return group;
+      }
+  
+      function createWaterEffect() {
+        const root = new THREE.Group();
+  
+        const geo = new THREE.CircleGeometry(0.82, 40);
+        const mat = new THREE.MeshPhysicalMaterial({
+          color: CONFIG.colors.water,
+          transparent: true,
+          opacity: 0.32,
+          roughness: 0.18,
+          transmission: 0.65,
+          thickness: 0.6,
+          depthWrite: false
+        });
+  
+        const disc = new THREE.Mesh(geo, mat);
+        disc.rotation.x = -Math.PI / 2;
+        disc.renderOrder = 2;
+        root.add(disc);
+  
+        const ringGeo = new THREE.RingGeometry(0.8, 0.86, 44);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: CONFIG.colors.water,
+          transparent: true,
+          opacity: 0.62,
+          side: THREE.DoubleSide,
+          depthWrite: false
+        });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = -Math.PI / 2;
+        ring.renderOrder = 3;
+        root.add(ring);
+  
+        // second ring for richer ripple
+        const ring2 = new THREE.Mesh(ringGeo, ringMat.clone());
+        ring2.rotation.x = -Math.PI / 2;
+        ring2.renderOrder = 3;
+        root.add(ring2);
+  
+        root.userData.animate = (t) => {
+          const a = 0.055;
+          const s1 = 1 + (Math.sin(t * 2.15) * a);
+          const s2 = 1 + (Math.sin(t * 2.15 + 1.35) * a);
+  
+          ring.scale.setScalar(s1);
+          ring.material.opacity = 0.62 - (s1 - 1) * 5;
+  
+          ring2.scale.setScalar(s2);
+          ring2.material.opacity = 0.42 - (s2 - 1) * 4;
+        };
+  
+        return root;
+      }
+  
+      function createBiodiversity() {
+        const group = new THREE.Group();
+  
+        const bodyGeo = new THREE.CapsuleGeometry(0.03, 0.085, 4, 10);
+        const wingGeo = new THREE.PlaneGeometry(0.085, 0.045);
+  
+        const bodyMat = new THREE.MeshStandardMaterial({ color: CONFIG.colors.bee, roughness: 0.65 });
+        const wingMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.68, side: THREE.DoubleSide, depthWrite: false });
+  
+        for (let i = 0; i < 3; i++) {
+          const bee = new THREE.Group();
+  
+          const body = new THREE.Mesh(bodyGeo, bodyMat);
+          body.rotation.x = Math.PI / 2;
+          bee.add(body);
+  
+          const w1 = new THREE.Mesh(wingGeo, wingMat);
+          w1.position.set(0.032, 0.024, 0);
+          bee.add(w1);
+  
+          const w2 = new THREE.Mesh(wingGeo, wingMat);
+          w2.position.set(-0.032, 0.024, 0);
+          bee.add(w2);
+  
+          bee.userData = {
+            speed: 0.55 + Math.random() * 0.55,
+            offset: Math.random() * 100,
+            wings: [w1, w2],
+            bob: 0.12 + Math.random() * 0.12
+          };
+  
+          group.add(bee);
+          bees.push(bee);
         }
-
-        // --- CROP FACTORY ---
-
-        function createCornPlant() {
-            const group = new THREE.Group();
-            
-            // Stalk
-            const stalkGeo = new THREE.CylinderGeometry(0.03, 0.05, 1.6, 6);
-            stalkGeo.translate(0, 0.8, 0);
-            const stalk = new THREE.Mesh(stalkGeo, new THREE.MeshStandardMaterial({color: CONFIG.colors.cornStalk}));
-            stalk.castShadow = true;
-            group.add(stalk);
-
-            // Leaves
-            const leafShape = new THREE.Shape();
-            leafShape.moveTo(0,0);
-            leafShape.quadraticCurveTo(0.05, 0.3, 0, 0.6); // Long narrow leaf
-            leafShape.quadraticCurveTo(-0.05, 0.3, 0, 0);
-            const leafGeo = new THREE.ShapeGeometry(leafShape);
-
-            for(let i=0; i<6; i++) {
-                const leaf = new THREE.Mesh(leafGeo, new THREE.MeshStandardMaterial({color: CONFIG.colors.leafDark, side: THREE.DoubleSide}));
-                leaf.position.y = 0.3 + (i * 0.2);
-                leaf.rotation.z = Math.PI / 4;
-                leaf.rotation.y = (i / 6) * Math.PI * 4; // Spiral up
-                leaf.rotation.x = -Math.PI/4; // Droop out
-                leaf.scale.setScalar(1.5);
-                leaf.castShadow = true;
-                group.add(leaf);
-            }
-            
-            // Tassel (top)
-            const tasselGeo = new THREE.ConeGeometry(0.05, 0.2, 5);
-            const tassel = new THREE.Mesh(tasselGeo, new THREE.MeshStandardMaterial({color: 0xEEDD82})); // Yellowish
-            tassel.position.y = 1.7;
-            group.add(tassel);
-
-            // Scale variance
-            group.scale.setScalar(1.0 + Math.random()*0.3);
-            return group;
+  
+        return group;
+      }
+  
+      function createMicroclimateVolume() {
+        // A soft volumetric box (sells the microclimate in a modern way)
+        const root = new THREE.Group();
+  
+        const boxGeo = new THREE.BoxGeometry(3.25, 1.55, 2.08);
+  
+        const mat = new THREE.MeshPhysicalMaterial({
+          color: CONFIG.colors.highlight,
+          transparent: true,
+          opacity: 0.10,
+          roughness: 0.25,
+          transmission: 0.35,
+          thickness: 1.0,
+          depthWrite: false
+        });
+  
+        const glass = new THREE.Mesh(boxGeo, mat);
+        glass.castShadow = false;
+        glass.receiveShadow = false;
+        glass.visible = false; // only show on hover/selection
+        glass.userData.isMicroGlass = true;
+        root.add(glass);
+  
+        // faint wireframe boundary to help comprehension, also hidden until focus
+        const wire = new THREE.Mesh(
+          new THREE.BoxGeometry(3.28, 1.58, 2.11),
+          new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.22,
+            depthWrite: false,
+            visible: false
+          })
+        );
+        wire.userData.isMicroWire = true;
+        root.add(wire);
+  
+        return root;
+      }
+  
+      function createAtmosphere() {
+        // drifting dust motes (true motion, not just rotation)
+        const count = 320;
+  
+        const geo = new THREE.BufferGeometry();
+        const positions = new Float32Array(count * 3);
+        const velocities = new Float32Array(count * 3);
+  
+        for (let i = 0; i < count; i++) {
+          const ix = i * 3;
+          positions[ix + 0] = (Math.random() - 0.5) * 22;
+          positions[ix + 1] = Math.random() * 7 + 0.5;
+          positions[ix + 2] = (Math.random() - 0.5) * 22;
+  
+          velocities[ix + 0] = (Math.random() - 0.5) * 0.02;
+          velocities[ix + 1] = (Math.random() - 0.5) * 0.012;
+          velocities[ix + 2] = (Math.random() - 0.5) * 0.02;
         }
-
-        function createTomatoPlant() {
-            const group = new THREE.Group();
-            
-            // Bushy stem structure
-            const mainStemGeo = new THREE.CylinderGeometry(0.02, 0.04, 0.8, 5);
-            mainStemGeo.translate(0, 0.4, 0);
-            const stemMat = new THREE.MeshStandardMaterial({color: CONFIG.colors.stem});
-            const stem = new THREE.Mesh(mainStemGeo, stemMat);
-            stem.castShadow = true;
-            group.add(stem);
-
-            // Jagged Leaf
-            const leafShape = new THREE.Shape();
-            leafShape.moveTo(0,0);
-            leafShape.lineTo(0.1, 0.05);
-            leafShape.lineTo(0.15, 0.15);
-            leafShape.lineTo(0.05, 0.2);
-            leafShape.lineTo(0, 0.3); // Tip
-            leafShape.lineTo(-0.05, 0.2);
-            leafShape.lineTo(-0.15, 0.15);
-            leafShape.lineTo(-0.1, 0.05);
-            leafShape.lineTo(0,0);
-            const leafGeo = new THREE.ShapeGeometry(leafShape);
-            const leafMat = new THREE.MeshStandardMaterial({color: CONFIG.colors.tomatoLeaf, side: THREE.DoubleSide});
-
-            for(let i=0; i<12; i++) {
-                const leaf = new THREE.Mesh(leafGeo, leafMat);
-                leaf.position.set((Math.random()-0.5)*0.3, 0.1 + Math.random()*0.6, (Math.random()-0.5)*0.3);
-                leaf.rotation.set(Math.random(), Math.random()*Math.PI*2, Math.random());
-                leaf.scale.setScalar(1.2);
-                leaf.castShadow = true;
-                group.add(leaf);
-            }
-
-            // Tomatoes
-            const fruitGeo = new THREE.SphereGeometry(0.05, 8, 8);
-            const fruitMat = new THREE.MeshStandardMaterial({color: 0xFF3333, roughness: 0.2});
-            for(let i=0; i<4; i++) {
-                const fruit = new THREE.Mesh(fruitGeo, fruitMat);
-                fruit.position.set((Math.random()-0.5)*0.3, 0.3 + Math.random()*0.4, (Math.random()-0.5)*0.3);
-                group.add(fruit);
-            }
-
-            group.scale.setScalar(1.2 + Math.random()*0.3);
-            return group;
+  
+        geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geo.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+  
+        const mat = new THREE.PointsMaterial({
+          size: 0.055,
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.25,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+  
+        const points = new THREE.Points(geo, mat);
+        points.frustumCulled = false;
+        scene.add(points);
+  
+        dust.push(points);
+      }
+  
+      function addInteractive(root, type, name, desc) {
+        root.userData.interactive = true;
+        root.userData.type = type;
+        root.userData.name = name;
+        root.userData.desc = desc;
+        interactiveRoots.push(root);
+      }
+  
+      // --- UI logic ---
+      function setupLegendUI() {
+        legendItems.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const type = btn.getAttribute('data-type');
+            toggleSelection(type);
+          });
+        });
+        legendContainer.addEventListener('click', (e) => e.stopPropagation());
+      }
+  
+      function toggleSelection(type) {
+        if (selectedType === type) {
+          resetSelection();
+        } else {
+          applySelection(type);
         }
-
-        function createBeanPlant() {
-            const group = new THREE.Group();
-            
-            // Short dense bush
-            const stemGeo = new THREE.CylinderGeometry(0.01, 0.02, 0.5, 4);
-            stemGeo.translate(0, 0.25, 0);
-            const stem = new THREE.Mesh(stemGeo, new THREE.MeshStandardMaterial({color: CONFIG.colors.stem}));
-            group.add(stem);
-
-            // Heart/Round Leaf
-            const leafShape = new THREE.Shape();
-            leafShape.moveTo(0,0);
-            leafShape.bezierCurveTo(0.15, 0.1, 0.15, 0.25, 0, 0.35);
-            leafShape.bezierCurveTo(-0.15, 0.25, -0.15, 0.1, 0, 0);
-            const leafGeo = new THREE.ShapeGeometry(leafShape);
-            const leafMat = new THREE.MeshStandardMaterial({color: CONFIG.colors.beanLeaf, side: THREE.DoubleSide});
-
-            for(let i=0; i<8; i++) {
-                const leaf = new THREE.Mesh(leafGeo, leafMat);
-                leaf.position.set((Math.random()-0.5)*0.25, 0.1 + Math.random()*0.3, (Math.random()-0.5)*0.25);
-                leaf.rotation.x = -Math.PI/3; // angled up
-                leaf.rotation.y = Math.random() * Math.PI * 2;
-                leaf.scale.setScalar(1.0);
-                leaf.castShadow = true;
-                group.add(leaf);
-            }
-            
-            // Bean Pods
-            const podGeo = new THREE.CapsuleGeometry(0.015, 0.15, 2, 6);
-            const podMat = new THREE.MeshStandardMaterial({color: 0xDDEEAA}); // Pale green/yellow
-            for(let i=0; i<3; i++) {
-                const pod = new THREE.Mesh(podGeo, podMat);
-                pod.position.set((Math.random()-0.5)*0.2, 0.2 + Math.random()*0.2, (Math.random()-0.5)*0.2);
-                pod.rotation.z = Math.PI / 2; // Hanging
-                group.add(pod);
-            }
-
-            group.scale.setScalar(1.1 + Math.random()*0.2);
-            return group;
+      }
+  
+      function applySelection(type) {
+        selectedType = type;
+  
+        legendItems.forEach(item => {
+          item.classList.toggle('active', item.getAttribute('data-type') === type);
+        });
+  
+        // find first root of this type as "primary" selection
+        selectedRoot = interactiveRoots.find(r => r.userData.type === type) || null;
+  
+        // outline meshes for all roots of that type (looks premium)
+        const selectedMeshes = interactiveRoots
+          .filter(r => r.userData.type === type)
+          .flatMap(r => gatherMeshes(r));
+  
+        outlinePass.selectedObjects = selectedMeshes;
+  
+        // show microclimate only if shade selected
+        interactiveRoots.forEach(r => setRootHighlight(r, r.userData.type === type));
+  
+        if (selectedRoot) {
+          setExplainer(selectedRoot.userData.name, selectedRoot.userData.desc);
+          pinExplainer();
         }
-
-
-        function createWaterEffect() {
-            const geo = new THREE.CircleGeometry(0.8, 32);
-            const mat = new THREE.MeshPhysicalMaterial({
-                color: CONFIG.colors.water,
-                transparent: true,
-                opacity: 0.4,
-                roughness: 0.1,
-                transmission: 0.5,
-                thickness: 0.5
-            });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.rotation.x = -Math.PI/2;
-            
-            const ringGeo = new THREE.RingGeometry(0.8, 0.85, 32);
-            const ringMat = new THREE.MeshBasicMaterial({
-                color: CONFIG.colors.water, 
-                transparent: true, 
-                opacity: 0.6,
-                side: THREE.DoubleSide
-            });
-            const ring = new THREE.Mesh(ringGeo, ringMat);
-            mesh.add(ring);
-            
-            mesh.userData.animate = (time) => {
-                const s = 1 + (Math.sin(time * 2) * 0.05);
-                ring.scale.setScalar(s);
-                ring.material.opacity = 0.6 - (s-1)*5;
-            };
-            
-            return mesh;
+  
+        controls.autoRotate = false;
+      }
+  
+      function resetSelection() {
+        selectedType = null;
+        selectedRoot = null;
+  
+        legendItems.forEach(item => item.classList.remove('active'));
+        outlinePass.selectedObjects = [];
+  
+        interactiveRoots.forEach(r => setRootHighlight(r, false));
+  
+        hideExplainer();
+        explainer.dataset.mode = 'pinned';
+  
+        if (!CONFIG.prefersReducedMotion) {
+          setTimeout(() => { if (!selectedType) controls.autoRotate = true; }, 900);
         }
-
-        function createBiodiversity() {
-            const group = new THREE.Group();
-            const bodyGeo = new THREE.CapsuleGeometry(0.03, 0.08, 4, 8);
-            const wingGeo = new THREE.PlaneGeometry(0.08, 0.04);
-            const bodyMat = new THREE.MeshStandardMaterial({color: CONFIG.colors.bee});
-            const wingMat = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.7, side: THREE.DoubleSide});
-
-            for(let i=0; i<3; i++) {
-                const bee = new THREE.Group();
-                const body = new THREE.Mesh(bodyGeo, bodyMat);
-                body.rotation.x = Math.PI/2;
-                bee.add(body);
-                
-                const w1 = new THREE.Mesh(wingGeo, wingMat);
-                w1.position.set(0.03, 0.02, 0);
-                bee.add(w1);
-                const w2 = new THREE.Mesh(wingGeo, wingMat);
-                w2.position.set(-0.03, 0.02, 0);
-                bee.add(w2);
-                
-                bee.userData = {
-                    speed: 0.5 + Math.random() * 0.5,
-                    offset: Math.random() * 100,
-                    wings: [w1, w2]
-                };
-                group.add(bee);
-                bees.push(bee);
-            }
-            return group;
-        }
-
-        function createShadowVolume() {
-            const geo = new THREE.BoxGeometry(3.2, 1.5, 2.0);
-            const mat = new THREE.MeshBasicMaterial({
-                color: 0xffffff,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.1,
-                visible: false
-            });
-            const mesh = new THREE.Mesh(geo, mat);
-            
-            const glassGeo = new THREE.BoxGeometry(3.18, 1.48, 1.98);
-            const glassMat = new THREE.MeshBasicMaterial({
-                color: CONFIG.colors.highlight,
-                transparent: true,
-                opacity: 0.15,
-                side: THREE.DoubleSide,
-                depthWrite: false,
-                visible: false
-            });
-            const glass = new THREE.Mesh(glassGeo, glassMat);
-            glass.userData.isGlass = true;
-            mesh.add(glass);
-
-            return mesh;
-        }
-
-        function createAtmosphere() {
-            const particlesGeo = new THREE.BufferGeometry();
-            const count = 250;
-            const posArray = new Float32Array(count * 3);
-            for(let i=0; i<count*3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 25;
-            }
-            particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            const mat = new THREE.PointsMaterial({
-                size: 0.06,
-                color: 0xffffff,
-                transparent: true,
-                opacity: 0.3,
-                blending: THREE.AdditiveBlending
-            });
-            const particles = new THREE.Points(particlesGeo, mat);
-            scene.add(particles);
-            dustParticles.push(particles);
-        }
-
-        function addToInteractive(mesh, type, name, desc) {
-            mesh.userData.interactive = true;
-            mesh.userData.type = type;
-            mesh.userData.name = name;
-            mesh.userData.desc = desc;
-            interactiveObjects.push(mesh);
-        }
-
-        // --- INTERACTION LOGIC ---
-
-        function setupLegendUI() {
-            legendItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent bubble to container (which resets)
-                    const type = item.getAttribute('data-type');
-                    toggleSelection(type);
-                });
-            });
-            // Also stop propagation on legend container click
-            legendContainer.addEventListener('click', (e) => e.stopPropagation());
-        }
-
-        function toggleSelection(type) {
-            if (selectedType === type) {
-                resetSelection();
+      }
+  
+      function setRootHighlight(root, active) {
+        root.traverse(child => {
+          if (!child.isMesh) return;
+  
+          // microclimate visual reveal
+          if (child.userData.isMicroGlass || child.userData.isMicroWire) {
+            child.visible = active;
+            if (child.material?.opacity != null) child.material.opacity = child.userData.isMicroGlass ? (active ? 0.14 : 0.0) : (active ? 0.24 : 0.0);
+            return;
+          }
+  
+          // emissive highlight
+          const mat = child.material;
+          if (mat && 'emissive' in mat) {
+            if (active) {
+              if (child.userData.orgEmissive === undefined) child.userData.orgEmissive = mat.emissive.getHex();
+              mat.emissive.setHex(CONFIG.colors.highlight);
+              mat.emissiveIntensity = 0.55;
             } else {
-                applySelection(type);
+              if (child.userData.orgEmissive !== undefined) mat.emissive.setHex(child.userData.orgEmissive);
+              mat.emissiveIntensity = 0.0;
             }
+          }
+        });
+      }
+  
+      // --- Pointer interaction (hover) ---
+      function onPointerMove(event) {
+        if (selectedType) return;
+  
+        const rect = container.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width;
+        const y = (event.clientY - rect.top) / rect.height;
+  
+        pointer.x = x * 2 - 1;
+        pointer.y = -(y * 2 - 1);
+  
+        raycaster.setFromCamera(pointer, camera);
+  
+        const hits = raycaster.intersectObjects(scene.children, true);
+  
+        let foundRoot = null;
+        for (const hit of hits) {
+          let cur = hit.object;
+          while (cur) {
+            if (cur.userData?.interactive) { foundRoot = cur; break; }
+            cur = cur.parent;
+          }
+          if (foundRoot) break;
         }
-
-        function applySelection(type) {
-            if(selectedType) {
-                resetSelectionVisuals(selectedType);
-            }
-            
-            selectedType = type;
-            
-            legendItems.forEach(item => {
-                if(item.getAttribute('data-type') === type) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-
-            interactiveObjects.forEach(obj => {
-                if(obj.userData.type === type) {
-                    highlightObject(obj, true);
-                    updateExplainer(obj.userData.name, obj.userData.desc);
-                }
-            });
-
-            controls.autoRotate = false;
+  
+        if (foundRoot) {
+          container.style.cursor = 'pointer';
+  
+          if (hoveredRoot !== foundRoot) {
+            if (hoveredRoot) setRootHighlight(hoveredRoot, false);
+  
+            hoveredRoot = foundRoot;
+            setRootHighlight(hoveredRoot, true);
+  
+            outlinePass.selectedObjects = gatherMeshes(hoveredRoot);
+            setExplainer(hoveredRoot.userData.name, hoveredRoot.userData.desc);
+  
+            setExplainerToCursor(event.clientX, event.clientY);
+          } else {
+            setExplainerToCursor(event.clientX, event.clientY);
+          }
+        } else {
+          container.style.cursor = 'grab';
+  
+          if (hoveredRoot) {
+            setRootHighlight(hoveredRoot, false);
+            hoveredRoot = null;
+            outlinePass.selectedObjects = [];
+            hideExplainer();
+          }
         }
-
-        function resetSelection() {
-            if(selectedType) {
-                resetSelectionVisuals(selectedType);
-            }
-            selectedType = null;
-            explainer.classList.remove('visible');
-            
-            setTimeout(() => {
-                if(!selectedType) controls.autoRotate = true;
-            }, 2000);
+      }
+  
+      function onCanvasClick(event) {
+        const rect = container.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+  
+        raycaster.setFromCamera(pointer, camera);
+        const hits = raycaster.intersectObjects(scene.children, true);
+  
+        let foundRoot = null;
+        for (const hit of hits) {
+          let cur = hit.object;
+          while (cur) {
+            if (cur.userData?.interactive) { foundRoot = cur; break; }
+            cur = cur.parent;
+          }
+          if (foundRoot) break;
         }
-        
-        function resetSelectionVisuals(type) {
-             legendItems.forEach(item => item.classList.remove('active'));
-             interactiveObjects.forEach(obj => {
-                 if(obj.userData.type === type) {
-                     highlightObject(obj, false);
-                 }
-             });
+  
+        if (foundRoot) toggleSelection(foundRoot.userData.type);
+        else resetSelection();
+      }
+  
+      function onResize() {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+  
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        composer.setSize(container.clientWidth, container.clientHeight);
+  
+        bloomPass.setSize(container.clientWidth, container.clientHeight);
+        outlinePass.setSize(container.clientWidth, container.clientHeight);
+      }
+  
+      // --- Animation loop ---
+      function animate() {
+        requestAnimationFrame(animate);
+  
+        const t = clock.getElapsedTime();
+  
+        controls.update();
+  
+        // Subtle premium "breathing" camera when idle (reduced motion respects)
+        if (!CONFIG.prefersReducedMotion && !selectedType && controls.autoRotate) {
+          const breathe = Math.sin(t * 0.35) * 0.04;
+          camera.position.y = 5.2 + breathe;
         }
-
-        function highlightObject(object, active) {
-            object.traverse((child) => {
-                if(child.isMesh) {
-                    if(active) {
-                        if(child.userData.orgEmissive === undefined) {
-                            child.userData.orgEmissive = child.material.emissive ? child.material.emissive.getHex() : 0x000000;
-                        }
-                        if(child.material.emissive) {
-                            child.material.emissive.setHex(CONFIG.colors.highlight);
-                            child.material.emissiveIntensity = 0.6;
-                        }
-                    } else {
-                        if(child.userData.orgEmissive !== undefined && child.material.emissive) {
-                            child.material.emissive.setHex(child.userData.orgEmissive);
-                            child.material.emissiveIntensity = 0; 
-                        }
-                    }
-
-                    if(object.userData.type === 'shade') {
-                        if(child.userData.isGlass) {
-                             child.material.visible = active;
-                        } else if(child.material.wireframe) {
-                            child.material.visible = active; 
-                            child.material.opacity = active ? 0.5 : 0;
-                        }
-                    }
-                }
-            });
+  
+        // Wind (whole plant) + leaf flutter (micro animation)
+        for (let i = 0; i < windPlants.length; i++) {
+          const plant = windPlants[i];
+          const w = plant.userData.wind;
+          const sway = Math.sin(t * CONFIG.windSpeed * w.speed + w.phase + plant.position.x * 0.6) * w.amp;
+  
+          // Whole plant sway
+          plant.rotation.z = sway;
+          plant.rotation.x = sway * 0.45;
+  
+          // Leaf flutter
+          plant.traverse(child => {
+            if (!child.isMesh || !child.userData.leaf) return;
+            const lf = Math.sin(t * (2.4 + w.speed) + child.userData.leafPhase + i) * 0.06;
+            child.rotation.z += lf * 0.004; // tiny additive feel
+          });
         }
-
-        function updateExplainer(title, text) {
-            document.getElementById('explainer-title').textContent = title;
-            document.getElementById('explainer-text').textContent = text;
-            explainer.classList.add('visible');
+  
+        // Bees
+        for (let i = 0; i < bees.length; i++) {
+          const bee = bees[i];
+          const u = t * bee.userData.speed + bee.userData.offset;
+  
+          const px = Math.sin(u) * 1.55 + 1.7;
+          const pz = Math.cos(u) * Math.sin(u * 0.8) * 1.35 - 1.15;
+          const py = 1.52 + Math.cos(u * 1.9) * bee.userData.bob;
+  
+          bee.position.set(px, py, pz);
+  
+          // Look ahead (smoother)
+          const nx = Math.sin(u + 0.12) * 1.55 + 1.7;
+          const nz = Math.cos(u + 0.12) * Math.sin((u + 0.12) * 0.8) * 1.35 - 1.15;
+          const ny = 1.52 + Math.cos((u + 0.12) * 1.9) * bee.userData.bob;
+          bee.lookAt(nx, ny, nz);
+  
+          const flap = Math.sin(t * 55 + i * 2.2) * 0.6;
+          bee.userData.wings[0].rotation.z = flap;
+          bee.userData.wings[1].rotation.z = -flap;
         }
-
-        function onMouseMove(event) {
-            if (selectedType) return;
-
-            const rect = container.getBoundingClientRect();
-            mouse.x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
-            mouse.y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
-
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(scene.children, true);
-            
-            let found = null;
-            for(let hit of intersects) {
-                let curr = hit.object;
-                while(curr) {
-                    if(curr.userData.interactive) {
-                        found = curr;
-                        break;
-                    }
-                    curr = curr.parent;
-                }
-                if(found) break;
-            }
-
-            if(found) {
-                container.style.cursor = 'pointer';
-                if(hoveredObject !== found) {
-                    if(hoveredObject) highlightObject(hoveredObject, false);
-                    hoveredObject = found;
-                    highlightObject(found, true);
-                    updateExplainer(found.userData.name, found.userData.desc);
-                }
-            } else {
-                container.style.cursor = 'grab';
-                if(hoveredObject) {
-                    highlightObject(hoveredObject, false);
-                    explainer.classList.remove('visible');
-                    hoveredObject = null;
-                }
-            }
+  
+        // Dust drift
+        for (const points of dust) {
+          const pos = points.geometry.getAttribute('position');
+          const vel = points.geometry.getAttribute('velocity');
+  
+          for (let i = 0; i < pos.count; i++) {
+            const ix = i * 3;
+  
+            pos.array[ix + 0] += vel.array[ix + 0];
+            pos.array[ix + 1] += vel.array[ix + 1];
+            pos.array[ix + 2] += vel.array[ix + 2];
+  
+            // Wrap bounds
+            if (pos.array[ix + 0] > 11) pos.array[ix + 0] = -11;
+            if (pos.array[ix + 0] < -11) pos.array[ix + 0] = 11;
+  
+            if (pos.array[ix + 2] > 11) pos.array[ix + 2] = -11;
+            if (pos.array[ix + 2] < -11) pos.array[ix + 2] = 11;
+  
+            if (pos.array[ix + 1] > 7.6) pos.array[ix + 1] = 0.7;
+            if (pos.array[ix + 1] < 0.6) pos.array[ix + 1] = 7.5;
+          }
+  
+          pos.needsUpdate = true;
+          points.rotation.y = t * 0.03;
         }
-
-        function onCanvasClick(event) {
-            const rect = container.getBoundingClientRect();
-            mouse.x = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
-            mouse.y = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
-            
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(scene.children, true);
-            
-            let found = null;
-            for(let hit of intersects) {
-                let curr = hit.object;
-                while(curr) {
-                    if(curr.userData.interactive) {
-                        found = curr; break;
-                    }
-                    curr = curr.parent;
-                }
-                if(found) break;
-            }
-            
-            if(found) {
-                toggleSelection(found.userData.type);
-            } else {
-                resetSelection();
-            }
+  
+        // Animate water ripples
+        for (const root of interactiveRoots) {
+          if (root.userData.type === 'water' && root.userData.animate) root.userData.animate(t);
         }
-
-        function onResize() {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
+  
+        // Panel glint
+        for (const root of interactiveRoots) {
+          if (root.userData.type !== 'panel') continue;
+          const panel = root.userData.panelMesh;
+          if (!panel?.material) continue;
+  
+          const phase = root.userData.glintPhase ?? 0;
+          const glint = 0.08 + 0.06 * Math.sin(t * 0.9 + phase);
+          panel.material.clearcoatRoughness = clamp(0.06 + glint, 0.05, 0.18);
         }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            const time = clock.getElapsedTime();
-            controls.update();
-
-            windAffectedObjects.forEach((obj, idx) => {
-                // Simple sway for entire plant group
-                const wind = Math.sin(time * CONFIG.windSpeed + idx + obj.position.x) * 0.08;
-                obj.rotation.z = wind;
-                obj.rotation.x = wind * 0.5;
-            });
-
-            bees.forEach((bee, idx) => {
-                const t = time * bee.userData.speed + bee.userData.offset;
-                bee.position.x = Math.sin(t) * 1.5 + 1.7; 
-                bee.position.z = Math.cos(t) * Math.sin(t) * 1.5 - 1.15; 
-                bee.position.y = 1.5 + Math.cos(t * 2) * 0.2;
-                bee.lookAt(
-                    Math.sin(t + 0.1) * 1.5 + 1.7,
-                    1.5 + Math.cos((t + 0.1) * 2) * 0.2,
-                    Math.cos(t + 0.1) * Math.sin(t + 0.1) * 1.5 - 1.15
-                );
-                bee.userData.wings[0].rotation.z = Math.sin(time * 50) * 0.5;
-                bee.userData.wings[1].rotation.z = -Math.sin(time * 50) * 0.5;
-            });
-
-            dustParticles.forEach(p => { p.rotation.y = time * 0.05; });
-            interactiveObjects.forEach(obj => {
-                 if(obj.userData.type === 'water' && obj.userData.animate) obj.userData.animate(time);
-            });
-
-            renderer.render(scene, camera);
+  
+        // Sunbeam shimmer
+        scene.traverse(obj => {
+          if (obj.isMesh && obj.geometry?.type === 'CylinderGeometry' && obj.material?.transparent && obj.material?.blending === THREE.AdditiveBlending) {
+            const p = obj.userData.phase ?? 0;
+            obj.material.opacity = 0.038 + 0.016 * (0.5 + 0.5 * Math.sin(t * 0.85 + p));
+          }
+        });
+  
+        // Outline pulse (premium feedback)
+        if (outlinePass.selectedObjects?.length) {
+          const pulse = 1.0 + Math.sin(t * 3.1) * CONFIG.post.outlinePulse * 0.15;
+          outlinePass.edgeStrength = CONFIG.post.outlineEdgeStrength * pulse;
+        } else {
+          outlinePass.edgeStrength = CONFIG.post.outlineEdgeStrength;
         }
-
-        init();
+  
+        composer.render();
+      }
+  
+      init();
     </script>
     <!-- === END: Agrivoltaics 3D Visualization Script === -->
 
@@ -1649,6 +2050,11 @@
             updateChart();
         });
     </script>
+    <script defer src="js/cms-config.js"></script>
+    <script defer src="js/cms-pantry.js"></script>
+    <script defer src="js/cms-core.js"></script>
+    <script defer src="js/cms-live-layout.js"></script>
+    <script defer src="js/cms-editor.js"></script>
 </body>
 
 </html>

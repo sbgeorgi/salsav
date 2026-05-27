@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALSAV Agrivoltaics – University of Arizona</title>
+    <title data-cms-key="meta.title">SALSAV Agrivoltaics – University of Arizona</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -307,42 +307,44 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="css/modern-system.css">
+    <link rel="stylesheet" href="css/cms-editor.css">
 </head>
 
-<body>
+<body data-cms-page="index">
     <nav class="navbar" id="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-brand">
-                <img src="static/salsa-logo.png" alt="SALSAV Agrivoltaics Logo">
-                <span>SALSA Agrivoltaics</span>
+                <img src="static/salsa-logo.png" alt="SALSAV Agrivoltaics Logo" data-cms-attr-alt="content.img_1.alt">
+                <span data-cms-key="nav.brand">SALSA Agrivoltaics</span>
             </a>
             <div class="navbar-links" id="navbar-links">
                 <ul class="navbar-menu">
-                    <li><a href="index.html" class="navbar-link active">Home</a></li>
+                    <li><a href="index.html" class="navbar-link active" data-cms-key="global.nav.home">Home</a></li>
                     <li class="has-dropdown">
-                        <a href="research-ecophysiology.html" class="navbar-link">Research</a>
+                        <a href="research-ecophysiology.html" class="navbar-link" data-cms-key="global.nav.research">Research</a>
                         <ul class="dropdown-content">
-                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
-                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
-                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                            <li><a href="research-ecophysiology.html" data-cms-key="global.nav.research.ecophysiology">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html" data-cms-key="global.nav.research.scaling_up">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html" data-cms-key="global.nav.research.scaling_out">Scaling Out</a></li>
                         </ul>
                     </li>
                     <li class="has-dropdown">
-                        <a href="education.html" class="navbar-link">Education</a>
+                        <a href="education.html" class="navbar-link" data-cms-key="global.nav.education">Education</a>
                         <ul class="dropdown-content">
-                            <li><a href="education.html">School Gardens</a></li>
-                            <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
-                            <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                            <li><a href="education.html" data-cms-key="global.nav.education.school_gardens">School Gardens</a></li>
+                            <li><a href="education-global-school.html" data-cms-key="global.nav.education.global_school">Global School of Agrivoltaics</a></li>
+                            <li><a href="education-interdisciplinary.html" data-cms-key="global.nav.education.interdisciplinary">Interdisciplinary Opportunities</a></li>
                         </ul>
                     </li>
-                    <li><a href="sites.html" class="navbar-link">Learning Labs</a></li>
-                    <li><a href="news.html" class="navbar-link">News</a></li>
-                    <li><a href="team.html" class="navbar-link">Team</a></li>
-                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                    <li><a href="sites.html" class="navbar-link" data-cms-key="global.nav.learning_labs">Learning Labs</a></li>
+                    <li><a href="news.html" class="navbar-link" data-cms-key="global.nav.news">News</a></li>
+                    <li><a href="team.html" class="navbar-link" data-cms-key="global.nav.team">Team</a></li>
+                    <li><a href="#footer" class="navbar-link" data-cms-key="global.nav.contact">Contact</a></li>
                 </ul>
             </div>
             <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu"
-                aria-expanded="false">
+                aria-expanded="false" data-cms-attr-aria-label="global.nav.toggle_aria">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
@@ -350,61 +352,61 @@
 
     <main>
         <!-- HERO -->
-        <section class="hero">
+        <section class="hero" data-cms-canvas="index.hero" data-cms-grid="12">
             <video id="heroVideo" class="hero-background-video" src="static/jacks-drone-video.mp4" autoplay loop muted
                 playsinline></video>
             <div class="hero-overlay"></div>
             <div class="container">
-                <h1 class="hero-headline reveal">Semi-arid Lab for Scaling Agrivoltaics</h1>
+                <h1 class="hero-headline reveal" data-cms-key="hero.headline" data-cms-block-id="index_hero_headline" data-cms-block-type="headingBlock" data-cms-parent-canvas="index.hero">Semi-arid Lab for Scaling Agrivoltaics</h1>
                 <div class="hero-subheadline reveal" style="transition-delay: 0.2s;">
-                    <p>Our lab researches and implements agrivoltaic systems to create resilient food, energy, and water
+                    <p data-cms-key="hero.text_1" data-cms-block-id="index_hero_text_1" data-cms-block-type="textBlock" data-cms-parent-canvas="index.hero">Our lab researches and implements agrivoltaic systems to create resilient food, energy, and water
                         solutions in arid regions. We scale this work from local test plots to global partnerships,
                         building a data-driven roadmap for a sustainable future.</p>
                 </div>
             </div>
             <div class="hero-video-controls">
-                <button class="video-control-btn" id="playPauseBtn" aria-label="Pause video">
+                <button class="video-control-btn" id="playPauseBtn" aria-label="Pause video" data-cms-attr-aria-label="hero.button_1.aria_label">
                     <i class="fa-solid fa-pause"></i>
                 </button>
-                <button class="video-control-btn" id="muteUnmuteBtn" aria-label="Unmute video">
+                <button class="video-control-btn" id="muteUnmuteBtn" aria-label="Unmute video" data-cms-attr-aria-label="hero.button_2.aria_label">
                     <i class="fa-solid fa-volume-xmark"></i>
                 </button>
             </div>
         </section>
 
         <!-- CHALLENGE SECTION -->
-        <section class="section challenge-section">
+        <section class="section challenge-section" data-cms-canvas="index.section" data-cms-grid="12">
             <div class="container">
                 <div class="news-header reveal">
-                    <span class="tag">The Pressing Need</span>
-                    <h2>Major Challenges Across Food, Energy & Water</h2>
+                    <span class="tag" data-cms-key="hero.tag_1">The Pressing Need</span>
+                    <h2 data-cms-key="hero.heading_1" data-cms-block-id="index_hero_heading_1" data-cms-block-type="headingBlock" data-cms-parent-canvas="index.hero">Major Challenges Across Food, Energy & Water</h2>
                 </div>
-                <div class="news-grid reveal" style="transition-delay: 0.2s;">
+                <div class="news-grid reveal" style="transition-delay: 0.2s;" data-cms-list="generic_1" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_1" data-cms-grid="12">
 
                     <a href="https://www.wired.com/story/growing-crops-under-solar-panels-now-theres-a-bright-idea/"
-                        target="_blank" rel="noopener noreferrer" class="challenge-card-link">
-                        <div class="challenge-card">
-                            <img src="static/wired.png" alt="WIRED Magazine Logo">
-                            <blockquote>"The results were dramatic... Shade from the solar panels led to a major
+                        target="_blank" rel="noopener noreferrer" class="challenge-card-link" data-cms-block-id="index_block_1" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_1">
+                        <div class="challenge-card" data-cms-block-id="index_block_2" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_1">
+                            <img src="static/wired.png" alt="WIRED Magazine Logo" data-cms-attr-alt="hero.img_1.alt">
+                            <blockquote data-cms-key="hero.quote_1">"The results were dramatic... Shade from the solar panels led to a major
                                 increase in the abundance of several crops. It's a win-win-win for food, water, and
                                 renewable energy."</blockquote>
                         </div>
                     </a>
 
                     <a href="https://www.cnbc.com/amp/2022/04/03/arizona-farmers-are-slammed-by-water-cuts-in-the-west-amid-drought.html"
-                        target="_blank" rel="noopener noreferrer" class="challenge-card-link">
-                        <div class="challenge-card">
-                            <img src="static/cnbc_redesign.png" alt="CNBC Logo">
-                            <blockquote>"Empty canals, dead cotton fields: Arizona farmers are getting slammed by water
+                        target="_blank" rel="noopener noreferrer" class="challenge-card-link" data-cms-block-id="index_block_3" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_1">
+                        <div class="challenge-card" data-cms-block-id="index_block_4" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_1">
+                            <img src="static/cnbc_redesign.png" alt="CNBC Logo" data-cms-attr-alt="hero.img_2.alt">
+                            <blockquote data-cms-key="hero.quote_2">"Empty canals, dead cotton fields: Arizona farmers are getting slammed by water
                                 cuts in the West."</blockquote>
                         </div>
                     </a>
 
                     <a href="https://grist.org/article/california-farmer-solar-panel-water-renewable-nature-conservancy"
-                        target="_blank" rel="noopener noreferrer" class="challenge-card-link">
-                        <div class="challenge-card">
-                            <img src="static/grist_logo.png" alt="Grist Logo">
-                            <blockquote>"Low on Water, California Farmers Turn to Solar Farming... a state law now
+                        target="_blank" rel="noopener noreferrer" class="challenge-card-link" data-cms-block-id="index_block_5" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_1">
+                        <div class="challenge-card" data-cms-block-id="index_block_6" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_1">
+                            <img src="static/grist_logo.png" alt="Grist Logo" data-cms-attr-alt="hero.img_3.alt">
+                            <blockquote data-cms-key="hero.quote_3">"Low on Water, California Farmers Turn to Solar Farming... a state law now
                                 requires water regulators to figure out how to balance their accounts so that
                                 groundwater levels stop dropping."</blockquote>
                         </div>
@@ -417,27 +419,27 @@
 
 
         <!-- WHAT IF SECTION -->
-        <section class="section what-if-section">
+        <section class="section what-if-section" data-cms-canvas="index.section" data-cms-grid="12">
             <div class="container">
-                <h2 class="reveal">We are moving beyond siloed solutions by asking a simple question: <span
+                <h2 class="reveal" data-cms-key="hero.heading_2">We are moving beyond siloed solutions by asking a simple question: <span
                         class="highlight">What if we produce our food under solar panels?</span></h2>
             </div>
         </section>
 
         <!-- PROOF SECTION (Interactive Charts) -->
-        <section class="section proof-section">
+        <section class="section proof-section" data-cms-canvas="index.section" data-cms-grid="12">
             <div class="container">
                 <div class="news-header reveal">
-                    <span class="tag">The Evidence is Clear</span>
-                    <h2>Data-Driven Results: Yield & Water Efficiency</h2>
-                    <p class="subtitle" style="max-width: 800px; margin: 1rem auto 0;">
+                    <span class="tag" data-cms-key="hero.tag_2">The Evidence is Clear</span>
+                    <h2 data-cms-key="hero.heading_3">Data-Driven Results: Yield & Water Efficiency</h2>
+                    <p class="subtitle" style="max-width: 800px; margin: 1rem auto 0;" data-cms-key="hero.subheadline">
                         Our research shows agrivoltaics not only improves crop yield in harsh conditions but also
                         significantly boosts water use efficiency. The interactive charts below, based on our published
                         data
                         (<a href="https://www.nature.com/articles/s44264-025-00073-1" target="_blank"
                             rel="noopener noreferrer"
                             title="Agrivoltaics as a climate-smart and resilient solution for midday depression in photosynthesis in dryland regions"
-                            style="color: var(--secondary-color); text-decoration: underline; font-weight: 600;">see
+                            style="color: var(--secondary-color); text-decoration: underline; font-weight: 600;" data-cms-attr-title="hero.a_1.title">see
                             publication</a>),
                         illustrate these dual benefits.
                     </p>
@@ -445,9 +447,9 @@
 
                 <!-- Interactive Toggle for Irrigation Levels -->
                 <div class="irrigation-toggle reveal">
-                    <button class="toggle-btn active" id="fullIrrigationBtn" data-irrigation="full">Full
+                    <button class="toggle-btn active" id="fullIrrigationBtn" data-irrigation="full" data-cms-key="hero.cta_1">Full
                         Irrigation</button>
-                    <button class="toggle-btn" id="halfIrrigationBtn" data-irrigation="half">Half Irrigation (Drought
+                    <button class="toggle-btn" id="halfIrrigationBtn" data-irrigation="half" data-cms-key="hero.cta_2">Half Irrigation (Drought
                         Condition)</button>
                 </div>
 
@@ -458,21 +460,21 @@
                 </div>
 
                 <!-- Charts Grid -->
-                <div class="charts-grid reveal">
-                    <div class="chart-card">
-                        <h3>Agricultural Yield per Plant</h3>
+                <div class="charts-grid reveal" data-cms-list="generic_2" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_2" data-cms-grid="12">
+                    <div class="chart-card" data-cms-block-id="index_block_7" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_2">
+                        <h3 data-cms-key="hero.heading_4">Agricultural Yield per Plant</h3>
                         <div id="yieldChart"></div>
                     </div>
-                    <div class="chart-card">
-                        <h3>Crop Water Productivity</h3>
+                    <div class="chart-card" data-cms-block-id="index_block_8" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_2">
+                        <h3 data-cms-key="hero.heading_5">Crop Water Productivity</h3>
                         <div id="productivityChart"></div>
                     </div>
                 </div>
 
                 <div style="text-align: center; margin-top: 4rem;" class="reveal">
-                    <h3 style="font-size: 1.5rem; font-weight: 500; color: var(--text-heading);">A Resilient
+                    <h3 style="font-size: 1.5rem; font-weight: 500; color: var(--text-heading);" data-cms-key="hero.heading_6">A Resilient
                         Solution for a Water-Scarce Future</h3>
-                    <p class="subtitle" style="max-width: 800px; margin: 1rem auto 0;">
+                    <p class="subtitle" style="max-width: 800px; margin: 1rem auto 0;" data-cms-key="hero.subheadline_2">
                         The data demonstrates a clear pattern: the moderated microclimate under solar panels
                         reduces plant stress. Even under simulated drought conditions (half irrigation),
                         agrivoltaic systems produce yields comparable to or greater than fully irrigated crops
@@ -484,60 +486,60 @@
         </section>
 
         <!-- RESEARCH PILLARS -->
-        <section class="section pillars-section" id="research-section">
+        <section class="section pillars-section" id="research-section" data-cms-canvas="index.research_section" data-cms-grid="12">
             <div class="container">
                 <div class="news-header reveal"
                     style="grid-column: 1 / -1; margin-bottom: 2rem; justify-content: flex-start;">
-                    <h2>Research in Agrivoltaics Systems</h2>
+                    <h2 data-cms-key="hero.heading_7">Research in Agrivoltaics Systems</h2>
                 </div>
-                <div class="pillars-left">
+                <div class="pillars-left" data-cms-list="generic_3" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_3" data-cms-grid="12">
                     <a href="research-ecophysiology.html"
                         style="text-decoration: none; color: inherit; display: block;">
-                        <div class="pillar-item reveal" data-image="static/ecophysiology-hero.jpg">
-                            <span class="tag">01. Ecophysiology</span>
-                            <h3>The Plant-Panel Symbiosis</h3>
-                            <p>The partial shade of solar panels creates a unique growing environment for crops. How
+                        <div class="pillar-item reveal" data-image="static/ecophysiology-hero.jpg" data-cms-list="generic_4" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_4" data-cms-grid="12" data-cms-block-id="index_block_9" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_3">
+                            <span class="tag" data-cms-key="hero.tag_3">01. Ecophysiology</span>
+                            <h3 data-cms-key="hero.heading_8">The Plant-Panel Symbiosis</h3>
+                            <p data-cms-key="hero.text_2">The partial shade of solar panels creates a unique growing environment for crops. How
                                 does the AV environment affect crop physiology, water use, phenology and yield?</p>
                         </div>
                     </a>
                     <a href="research-scaling-up.html" style="text-decoration: none; color: inherit; display: block;">
-                        <div class="pillar-item reveal" data-image="static/scaling-up-hero.jpg">
-                            <span class="tag">02. Scaling Up</span>
-                            <h3>From Kilowatts to Megawatts</h3>
-                            <p>Taking proven benefits from test plots to utility-scale requires robust engineering and
+                        <div class="pillar-item reveal" data-image="static/scaling-up-hero.jpg" data-cms-list="generic_5" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_5" data-cms-grid="12" data-cms-block-id="index_block_10" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_4">
+                            <span class="tag" data-cms-key="hero.tag_4">02. Scaling Up</span>
+                            <h3 data-cms-key="hero.heading_9">From Kilowatts to Megawatts</h3>
+                            <p data-cms-key="hero.text_3">Taking proven benefits from test plots to utility-scale requires robust engineering and
                                 economic models. We analyze system designs and financial viability to create a clear
                                 roadmap
                                 for profitable agrivoltaic projects.</p>
                         </div>
                     </a>
                     <a href="research-scaling-out.html" style="text-decoration: none; color: inherit; display: block;">
-                        <div class="pillar-item reveal" data-image="static/adapting.jpeg">
-                            <span class="tag">03. Scaling Out</span>
-                            <h3>Adapting to Diverse Contexts</h3>
-                            <p>An agrivoltaic solution for Arizona's desert differs from one for Kenya's highlands. Our
+                        <div class="pillar-item reveal" data-image="static/adapting.jpeg" data-cms-list="generic_6" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_6" data-cms-grid="12" data-cms-block-id="index_block_11" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_5">
+                            <span class="tag" data-cms-key="hero.tag_5">03. Scaling Out</span>
+                            <h3 data-cms-key="hero.heading_10">Adapting to Diverse Contexts</h3>
+                            <p data-cms-key="hero.text_4">An agrivoltaic solution for Arizona's desert differs from one for Kenya's highlands. Our
                                 research spans multiple climates and crop types to develop adaptable, resilient models
                                 that
                                 work worldwide.</p>
                         </div>
                     </a>
                 </div>
-                <div class="pillars-right">
-                    <div class="pillar-image is-visible" id="pillar-image-ecophysiology-hero"><img
-                            src="static/ecophysiology-hero.jpg" alt="Ecophysiology research"></div>
-                    <div class="pillar-image" id="pillar-image-scaling-up-hero"><img src="static/scaling-up-hero.jpg"
-                            alt="Large-scale agrivoltaics"></div>
-                    <div class="pillar-image" id="pillar-image-adapting"><img src="static/adapting.jpg"
-                            alt="Adapting agrivoltaics to diverse global contexts"></div>
+                <div class="pillars-right" data-cms-list="generic_7" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_7" data-cms-grid="12">
+                    <div class="pillar-image is-visible" id="pillar-image-ecophysiology-hero" data-cms-list="generic_8" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_8" data-cms-grid="12"><img
+                            src="static/ecophysiology-hero.jpg" alt="Ecophysiology research" data-cms-attr-alt="hero.img_4.alt"></div>
+                    <div class="pillar-image" id="pillar-image-scaling-up-hero" data-cms-list="generic_9" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_9" data-cms-grid="12"><img src="static/scaling-up-hero.jpg"
+                            alt="Large-scale agrivoltaics" data-cms-attr-alt="hero.img_5.alt"></div>
+                    <div class="pillar-image" id="pillar-image-adapting" data-cms-list="generic_10" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_10" data-cms-grid="12"><img src="static/adapting.jpg"
+                            alt="Adapting agrivoltaics to diverse global contexts" data-cms-attr-alt="hero.img_6.alt"></div>
                 </div>
         </section>
 
         <!-- RESEARCHER SECTION -->
-        <section class="section researcher-section">
+        <section class="section researcher-section" data-cms-canvas="index.section" data-cms-grid="12">
             <div class="container">
                 <div class="researcher-info reveal">
-                    <h2>A climate expert takes you inside the research</h2>
-                    <h3>Dr. Greg Barron-Gafford, Lead Investigator</h3>
-                    <p>As a Professor at the University of Arizona, Dr. Barron-Gafford leads our multi-disciplinary
+                    <h2 data-cms-key="hero.heading_11">A climate expert takes you inside the research</h2>
+                    <h3 data-cms-key="hero.heading_12">Dr. Greg Barron-Gafford, Lead Investigator</h3>
+                    <p data-cms-key="hero.text_5">As a Professor at the University of Arizona, Dr. Barron-Gafford leads our multi-disciplinary
                         team
                         exploring the food-energy-water nexus, demonstrating how agrivoltaics can meet our growing need
                         for renewable energy and sustainable agriculture.</p>
@@ -550,12 +552,12 @@
         </section>
 
         <!-- EDUCATION SECTION -->
-        <section class="section education-section" style="background-color: var(--bg-light-navy);">
+        <section class="section education-section" style="background-color: var(--bg-light-navy);" data-cms-canvas="index.section" data-cms-grid="12">
             <div class="container reveal" style="text-align: center;">
-                <h2 style="font-size: clamp(2.2rem, 5vw, 3rem); line-height: 1.2; margin-bottom: 1.5rem;">Developing the
+                <h2 style="font-size: clamp(2.2rem, 5vw, 3rem); line-height: 1.2; margin-bottom: 1.5rem;" data-cms-key="hero.heading_13">Developing the
                     Next Generation of Agrivoltaics Leaders</h2>
                 <p class="subtitle"
-                    style="max-width: 800px; margin-left: auto; margin-right: auto; margin-bottom: 3rem;">Our
+                    style="max-width: 800px; margin-left: auto; margin-right: auto; margin-bottom: 3rem;" data-cms-key="hero.subheadline_3">Our
                     educational focus builds capacity at all levels, from K-12 engagement to university-level research
                     and professional training.</p>
                 <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; text-align: left;">
@@ -563,9 +565,9 @@
                         style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
                         <div
                             style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
-                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">School
+                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;" data-cms-key="hero.heading_14">School
                                 Garden Programs</h3>
-                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Bringing hands-on
+                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;" data-cms-key="hero.text_6">Bringing hands-on
                                 agrivoltaics learning to K-12 students, inspiring future scientists and innovators.</p>
                         </div>
                     </a>
@@ -573,9 +575,9 @@
                         style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
                         <div
                             style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
-                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">
+                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;" data-cms-key="hero.heading_15">
                                 Interdisciplinary Opportunities</h3>
-                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Fostering collaboration
+                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;" data-cms-key="hero.text_7">Fostering collaboration
                                 across science, engineering, and policy for graduate and undergraduate students.</p>
                         </div>
                     </a>
@@ -583,9 +585,9 @@
                         style="text-decoration: none; color: inherit; flex: 1 1 0; min-width: 280px; max-width: 350px; display: block; transition: transform 0.3s ease, box-shadow 0.3s ease;">
                         <div
                             style="background: var(--bg-dark); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
-                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;">Global
+                            <h3 style="color: var(--secondary-color); margin-bottom: 0.5rem; font-size: 1.25rem;" data-cms-key="hero.heading_16">Global
                                 School of Agrivoltaics</h3>
-                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;">Training workshops and
+                            <p style="color: var(--text-body); font-size: 1rem; flex-grow: 1;" data-cms-key="hero.text_8">Training workshops and
                                 resources for farmers, developers, and policymakers to implement successful projects.
                             </p>
                         </div>
@@ -595,163 +597,163 @@
         </section>
 
         <!-- FEATURED SITES CAROUSEL -->
-        <section class="section sites-carousel-section">
+        <section class="section sites-carousel-section" data-cms-canvas="index.section" data-cms-grid="12">
             <div class="container">
                 <div class="news-header reveal">
-                    <h2>Our Global SALSA Learning Labs</h2>
-                    <a href="sites.html" class="cta-button">View All Sites</a>
+                    <h2 data-cms-key="carousel.heading_1">Our Global SALSA Learning Labs</h2>
+                    <a href="sites.html" class="cta-button" data-cms-key="carousel.link_1">View All Sites</a>
                 </div>
-                <p class="subtitle reveal" style="text-align: center; max-width: 800px; margin: -2rem auto 4rem;">
+                <p class="subtitle reveal" style="text-align: center; max-width: 800px; margin: -2rem auto 4rem;" data-cms-key="carousel.subheadline_1">
                     From the drylands of Arizona to equatorial Kenya, our research spans diverse climates to create
                     adaptable, resilient agrivoltaic models.
                 </p>
             </div>
 
             <div class="carousel-container reveal" style="transition-delay: 0.2s;">
-                <div class="carousel-track">
+                <div class="carousel-track" data-cms-list="generic_11" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_11" data-cms-grid="12">
                     <!-- Original Set of Site Cards -->
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#arizona-sites-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_12" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#arizona-sites-detailed" target="_blank" data-cms-block-id="news_item_item_biosphere_2_laboratory" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/biosphere2agriv.jpg"
-                                    alt="Agrivoltaics research at Biosphere 2"></div>
+                                    alt="Agrivoltaics research at Biosphere 2" data-cms-attr-alt="carousel.img_1.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Arizona, USA</span>
-                                <h3>Biosphere 2 Laboratory</h3>
-                                <p>The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win'
+                                <span class="tag" data-cms-key="carousel.tag_1">Arizona, USA</span>
+                                <h3 data-cms-key="carousel.heading_2">Biosphere 2 Laboratory</h3>
+                                <p data-cms-key="carousel.text_1">The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win'
                                     for food, water, and energy.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#colorado-site-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_13" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#colorado-site-detailed" target="_blank" data-cms-block-id="news_item_item_jack_s_solar_garden" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/jacksagriv.jpg"
-                                    alt="Agrivoltaics at Jack's Solar Garden"></div>
+                                    alt="Agrivoltaics at Jack's Solar Garden" data-cms-attr-alt="carousel.img_2.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Colorado, USA</span>
-                                <h3>Jack’s Solar Garden</h3>
-                                <p>A nationally-recognized showcase focusing on microclimate benefits and improving
+                                <span class="tag" data-cms-key="carousel.tag_2">Colorado, USA</span>
+                                <h3 data-cms-key="carousel.heading_3">Jack’s Solar Garden</h3>
+                                <p data-cms-key="carousel.text_2">A nationally-recognized showcase focusing on microclimate benefits and improving
                                     pasture quality for livestock grazing.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_14" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank" data-cms-block-id="news_item_item_community_agrivoltaics" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/makueni2.jpg"
-                                    alt="Community agrivoltaics in Kenya"></div>
+                                    alt="Community agrivoltaics in Kenya" data-cms-attr-alt="carousel.img_3.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Makueni County, Kenya</span>
-                                <h3>Community Agrivoltaics</h3>
-                                <p>A community-focused site providing clean energy and irrigation to tackle food and
+                                <span class="tag" data-cms-key="carousel.tag_3">Makueni County, Kenya</span>
+                                <h3 data-cms-key="carousel.heading_4">Community Agrivoltaics</h3>
+                                <p data-cms-key="carousel.text_3">A community-focused site providing clean energy and irrigation to tackle food and
                                     energy security in a semi-arid region.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#israel-site-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_15" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#israel-site-detailed" target="_blank" data-cms-block-id="news_item_item_extreme_climate_research" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/aravaagriv.jpg"
-                                    alt="Agrivoltaics in the Arava Desert, Israel"></div>
+                                    alt="Agrivoltaics in the Arava Desert, Israel" data-cms-attr-alt="carousel.img_4.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Arava Desert, Israel</span>
-                                <h3>Extreme Climate Research</h3>
-                                <p>Developing robust systems for extreme desert climates, focusing on enhancing crop
+                                <span class="tag" data-cms-key="carousel.tag_4">Arava Desert, Israel</span>
+                                <h3 data-cms-key="carousel.heading_5">Extreme Climate Research</h3>
+                                <p data-cms-key="carousel.text_4">Developing robust systems for extreme desert climates, focusing on enhancing crop
                                     yields while drastically reducing water needs.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#morocco-collaboration-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_16" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#morocco-collaboration-detailed" target="_blank" data-cms-block-id="news_item_item_green_energy_park" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/um6pagriv.jpeg"
-                                    alt="Green Energy Park in Morocco"></div>
+                                    alt="Green Energy Park in Morocco" data-cms-attr-alt="carousel.img_5.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Ben Guerir, Morocco</span>
-                                <h3>Green Energy Park</h3>
-                                <p>A regional hub for West Africa, focusing on water-saving tech, battery storage, and
+                                <span class="tag" data-cms-key="carousel.tag_5">Ben Guerir, Morocco</span>
+                                <h3 data-cms-key="carousel.heading_6">Green Energy Park</h3>
+                                <p data-cms-key="carousel.text_5">A regional hub for West Africa, focusing on water-saving tech, battery storage, and
                                     increasing solar output via crop cooling.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#mexico-collaboration-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_17" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#mexico-collaboration-detailed" target="_blank" data-cms-block-id="news_item_item_pase_project_at_unam" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/paseagriv.jpg"
-                                    alt="PASE Agrivoltaics project in Mexico"></div>
+                                    alt="PASE Agrivoltaics project in Mexico" data-cms-attr-alt="carousel.img_6.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Mexico City, Mexico</span>
-                                <h3>PASE Project at UNAM</h3>
-                                <p>Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable
+                                <span class="tag" data-cms-key="carousel.tag_6">Mexico City, Mexico</span>
+                                <h3 data-cms-key="carousel.heading_7">PASE Project at UNAM</h3>
+                                <p data-cms-key="carousel.text_6">Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable
                                     and educational research plot.</p>
                             </div>
                         </a>
                     </div>
 
                     <!-- Duplicated Set for Seamless Loop -->
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#arizona-sites-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_18" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#arizona-sites-detailed" target="_blank" data-cms-block-id="news_item_item_biosphere_2_laboratory" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/biosphere2agriv.jpg"
-                                    alt="Agrivoltaics research at Biosphere 2"></div>
+                                    alt="Agrivoltaics research at Biosphere 2" data-cms-attr-alt="carousel.img_7.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Arizona, USA</span>
-                                <h3>Biosphere 2 Laboratory</h3>
-                                <p>The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win'
+                                <span class="tag" data-cms-key="carousel.tag_1">Arizona, USA</span>
+                                <h3 data-cms-key="carousel.heading_2">Biosphere 2 Laboratory</h3>
+                                <p data-cms-key="carousel.text_1">The pioneering site where agrivoltaics in drylands was born, proving a 'win-win-win'
                                     for food, water, and energy.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#colorado-site-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_19" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#colorado-site-detailed" target="_blank" data-cms-block-id="news_item_item_jack_s_solar_garden" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/jacksagriv.jpg"
-                                    alt="Agrivoltaics at Jack's Solar Garden"></div>
+                                    alt="Agrivoltaics at Jack's Solar Garden" data-cms-attr-alt="carousel.img_8.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Colorado, USA</span>
-                                <h3>Jack’s Solar Garden</h3>
-                                <p>A nationally-recognized showcase focusing on microclimate benefits and improving
+                                <span class="tag" data-cms-key="carousel.tag_2">Colorado, USA</span>
+                                <h3 data-cms-key="carousel.heading_3">Jack’s Solar Garden</h3>
+                                <p data-cms-key="carousel.text_2">A nationally-recognized showcase focusing on microclimate benefits and improving
                                     pasture quality for livestock grazing.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank">
-                            <div class="news-image-wrapper"><img src="static/makueni-site-photo.jpg"
-                                    alt="Community agrivoltaics in Kenya"></div>
+                    <div class="slide" data-cms-block-id="index_block_20" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#kenya-site-detailed" target="_blank" data-cms-block-id="news_item_item_community_agrivoltaics" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
+                            <div class="news-image-wrapper"><img src="static/makueni2.jpg"
+                                    alt="Community agrivoltaics in Kenya" data-cms-attr-alt="carousel.img_9.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Makueni County, Kenya</span>
-                                <h3>Community Agrivoltaics</h3>
-                                <p>A community-focused site providing clean energy and irrigation to tackle food and
+                                <span class="tag" data-cms-key="carousel.tag_3">Makueni County, Kenya</span>
+                                <h3 data-cms-key="carousel.heading_4">Community Agrivoltaics</h3>
+                                <p data-cms-key="carousel.text_3">A community-focused site providing clean energy and irrigation to tackle food and
                                     energy security in a semi-arid region.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#israel-site-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_21" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#israel-site-detailed" target="_blank" data-cms-block-id="news_item_item_extreme_climate_research" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/aravaagriv.jpg"
-                                    alt="Agrivoltaics in the Arava Desert, Israel"></div>
+                                    alt="Agrivoltaics in the Arava Desert, Israel" data-cms-attr-alt="carousel.img_10.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Arava Desert, Israel</span>
-                                <h3>Extreme Climate Research</h3>
-                                <p>Developing robust systems for extreme desert climates, focusing on enhancing crop
+                                <span class="tag" data-cms-key="carousel.tag_4">Arava Desert, Israel</span>
+                                <h3 data-cms-key="carousel.heading_5">Extreme Climate Research</h3>
+                                <p data-cms-key="carousel.text_4">Developing robust systems for extreme desert climates, focusing on enhancing crop
                                     yields while drastically reducing water needs.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#morocco-collaboration-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_22" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#morocco-collaboration-detailed" target="_blank" data-cms-block-id="news_item_item_green_energy_park" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/um6pagriv.jpeg"
-                                    alt="Green Energy Park in Morocco"></div>
+                                    alt="Green Energy Park in Morocco" data-cms-attr-alt="carousel.img_11.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Ben Guerir, Morocco</span>
-                                <h3>Green Energy Park</h3>
-                                <p>A regional hub for West Africa, focusing on water-saving tech, battery storage, and
+                                <span class="tag" data-cms-key="carousel.tag_5">Ben Guerir, Morocco</span>
+                                <h3 data-cms-key="carousel.heading_6">Green Energy Park</h3>
+                                <p data-cms-key="carousel.text_5">A regional hub for West Africa, focusing on water-saving tech, battery storage, and
                                     increasing solar output via crop cooling.</p>
                             </div>
                         </a>
                     </div>
-                    <div class="slide">
-                        <a class="news-card" href="sites.html#mexico-collaboration-detailed" target="_blank">
+                    <div class="slide" data-cms-block-id="index_block_23" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_11">
+                        <a class="news-card" href="sites.html#mexico-collaboration-detailed" target="_blank" data-cms-block-id="news_item_item_pase_project_at_unam" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                             <div class="news-image-wrapper"><img src="static/paseagriv.jpg"
-                                    alt="PASE Agrivoltaics project in Mexico"></div>
+                                    alt="PASE Agrivoltaics project in Mexico" data-cms-attr-alt="carousel.img_12.alt"></div>
                             <div class="news-card-content">
-                                <span class="tag">Mexico City, Mexico</span>
-                                <h3>PASE Project at UNAM</h3>
-                                <p>Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable
+                                <span class="tag" data-cms-key="carousel.tag_6">Mexico City, Mexico</span>
+                                <h3 data-cms-key="carousel.heading_7">PASE Project at UNAM</h3>
+                                <p data-cms-key="carousel.text_6">Mexico’s first full agrivoltaics pilot, established at UNAM as a flagship sustainable
                                     and educational research plot.</p>
                             </div>
                         </a>
@@ -759,48 +761,48 @@
                 </div>
             </div>
             <div class="carousel-nav reveal" style="transition-delay: 0.2s;">
-                <button class="nav-btn" id="prevBtn" aria-label="Previous slide"><i
+                <button class="nav-btn" id="prevBtn" aria-label="Previous slide" data-cms-attr-aria-label="carousel.button_1.aria_label"><i
                         class="fa-solid fa-arrow-left"></i></button>
-                <button class="nav-btn" id="nextBtn" aria-label="Next slide"><i
+                <button class="nav-btn" id="nextBtn" aria-label="Next slide" data-cms-attr-aria-label="carousel.button_2.aria_label"><i
                         class="fa-solid fa-arrow-right"></i></button>
             </div>
         </section>
 
         <!-- NEWS & PUBLICATIONS -->
-        <section class="section news-section" style="padding-top: 0;">
+        <section class="section news-section" style="padding-top: 0;" data-cms-canvas="index.section" data-cms-grid="12">
             <div class="container">
                 <div class="news-header reveal">
-                    <h2>Field & Academic Press</h2>
-                    <a href="news.html" class="cta-button">See All</a>
+                    <h2 data-cms-key="carousel.heading_8">Field & Academic Press</h2>
+                    <a href="news.html" class="cta-button" data-cms-key="carousel.link_2">See All</a>
                 </div>
 
-                <div class="news-grid reveal" style="transition-delay: 0.2s;">
-                    <a class="news-card" href="https://doi.org/10.1038/s44264-025-00073-1" target="_blank">
+                <div class="news-grid reveal" style="transition-delay: 0.2s;" data-cms-list="generic_12" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_12" data-cms-grid="12">
+                    <a class="news-card" href="https://doi.org/10.1038/s44264-025-00073-1" target="_blank" data-cms-block-id="news_item_item_agrivoltaics_as_a_climate_smart_solution_for_midday_photosynthesis_colla" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                         <div class="news-image-wrapper"><img src="static/pub-placeholder.jpg"
-                                alt="Agrivoltaics as a climate-smart solution"></div>
+                                alt="Agrivoltaics as a climate-smart solution" data-cms-attr-alt="carousel.img_13.alt"></div>
                         <div class="news-card-content">
-                            <span class="tag">Publication • 2025</span>
-                            <h3>Agrivoltaics as a climate-smart solution for midday photosynthesis collapse</h3>
+                            <span class="tag" data-cms-key="carousel.tag_7">Publication • 2025</span>
+                            <h3 data-cms-key="carousel.heading_9">Agrivoltaics as a climate-smart solution for midday photosynthesis collapse</h3>
                         </div>
                     </a>
 
-                    <a class="news-card" href="https://www.nrel.gov/docs/fy22osti/83566.pdf" target="_blank">
-                        <div class="news-image-wrapper"><img src="static/5cs.jpg" alt="Placeholder image for a report">
+                    <a class="news-card" href="https://www.nrel.gov/docs/fy22osti/83566.pdf" target="_blank" data-cms-block-id="news_item_item_the_5_cs_of_agrivoltaic_success_factors_in_the_united_states" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
+                        <div class="news-image-wrapper"><img src="static/5cs.jpg" alt="Placeholder image for a report" data-cms-attr-alt="carousel.img_14.alt">
                         </div>
                         <div class="news-card-content">
-                            <span class="tag">Report • 2022</span>
-                            <h3>The 5 Cs of Agrivoltaic Success Factors in the United States</h3>
+                            <span class="tag" data-cms-key="carousel.tag_8">Report • 2022</span>
+                            <h3 data-cms-key="carousel.heading_10">The 5 Cs of Agrivoltaic Success Factors in the United States</h3>
                         </div>
                     </a>
 
                     <a class="news-card"
                         href="https://www.wired.com/story/growing-crops-under-solar-panels-now-theres-a-bright-idea/"
-                        target="_blank">
+                        target="_blank" data-cms-block-id="news_item_item_wired_growing_crops_under_solar_panels_now_there_s_a_bright_idea" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
                         <div class="news-image-wrapper"><img src="static/wired1.jpg"
-                                alt="Placeholder image for a news article"></div>
+                                alt="Placeholder image for a news article" data-cms-attr-alt="carousel.img_15.alt"></div>
                         <div class="news-card-content">
-                            <span class="tag">News • 2021</span>
-                            <h3>Wired: Growing Crops Under Solar Panels? Now There’s a Bright Idea</h3>
+                            <span class="tag" data-cms-key="carousel.tag_9">News • 2021</span>
+                            <h3 data-cms-key="carousel.heading_11">Wired: Growing Crops Under Solar Panels? Now There’s a Bright Idea</h3>
                         </div>
                     </a>
                 </div>
@@ -808,72 +810,72 @@
         </section>
 
         <!-- PARTNERS SECTION -->
-        <section class="partners-section" id="partners-section">
+        <section class="partners-section" id="partners-section" data-cms-canvas="index.partners_section" data-cms-grid="12">
             <div class="container">
                 <div class="section-header reveal">
-                    <h2>We Are Proud to be Partners</h2>
-                    <p class="subtitle">Complex challenges require great partners with diverse backgrounds. Our team
+                    <h2 data-cms-key="carousel.heading_12">We Are Proud to be Partners</h2>
+                    <p class="subtitle" data-cms-key="carousel.subheadline_2">Complex challenges require great partners with diverse backgrounds. Our team
                         bridges research, industry, and the public sector.</p>
                 </div>
-                <div class="partners-grid reveal" style="transition-delay: 0.2s;">
-                    <a href="https://geography.arizona.edu" target="_blank" rel="noopener" class="partner-logo-link">
+                <div class="partners-grid reveal" style="transition-delay: 0.2s;" data-cms-list="generic_13" data-cms-list-type="genericBlocks" data-cms-canvas="index.generic_13" data-cms-grid="12" data-cms-block-id="index_block_24" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.partners_section">
+                    <a href="https://geography.arizona.edu" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_25" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
                         <img src="static/uaes.png" alt="UArizona School of Geography, Development & Environment Logo"
-                            class="partner-logo">
+                            class="partner-logo" data-cms-attr-alt="challenge.img_1.alt">
                     </a>
-                    <a href="https://biosphere2.org/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/b2-logo-placeholder.png" alt="Biosphere 2 Logo" class="partner-logo">
+                    <a href="https://biosphere2.org/" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_26" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
+                        <img src="static/b2-logo-placeholder.png" alt="Biosphere 2 Logo" class="partner-logo" data-cms-attr-alt="challenge.img_2.alt">
                     </a>
                     <a href="https://www.fainstitute.arizona.edu" target="_blank" rel="noopener"
-                        class="partner-logo-link">
+                        class="partner-logo-link" data-cms-block-id="index_block_27" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
                         <img src="static/fazi-logo-placeholder.jpg"
-                            alt="France-Arizona Institute for Global Grand Challenges Logo" class="partner-logo">
+                            alt="France-Arizona Institute for Global Grand Challenges Logo" class="partner-logo" data-cms-attr-alt="challenge.img_3.alt">
                     </a>
-                    <a href="https://www.unam.mx/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/unam-logo-placeholder.png" alt="UNAM Logo" class="partner-logo">
+                    <a href="https://www.unam.mx/" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_28" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
+                        <img src="static/unam-logo-placeholder.png" alt="UNAM Logo" class="partner-logo" data-cms-attr-alt="challenge.img_4.alt">
                     </a>
-                    <a href="https://www.um6p.ma/en" target="_blank" rel="noopener" class="partner-logo-link">
+                    <a href="https://www.um6p.ma/en" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_29" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
                         <img src="static/um6p-logo-placeholder.png" alt="Mohammed VI Polytechnic University Logo"
-                            class="partner-logo">
+                            class="partner-logo" data-cms-attr-alt="challenge.img_5.alt">
                     </a>
-                    <a href="https://www.cnrs.fr/en/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/cnrs-logo-placeholder.png" alt="CNRS Logo" class="partner-logo">
+                    <a href="https://www.cnrs.fr/en/" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_30" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
+                        <img src="static/cnrs-logo-placeholder.png" alt="CNRS Logo" class="partner-logo" data-cms-attr-alt="challenge.img_6.alt">
                     </a>
-                    <a href="https://jointinstitute.jnf.org/" target="_blank" rel="noopener" class="partner-logo-link">
+                    <a href="https://jointinstitute.jnf.org/" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_31" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
                         <img src="static/kasser-logo-placeholder.jpg"
                             alt="Kasser Joint Institute for Food, Water, and Energy Security Logo"
-                            class="partner-logo">
+                            class="partner-logo" data-cms-attr-alt="challenge.img_7.alt">
                     </a>
-                    <a href="https://www.trbf.org/" target="_blank" rel="noopener" class="partner-logo-link">
+                    <a href="https://www.trbf.org/" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_32" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
                         <img src="static/trbf-logo-placeholder.png" alt="Thomas R. Brown Foundations Logo"
-                            class="partner-logo">
+                            class="partner-logo" data-cms-attr-alt="challenge.img_8.alt">
                     </a>
-                    <a href="http://www.sec.gob.mx/" target="_blank" rel="noopener" class="partner-logo-link">
+                    <a href="http://www.sec.gob.mx/" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_33" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
                         <img src="static/sonora-sec-logo-placeholder.png"
-                            alt="Gobierno de Sonora Secretaría de Educación y Cultura Logo" class="partner-logo">
+                            alt="Gobierno de Sonora Secretaría de Educación y Cultura Logo" class="partner-logo" data-cms-attr-alt="challenge.img_9.alt">
                     </a>
 
-                    <a href="https://www.nrel.gov/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/nrel.png" alt="NREL Transforming Energy Logo" class="partner-logo">
+                    <a href="https://www.nrel.gov/" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_34" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
+                        <img src="static/nrel.png" alt="NREL Transforming Energy Logo" class="partner-logo" data-cms-attr-alt="challenge.img_10.alt">
                     </a>
-                    <a href="https://www.aes.com/" target="_blank" rel="noopener" class="partner-logo-link">
-                        <img src="static/aes.png" alt="AES Corporation Logo" class="partner-logo">
+                    <a href="https://www.aes.com/" target="_blank" rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_35" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
+                        <img src="static/aes.png" alt="AES Corporation Logo" class="partner-logo" data-cms-attr-alt="challenge.img_11.alt">
                     </a>
                     <a href="https://www.energy.gov/eere/solar/solar-energy-technologies-office" target="_blank"
-                        rel="noopener" class="partner-logo-link">
+                        rel="noopener" class="partner-logo-link" data-cms-block-id="index_block_36" data-cms-block-type="genericBlock" data-cms-parent-canvas="index.generic_13">
                         <img src="static/doe.jpg" alt="U.S. Department of Energy Solar Awardee Logo"
-                            class="partner-logo">
+                            class="partner-logo" data-cms-attr-alt="challenge.img_12.alt">
                     </a>
                 </div>
             </div>
         </section>
 
         <!-- CTA -->
-        <section class="cta-section">
+        <section class="cta-section" data-cms-canvas="index.cta_section" data-cms-grid="12">
             <div class="container">
-                <h2 class="reveal">Let’s shape the future of energy & agriculture.</h2>
-                <p class="reveal" style="transition-delay: 0.1s;">Our research provides data-driven models that
+                <h2 class="reveal" data-cms-key="challenge.heading_1">Let’s shape the future of energy & agriculture.</h2>
+                <p class="reveal" style="transition-delay: 0.1s;" data-cms-key="challenge.text_1">Our research provides data-driven models that
                     developers, farmers and policymakers can trust.</p>
-                <a href="#footer" class="cta-button reveal" style="transition-delay: 0.2s;">Contact Us</a>
+                <a href="#footer" class="cta-button reveal" style="transition-delay: 0.2s;" data-cms-key="global.footer.contact.heading">Contact Us</a>
             </div>
         </section>
     </main>
@@ -881,31 +883,32 @@
     <footer class="footer" id="footer">
         <div class="container footer-content">
             <div class="footer-brand">
-                <h3>SALSAV Agrivoltaics</h3>
-                <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
+                <h3 data-cms-key="global.footer.salsav_agrivoltaics">SALSAV Agrivoltaics</h3>
+                <p data-cms-key="global.footer.brand.description">A project of the University of Arizona, pioneering food-energy-water solutions.</p>
             </div>
             <div class="footer-links">
-                <h4>Quick Links</h4>
+                <h4 data-cms-key="global.footer.quick_links.heading">Quick Links</h4>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="sites.html">Sites</a></li>
-                    <li><a href="news.html">News</a></li>
-                    <li><a href="team.html">Team</a></li>
+                    <li><a href="index.html" data-cms-key="global.footer.home">Home</a></li>
+                    <li><a href="sites.html" data-cms-key="global.footer.sites">Sites</a></li>
+                    <li><a href="news.html" data-cms-key="global.footer.news">News</a></li>
+                    <li><a href="team.html" data-cms-key="global.footer.team">Team</a></li>
                 </ul>
             </div>
             <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p>University of Arizona</p>
-                <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
+                <h4 data-cms-key="global.footer.contact.heading">Contact Us</h4>
+                <p data-cms-key="global.footer.contact.organization">University of Arizona</p>
+                <p data-cms-key="global.footer.contact.email"><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2024 SALSAV Agrivoltaics. All Rights Reserved.</p>
+            <p data-cms-key="global.footer.copyright">© 2024 SALSAV Agrivoltaics. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            document.body.removeAttribute('data-nav-open');
             const initScrollReveal = () => {
                 const revealObserver = new IntersectionObserver((entries, observer) => {
                     entries.forEach(entry => {
@@ -927,15 +930,68 @@
             const initMobileNav = () => {
                 const toggleBtn = document.getElementById('mobile-toggle');
                 const navLinks = document.getElementById('navbar-links');
-                const icon = toggleBtn.querySelector('i');
                 if (!toggleBtn || !navLinks) return;
+                const icon = toggleBtn.querySelector('i');
+                const dropdownToggles = navLinks.querySelectorAll('.has-dropdown > a');
+                const setMenuState = (isOpen) => {
+                    navLinks.classList.toggle('active', isOpen);
+                    toggleBtn.setAttribute('aria-expanded', String(isOpen));
+                    if (isOpen) {
+                        document.body.dataset.navOpen = 'true';
+                    } else {
+                        document.body.removeAttribute('data-nav-open');
+                    }
+                    if (icon) {
+                        icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+                    }
+                    if (!isOpen) {
+                        dropdownToggles.forEach(toggle => {
+                            toggle.parentElement.classList.remove('open');
+                            toggle.setAttribute('aria-expanded', 'false');
+                        });
+                    }
+                };
+                toggleBtn.setAttribute('aria-controls', navLinks.id);
+                toggleBtn.setAttribute('aria-expanded', 'false');
                 toggleBtn.addEventListener('click', () => {
-                    navLinks.classList.toggle('active');
-                    const isActive = navLinks.classList.contains('active');
-                    toggleBtn.setAttribute('aria-expanded', isActive);
-                    icon.className = isActive ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
-                    document.body.style.overflow = isActive ? 'hidden' : '';
+                    setMenuState(!navLinks.classList.contains('active'));
                 });
+                dropdownToggles.forEach(toggle => {
+                    toggle.setAttribute('aria-expanded', 'false');
+                    toggle.addEventListener('click', (event) => {
+                        if (window.innerWidth < 992 && !toggle.parentElement.classList.contains('open')) {
+                            event.preventDefault();
+                        }
+                        if (window.innerWidth < 992) {
+                            dropdownToggles.forEach(otherToggle => {
+                                if (otherToggle !== toggle) {
+                                    otherToggle.parentElement.classList.remove('open');
+                                    otherToggle.setAttribute('aria-expanded', 'false');
+                                }
+                            });
+                            toggle.parentElement.classList.toggle('open');
+                            toggle.setAttribute('aria-expanded', String(toggle.parentElement.classList.contains('open')));
+                        }
+                    });
+                });
+                navLinks.querySelectorAll('.navbar-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth < 992 && !link.parentElement.classList.contains('has-dropdown')) {
+                            setMenuState(false);
+                        }
+                    });
+                });
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        setMenuState(false);
+                    }
+                });
+                window.addEventListener('pagehide', () => setMenuState(false));
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth >= 992) {
+                        setMenuState(false);
+                    }
+                }, { passive: true });
             };
 
             const initHeroVideoControls = () => {
@@ -1264,8 +1320,17 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         setTimeout(() => {
-                            yieldChart.windowResize();
-                            productivityChart.windowResize();
+                            const refreshChartLayout = (chart) => {
+                                if (typeof chart.windowResize === 'function') {
+                                    chart.windowResize();
+                                } else if (typeof chart.resize === 'function') {
+                                    chart.resize();
+                                } else {
+                                    chart.updateOptions({}, false, true);
+                                }
+                            };
+                            refreshChartLayout(yieldChart);
+                            refreshChartLayout(productivityChart);
                         }, 100);
                         observer.unobserve(entry.target);
                     }
@@ -1276,6 +1341,11 @@
             if (chartContainer) chartObserver.observe(chartContainer);
         });
     </script>
+    <script defer src="js/cms-config.js"></script>
+    <script defer src="js/cms-pantry.js"></script>
+    <script defer src="js/cms-core.js"></script>
+    <script defer src="js/cms-live-layout.js"></script>
+    <script defer src="js/cms-editor.js"></script>
 </body>
 
 </html>

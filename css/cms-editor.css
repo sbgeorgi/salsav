@@ -1,0 +1,950 @@
+.salsav-cms-toolbar,
+.salsav-cms-modal,
+.salsav-cms-toast-tray,
+.salsav-cms-admin-shell {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+[data-cms-block-id] {
+  --cms-block-width: auto;
+  --cms-block-min-height: auto;
+  --cms-image-height: auto;
+  --cms-x: 0px;
+  --cms-y: 0px;
+}
+
+.salsav-cms-toolbar {
+  position: fixed;
+  left: 50%;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 99990;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: min(calc(100vw - 1.5rem), 860px);
+  padding: 0.6rem;
+  color: #e6f1ff;
+  background: rgba(7, 17, 32, 0.92);
+  border: 1px solid rgba(232, 122, 36, 0.38);
+  border-radius: 0.5rem;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(14px);
+  transform: translateX(-50%);
+}
+
+.salsav-cms-toolbar-title {
+  font-weight: 800;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.salsav-cms-mode-switcher {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+html.salsav-cms-preview .salsav-cms-toolbar,
+html.salsav-cms-preview .salsav-cms-drag-handle-live,
+html.salsav-cms-preview .salsav-cms-resize-handle,
+html.salsav-cms-preview .salsav-cms-block-bubble {
+  display: none !important;
+}
+
+.salsav-cms-page-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.65rem;
+  color: #fca311;
+  background: rgba(252, 163, 17, 0.12);
+  border: 1px solid rgba(252, 163, 17, 0.32);
+  border-radius: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.salsav-cms-button,
+.salsav-cms-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 2rem;
+  padding: 0.48rem 0.72rem;
+  color: #e6f1ff;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.4rem;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.salsav-cms-button:hover,
+.salsav-cms-icon-button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.salsav-cms-button-primary,
+.salsav-cms-button-active {
+  color: #081321;
+  background: #fca311;
+  border-color: #fca311;
+}
+
+.salsav-cms-button-primary:hover,
+.salsav-cms-button-active:hover {
+  color: #081321;
+  background: #ffb23c;
+}
+
+.salsav-cms-icon-button {
+  width: 2rem;
+  padding: 0;
+}
+
+html.salsav-cms-editing [data-cms-key],
+html.salsav-cms-editing [data-cms-attr-alt],
+html.salsav-cms-editing [data-cms-attr-title],
+html.salsav-cms-editing [data-cms-attr-aria-label],
+html.salsav-cms-editing [data-cms-attr-placeholder],
+html.salsav-cms-editing [data-cms-attr-content] {
+  outline: 2px dashed rgba(252, 163, 17, 0.75);
+  outline-offset: 4px;
+  cursor: pointer;
+}
+
+html.salsav-cms-moving [data-cms-block-id],
+html.salsav-cms-resizing [data-cms-block-id],
+html.salsav-cms-blocks [data-cms-block-id] {
+  position: relative;
+  outline: 2px solid rgba(56, 189, 248, 0.55);
+  outline-offset: 4px;
+}
+
+html.salsav-cms-editing [data-cms-key]:hover,
+html.salsav-cms-editing [data-cms-attr-alt]:hover,
+html.salsav-cms-editing [data-cms-attr-title]:hover,
+html.salsav-cms-editing [data-cms-attr-aria-label]:hover,
+html.salsav-cms-editing [data-cms-attr-placeholder]:hover,
+html.salsav-cms-editing [data-cms-attr-content]:hover {
+  outline-style: solid;
+  box-shadow: 0 0 0 5px rgba(252, 163, 17, 0.12);
+}
+
+.salsav-cms-selected {
+  outline: 3px solid #38bdf8 !important;
+  outline-offset: 5px !important;
+}
+
+.salsav-cms-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  color: #d8e3f0;
+}
+
+.salsav-cms-modal-open {
+  display: block;
+}
+
+.salsav-cms-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 8, 18, 0.62);
+}
+
+.salsav-cms-editor-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: min(520px, 100vw);
+  height: 100%;
+  padding: 1.2rem;
+  background: #0a192f;
+  border-left: 1px solid rgba(252, 163, 17, 0.24);
+  box-shadow: -24px 0 50px rgba(0, 0, 0, 0.32);
+}
+
+.salsav-cms-editor-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.salsav-cms-editor-head h2 {
+  margin: 0;
+  color: #e6f1ff;
+  font-size: 1.4rem;
+  letter-spacing: 0;
+}
+
+.salsav-cms-kicker {
+  margin: 0 0 0.25rem;
+  color: #fca311;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.salsav-cms-field-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.salsav-cms-field-meta div {
+  min-width: 0;
+  padding: 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.4rem;
+}
+
+.salsav-cms-field-meta dt {
+  color: rgba(216, 227, 240, 0.64);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.salsav-cms-field-meta dd {
+  margin: 0.15rem 0 0;
+  overflow-wrap: anywhere;
+  color: #e6f1ff;
+  font-size: 0.9rem;
+}
+
+.salsav-cms-editor-input,
+.salsav-cms-rich-editor,
+.salsav-cms-admin-input,
+.salsav-cms-admin-textarea,
+.salsav-cms-admin-select {
+  width: 100%;
+  color: #e6f1ff;
+  background: rgba(2, 7, 18, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 0.45rem;
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.salsav-cms-editor-input {
+  flex: 1;
+  min-height: 180px;
+  padding: 0.85rem;
+  resize: vertical;
+}
+
+.salsav-cms-rich-editor {
+  min-height: 240px;
+  max-height: 48vh;
+  overflow: auto;
+  padding: 0.9rem;
+}
+
+.salsav-cms-rich-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.55rem;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.45rem;
+}
+
+.salsav-cms-mini-button,
+.salsav-cms-mini-select {
+  min-height: 1.75rem;
+  padding: 0.32rem 0.5rem;
+  color: #e6f1ff;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.35rem;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.salsav-cms-mini-select {
+  max-width: 150px;
+}
+
+.cms-accent {
+  color: #fca311;
+}
+
+.cms-muted {
+  color: #aab8cc;
+}
+
+.cms-highlight {
+  background: rgba(252, 163, 17, 0.2);
+  border-radius: 0.2rem;
+  padding-inline: 0.15rem;
+}
+
+.cms-small {
+  font-size: 0.86em;
+}
+
+.cms-bold {
+  font-weight: 800;
+}
+
+.cms-italic {
+  font-style: italic;
+}
+
+.salsav-cms-admin-input,
+.salsav-cms-admin-select {
+  min-height: 2.5rem;
+  padding: 0 0.75rem;
+}
+
+.salsav-cms-admin-textarea {
+  min-height: 220px;
+  padding: 0.85rem;
+  resize: vertical;
+}
+
+.salsav-cms-editor-input:focus,
+.salsav-cms-admin-input:focus,
+.salsav-cms-admin-textarea:focus,
+.salsav-cms-admin-select:focus {
+  border-color: #fca311;
+  outline: 3px solid rgba(252, 163, 17, 0.18);
+}
+
+.salsav-cms-editor-actions,
+.salsav-cms-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.salsav-cms-toast-tray {
+  position: fixed;
+  right: 1rem;
+  bottom: 5.5rem;
+  z-index: 100000;
+  display: grid;
+  gap: 0.5rem;
+  width: min(360px, calc(100vw - 2rem));
+}
+
+.salsav-cms-toast {
+  padding: 0.75rem 0.9rem;
+  color: #e6f1ff;
+  background: rgba(7, 17, 32, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-left: 4px solid #38bdf8;
+  border-radius: 0.45rem;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.salsav-cms-toast-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.salsav-cms-toast-success {
+  border-left-color: #22c55e;
+}
+
+.salsav-cms-toast-error {
+  border-left-color: #ef4444;
+}
+
+.salsav-cms-admin-page {
+  min-height: 100vh;
+  margin: 0;
+  color: #d8e3f0;
+  background: #0a192f;
+}
+
+.salsav-cms-admin-shell {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+
+.salsav-cms-admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.salsav-cms-admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.salsav-cms-admin-brand img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.salsav-cms-admin-brand h1 {
+  margin: 0;
+  color: #e6f1ff;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+}
+
+.salsav-cms-admin-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1rem;
+}
+
+.salsav-cms-admin-panel {
+  padding: 1rem;
+  background: rgba(17, 34, 64, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 0.5rem;
+}
+
+.salsav-cms-admin-panel h2,
+.salsav-cms-admin-panel h3 {
+  margin: 0 0 0.75rem;
+  color: #e6f1ff;
+  letter-spacing: 0;
+}
+
+.salsav-cms-admin-note {
+  margin: 0 0 1rem;
+  color: #b8c6da;
+}
+
+.salsav-cms-warning {
+  padding: 0.8rem;
+  color: #ffe8c2;
+  background: rgba(252, 163, 17, 0.12);
+  border: 1px solid rgba(252, 163, 17, 0.3);
+  border-radius: 0.45rem;
+}
+
+.salsav-cms-login-card {
+  width: min(460px, 100%);
+  margin: 8vh auto 0;
+}
+
+.salsav-cms-login-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.salsav-cms-list {
+  display: grid;
+  gap: 0.35rem;
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.salsav-cms-list-button {
+  width: 100%;
+  padding: 0.62rem 0.7rem;
+  color: #d8e3f0;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+
+.salsav-cms-list-button:hover,
+.salsav-cms-list-button-active {
+  color: #ffffff;
+  border-color: rgba(252, 163, 17, 0.45);
+  background: rgba(252, 163, 17, 0.12);
+}
+
+.salsav-cms-field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.salsav-cms-admin-hidden {
+  display: none !important;
+}
+
+.salsav-cms-log-list {
+  display: grid;
+  gap: 0.55rem;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.salsav-cms-log-item {
+  padding: 0.7rem;
+  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.4rem;
+  overflow-wrap: anywhere;
+}
+
+.salsav-cms-collection-shell {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(2, 7, 18, 0.22);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 0.5rem;
+}
+
+.salsav-cms-collection-tabs,
+.salsav-cms-collection-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.salsav-cms-collection-toolbar {
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.salsav-cms-collection-toolbar .salsav-cms-admin-input,
+.salsav-cms-collection-toolbar .salsav-cms-admin-select {
+  width: min(100%, 240px);
+}
+
+.salsav-cms-collection-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.salsav-cms-sortable-row {
+  display: grid;
+  grid-template-columns: auto auto minmax(180px, 1fr) repeat(7, auto);
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.45rem;
+  transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+}
+
+.salsav-cms-sortable-row:hover {
+  background: rgba(255, 255, 255, 0.075);
+  border-color: rgba(252, 163, 17, 0.32);
+}
+
+.salsav-cms-sortable-row-is-dragging {
+  opacity: 0.58;
+  transform: scale(0.99);
+}
+
+.salsav-cms-drop-target {
+  border-color: #38bdf8 !important;
+  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.8);
+}
+
+.salsav-cms-drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: #fca311;
+  background: rgba(252, 163, 17, 0.1);
+  border: 1px solid rgba(252, 163, 17, 0.28);
+  border-radius: 0.35rem;
+  font-weight: 900;
+  cursor: grab;
+}
+
+.salsav-cms-drag-handle-live {
+  position: absolute;
+  top: 0.45rem;
+  left: 0.45rem;
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: #081321;
+  background: #fca311;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 0.35rem;
+  font-weight: 900;
+  cursor: grab;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.24);
+}
+
+.salsav-cms-block-bubble {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  z-index: 26;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  max-width: min(420px, calc(100vw - 2rem));
+  padding: 0.35rem;
+  background: rgba(7, 17, 32, 0.94);
+  border: 1px solid rgba(252, 163, 17, 0.28);
+  border-radius: 0.45rem;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+}
+
+.salsav-cms-resize-handle {
+  position: absolute;
+  z-index: 24;
+  background: #38bdf8;
+  border: 2px solid #081321;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+}
+
+.salsav-cms-resize-right {
+  top: 50%;
+  right: -7px;
+  width: 12px;
+  height: 44px;
+  cursor: ew-resize;
+  transform: translateY(-50%);
+  border-radius: 999px;
+}
+
+.salsav-cms-resize-bottom {
+  bottom: -7px;
+  left: 50%;
+  width: 44px;
+  height: 12px;
+  cursor: ns-resize;
+  transform: translateX(-50%);
+  border-radius: 999px;
+}
+
+.salsav-cms-resize-corner {
+  right: -8px;
+  bottom: -8px;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  border-radius: 0.3rem;
+}
+
+.salsav-cms-drop-target {
+  outline: 3px solid #38bdf8 !important;
+  outline-offset: 6px !important;
+}
+
+.salsav-cms-drag-handle:active {
+  cursor: grabbing;
+}
+
+.salsav-cms-row-main {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.salsav-cms-row-main strong,
+.salsav-cms-row-main span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.salsav-cms-row-main span {
+  color: #aab8cc;
+  font-size: 0.82rem;
+}
+
+.salsav-cms-row-hidden {
+  opacity: 0.56;
+}
+
+.salsav-cms-section-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.salsav-cms-section-column {
+  min-height: 120px;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.14);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 0.5rem;
+}
+
+.salsav-cms-section-column h3 {
+  margin: 0;
+  color: #e6f1ff;
+  font-size: 1rem;
+}
+
+.salsav-cms-section-column > p {
+  margin: 0.1rem 0 0.65rem;
+  color: #aab8cc;
+  font-size: 0.82rem;
+}
+
+.salsav-cms-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.6rem;
+  padding: 0.25rem 0.55rem;
+  color: #d8e3f0;
+  background: rgba(148, 163, 184, 0.14);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.salsav-cms-badge-article {
+  color: #c7f9d4;
+  background: rgba(34, 197, 94, 0.13);
+  border-color: rgba(34, 197, 94, 0.32);
+}
+
+.salsav-cms-badge-paper {
+  color: #dbeafe;
+  background: rgba(56, 189, 248, 0.13);
+  border-color: rgba(56, 189, 248, 0.32);
+}
+
+.salsav-cms-badge-video {
+  color: #ffe8c2;
+  background: rgba(252, 163, 17, 0.13);
+  border-color: rgba(252, 163, 17, 0.32);
+}
+
+.salsav-cms-preview-card {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.85rem;
+  color: #d8e3f0;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.45rem;
+}
+
+.salsav-cms-danger-zone {
+  color: #fecaca;
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.salsav-cms-danger-zone:hover {
+  color: #fff;
+  background: rgba(239, 68, 68, 0.22);
+}
+
+.salsav-cms-thumb {
+  width: 2.35rem;
+  height: 2.35rem;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.salsav-cms-collection-form {
+  display: grid;
+  gap: 0.75rem;
+  overflow: auto;
+}
+
+.salsav-cms-collection-form label {
+  display: grid;
+  gap: 0.32rem;
+  color: #d8e3f0;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.salsav-cms-collection-form label:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+}
+
+.salsav-cms-overlay-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.salsav-cms-hover-box,
+.salsav-cms-selected-box,
+.salsav-cms-drop-indicator {
+  position: fixed;
+  box-sizing: border-box;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.salsav-cms-hover-box {
+  border: 2px dashed rgba(232, 122, 36, 0.8);
+  background: rgba(232, 122, 36, 0.06);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.78);
+}
+
+.salsav-cms-selected-box {
+  border: 2px solid #e87a24;
+  background: rgba(232, 122, 36, 0.08);
+  box-shadow: 0 0 0 3px rgba(232, 122, 36, 0.16), 0 14px 38px rgba(7, 17, 32, 0.22);
+}
+
+.salsav-cms-overlay-label {
+  position: absolute;
+  left: 0;
+  top: -25px;
+  max-width: min(54vw, 360px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 6px 8px;
+  color: #fff;
+  background: #17372d;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+.salsav-cms-drop-indicator {
+  border: 2px solid #2f8f83;
+  background: rgba(47, 143, 131, 0.14);
+}
+
+.salsav-cms-block-actions {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: min(92vw, 680px);
+  padding: 7px;
+  color: #193228;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(25, 50, 40, 0.16);
+  border-radius: 10px;
+  box-shadow: 0 16px 42px rgba(7, 17, 32, 0.24);
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+}
+
+.salsav-cms-overlay-reason {
+  padding: 0 7px;
+  color: #405347;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.salsav-cms-block-actions .salsav-cms-drag-handle-live,
+.salsav-cms-block-actions .salsav-cms-resize-handle {
+  position: static;
+  inset: auto;
+  transform: none;
+}
+
+.salsav-cms-block-actions .salsav-cms-drag-handle-live {
+  width: auto;
+  min-width: 2.4rem;
+  height: 2rem;
+  padding: 0 0.65rem;
+}
+
+.salsav-cms-block-actions .salsav-cms-resize-handle {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 0.35rem;
+  cursor: nwse-resize;
+}
+
+.salsav-cms-drag-ghost,
+.salsav-cms-sortable-row-is-dragging {
+  opacity: 0.44;
+}
+
+.salsav-cms-drop-placeholder {
+  min-height: 56px;
+  border: 2px dashed #2f8f83;
+  border-radius: 8px;
+  background: rgba(47, 143, 131, 0.08);
+}
+
+.salsav-cms-mode-active {
+  color: #fff;
+  background: rgba(232, 122, 36, 0.24);
+  border-color: rgba(232, 122, 36, 0.62);
+}
+
+.salsav-cms-preview-mode .salsav-cms-overlay-layer,
+html.salsav-cms-preview .salsav-cms-overlay-layer {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .salsav-cms-toolbar {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    width: auto;
+    flex-wrap: wrap;
+    transform: none;
+  }
+
+  .salsav-cms-toolbar-title {
+    width: 100%;
+  }
+
+  .salsav-cms-editor-panel {
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    height: min(86vh, 720px);
+    border-top: 1px solid rgba(252, 163, 17, 0.24);
+    border-left: 0;
+    border-radius: 0.7rem 0.7rem 0 0;
+  }
+
+  .salsav-cms-field-meta,
+  .salsav-cms-admin-grid,
+  .salsav-cms-field-grid,
+  .salsav-cms-section-board {
+    grid-template-columns: 1fr;
+  }
+
+  .salsav-cms-sortable-row {
+    grid-template-columns: auto 1fr;
+  }
+
+  .salsav-cms-sortable-row > * {
+    min-width: 0;
+  }
+}

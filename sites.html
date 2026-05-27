@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SALSA - Learning Labs</title>
+    <title data-cms-key="meta.title">SALSA - Learning Labs</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap"
         rel="stylesheet">
@@ -194,41 +194,43 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="css/modern-system.css">
+    <link rel="stylesheet" href="css/cms-editor.css">
 </head>
 
-<body>
+<body data-cms-page="sites">
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-brand">
-                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo">
-                <span>AGRIVOLTAICS</span>
+                <img src="static/salsa-logo.png" alt="SALSA Agrivoltaics Logo" data-cms-attr-alt="sites.img_1.alt">
+                <span data-cms-key="nav.brand">AGRIVOLTAICS</span>
             </a>
-            <button type="button" class="mobile-toggle" aria-label="Toggle menu">☰</button>
+            <button type="button" class="mobile-toggle" aria-label="Toggle menu" data-cms-attr-aria-label="global.nav.toggle_aria">☰</button>
             <div class="navbar-links">
                 <ul class="navbar-menu">
-                    <li><a href="index.html" class="navbar-link">Home</a></li>
+                    <li><a href="index.html" class="navbar-link" data-cms-key="global.nav.home">Home</a></li>
                     <li class="has-dropdown">
-                        <a href="#" class="navbar-link">Research</a>
+                        <a href="#" class="navbar-link" data-cms-key="global.nav.research">Research</a>
                         <ul class="dropdown-content">
-                            <li><a href="research-ecophysiology.html">Ecophysiology</a></li>
-                            <li><a href="research-scaling-up.html">Scaling Up</a></li>
-                            <li><a href="research-scaling-out.html">Scaling Out</a></li>
+                            <li><a href="research-ecophysiology.html" data-cms-key="global.nav.research.ecophysiology">Ecophysiology</a></li>
+                            <li><a href="research-scaling-up.html" data-cms-key="global.nav.research.scaling_up">Scaling Up</a></li>
+                            <li><a href="research-scaling-out.html" data-cms-key="global.nav.research.scaling_out">Scaling Out</a></li>
                         </ul>
                     </li>
                     <li class="has-dropdown">
                         <!-- The 'active' class is now correctly on the Education link for this page -->
-                        <a href="education.html" class="navbar-link">Education</a>
+                        <a href="education.html" class="navbar-link" data-cms-key="global.nav.education">Education</a>
                         <ul class="dropdown-content">
-                            <li><a href="education.html">School Gardens</a></li>
-                            <li><a href="education-global-school.html">Global School of Agrivoltaics</a></li>
-                            <li><a href="education-interdisciplinary.html">Interdisciplinary Opportunities</a></li>
+                            <li><a href="education.html" data-cms-key="global.nav.education.school_gardens">School Gardens</a></li>
+                            <li><a href="education-global-school.html" data-cms-key="global.nav.education.global_school">Global School of Agrivoltaics</a></li>
+                            <li><a href="education-interdisciplinary.html" data-cms-key="global.nav.education.interdisciplinary">Interdisciplinary Opportunities</a></li>
                         </ul>
                     </li>
                     <!-- The 'active' class has been removed from Learning Labs -->
-                    <li><a href="sites.html" class="navbar-link">Learning Labs</a></li>
-                    <li><a href="news.html" class="navbar-link">News</a></li>
-                    <li><a href="team.html" class="navbar-link">Team</a></li>
-                    <li><a href="#footer" class="navbar-link">Contact</a></li>
+                    <li><a href="sites.html" class="navbar-link" data-cms-key="global.nav.learning_labs">Learning Labs</a></li>
+                    <li><a href="news.html" class="navbar-link" data-cms-key="global.nav.news">News</a></li>
+                    <li><a href="team.html" class="navbar-link" data-cms-key="global.nav.team">Team</a></li>
+                    <li><a href="#footer" class="navbar-link" data-cms-key="global.nav.contact">Contact</a></li>
                 </ul>
             </div>
 
@@ -238,8 +240,8 @@
     <main class="section">
         <div class="container">
             <div class="section-header">
-                <h2>Global Agrivoltaic Learning Labs</h2>
-                <p class="subtitle">Interactive map showcasing SALSA's key research and collaboration sites for
+                <h2 data-cms-key="education.heading_1" data-cms-block-id="sites_education_heading_1" data-cms-block-type="headingBlock" data-cms-parent-canvas="sites.education">Global Agrivoltaic Learning Labs</h2>
+                <p class="subtitle" data-cms-key="education.subheadline_1" data-cms-block-id="sites_education_subheadline_1" data-cms-block-type="textBlock" data-cms-parent-canvas="sites.education">Interactive map showcasing SALSA's key research and collaboration sites for
                     agrivoltaics across the globe.</p>
             </div>
             <div id="map"></div>
@@ -247,17 +249,17 @@
 
         <!-- Detailed Site Sections - COMPLETE AND UNABRIDGED -->
         <div id="detailed-sites-wrapper">
-            <section class="detailed-content-section" id="arizona-sites-detailed">
+            <section class="detailed-content-section" id="arizona-sites-detailed" data-cms-canvas="sites.arizona_sites_detailed" data-cms-grid="12">
                 <div class="container">
                     <div class="section-header">
-                        <h2>Arizona (USA) Research Sites</h2>
+                        <h2 data-cms-key="education.heading_2" data-cms-block-id="sites_education_heading_2" data-cms-block-type="headingBlock" data-cms-parent-canvas="sites.education">Arizona (USA) Research Sites</h2>
                     </div>
 
                     <!-- ────────── Biosphere 2 ────────── -->
-                    <div class="alternating-item">
-                        <div class="alternating-item__text">
-                            <h3>Biosphere 2 Agrivoltaics Research Laboratory</h3>
-                            <p>Biosphere 2 hosts our Agrivoltaic Learning Lab -- a 30 kW array 3 m (≈9 ft) above test
+                    <div class="alternating-item" data-cms-block-id="sites_block_1" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.arizona_sites_detailed">
+                        <div class="alternating-item__text" data-cms-block-id="sites_block_2" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.arizona_sites_detailed">
+                            <h3 data-cms-key="education.heading_3">Biosphere 2 Agrivoltaics Research Laboratory</h3>
+                            <p data-cms-key="education.text_1">Biosphere 2 hosts our Agrivoltaic Learning Lab -- a 30 kW array 3 m (≈9 ft) above test
                                 plots. Established in 2017, this was the first U.S. dryland agrivoltaics experimental
                                 sites.<sup class='citation-link'><a
                                         href='https://biosphere2.org/research/research-initiatives/agrivoltaics'
@@ -266,16 +268,16 @@
                                         href='https://www.agrisolarclearinghouse.org/biosphere-2-agrivoltaic-learning-lab/'
                                         target='_blank' rel='noopener'>[AgriSolar]</a></sup></p>
                         </div>
-                        <div class="alternating-item__image">
-                            <img src="static/b2agrivoltaics.jpg" alt="Agrivoltaics Research at Biosphere 2">
+                        <div class="alternating-item__image" data-cms-block-id="sites_block_3" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.arizona_sites_detailed">
+                            <img src="static/b2agrivoltaics.jpg" alt="Agrivoltaics Research at Biosphere 2" data-cms-attr-alt="education.img_1.alt">
                         </div>
                     </div>
 
                     <!-- ────────── AES Utility-Scale Site ────────── -->
-                    <div class="alternating-item">
-                        <div class="alternating-item__text">
-                            <h3>AZ Utility-scale Agrivoltaics Learning Lab</h3>
-                            <p>Building on the Biosphere 2 success, the team responded to a call for proposals from the
+                    <div class="alternating-item" data-cms-block-id="sites_block_4" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.arizona_sites_detailed">
+                        <div class="alternating-item__text" data-cms-block-id="sites_block_5" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.arizona_sites_detailed">
+                            <h3 data-cms-key="education.heading_4">AZ Utility-scale Agrivoltaics Learning Lab</h3>
+                            <p data-cms-key="education.text_2">Building on the Biosphere 2 success, the team responded to a call for proposals from the
                                 US Dept of Energy asking for Foundational Agrivoltaic Research at the Megawatt Scale
                                 (FARMS). The team argued that the easiest way to scale-up agrivoltaics would be to
                                 reduce the burden on PV developers. They secured a $1.2 million award in 2023 to
@@ -286,8 +288,8 @@
                                         href='https://www.energy.gov/eere/solar/foundational-agrivoltaic-research-megawatt-scale-farms-funding-program'
                                         target='_blank' rel='noopener'>[DOE FARMS]</a></sup></p>
                         </div>
-                        <div class="alternating-item__image">
-                            <img src="static/aesagriv.jpg" alt="AES Utility-Scale Agrivoltaics Site">
+                        <div class="alternating-item__image" data-cms-block-id="sites_block_6" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.arizona_sites_detailed">
+                            <img src="static/aesagriv.jpg" alt="AES Utility-Scale Agrivoltaics Site" data-cms-attr-alt="education.img_2.alt">
                         </div>
                     </div>
                 </div>
@@ -295,15 +297,15 @@
 
 
 
-            <section class="detailed-content-section" id="colorado-site-detailed">
+            <section class="detailed-content-section" id="colorado-site-detailed" data-cms-canvas="sites.colorado_site_detailed" data-cms-grid="12">
                 <div class="container">
                     <div class="section-header">
-                        <h2>Colorado (USA) Agrivoltaics Collaboration</h2>
+                        <h2 data-cms-key="education.heading_5">Colorado (USA) Agrivoltaics Collaboration</h2>
                     </div>
-                    <div class="alternating-item">
-                        <div class="alternating-item__text">
-                            <h3>Jack's Solar Garden &amp; NREL InSPIRE Program</h3>
-                            <p>In Colorado, agrivoltaics research is carried out via a multi-institution consortium,
+                    <div class="alternating-item" data-cms-block-id="sites_block_7" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.colorado_site_detailed">
+                        <div class="alternating-item__text" data-cms-block-id="sites_block_8" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.colorado_site_detailed">
+                            <h3 data-cms-key="education.heading_6">Jack's Solar Garden &amp; NREL InSPIRE Program</h3>
+                            <p data-cms-key="education.text_3">In Colorado, agrivoltaics research is carried out via a multi-institution consortium,
                                 primarily with Colorado State University (CSU) and the National Renewable Energy
                                 Laboratory (NREL).<sup class='citation-link'><a
                                         href='https://www.nrel.gov/news/detail/program/2021/future-of-agriculture-combined-with-renewable-energy-finds-success-at-jacks-solar-garden'
@@ -317,22 +319,22 @@
                                         href='https://www.lhvc.com/story/2024/05/22/news/sprout-city-farms-farms-with-jacks-solar-garden/9200.html'
                                         target='_blank' rel='noopener'>[Sprout City Farms]</a></sup></p>
                         </div>
-                        <div class="alternating-item__image"><img src="static/jacksagriv.jpg"
-                                alt="Agrivoltaics research at Jack's Solar Garden, Colorado"></div>
+                        <div class="alternating-item__image" data-cms-block-id="sites_block_9" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.colorado_site_detailed"><img src="static/jacksagriv.jpg"
+                                alt="Agrivoltaics research at Jack's Solar Garden, Colorado" data-cms-attr-alt="sites.img_2.alt"></div>
                     </div>
                 </div>
             </section>
 
 
-            <section class="detailed-content-section" id="kenya-site-detailed">
+            <section class="detailed-content-section" id="kenya-site-detailed" data-cms-canvas="sites.kenya_site_detailed" data-cms-grid="12">
                 <div class="container">
                     <div class="section-header">
-                        <h2>Kenya Community Agrivoltaics</h2>
+                        <h2 data-cms-key="education.heading_7">Kenya Community Agrivoltaics</h2>
                     </div>
-                    <div class="alternating-item">
-                        <div class="alternating-item__text">
-                            <h3>Makueni Community Agrivoltaics Learning Lab</h3>
-                            <p>Launched in July 2023, our agrivoltaics site is the first in Kenya intentionally built
+                    <div class="alternating-item" data-cms-block-id="sites_block_10" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.kenya_site_detailed">
+                        <div class="alternating-item__text" data-cms-block-id="sites_block_11" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.kenya_site_detailed">
+                            <h3 data-cms-key="education.heading_8">Makueni Community Agrivoltaics Learning Lab</h3>
+                            <p data-cms-key="education.text_4">Launched in July 2023, our agrivoltaics site is the first in Kenya intentionally built
                                 within a community to be operated by and provide food for the community. The project is
                                 on the grounds of St. Patrick's Ng'omano Primary School in Kibwezi East, Makueni
                                 County.<sup class='citation-link'><a
@@ -366,22 +368,22 @@
                                         target='_blank' rel='noopener'>[NREL]</a></sup> The project is funded by the
                                 Kasser Joint Institute for Food, Water & Energy Security.</p>
                         </div>
-                        <div class="alternating-item__image"><img src="static/kenyaagriv.jpg"
-                                alt="Community agrivoltaics project in Makueni County, Kenya"></div>
+                        <div class="alternating-item__image" data-cms-block-id="sites_block_12" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.kenya_site_detailed"><img src="static/kenyaagriv.jpg"
+                                alt="Community agrivoltaics project in Makueni County, Kenya" data-cms-attr-alt="education.img_3.alt"></div>
                     </div>
                 </div>
             </section>
 
 
-            <section class="detailed-content-section" id="israel-site-detailed">
+            <section class="detailed-content-section" id="israel-site-detailed" data-cms-canvas="sites.israel_site_detailed" data-cms-grid="12">
                 <div class="container">
                     <div class="section-header">
-                        <h2>Israel Agrivoltaics Research</h2>
+                        <h2 data-cms-key="education.heading_9">Israel Agrivoltaics Research</h2>
                     </div>
-                    <div class="alternating-item">
-                        <div class="alternating-item__text">
-                            <h3>Arava Desert Initiatives</h3>
-                            <p>In Israel's southern Arava Valley, the Kasser Joint Institute and the Arava Institute
+                    <div class="alternating-item" data-cms-block-id="sites_block_13" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.israel_site_detailed">
+                        <div class="alternating-item__text" data-cms-block-id="sites_block_14" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.israel_site_detailed">
+                            <h3 data-cms-key="education.heading_10">Arava Desert Initiatives</h3>
+                            <p data-cms-key="education.text_5">In Israel's southern Arava Valley, the Kasser Joint Institute and the Arava Institute
                                 partner with the University of Arizona to pioneer agrivoltaic systems for extreme desert
                                 farming.<sup class='citation-link'><a href='https://jointinstitute.jnf.org/agrivoltaics'
                                         target='_blank' rel='noopener'>[KJI]</a></sup> Pilot plots at Kibbutz Ketura's
@@ -396,23 +398,23 @@
                                         href='https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus'
                                         target='_blank' rel='noopener'>[UA News]</a></sup></p>
                         </div>
-                        <div class="alternating-item__image"><img src="static/aravaagriv.jpg"
-                                alt="Agrivoltaics research in the Arava Desert, Israel"></div>
+                        <div class="alternating-item__image" data-cms-block-id="sites_block_15" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.israel_site_detailed"><img src="static/aravaagriv.jpg"
+                                alt="Agrivoltaics research in the Arava Desert, Israel" data-cms-attr-alt="sites.img_3.alt"></div>
                     </div>
                 </div>
             </section>
 
 
             <!-- ────────── Morocco ────────── -->
-            <section class="detailed-content-section" id="morocco-collaboration-detailed">
+            <section class="detailed-content-section" id="morocco-collaboration-detailed" data-cms-canvas="sites.morocco_collaboration_detailed" data-cms-grid="12">
                 <div class="container">
                     <div class="section-header">
-                        <h2>Morocco Agrivoltaics Collaboration</h2>
+                        <h2 data-cms-key="education.heading_11">Morocco Agrivoltaics Collaboration</h2>
                     </div>
-                    <div class="alternating-item">
-                        <div class="alternating-item__text">
-                            <h3>Green Energy Park and North African Initiatives</h3>
-                            <p>SALSA V partners with the Green Energy Park (GEP) in Ben Guerir—jointly run by IRESEN and
+                    <div class="alternating-item" data-cms-block-id="sites_block_16" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.morocco_collaboration_detailed">
+                        <div class="alternating-item__text" data-cms-block-id="sites_block_17" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.morocco_collaboration_detailed">
+                            <h3 data-cms-key="education.heading_12">Green Energy Park and North African Initiatives</h3>
+                            <p data-cms-key="education.text_6">SALSA V partners with the Green Energy Park (GEP) in Ben Guerir—jointly run by IRESEN and
                                 Mohammed VI Polytechnic University (UM6P)—to build the first replicated agrivoltaics
                                 platform in North Africa.<sup class='citation-link'><a
                                         href='https://www.greenenergypark.ma/' target='_blank'
@@ -432,22 +434,22 @@
                                         href='https://africanclimateactionpartnership.org/wp-content/uploads/2024/11/Masterdeck-Slides.pdf'
                                         target='_blank' rel='noopener'>[ACAP Slides]</a></sup></p>
                         </div>
-                        <div class="alternating-item__image"><img src="static/um6pagriv.jpeg"
-                                alt="Green Energy Park in Morocco for agrivoltaics research"></div>
+                        <div class="alternating-item__image" data-cms-block-id="sites_block_18" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.morocco_collaboration_detailed"><img src="static/um6pagriv.jpeg"
+                                alt="Green Energy Park in Morocco for agrivoltaics research" data-cms-attr-alt="carousel.img_1.alt"></div>
                     </div>
                 </div>
             </section>
 
             <!-- ────────── Mexico ────────── -->
-            <section class="detailed-content-section" id="mexico-collaboration-detailed">
+            <section class="detailed-content-section" id="mexico-collaboration-detailed" data-cms-canvas="sites.mexico_collaboration_detailed" data-cms-grid="12">
                 <div class="container">
                     <div class="section-header">
-                        <h2>Mexico Agrivoltaics Initiatives</h2>
+                        <h2 data-cms-key="carousel.heading_1">Mexico Agrivoltaics Initiatives</h2>
                     </div>
-                    <div class="alternating-item">
-                        <div class="alternating-item__text">
-                            <h3>PASE Project and Northern Mexico Research</h3>
-                            <p>Mexico's first full agrivoltaics pilot—the Parcela Agrovoltaica Sostenible y Educacional
+                    <div class="alternating-item" data-cms-block-id="sites_block_19" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.mexico_collaboration_detailed">
+                        <div class="alternating-item__text" data-cms-block-id="sites_block_20" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.mexico_collaboration_detailed">
+                            <h3 data-cms-key="carousel.heading_2">PASE Project and Northern Mexico Research</h3>
+                            <p data-cms-key="carousel.text_1">Mexico's first full agrivoltaics pilot—the Parcela Agrovoltaica Sostenible y Educacional
                                 (PASE)—was inaugurated in 2022 at UNAM-FMVZ's Topilejo farm in Mexico City, in alliance
                                 with UArizona and SECTEI.<sup class='citation-link'><a
                                         href='https://unamglobal.unam.mx/global_tv/instalan-en-la-unam-la-primera-parcela-agrovoltaica-de-mexico/'
@@ -468,8 +470,8 @@
                                         href='https://topsectoragrifood.nl/wp-content/uploads/2021/12/SMP21.14-Mexico-Agrivoltaics-in-Mexico-SMP21.14-20211210.pdf'
                                         target='_blank' rel='noopener'>[Topsector Study]</a></sup></p>
                         </div>
-                        <div class="alternating-item__image"><img src="static/paseagriv.jpg"
-                                alt="PASE Agrivoltaics project in Mexico City"></div>
+                        <div class="alternating-item__image" data-cms-block-id="sites_block_21" data-cms-block-type="genericBlock" data-cms-parent-canvas="sites.mexico_collaboration_detailed"><img src="static/paseagriv.jpg"
+                                alt="PASE Agrivoltaics project in Mexico City" data-cms-attr-alt="carousel.img_2.alt"></div>
                     </div>
                 </div>
             </section>
@@ -481,26 +483,26 @@
     <footer class="footer" id="footer">
         <div class="container footer-content">
             <div class="footer-brand">
-                <h3>SALSA Agrivoltaics</h3>
-                <p>A project of the University of Arizona, pioneering food-energy-water solutions.</p>
+                <h3 data-cms-key="global.footer.brand.title">SALSA Agrivoltaics</h3>
+                <p data-cms-key="global.footer.brand.description">A project of the University of Arizona, pioneering food-energy-water solutions.</p>
             </div>
             <div class="footer-links">
-                <h4>Quick Links</h4>
+                <h4 data-cms-key="global.footer.quick_links.heading">Quick Links</h4>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="sites.html">Learning Labs</a></li>
-                    <li><a href="news.html">News</a></li>
-                    <li><a href="team.html">Team</a></li>
+                    <li><a href="index.html" data-cms-key="global.footer.home">Home</a></li>
+                    <li><a href="sites.html" data-cms-key="global.footer.learning_labs">Learning Labs</a></li>
+                    <li><a href="news.html" data-cms-key="global.footer.news">News</a></li>
+                    <li><a href="team.html" data-cms-key="global.footer.team">Team</a></li>
                 </ul>
             </div>
             <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p>University of Arizona</p>
-                <p><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
+                <h4 data-cms-key="global.footer.contact.heading">Contact Us</h4>
+                <p data-cms-key="global.footer.contact.organization">University of Arizona</p>
+                <p data-cms-key="global.footer.contact.email"><a href="mailto:gregbg@arizona.edu">gregbg@arizona.edu</a></p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
+            <p data-cms-key="global.footer.copyright">© 2024 SALSA Agrivoltaics. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -620,6 +622,11 @@
             legend.addTo(map);
         });
     </script>
+    <script defer src="js/cms-config.js"></script>
+    <script defer src="js/cms-pantry.js"></script>
+    <script defer src="js/cms-core.js"></script>
+    <script defer src="js/cms-live-layout.js"></script>
+    <script defer src="js/cms-editor.js"></script>
 </body>
 
 </html>
