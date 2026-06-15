@@ -1,6 +1,7 @@
 (function () {
   const config = window.SALSAV_CMS_CONFIG || {};
   const baskets = config.baskets || {};
+  let seedContentPromise = null;
 
   function cloneWithoutMetadata(value) {
     if (!value || typeof value !== "object") return value;
@@ -60,18 +61,107 @@
     return nextPayload;
   }
 
+  function normalizeContentPayload(payload) {
+    const next = payload || {};
+    next.pages = next.pages || {};
+    next.collections = next.collections || {};
+    next.collections.newsArticles = Array.isArray(next.collections.newsArticles) ? next.collections.newsArticles : [];
+    next.collections.teamSections = Array.isArray(next.collections.teamSections) ? next.collections.teamSections : [];
+    next.collections.teamMembers = Array.isArray(next.collections.teamMembers) ? next.collections.teamMembers : [];
+    next.collections.teamSummaryRows = Array.isArray(next.collections.teamSummaryRows) ? next.collections.teamSummaryRows : [];
+    next.collections.genericBlocks = next.collections.genericBlocks && typeof next.collections.genericBlocks === "object" ? next.collections.genericBlocks : {};
+    next.layout = next.layout || {};
+    next.layout.pages = next.layout.pages || {};
+    return next;
+  }
+
+  async function getSeedContent() {
+    if (seedContentPromise) return seedContentPromise;
+    seedContentPromise = fetch("cms/seed-content.json", {
+      headers: { Accept: "application/json" },
+      cache: "no-store"
+    })
+      .then((response) => response.ok ? response.json() : null)
+      .then((payload) => payload ? normalizeContentPayload(cloneWithoutMetadata(payload)) : null)
+      .catch(() => null);
+    return seedContentPromise;
+  }
+
+  function mergePlainObject(seed, remote, state) {
+    const seedObject = seed && typeof seed === "object" && !Array.isArray(seed) ? seed : {};
+    const remoteObject = remote && typeof remote === "object" && !Array.isArray(remote) ? remote : {};
+    const next = { ...seedObject };
+    Object.keys(remoteObject).forEach((key) => {
+      if (seedObject[key] && typeof seedObject[key] === "object" && !Array.isArray(seedObject[key]) && remoteObject[key] && typeof remoteObject[key] === "object" && !Array.isArray(remoteObject[key])) {
+        next[key] = mergePlainObject(seedObject[key], remoteObject[key], state);
+      } else {
+        next[key] = remoteObject[key];
+      }
+    });
+    Object.keys(seedObject).forEach((key) => {
+      if (!Object.prototype.hasOwnProperty.call(remoteObject, key)) state.seeded = true;
+    });
+    return next;
+  }
+
+  function mergeArrayById(seedItems, remoteItems, state) {
+    const seed = Array.isArray(seedItems) ? seedItems : [];
+    const remote = Array.isArray(remoteItems) ? remoteItems : [];
+    const remoteById = new Map(remote.filter((item) => item && item.id).map((item) => [item.id, item]));
+    const seedIds = new Set(seed.filter((item) => item && item.id).map((item) => item.id));
+    const merged = seed.map((item) => {
+      const remoteItem = item && item.id ? remoteById.get(item.id) : null;
+      if (!remoteItem) {
+        state.seeded = true;
+        return item;
+      }
+      return mergePlainObject(item, remoteItem, state);
+    });
+    remote.forEach((item) => {
+      if (!item || !item.id || !seedIds.has(item.id)) merged.push(item);
+    });
+    return merged;
+  }
+
+  function mergeGenericBlocks(seedBlocks, remoteBlocks, state) {
+    const next = {};
+    const keys = new Set([
+      ...Object.keys(seedBlocks || {}),
+      ...Object.keys(remoteBlocks || {})
+    ]);
+    keys.forEach((key) => {
+      next[key] = mergeArrayById((seedBlocks || {})[key], (remoteBlocks || {})[key], state);
+    });
+    return next;
+  }
+
+  function mergeSeedContent(remotePayload, seedPayload) {
+    const remote = normalizeContentPayload(remotePayload || {});
+    if (!seedPayload) return remote;
+    const seed = normalizeContentPayload(cloneWithoutMetadata(seedPayload));
+    const state = { seeded: false };
+    const merged = mergePlainObject(seed, remote, state);
+    merged.pages = mergePlainObject(seed.pages, remote.pages, state);
+    merged.collections = mergePlainObject(seed.collections, remote.collections, state);
+    merged.collections.newsArticles = mergeArrayById(seed.collections.newsArticles, remote.collections.newsArticles, state);
+    merged.collections.teamSections = mergeArrayById(seed.collections.teamSections, remote.collections.teamSections, state);
+    merged.collections.teamMembers = mergeArrayById(seed.collections.teamMembers, remote.collections.teamMembers, state);
+    merged.collections.teamSummaryRows = mergeArrayById(seed.collections.teamSummaryRows, remote.collections.teamSummaryRows, state);
+    merged.collections.genericBlocks = mergeGenericBlocks(seed.collections.genericBlocks, remote.collections.genericBlocks, state);
+    merged.layout = mergePlainObject(seed.layout, remote.layout, state);
+    merged.layout.pages = mergePlainObject(seed.layout.pages, remote.layout.pages, state);
+    Object.defineProperty(merged, "__seedMerged", {
+      value: state.seeded,
+      enumerable: false,
+      configurable: true
+    });
+    return normalizeContentPayload(merged);
+  }
+
   async function getContent() {
-    const payload = await getBasket(baskets.content);
-    payload.pages = payload.pages || {};
-    payload.collections = payload.collections || {};
-    payload.collections.newsArticles = Array.isArray(payload.collections.newsArticles) ? payload.collections.newsArticles : [];
-    payload.collections.teamSections = Array.isArray(payload.collections.teamSections) ? payload.collections.teamSections : [];
-    payload.collections.teamMembers = Array.isArray(payload.collections.teamMembers) ? payload.collections.teamMembers : [];
-    payload.collections.teamSummaryRows = Array.isArray(payload.collections.teamSummaryRows) ? payload.collections.teamSummaryRows : [];
-    payload.collections.genericBlocks = payload.collections.genericBlocks && typeof payload.collections.genericBlocks === "object" ? payload.collections.genericBlocks : {};
-    payload.layout = payload.layout || {};
-    payload.layout.pages = payload.layout.pages || {};
-    return payload;
+    const payload = normalizeContentPayload(await getBasket(baskets.content));
+    const seed = await getSeedContent();
+    return mergeSeedContent(payload, seed);
   }
 
   async function saveContent(payload) {

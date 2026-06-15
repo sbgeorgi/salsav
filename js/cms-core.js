@@ -1,8 +1,9 @@
 (function () {
-  const allowedAttr = new Set(["alt", "title", "aria-label", "placeholder", "content"]);
+  const allowedAttr = new Set(["alt", "title", "aria-label", "placeholder", "content", "src"]);
   const allowedTags = new Set(["A", "STRONG", "B", "EM", "I", "U", "BR", "SPAN", "SUP", "SUB", "SMALL", "P", "UL", "OL", "LI", "BLOCKQUOTE"]);
-  const allowedClasses = new Set(["cms-accent", "cms-muted", "cms-highlight", "cms-small"]);
+  const allowedClasses = new Set(["cms-accent", "cms-muted", "cms-highlight", "cms-small", "cms-bold", "cms-italic"]);
   const allowedProtocols = new Set(["http:", "https:", "mailto:"]);
+  let seedFallbackPromise = null;
 
   function inferPageId() {
     const explicit = document.body && document.body.dataset.cmsPage;
@@ -11,14 +12,15 @@
     return name.replace(/\.html?$/i, "") || "index";
   }
 
-  function isSafeUrl(value) {
+  function isSafeUrl(value, imageOnly) {
     if (!value) return true;
     const trimmed = String(value).trim();
-    if (trimmed.startsWith("#") || trimmed.startsWith("/") || trimmed.startsWith("./") || trimmed.startsWith("../")) {
+    if ((!imageOnly && trimmed.startsWith("#")) || trimmed.startsWith("/") || trimmed.startsWith("./") || trimmed.startsWith("../")) {
       return true;
     }
     try {
-      return allowedProtocols.has(new URL(trimmed, window.location.href).protocol);
+      const protocol = new URL(trimmed, window.location.href).protocol;
+      return imageOnly ? ["http:", "https:"].includes(protocol) : allowedProtocols.has(protocol);
     } catch (error) {
       return false;
     }
@@ -48,7 +50,7 @@
                 child.removeAttribute(attr.name);
                 return;
               }
-              if (name === "href" && !isSafeUrl(value)) child.removeAttribute(attr.name);
+              if (name === "href" && !isSafeUrl(value, false)) child.removeAttribute(attr.name);
               if (name === "target" && value === "_blank") child.setAttribute("rel", "noopener noreferrer");
               return;
             }
@@ -92,6 +94,13 @@
 
   function renderAttr(element, attr, field) {
     if (!allowedAttr.has(attr) || !field || typeof field.value === "undefined" || field.value === null) return;
+    if (attr === "src") {
+      if (!element.matches("img, source, video")) return;
+      const value = String(field.value || "").trim();
+      if (!isSafeUrl(value, true)) return;
+      element.setAttribute(attr, value);
+      return;
+    }
     if ((attr === "content" || attr === "placeholder" || attr === "title" || attr === "aria-label" || attr === "alt")) {
       element.setAttribute(attr, String(field.value));
     }
@@ -111,6 +120,41 @@
         renderAttr(element, attr, field);
       });
     });
+  }
+
+  function normalizeContentPayload(payload) {
+    const next = payload || {};
+    next.pages = next.pages || {};
+    next.collections = next.collections || {};
+    next.collections.newsArticles = Array.isArray(next.collections.newsArticles) ? next.collections.newsArticles : [];
+    next.collections.teamSections = Array.isArray(next.collections.teamSections) ? next.collections.teamSections : [];
+    next.collections.teamMembers = Array.isArray(next.collections.teamMembers) ? next.collections.teamMembers : [];
+    next.collections.teamSummaryRows = Array.isArray(next.collections.teamSummaryRows) ? next.collections.teamSummaryRows : [];
+    next.collections.genericBlocks = next.collections.genericBlocks && typeof next.collections.genericBlocks === "object" ? next.collections.genericBlocks : {};
+    next.layout = next.layout || {};
+    next.layout.pages = next.layout.pages || {};
+    return next;
+  }
+
+  async function loadSeedFallback() {
+    if (seedFallbackPromise) return seedFallbackPromise;
+    seedFallbackPromise = fetch("cms/seed-content.json", {
+      headers: { Accept: "application/json" },
+      cache: "no-store"
+    })
+      .then((response) => response.ok ? response.json() : null)
+      .then((payload) => {
+        if (!payload) return null;
+        const content = normalizeContentPayload(payload);
+        Object.defineProperty(content, "__seedMerged", {
+          value: true,
+          enumerable: false,
+          configurable: true
+        });
+        return content;
+      })
+      .catch(() => null);
+    return seedFallbackPromise;
   }
 
   function applyLayout(content) {
@@ -149,7 +193,8 @@
       applyFields(content, pageId);
     } catch (error) {
       console.warn("[SALSAV CMS] Pantry hydration skipped:", error.message);
-      content = null;
+      content = await loadSeedFallback();
+      if (content) applyFields(content, pageId);
     }
 
     window.SALSAV_CMS_CONTENT = content;

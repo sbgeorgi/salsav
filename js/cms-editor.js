@@ -1,10 +1,37 @@
 (function () {
   const config = window.SALSAV_CMS_CONFIG || {};
   const modes = ["text", "move", "resize", "blocks", "preview"];
-  const safeAttrs = ["alt", "title", "aria-label", "placeholder", "content"];
+  const safeAttrs = ["alt", "title", "aria-label", "placeholder", "content", "src"];
   const allowedRichClasses = new Set(["cms-accent", "cms-muted", "cms-highlight", "cms-small", "cms-bold", "cms-italic"]);
   const allowedRichTags = new Set(["A", "STRONG", "B", "EM", "I", "U", "BR", "SPAN", "SUP", "SUB", "SMALL", "P", "UL", "OL", "LI", "BLOCKQUOTE"]);
   const fallbackImage = "static/salsa-logo.png";
+  const syncIntervalMs = 3000;
+  const textSaveDelayMs = 650;
+  const collectionLabels = {
+    newsArticle: "News card",
+    teamMember: "Team card",
+    teamSummaryRow: "Summary row",
+    genericBlock: "Block",
+    headingBlock: "Heading",
+    textBlock: "Text",
+    imageBlock: "Image",
+    buttonBlock: "Button"
+  };
+  const fieldLabels = {
+    title: "Headline",
+    category: "Category",
+    source: "Source",
+    displayDate: "Date",
+    date: "Date",
+    description: "Summary",
+    url: "Link",
+    name: "Name",
+    affiliation: "Affiliation",
+    expertise: "Expertise",
+    profileUrl: "Profile link",
+    imageSrc: "Image",
+    imageAlt: "Image description"
+  };
 
   const editorState = {
     mode: "text",
@@ -18,18 +45,38 @@
     isResizing: false,
     dirty: false,
     content: null,
+    baseContent: null,
     overlay: null,
     hoverBox: null,
     selectedBox: null,
     dropIndicator: null,
     actionLayer: null,
+    formatToolbar: null,
+    imageChip: null,
+    imagePopover: null,
     raf: 0,
     drag: null,
+    pendingDrag: null,
     resize: null,
+    inline: null,
     quill: null,
     quillLoaded: false,
     activeField: null,
-    saveQueue: Promise.resolve()
+    saveQueue: Promise.resolve(),
+    syncTimer: 0,
+    syncInFlight: null,
+    syncStatus: "idle",
+    lastSavedAt: null,
+    lastSyncErrorAt: 0,
+    syncBackoffMs: 0,
+    syncBackoffUntil: 0,
+    changeId: 0,
+    seedMerged: false,
+    seedSyncQueued: false,
+    pendingAudits: [],
+    history: [],
+    historyIndex: -1,
+    suppressHistory: false
   };
 
   function pageId() {
@@ -175,6 +222,209 @@
     return String(key || "").split(".").map((part) => part.replace(/_/g, " ")).join(" / ");
   }
 
+  function humanFieldLabel(key) {
+    const clean = String(key || "").split(".").pop();
+    return fieldLabels[clean] || clean.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()) || "Text";
+  }
+
+  function humanTargetName(target) {
+    if (!target) return "Selection";
+    if (target.type === "text") return humanFieldLabel(target.cmsKey);
+    if (target.type === "list") {
+      if (target.listId?.includes("team")) return "Team section";
+      if (target.listId?.includes("news")) return "News section";
+      return "Section";
+    }
+    return collectionLabels[target.blockType] || "Block";
+  }
+
+  function deepClone(value) {
+    if (typeof structuredClone === "function") {
+      try {
+        return structuredClone(value);
+      } catch (error) {
+        // JSON fallback below is sufficient for the CMS content shape.
+      }
+    }
+    return JSON.parse(JSON.stringify(value || {}));
+  }
+
+  function mergePlainObject(base, overlay) {
+    if (!overlay || typeof overlay !== "object" || Array.isArray(overlay)) return overlay;
+    const next = { ...(base && typeof base === "object" && !Array.isArray(base) ? base : {}) };
+    Object.keys(overlay).forEach((key) => {
+      const value = overlay[key];
+      if (Array.isArray(value)) {
+        next[key] = value.slice();
+      } else if (value && typeof value === "object") {
+        next[key] = mergePlainObject(next[key], value);
+      } else {
+        next[key] = value;
+      }
+    });
+    return next;
+  }
+
+  function mergeArrayById(remoteItems, localItems) {
+    const remote = Array.isArray(remoteItems) ? remoteItems : [];
+    const local = Array.isArray(localItems) ? localItems : [];
+    const byId = new Map(remote.filter((item) => item && item.id).map((item) => [item.id, item]));
+    const merged = [];
+    local.forEach((item) => {
+      if (!item || !item.id) return;
+      merged.push(mergePlainObject(byId.get(item.id) || {}, item));
+      byId.delete(item.id);
+    });
+    byId.forEach((item) => merged.push(item));
+    return merged;
+  }
+
+  function mergeContentForSync(remoteContent, localContent) {
+    const remote = ensureContent(remoteContent || {});
+    const local = ensureContent(localContent || {});
+    const merged = mergePlainObject(remote, local);
+    merged.pages = mergePlainObject(remote.pages || {}, local.pages || {});
+    merged.collections = mergePlainObject(remote.collections || {}, local.collections || {});
+    merged.collections.newsArticles = mergeArrayById(remote.collections.newsArticles, local.collections.newsArticles);
+    merged.collections.teamSections = mergeArrayById(remote.collections.teamSections, local.collections.teamSections);
+    merged.collections.teamMembers = mergeArrayById(remote.collections.teamMembers, local.collections.teamMembers);
+    merged.collections.teamSummaryRows = mergeArrayById(remote.collections.teamSummaryRows, local.collections.teamSummaryRows);
+    merged.collections.genericBlocks = mergePlainObject(remote.collections.genericBlocks || {}, local.collections.genericBlocks || {});
+    merged.layout = mergePlainObject(remote.layout || {}, local.layout || {});
+    merged.layout.pages = mergePlainObject(remote.layout?.pages || {}, local.layout?.pages || {});
+    merged.updatedAt = new Date().toISOString();
+    merged.version = Math.max(Number(remote.version || 0), Number(local.version || 0)) + 1;
+    return ensureContent(merged);
+  }
+
+  function snapshotContent() {
+    return deepClone(editorState.content || {});
+  }
+
+  function pushHistory(label) {
+    if (editorState.suppressHistory || !editorState.content) return;
+    const snapshot = snapshotContent();
+    editorState.history = editorState.history.slice(0, editorState.historyIndex + 1);
+    editorState.history.push({ label: label || "Edit", content: snapshot });
+    if (editorState.history.length > 30) editorState.history.shift();
+    editorState.historyIndex = editorState.history.length - 1;
+    updateDockState();
+  }
+
+  function restoreHistory(offset) {
+    const nextIndex = editorState.historyIndex + offset;
+    if (nextIndex < 0 || nextIndex >= editorState.history.length) return;
+    editorState.suppressHistory = true;
+    editorState.historyIndex = nextIndex;
+    editorState.content = ensureContent(deepClone(editorState.history[nextIndex].content));
+    window.SALSAV_CMS_CONTENT = editorState.content;
+    if (window.SALSAVCMS) window.SALSAVCMS.content = editorState.content;
+    markDirty("Editing");
+    applyCurrentContent();
+    editorState.suppressHistory = false;
+    updateDockState();
+  }
+
+  function setSyncStatus(status, message) {
+    editorState.syncStatus = status || "idle";
+    const dock = document.querySelector(".salsav-cms-toolbar");
+    if (!dock) return;
+    dock.dataset.syncStatus = editorState.syncStatus;
+    const statusNode = dock.querySelector(".salsav-cms-sync-status");
+    if (statusNode) statusNode.textContent = message || (status === "saving" ? "Saving" : status === "error" ? "Retrying" : status === "saved" ? "Saved" : "Ready");
+  }
+
+  function syncErrorMessage(error) {
+    const text = String(error?.message || "");
+    if (/429|rate/i.test(text)) return "Pantry is busy, retrying...";
+    return "Network error, retrying...";
+  }
+
+  function updateDockState() {
+    const dock = document.querySelector(".salsav-cms-toolbar");
+    if (!dock) return;
+    dock.querySelector('[data-salsav-cms-action="undo"]')?.toggleAttribute("disabled", editorState.historyIndex <= 0);
+    dock.querySelector('[data-salsav-cms-action="redo"]')?.toggleAttribute("disabled", editorState.historyIndex >= editorState.history.length - 1);
+    const modeToggle = dock.querySelector('[data-salsav-cms-action="toggle-preview"]');
+    if (modeToggle) modeToggle.textContent = editorState.mode === "preview" ? "Edit" : "Preview";
+  }
+
+  function markDirty(message) {
+    editorState.changeId += 1;
+    editorState.dirty = true;
+    setSyncStatus("dirty", message || "Editing");
+  }
+
+  function queueAudit(event) {
+    if (!event) return;
+    editorState.pendingAudits.push({
+      at: new Date().toISOString(),
+      source: "live-editor",
+      pageId: editorState.pageId,
+      ...event
+    });
+  }
+
+  async function flushSync(options = {}) {
+    if (!window.SALSAVPantry || editorState.syncInFlight) return editorState.syncInFlight;
+    if (!options.force && editorState.syncBackoffUntil && Date.now() < editorState.syncBackoffUntil) {
+      const seconds = Math.max(1, Math.ceil((editorState.syncBackoffUntil - Date.now()) / 1000));
+      setSyncStatus("error", `Retrying in ${seconds}s`);
+      return editorState.content;
+    }
+    if (!editorState.dirty && !options.force) return editorState.content;
+    const localSnapshot = ensureContent(deepClone(editorState.content || {}));
+    const syncChangeId = editorState.changeId;
+    const audits = editorState.pendingAudits.slice();
+    editorState.pendingAudits = [];
+    setSyncStatus("saving", "Saving");
+    editorState.syncInFlight = (async () => {
+      try {
+        const latest = ensureContent(await window.SALSAVPantry.getContent());
+        const merged = mergeContentForSync(latest, localSnapshot);
+        await window.SALSAVPantry.saveContent(merged);
+        await Promise.all(audits.map((event) => window.SALSAVPantry.appendAudit(event).catch(() => {})));
+        editorState.baseContent = ensureContent(deepClone(merged));
+        if (editorState.changeId === syncChangeId) {
+          editorState.content = ensureContent(deepClone(merged));
+          window.SALSAV_CMS_CONTENT = editorState.content;
+          if (window.SALSAVCMS) window.SALSAVCMS.content = editorState.content;
+          editorState.dirty = false;
+        }
+        editorState.lastSavedAt = new Date();
+        editorState.syncBackoffMs = 0;
+        editorState.syncBackoffUntil = 0;
+        setSyncStatus(editorState.dirty ? "dirty" : "saved", editorState.dirty ? "Editing" : "Saved");
+        if (options.force) toast("Saved.", "success");
+        return editorState.content;
+      } catch (error) {
+        editorState.pendingAudits.unshift(...audits);
+        editorState.dirty = true;
+        const rateLimited = /429|rate/i.test(String(error?.message || ""));
+        const minimumBackoff = rateLimited ? 30000 : 5000;
+        editorState.syncBackoffMs = editorState.syncBackoffMs ? Math.min(editorState.syncBackoffMs * 2, 120000) : minimumBackoff;
+        editorState.syncBackoffMs = Math.max(editorState.syncBackoffMs, minimumBackoff);
+        editorState.syncBackoffUntil = Date.now() + editorState.syncBackoffMs;
+        setSyncStatus("error", rateLimited ? "Pantry busy" : "Retrying");
+        if (!editorState.lastSyncErrorAt || Date.now() - editorState.lastSyncErrorAt > 20000 || options.force) {
+          toast(syncErrorMessage(error), "error");
+          editorState.lastSyncErrorAt = Date.now();
+        }
+        throw error;
+      } finally {
+        editorState.syncInFlight = null;
+      }
+    })();
+    return editorState.syncInFlight;
+  }
+
+  function startBackgroundSync() {
+    if (editorState.syncTimer) return;
+    editorState.syncTimer = window.setInterval(() => {
+      flushSync().catch(() => {});
+    }, syncIntervalMs);
+  }
+
   function ensureContent(content) {
     const next = { version: 1, updatedAt: null, pages: {}, collections: {}, layout: { pages: {} }, ...(content || {}) };
     next.pages = next.pages || {};
@@ -192,32 +442,35 @@
 
   async function loadLatest() {
     if (!window.SALSAVPantry) throw new Error("SALSAVPantry is unavailable.");
-    editorState.content = ensureContent(await window.SALSAVPantry.getContent());
+    const latest = await window.SALSAVPantry.getContent();
+    editorState.seedMerged = Boolean(latest && latest.__seedMerged);
+    editorState.content = ensureContent(latest);
+    editorState.baseContent = ensureContent(deepClone(editorState.content));
     window.SALSAV_CMS_CONTENT = editorState.content;
     if (window.SALSAVCMS) window.SALSAVCMS.content = editorState.content;
     return editorState.content;
   }
 
   function saveContentMutation(label, mutator, audit) {
-    const run = async () => {
-      if (!window.SALSAVPantry) throw new Error("SALSAVPantry is unavailable.");
-      const latest = await window.SALSAVPantry.getContent();
-      const content = ensureContent(latest);
-      await mutator(content);
-      content.version = Number(content.version || 0) + 1;
-      content.updatedAt = new Date().toISOString();
-      await window.SALSAVPantry.saveContent(content);
-      const verified = ensureContent(await window.SALSAVPantry.getContent());
-      editorState.content = verified;
-      window.SALSAV_CMS_CONTENT = verified;
-      if (window.SALSAVCMS) window.SALSAVCMS.content = verified;
-      applyCurrentContent();
-      if (audit) await appendAudit(audit);
-      if (label) toast(`${label} saved.`, "success");
-      return verified;
-    };
+    const run = async () => mutateContentLocally(mutator, audit, { label, render: true, history: true });
     editorState.saveQueue = editorState.saveQueue.then(run, run);
     return editorState.saveQueue;
+  }
+
+  async function mutateContentLocally(mutator, audit, options = {}) {
+    const content = ensureContent(deepClone(editorState.content || window.SALSAV_CMS_CONTENT || {}));
+    await mutator(content);
+    content.version = Number(content.version || 0) + 1;
+    content.updatedAt = new Date().toISOString();
+    editorState.content = ensureContent(content);
+    window.SALSAV_CMS_CONTENT = editorState.content;
+    if (window.SALSAVCMS) window.SALSAVCMS.content = editorState.content;
+    if (audit) queueAudit(audit);
+    markDirty(options.label || "Editing");
+    if (options.render !== false) applyCurrentContent();
+    if (options.history !== false) pushHistory(options.label || "Edit");
+    if (options.toast) toast(options.toast, "success");
+    return editorState.content;
   }
 
   async function saveContentPatch(patch, audit, label) {
@@ -243,13 +496,9 @@
   }
 
   async function appendAudit(event) {
-    if (!window.SALSAVPantry || !event) return;
-    return window.SALSAVPantry.appendAudit({
-      at: new Date().toISOString(),
-      source: "live-editor",
-      pageId: editorState.pageId,
-      ...event
-    }).catch(() => {});
+    queueAudit(event);
+    markDirty("Editing");
+    return Promise.resolve();
   }
 
   function applyCurrentContent() {
@@ -288,8 +537,89 @@
     return null;
   }
 
+  function collectionTypeForBlock(block) {
+    const blockType = block?.getAttribute("data-cms-block-type") || "";
+    if (blockType === "newsArticle") return "newsArticles";
+    if (blockType === "teamMember") return "teamMembers";
+    if (blockType === "teamSummaryRow") return "teamSummaryRows";
+    return "";
+  }
+
+  function collectionFieldInfoFromElement(element) {
+    const fieldElement = element?.closest("[data-cms-collection-field]");
+    if (!fieldElement || !isUsableTargetElement(fieldElement)) return null;
+    const block = fieldElement.closest("[data-cms-block-id]");
+    const collectionType = collectionTypeForBlock(block);
+    const field = fieldElement.getAttribute("data-cms-collection-field");
+    const id = block?.getAttribute("data-cms-block-id");
+    if (!collectionType || !field || !id) return null;
+    return {
+      mode: "collection",
+      element: fieldElement,
+      block,
+      collectionType,
+      blockType: block.getAttribute("data-cms-block-type"),
+      id,
+      field,
+      label: fieldElement.getAttribute("data-cms-field-label") || humanFieldLabel(field)
+    };
+  }
+
+  function ensureRuntimeImageKey(img) {
+    if (!img || img.getAttribute("data-cms-image-field") || img.getAttribute("data-cms-attr-src")) return;
+    const block = img.closest("[data-cms-block-id]");
+    if (!block) return;
+    const key = `${block.getAttribute("data-cms-block-id")}.imageSrc`;
+    img.setAttribute("data-cms-attr-src", key);
+  }
+
+  function imageInfoFromElement(element) {
+    const img = element?.closest("img");
+    if (!img || !isUsableTargetElement(img)) return null;
+    const block = img.closest("[data-cms-block-id]");
+    const collectionType = collectionTypeForBlock(block);
+    if (img.getAttribute("data-cms-image-field") && block && collectionType) {
+      return {
+        mode: "collection",
+        element: img,
+        block,
+        collectionType,
+        blockType: block.getAttribute("data-cms-block-type"),
+        id: block.getAttribute("data-cms-block-id"),
+        field: img.getAttribute("data-cms-image-field"),
+        altField: img.getAttribute("data-cms-image-alt-field") || "imageAlt",
+        label: "Image"
+      };
+    }
+    ensureRuntimeImageKey(img);
+    const attrKey = img.dataset.cmsAttrSrc || img.getAttribute("data-cms-attr-src");
+    if (!attrKey) return null;
+    return {
+      mode: "field",
+      element: img,
+      key: attrKey,
+      attr: "src",
+      label: "Image"
+    };
+  }
+
+  function hydrateRuntimeImageKeys() {
+    if (!editorState.content) return;
+    document.querySelectorAll("img").forEach((img) => {
+      ensureRuntimeImageKey(img);
+      const key = img.dataset.cmsAttrSrc || img.getAttribute("data-cms-attr-src");
+      if (!key) return;
+      const field = findField(editorState.content, key);
+      if (field?.value && isSafeUrl(field.value, true)) img.setAttribute("src", field.value);
+    });
+  }
+
   function isCmsChrome(element) {
-    return Boolean(element && element.closest(".salsav-cms-toolbar,.salsav-cms-overlay-layer,.salsav-cms-modal,.salsav-cms-toast-tray"));
+    return Boolean(element && element.closest(".salsav-cms-toolbar,.salsav-cms-overlay-layer,.salsav-cms-modal,.salsav-cms-toast-tray,.salsav-cms-format-toolbar,.salsav-cms-image-chip,.salsav-cms-image-popover,.salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move"));
+  }
+
+  function isSiteNavigationChrome(element) {
+    return Boolean(element && element.closest("header,.navbar,.nav-menu,.navbar-menu,.navbar-brand"));
   }
 
   function isVisible(element) {
@@ -299,7 +629,7 @@
   }
 
   function isUsableTargetElement(element) {
-    return Boolean(element && !isCmsChrome(element) && isVisible(element));
+    return Boolean(element && !isCmsChrome(element) && !isSiteNavigationChrome(element) && isVisible(element));
   }
 
   function nearestList(element) {
@@ -432,6 +762,7 @@
     editorState.pageId = pageId();
     editorState.targets.clear();
     const seenElements = new Set();
+    hydrateRuntimeImageKeys();
 
     document.querySelectorAll("[data-cms-key], [data-cms-attr-alt], [data-cms-attr-title], [data-cms-attr-aria-label], [data-cms-attr-placeholder], [data-cms-attr-content]").forEach((element, index) => {
       if (!isUsableTargetElement(element)) return;
@@ -457,6 +788,34 @@
         canArchive: false,
         canFreePosition: false,
         collectionType: "field"
+      });
+    });
+
+    document.querySelectorAll("[data-cms-collection-field]").forEach((element, index) => {
+      if (!isUsableTargetElement(element)) return;
+      const info = collectionFieldInfoFromElement(element);
+      if (!info) return;
+      const id = `collection:${info.collectionType}:${info.id}:${info.field}:${index}`;
+      editorState.targets.set(id, {
+        id,
+        type: "text",
+        pageId: editorState.pageId,
+        element: info.element,
+        cmsKey: info.field,
+        attr: null,
+        collectionInfo: info,
+        blockId: info.id,
+        blockType: info.blockType,
+        listId: null,
+        listType: null,
+        listElement: null,
+        canTextEdit: true,
+        canDrag: false,
+        canResize: false,
+        canDuplicate: false,
+        canArchive: false,
+        canFreePosition: false,
+        collectionType: info.collectionType
       });
     });
 
@@ -494,6 +853,7 @@
     if (editorState.selectedTargetId && !editorState.targets.has(editorState.selectedTargetId)) editorState.selectedTargetId = null;
     if (editorState.hoveredTargetId && !editorState.targets.has(editorState.hoveredTargetId)) editorState.hoveredTargetId = null;
     scheduleOverlay();
+    decorateLiveChrome();
     return editorState.targets;
   }
 
@@ -501,6 +861,10 @@
     if (!element || isCmsChrome(element)) return null;
     const mode = preferredMode || editorState.mode;
     if (mode === "text") {
+      const collectionInfo = collectionFieldInfoFromElement(element);
+      if (collectionInfo) {
+        return Array.from(editorState.targets.values()).find((target) => target.collectionInfo && target.collectionInfo.element === collectionInfo.element && target.collectionInfo.id === collectionInfo.id && target.collectionInfo.field === collectionInfo.field) || null;
+      }
       const info = fieldInfoFromElement(element);
       if (info) {
         return Array.from(editorState.targets.values()).find((target) => target.type === "text" && target.element === info.element && target.cmsKey === info.key) || null;
@@ -515,6 +879,10 @@
       if (list && mode === "blocks") {
         return Array.from(editorState.targets.values()).find((target) => target.type === "list" && target.element === list) || null;
       }
+    }
+    const collectionInfo = collectionFieldInfoFromElement(element);
+    if (collectionInfo) {
+      return Array.from(editorState.targets.values()).find((target) => target.collectionInfo && target.collectionInfo.element === collectionInfo.element && target.collectionInfo.id === collectionInfo.id && target.collectionInfo.field === collectionInfo.field) || null;
     }
     const info = fieldInfoFromElement(element);
     if (info) {
@@ -580,10 +948,7 @@
   }
 
   function targetLabel(target) {
-    if (!target) return "";
-    if (target.type === "text") return target.cmsKey || "Text";
-    if (target.type === "list") return target.listId || "List";
-    return target.blockType === "newsArticle" ? "News article" : target.blockType === "teamMember" ? "Team member" : target.blockId || "Block";
+    return humanTargetName(target);
   }
 
   function renderOverlay() {
@@ -615,7 +980,7 @@
       if (target.canTextEdit) {
         layer.append(button("Edit text", "edit-text"));
       } else {
-        layer.append(reason("This block has no direct text key."));
+        layer.append(reason("Click visible copy to edit it."));
       }
       return;
     }
@@ -734,6 +1099,7 @@
     editorState.hoveredTargetId = null;
     editorState.selectedTargetId = null;
     buildTargetRegistry();
+    updateDockState();
   }
 
   function ensureToolbar() {
@@ -741,34 +1107,40 @@
     const toolbar = document.createElement("div");
     toolbar.className = "salsav-cms-toolbar";
     const addButton = editorState.pageId === "news"
-      ? '<button type="button" class="salsav-cms-button" data-salsav-cms-action="add-article">+ Article</button>'
+      ? '<button type="button" class="salsav-cms-button salsav-cms-dock-add" data-salsav-cms-action="add-article">Add article</button>'
       : editorState.pageId === "team"
-        ? '<button type="button" class="salsav-cms-button" data-salsav-cms-action="add-member">+ Team Member</button>'
+        ? '<button type="button" class="salsav-cms-button salsav-cms-dock-add" data-salsav-cms-action="add-member">Add member</button>'
         : "";
     toolbar.innerHTML = `
-      <span class="salsav-cms-toolbar-title">SALSAV CMS</span>
-      <span class="salsav-cms-page-chip">${escapeHtml(editorState.pageId)}</span>
-      <div class="salsav-cms-mode-switcher">
-        ${modes.map((mode) => `<button type="button" class="salsav-cms-button salsav-cms-mode-button${mode === editorState.mode ? " salsav-cms-button-active salsav-cms-mode-active" : ""}" data-mode="${mode}">${mode[0].toUpperCase()}${mode.slice(1)}</button>`).join("")}
-      </div>
+      <span class="salsav-cms-toolbar-title">SALSAV</span>
+      <button type="button" class="salsav-cms-button salsav-cms-mode-button salsav-cms-button-active" data-salsav-cms-action="toggle-preview">Preview</button>
+      <button type="button" class="salsav-cms-icon-button" data-salsav-cms-action="undo" aria-label="Undo" title="Undo">Undo</button>
+      <button type="button" class="salsav-cms-icon-button" data-salsav-cms-action="redo" aria-label="Redo" title="Redo">Redo</button>
       ${addButton}
-      <button type="button" class="salsav-cms-button" data-salsav-cms-action="refresh">Refresh</button>
-      <button type="button" class="salsav-cms-button" data-salsav-cms-action="export">Export JSON</button>
-      <button type="button" class="salsav-cms-button" data-salsav-cms-action="logout">Logout</button>`;
+      <button type="button" class="salsav-cms-button salsav-cms-sync-button" data-salsav-cms-action="sync">Sync</button>
+      <span class="salsav-cms-sync-status" aria-live="polite">Ready</span>
+      <button type="button" class="salsav-cms-icon-button salsav-cms-secondary-action" data-salsav-cms-action="refresh" aria-label="Refresh content" title="Refresh">Refresh</button>
+      <button type="button" class="salsav-cms-icon-button salsav-cms-secondary-action" data-salsav-cms-action="export" aria-label="Download backup" title="Download backup">Backup</button>
+      <button type="button" class="salsav-cms-icon-button salsav-cms-secondary-action" data-salsav-cms-action="logout" aria-label="Logout" title="Logout">Logout</button>`;
     document.body.appendChild(toolbar);
     toolbar.addEventListener("click", (event) => {
       const modeButton = event.target.closest("[data-mode]");
       if (modeButton) setMode(modeButton.dataset.mode);
       const action = event.target.closest("[data-salsav-cms-action]")?.dataset.salsavCmsAction;
+      if (action === "toggle-preview") setMode(editorState.mode === "preview" ? "text" : "preview");
+      if (action === "undo") restoreHistory(-1);
+      if (action === "redo") restoreHistory(1);
+      if (action === "sync") flushSync({ force: true }).catch(() => {});
       if (action === "refresh") refreshContent();
       if (action === "export") downloadJson("salsav-site-content.json", editorState.content || {});
       if (action === "logout") {
         sessionStorage.removeItem(config.sessionKey);
         window.location.reload();
       }
-      if (action === "add-article") openArticleEditor();
-      if (action === "add-member") openMemberEditor();
+      if (action === "add-article") createVisualArticle();
+      if (action === "add-member") createVisualMember();
     });
+    updateDockState();
   }
 
   function downloadJson(name, payload) {
@@ -783,11 +1155,335 @@
   async function refreshContent() {
     try {
       await loadLatest();
+      editorState.dirty = false;
+      editorState.pendingAudits = [];
+      editorState.history = [{ label: "Refreshed", content: snapshotContent() }];
+      editorState.historyIndex = 0;
       applyCurrentContent();
+      setSyncStatus("saved", "Saved");
       toast("Pantry content refreshed.", "success");
     } catch (error) {
       toast(error.message || "Refresh failed.", "error");
     }
+  }
+
+  function ensureFormatToolbar() {
+    if (editorState.formatToolbar) return editorState.formatToolbar;
+    const toolbar = document.createElement("div");
+    toolbar.className = "salsav-cms-format-toolbar";
+    toolbar.hidden = true;
+    toolbar.innerHTML = `
+      <button type="button" data-format="bold" aria-label="Bold"><strong>B</strong></button>
+      <button type="button" data-format="italic" aria-label="Italic"><em>I</em></button>
+      <button type="button" data-format="underline" aria-label="Underline"><u>U</u></button>
+      <button type="button" data-format="link" aria-label="Add link">Link</button>
+      <button type="button" data-format="insertUnorderedList" aria-label="Bullet list">List</button>
+      <button type="button" data-format="insertOrderedList" aria-label="Numbered list">1 2</button>
+      <button type="button" data-format="blockquote" aria-label="Quote">Quote</button>
+      <button type="button" data-format="superscript" aria-label="Superscript">Sup</button>
+      <button type="button" data-format="subscript" aria-label="Subscript">Sub</button>
+      <button type="button" data-format="clear" aria-label="Clear formatting">Clear</button>
+      <form class="salsav-cms-link-form" hidden>
+        <input type="url" placeholder="Paste link URL" aria-label="Paste link URL">
+      </form>`;
+    document.body.appendChild(toolbar);
+    toolbar.addEventListener("mousedown", (event) => {
+      if (event.target.closest("input")) return;
+      event.preventDefault();
+    });
+    toolbar.addEventListener("click", (event) => {
+      const action = event.target.closest("[data-format]")?.dataset.format;
+      if (!action) return;
+      event.preventDefault();
+      if (action === "link") {
+        const form = toolbar.querySelector(".salsav-cms-link-form");
+        form.hidden = !form.hidden;
+        if (!form.hidden) form.querySelector("input").focus();
+        return;
+      }
+      applyFormatAction(action);
+    });
+    toolbar.querySelector(".salsav-cms-link-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = event.currentTarget.querySelector("input");
+      const url = input.value.trim();
+      if (!isSafeUrl(url, false)) {
+        toast("That link cannot be used.", "error");
+        return;
+      }
+      document.execCommand("createLink", false, url);
+      const selection = window.getSelection();
+      const anchor = selection?.anchorNode?.parentElement?.closest("a");
+      if (anchor && new URL(url, window.location.href).origin !== window.location.origin) {
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+      }
+      input.value = "";
+      event.currentTarget.hidden = true;
+      commitInlineEdit(false);
+      updateFormatToolbar();
+    });
+    editorState.formatToolbar = toolbar;
+    return toolbar;
+  }
+
+  function applyFormatAction(action) {
+    if (!editorState.inline) return;
+    if (action === "blockquote") {
+      document.execCommand("formatBlock", false, "blockquote");
+    } else if (action === "clear") {
+      document.execCommand("removeFormat");
+      document.execCommand("unlink");
+    } else {
+      document.execCommand(action);
+    }
+    commitInlineEdit(false);
+    updateFormatToolbar();
+  }
+
+  function updateFormatToolbar() {
+    const toolbar = ensureFormatToolbar();
+    const active = editorState.inline;
+    const selection = window.getSelection();
+    if (!active || !selection || selection.rangeCount === 0 || selection.isCollapsed || !active.element.contains(selection.anchorNode)) {
+      toolbar.hidden = true;
+      return;
+    }
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    if (!rect.width && !rect.height) {
+      toolbar.hidden = true;
+      return;
+    }
+    toolbar.hidden = false;
+    toolbar.style.left = `${Math.min(window.innerWidth - toolbar.offsetWidth - 10, Math.max(10, rect.left + rect.width / 2 - toolbar.offsetWidth / 2))}px`;
+    toolbar.style.top = `${Math.max(10, rect.top - toolbar.offsetHeight - 12)}px`;
+  }
+
+  function plainTextFromEditable(element) {
+    return String(element.innerText || element.textContent || "").replace(/\u00a0/g, " ").trim();
+  }
+
+  function editableHtml(element) {
+    return sanitizeRichHtml(element.innerHTML || "");
+  }
+
+  function editableHasFormatting(element, existingType) {
+    return richTextHasFormatting(editableHtml(element), plainTextFromEditable(element), existingType);
+  }
+
+  function pageFieldTargetPageId(key) {
+    return String(key || "").startsWith("global.") ? "global" : editorState.pageId;
+  }
+
+  function setPageFieldValue(content, info, value, type) {
+    const targetPageId = pageFieldTargetPageId(info.key);
+    content.pages[targetPageId] = content.pages[targetPageId] || { path: `${targetPageId}.html`, title: labelFromKey(targetPageId), fields: {} };
+    content.pages[targetPageId].fields = content.pages[targetPageId].fields || {};
+    const previous = content.pages[targetPageId].fields[info.key] || {};
+    content.pages[targetPageId].fields[info.key] = {
+      ...previous,
+      type,
+      label: previous.label || humanFieldLabel(info.key),
+      value,
+      selectorHint: previous.selectorHint || (info.attr ? `[data-cms-attr-${info.attr}="${info.key}"]` : `[data-cms-key="${info.key}"]`),
+      updatedAt: new Date().toISOString()
+    };
+    if (info.attr) content.pages[targetPageId].fields[info.key].attr = info.attr;
+  }
+
+  function collectionItem(content, info) {
+    const list = content.collections?.[info.collectionType];
+    return Array.isArray(list) ? list.find((item) => item.id === info.id) : null;
+  }
+
+  async function commitInlineEdit(final) {
+    const active = editorState.inline;
+    if (!active || active.committing) return;
+    window.clearTimeout(active.timer);
+    active.committing = true;
+    try {
+      if (active.mode === "collection") {
+        const isRich = editableHasFormatting(active.element, /<\/?[a-z][\s>/]/i.test(collectionItem(editorState.content, active.info)?.[active.info.field] || "") ? "html" : "text");
+        const value = isRich ? editableHtml(active.element) : plainTextFromEditable(active.element);
+        await mutateContentLocally((content) => {
+          const item = collectionItem(content, active.info);
+          if (!item) return;
+          item[active.info.field] = value;
+          if (active.info.field === "displayDate" && !item.date) item.date = value;
+          item.updatedAt = new Date().toISOString();
+        }, final ? {
+          type: isRich ? "rich_text_updated" : active.info.blockType === "teamMember" ? "team_member_updated" : active.info.blockType === "newsArticle" ? "news_article_updated" : "text_updated",
+          entityType: active.info.blockType || "collectionItem",
+          entityId: active.info.id,
+          label: active.info.label
+        } : null, { label: active.info.label, render: false, history: final });
+      } else {
+        const existing = findField(editorState.content, active.info.key) || {};
+        const isRich = editableHasFormatting(active.element, existing.type);
+        const value = isRich ? editableHtml(active.element) : plainTextFromEditable(active.element);
+        await mutateContentLocally((content) => {
+          setPageFieldValue(content, active.info, value, isRich ? "html" : "text");
+        }, final ? {
+          type: isRich ? "rich_text_updated" : "text_updated",
+          entityType: "field",
+          entityId: active.info.key,
+          label: humanFieldLabel(active.info.key)
+        } : null, { label: humanFieldLabel(active.info.key), render: false, history: final });
+      }
+    } finally {
+      active.committing = false;
+    }
+  }
+
+  function queueInlineCommit() {
+    const active = editorState.inline;
+    if (!active) return;
+    window.clearTimeout(active.timer);
+    active.timer = window.setTimeout(() => commitInlineEdit(false).catch((error) => toast(error.message || "Save failed.", "error")), textSaveDelayMs);
+  }
+
+  function closeInlineEditor(options = {}) {
+    const active = editorState.inline;
+    if (!active) return Promise.resolve();
+    const element = active.element;
+    return commitInlineEdit(true).catch((error) => toast(error.message || "Save failed.", "error")).finally(() => {
+      element.removeEventListener("input", queueInlineCommit);
+      element.removeEventListener("blur", active.onBlur);
+      element.removeEventListener("paste", active.onPaste);
+      element.removeAttribute("contenteditable");
+      element.removeAttribute("spellcheck");
+      element.classList.remove("salsav-cms-inline-active");
+      if (editorState.inline === active) editorState.inline = null;
+      ensureFormatToolbar().hidden = true;
+      if (!options.keepSelection) window.getSelection()?.removeAllRanges();
+      buildTargetRegistry();
+    });
+  }
+
+  function startInlineEditor(target) {
+    if (!target || !target.canTextEdit) return false;
+    const collectionInfo = target.collectionInfo || collectionFieldInfoFromElement(target.element);
+    const pageInfo = collectionInfo ? null : (target.type === "text" ? { element: target.element, key: target.cmsKey, attr: target.attr } : fieldInfoFromElement(target.element));
+    if (!collectionInfo && (!pageInfo || pageInfo.attr)) return false;
+    if (editorState.inline?.element === target.element) return true;
+    closeInlineEditor({ keepSelection: true });
+    const element = collectionInfo ? collectionInfo.element : pageInfo.element;
+    editorState.inline = {
+      mode: collectionInfo ? "collection" : "field",
+      info: collectionInfo || pageInfo,
+      element,
+      timer: 0,
+      committing: false,
+      onBlur: () => closeInlineEditor(),
+      onPaste: (event) => {
+        event.preventDefault();
+        const text = event.clipboardData?.getData("text/plain") || "";
+        document.execCommand("insertText", false, text);
+      }
+    };
+    element.setAttribute("contenteditable", "true");
+    element.setAttribute("spellcheck", "true");
+    element.classList.add("salsav-cms-inline-active");
+    element.addEventListener("input", queueInlineCommit);
+    element.addEventListener("blur", editorState.inline.onBlur);
+    element.addEventListener("paste", editorState.inline.onPaste);
+    element.focus({ preventScroll: true });
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    updateFormatToolbar();
+    return true;
+  }
+
+  function ensureImageChip() {
+    if (editorState.imageChip) return editorState.imageChip;
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "salsav-cms-image-chip";
+    chip.textContent = "Image";
+    chip.hidden = true;
+    chip.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const info = chip._imageInfo;
+      if (info) openImagePopover(info);
+    });
+    document.body.appendChild(chip);
+    editorState.imageChip = chip;
+    return chip;
+  }
+
+  function ensureImagePopover() {
+    if (editorState.imagePopover) return editorState.imagePopover;
+    const popover = document.createElement("form");
+    popover.className = "salsav-cms-image-popover";
+    popover.hidden = true;
+    popover.innerHTML = `<input type="url" placeholder="Paste Image URL" aria-label="Paste Image URL">`;
+    popover.addEventListener("submit", (event) => event.preventDefault());
+    popover.querySelector("input").addEventListener("input", (event) => {
+      const value = event.target.value.trim();
+      const info = popover._imageInfo;
+      if (!info || !value) return;
+      applyImageUrl(info, value).catch((error) => toast(error.message || "Image update failed.", "error"));
+    });
+    document.body.appendChild(popover);
+    editorState.imagePopover = popover;
+    return popover;
+  }
+
+  function placeImageChip(info) {
+    const chip = ensureImageChip();
+    if (!info || editorState.mode === "preview" || editorState.inline) {
+      chip.hidden = true;
+      return;
+    }
+    const rect = info.element.getBoundingClientRect();
+    chip.hidden = false;
+    chip._imageInfo = info;
+    chip.style.left = `${Math.min(window.innerWidth - 86, Math.max(10, rect.right - 76))}px`;
+    chip.style.top = `${Math.max(10, rect.top + 10)}px`;
+  }
+
+  function openImagePopover(info) {
+    const popover = ensureImagePopover();
+    const rect = info.element.getBoundingClientRect();
+    popover._imageInfo = info;
+    popover.hidden = false;
+    popover.style.left = `${Math.min(window.innerWidth - 280, Math.max(10, rect.left + rect.width / 2 - 140))}px`;
+    popover.style.top = `${Math.min(window.innerHeight - 74, Math.max(10, rect.top + 14))}px`;
+    const input = popover.querySelector("input");
+    input.value = info.element.getAttribute("src") || "";
+    input.focus();
+    input.select();
+  }
+
+  function closeImagePopover() {
+    if (editorState.imagePopover) editorState.imagePopover.hidden = true;
+  }
+
+  async function applyImageUrl(info, url) {
+    if (!isSafeUrl(url, true)) throw new Error("That image URL cannot be used.");
+    info.element.setAttribute("src", url);
+    await mutateContentLocally((content) => {
+      if (info.mode === "collection") {
+        const item = collectionItem(content, info);
+        if (!item) return;
+        item[info.field] = url;
+        if (info.altField && !item[info.altField]) item[info.altField] = `Image for ${item.name || item.title || "SALSAV"}`;
+        item.updatedAt = new Date().toISOString();
+      } else {
+        setPageFieldValue(content, info, url, "attr");
+      }
+    }, {
+      type: "text_updated",
+      entityType: info.blockType || "image",
+      entityId: info.id || info.key,
+      label: "Image"
+    }, { label: "Image", render: false, history: true });
   }
 
   function ensureQuillLoaded() {
@@ -840,9 +1536,9 @@
         </div>
         <dl class="salsav-cms-field-meta">
           <div><dt>Page</dt><dd class="salsav-cms-editor-page"></dd></div>
-          <div><dt>Key</dt><dd class="salsav-cms-editor-key"></dd></div>
+          <div><dt>Area</dt><dd class="salsav-cms-editor-key"></dd></div>
           <div><dt>Label</dt><dd class="salsav-cms-editor-label"></dd></div>
-          <div><dt>Type</dt><dd class="salsav-cms-editor-type"></dd></div>
+          <div><dt>Format</dt><dd class="salsav-cms-editor-type"></dd></div>
         </dl>
         <div class="salsav-cms-rich-editor-shell">
           <div class="salsav-cms-rich-editor"></div>
@@ -851,7 +1547,6 @@
         <div class="salsav-cms-editor-actions">
           <button type="button" class="salsav-cms-button salsav-cms-button-primary" data-save-rich>Save</button>
           <button type="button" class="salsav-cms-button" data-refresh-rich>Refresh from Pantry</button>
-          <button type="button" class="salsav-cms-button" data-copy-key>Copy key</button>
           <button type="button" class="salsav-cms-button" data-close-rich>Cancel</button>
         </div>
       </section>`;
@@ -860,7 +1555,6 @@
       if (event.target.matches("[data-close-rich]")) closeRichEditor();
       if (event.target.matches("[data-save-rich]")) saveActiveField();
       if (event.target.matches("[data-refresh-rich]")) refreshActiveField();
-      if (event.target.matches("[data-copy-key]")) navigator.clipboard?.writeText(editorState.activeField?.key || "").catch(() => {});
     });
     return modal;
   }
@@ -873,9 +1567,9 @@
     const field = findField(editorState.content, info.key) || {};
     const modal = ensureRichModal();
     modal.querySelector(".salsav-cms-editor-page").textContent = editorState.pageId;
-    modal.querySelector(".salsav-cms-editor-key").textContent = info.key;
+    modal.querySelector(".salsav-cms-editor-key").textContent = humanFieldLabel(info.key);
     modal.querySelector(".salsav-cms-editor-label").textContent = field.label || labelFromKey(info.key);
-    modal.querySelector(".salsav-cms-editor-type").textContent = info.attr ? "attr" : (field.type || "text");
+    modal.querySelector(".salsav-cms-editor-type").textContent = info.attr ? "Detail" : (field.type === "html" ? "Rich text" : "Text");
     const editor = modal.querySelector(".salsav-cms-rich-editor");
     const attrEditor = modal.querySelector(".salsav-cms-attr-editor");
     modal.classList.add("salsav-cms-modal-open");
@@ -988,6 +1682,176 @@
 
   function blankMember() {
     return { id: `team_${Date.now()}`, type: "teamMember", visible: true, sectionId: "key_contributors", order: 10, name: "", title: "", description: "", affiliation: "", expertise: "", profileUrl: "#", imageSrc: fallbackImage, imageAlt: "", openInNewTab: true, includeInSummary: false, updatedAt: null };
+  }
+
+  function nextOrder(items, sectionKey, sectionValue) {
+    const scoped = (items || []).filter((item) => !sectionKey || item[sectionKey] === sectionValue);
+    return scoped.reduce((max, item) => Math.max(max, Number(item.order || 0)), 0) + 10;
+  }
+
+  async function createVisualArticle() {
+    const item = {
+      ...blankArticle(),
+      id: `news_new_${Date.now()}`,
+      title: "New article",
+      source: "Source",
+      displayDate: "Date",
+      description: "Write a short summary.",
+      imageAlt: "Preview image",
+      order: nextOrder(ensureContent(editorState.content).collections.newsArticles)
+    };
+    await saveContentPatch((content) => {
+      content.collections.newsArticles.push(item);
+      normalizeListOrder(content.collections.newsArticles);
+    }, {
+      type: "news_article_created",
+      entityType: "newsArticle",
+      entityId: item.id,
+      label: "New article"
+    }, "New article");
+    focusNewCollectionField(item.id, "title");
+  }
+
+  async function createVisualMember(sectionId) {
+    const section = sectionId || "key_contributors";
+    const item = {
+      ...blankMember(),
+      id: `team_new_${Date.now()}`,
+      sectionId: section,
+      name: "New team member",
+      title: "Role or affiliation",
+      description: "Write a short bio.",
+      affiliation: "",
+      expertise: "",
+      imageAlt: "Team member photo",
+      order: nextOrder(ensureContent(editorState.content).collections.teamMembers, "sectionId", section)
+    };
+    await saveContentPatch((content) => {
+      content.collections.teamMembers.push(item);
+      normalizeListOrder(content.collections.teamMembers, "sectionId");
+    }, {
+      type: "team_member_created",
+      entityType: "teamMember",
+      entityId: item.id,
+      label: "New team member"
+    }, "New team member");
+    focusNewCollectionField(item.id, "name");
+  }
+
+  function focusNewCollectionField(id, field) {
+    window.setTimeout(() => {
+      buildTargetRegistry();
+      const element = document.querySelector(`[data-cms-block-id="${CSS.escape(id)}"] [data-cms-collection-field="${CSS.escape(field)}"]`);
+      if (!element) return;
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
+      const target = Array.from(editorState.targets.values()).find((item) => item.collectionInfo?.id === id && item.collectionInfo?.field === field);
+      if (target) {
+        selectTarget(target.id);
+        startInlineEditor(target);
+      }
+    }, 80);
+  }
+
+  function decorateLiveChrome() {
+    if (!readSession() || editorState.mode === "preview") return;
+    document.querySelectorAll(".salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move").forEach((node) => node.remove());
+
+    if (editorState.pageId === "team") {
+      document.querySelectorAll(".team-grid").forEach((grid) => {
+        const section = teamSectionFromList(grid) || "key_contributors";
+        if (getComputedStyle(grid).position === "static") grid.style.position = "relative";
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "salsav-cms-section-add";
+        button.textContent = "+";
+        button.setAttribute("aria-label", "Add team member");
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          createVisualMember(section).catch((error) => toast(error.message || "Could not add member.", "error"));
+        });
+        grid.append(button);
+      });
+    }
+
+    if (editorState.pageId === "news") {
+      const grid = document.getElementById("news-grid-container");
+      if (grid) {
+        if (getComputedStyle(grid).position === "static") grid.style.position = "relative";
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "salsav-cms-section-add";
+        button.textContent = "+";
+        button.setAttribute("aria-label", "Add article");
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          createVisualArticle().catch((error) => toast(error.message || "Could not add article.", "error"));
+        });
+        grid.append(button);
+      }
+    }
+
+    document.querySelectorAll('[data-cms-block-id]').forEach((card) => {
+      if (isSiteNavigationChrome(card) || !isVisible(card)) return;
+      const target = targetFromBlockElement(card);
+      if (!target.canDrag) return;
+      if (getComputedStyle(card).position === "static") card.style.position = "relative";
+      const move = document.createElement("button");
+      move.type = "button";
+      move.className = "salsav-cms-card-move";
+      move.textContent = "Move";
+      move.setAttribute("aria-label", "Move");
+      move.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        selectTarget(target.id);
+        startDrag(target, event);
+      });
+      card.append(move);
+    });
+
+    document.querySelectorAll('[data-cms-block-type="teamMember"], [data-cms-block-type="newsArticle"]').forEach((card) => {
+      if (isSiteNavigationChrome(card) || !isVisible(card)) return;
+      if (getComputedStyle(card).position === "static") card.style.position = "relative";
+      const trash = document.createElement("button");
+      trash.type = "button";
+      trash.className = "salsav-cms-card-trash";
+      trash.textContent = "Delete";
+      trash.setAttribute("aria-label", "Remove");
+      trash.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const target = targetFromBlockElement(card);
+        archiveVisualCard(target).catch((error) => toast(error.message || "Could not remove.", "error"));
+      });
+      card.append(trash);
+    });
+  }
+
+  async function archiveVisualCard(target) {
+    if (!target) return;
+    await saveContentPatch((content) => {
+      if (target.blockType === "newsArticle") {
+        const item = content.collections.newsArticles.find((article) => article.id === target.blockId);
+        if (item) {
+          item.visible = false;
+          item.updatedAt = new Date().toISOString();
+        }
+      }
+      if (target.blockType === "teamMember") {
+        const item = content.collections.teamMembers.find((member) => member.id === target.blockId);
+        if (item) {
+          item.visible = false;
+          item.updatedAt = new Date().toISOString();
+        }
+      }
+    }, {
+      type: "block_archived",
+      entityType: target.blockType,
+      entityId: target.blockId,
+      label: targetLabel(target)
+    }, "Removed");
   }
 
   function teamSectionsOptions(selected) {
@@ -1300,18 +2164,45 @@
     event.preventDefault();
     event.stopPropagation();
     const rect = target.element.getBoundingClientRect();
+    const parent = target.element.parentElement;
+    const parentStyle = parent ? getComputedStyle(parent) : null;
+    const parentWidth = Math.max(180, parent?.getBoundingClientRect().width || window.innerWidth);
+    const columns = Number(parent?.getAttribute("data-cms-grid") || target.canvasElement?.getAttribute("data-cms-grid") || 12);
+    if (parent && parentStyle?.display.includes("grid")) {
+      parent.classList.add("salsav-cms-managed-grid");
+      if (!parent.getAttribute("data-cms-grid")) parent.setAttribute("data-cms-grid", String(Number.isFinite(columns) ? columns : 12));
+      parent.style.setProperty("--cms-grid-columns", String(Number.isFinite(columns) ? Math.max(1, Math.min(12, columns)) : 12));
+      ensureGridChildSpans(parent);
+    }
     editorState.isResizing = true;
     editorState.resize = {
       target,
-      side: side || "corner",
+      side: side === "bottom-right" ? "corner" : (side || "corner"),
       startX: event.clientX,
       startY: event.clientY,
       width: rect.width,
       height: rect.height,
-      parentWidth: Math.max(180, target.element.parentElement?.getBoundingClientRect().width || window.innerWidth)
+      parentWidth,
+      parentDisplay: parentStyle?.display || "",
+      columns: Number.isFinite(columns) ? Math.max(1, Math.min(12, columns)) : 12,
+      flexBasis: "",
+      colSpan: null,
+      minHeight: ""
     };
     document.addEventListener("pointermove", resizeMove);
     document.addEventListener("pointerup", commitResize, { once: true });
+  }
+
+  function ensureGridChildSpans(grid) {
+    if (!grid) return;
+    const columns = Math.max(1, Number(grid.getAttribute("data-cms-grid") || 12) || 12);
+    grid.style.setProperty("--cms-grid-columns", String(Math.min(12, columns)));
+    const children = Array.from(grid.querySelectorAll(":scope > [data-cms-block-id]")).filter(isVisible);
+    const defaultSpan = columns >= 12 ? 4 : 1;
+    children.forEach((child) => {
+      if (!child.style.getPropertyValue("--cms-col-span")) child.style.setProperty("--cms-col-span", String(defaultSpan));
+      if (!child.style.gridColumn) child.style.gridColumn = `span ${Math.min(columns, Number(child.style.getPropertyValue("--cms-col-span")) || defaultSpan)}`;
+    });
   }
 
   function resizeMove(event) {
@@ -1322,12 +2213,26 @@
     const width = Math.round(Math.max(180, Math.min(maxWidth, resize.width + event.clientX - resize.startX)));
     const height = Math.round(Math.max(120, Math.min(maxHeight, resize.height + event.clientY - resize.startY)));
     if (resize.side === "right" || resize.side === "corner") {
-      resize.target.element.style.setProperty("--cms-block-width", `${width}px`);
-      resize.target.element.style.width = `${width}px`;
+      const basis = `${Math.max(18, Math.min(100, (width / resize.parentWidth) * 100)).toFixed(3)}%`;
+      resize.flexBasis = basis;
+      resize.target.element.style.setProperty("--cms-block-width", basis);
+      if (resize.parentDisplay.includes("grid")) {
+        const span = Math.max(1, Math.min(resize.columns, Math.round((width / resize.parentWidth) * resize.columns)));
+        resize.colSpan = span;
+        resize.target.element.parentElement?.classList.add("salsav-cms-managed-grid");
+        ensureGridChildSpans(resize.target.element.parentElement);
+        resize.target.element.style.setProperty("--cms-col-span", String(span));
+        resize.target.element.style.gridColumn = `span ${span}`;
+      } else {
+        resize.target.element.style.setProperty("width", basis, "important");
+        resize.target.element.style.flexBasis = basis;
+        resize.target.element.style.maxWidth = basis;
+      }
     }
     if (resize.side === "bottom" || resize.side === "corner") {
-      resize.target.element.style.setProperty("--cms-block-min-height", `${height}px`);
-      resize.target.element.style.minHeight = `${height}px`;
+      resize.minHeight = `${height}px`;
+      resize.target.element.style.setProperty("--cms-block-min-height", resize.minHeight);
+      resize.target.element.style.minHeight = resize.minHeight;
     }
     scheduleOverlay();
   }
@@ -1339,11 +2244,11 @@
     editorState.resize = null;
     if (!resize) return;
     try {
-      const width = resize.target.element.style.width || "";
-      const minHeight = resize.target.element.style.minHeight || "";
+      const width = resize.colSpan ? "" : (resize.flexBasis || resize.target.element.style.getPropertyValue("--cms-block-width") || "");
+      const minHeight = resize.minHeight || resize.target.element.style.minHeight || "";
       const image = resize.target.element.querySelector(".news-image-wrapper, .researcher-image-container, .pi-image, .content-image");
       const imageHeight = image ? image.style.height || "" : "";
-      await saveLayoutPatch(resize.target.blockId, { width, minHeight, imageHeight }, {
+      await saveLayoutPatch(resize.target.blockId, { width, flexBasis: resize.flexBasis, colSpan: resize.colSpan, minHeight, imageHeight }, {
         type: "block_resized",
         entityType: resize.target.blockType || "genericBlock",
         entityId: resize.target.blockId,
@@ -1419,16 +2324,16 @@
 
   async function handleBlockAction(target, action, value) {
     if (!target) return;
-    if (action === "edit-text") return openRichTextEditor(target);
+    if (action === "edit-text") return startInlineEditor(target);
     if (action === "edit-block") {
-      if (target.blockType === "newsArticle") return openArticleEditor(target.blockId);
-      if (target.blockType === "teamMember") return openMemberEditor(target.blockId);
+      if (target.blockType === "newsArticle") return focusNewCollectionField(target.blockId, "title");
+      if (target.blockType === "teamMember") return focusNewCollectionField(target.blockId, "name");
       const nested = target.element.querySelector("[data-cms-key]");
-      if (nested) return openRichTextEditor(findTargetForElement(nested, "text"));
+      if (nested) return startInlineEditor(findTargetForElement(nested, "text"));
       return toast("This generic block has no editable settings yet.", "info");
     }
-    if (action === "add-article") return openArticleEditor();
-    if (action === "add-member") return openMemberEditor();
+    if (action === "add-article") return createVisualArticle();
+    if (action === "add-member") return createVisualMember(target?.listElement ? teamSectionFromList(target.listElement) : undefined);
     if (action === "add-generic") return toast("Generic card creation uses the static page template in this release.", "info");
     if (action === "move-up") return moveBlockByStep(target, -1).then(() => toast("Moved up.", "success")).catch((error) => toast(error.message || "Move failed.", "error"));
     if (action === "move-down") return moveBlockByStep(target, 1).then(() => toast("Moved down.", "success")).catch((error) => toast(error.message || "Move failed.", "error"));
@@ -1443,16 +2348,20 @@
           const item = list.find((article) => article.id === target.blockId);
           if (!item) return;
           if (action === "duplicate-block") list.push({ ...item, id: `${item.id}_copy_${Date.now()}`, title: `${item.title} (copy)`, order: Number(item.order || 0) + 1, updatedAt: new Date().toISOString() });
-          if (action === "archive-block") item.visible = false;
-          if (action === "delete-block" && confirm("Permanently delete this article?")) list.splice(list.indexOf(item), 1);
+          if (action === "archive-block" || action === "delete-block") {
+            item.visible = false;
+            item.updatedAt = new Date().toISOString();
+          }
           normalizeListOrder(list);
         } else if (target.blockType === "teamMember") {
           const list = content.collections.teamMembers;
           const item = list.find((member) => member.id === target.blockId);
           if (!item) return;
           if (action === "duplicate-block") list.push({ ...item, id: `${item.id}_copy_${Date.now()}`, name: `${item.name} (copy)`, order: Number(item.order || 0) + 1, updatedAt: new Date().toISOString() });
-          if (action === "archive-block") item.visible = false;
-          if (action === "delete-block" && confirm("Permanently delete this team member?")) list.splice(list.indexOf(item), 1);
+          if (action === "archive-block" || action === "delete-block") {
+            item.visible = false;
+            item.updatedAt = new Date().toISOString();
+          }
           normalizeListOrder(list, "sectionId");
         } else {
           const key = `${editorState.pageId}.${target.listId || "blocks"}`;
@@ -1512,10 +2421,16 @@
       target.element.style.removeProperty("--cms-block-width");
       target.element.style.removeProperty("--cms-block-min-height");
       target.element.style.removeProperty("--cms-image-height");
+      target.element.style.removeProperty("--cms-col-span");
+      target.element.style.removeProperty("--cms-row-span");
       target.element.style.removeProperty("--cms-x");
       target.element.style.removeProperty("--cms-y");
       target.element.style.width = "";
       target.element.style.minHeight = "";
+      target.element.style.flexBasis = "";
+      target.element.style.maxWidth = "";
+      target.element.style.gridColumn = "";
+      target.element.style.gridRow = "";
       target.element.style.transform = "";
       toast("Size reset.", "success");
     } catch (error) {
@@ -1540,9 +2455,62 @@
     }
   }
 
+  function resizeSideFromPoint(element, x, y) {
+    if (!element || !isResizableBlock(element)) return "";
+    const rect = element.getBoundingClientRect();
+    const edge = 12;
+    const nearRight = Math.abs(x - rect.right) <= edge && y >= rect.top && y <= rect.bottom;
+    const nearBottom = Math.abs(y - rect.bottom) <= edge && x >= rect.left && x <= rect.right;
+    if (nearRight && nearBottom) return "bottom-right";
+    if (nearRight) return "right";
+    if (nearBottom) return "bottom";
+    return "";
+  }
+
+  function blockTargetFromEvent(event) {
+    const block = event.target?.closest?.("[data-cms-block-id],.news-card,.researcher-card,.pi-profile,.project-table tbody tr,.slide,.partner-logo-link,.proof-card,.site-card,.education-card,.research-card");
+    if (!block || isCmsChrome(block) || isSiteNavigationChrome(block)) return null;
+    return Array.from(editorState.targets.values()).find((target) => target.type === "block" && target.element === block) || targetFromBlockElement(block);
+  }
+
+  function updateDirectManipulationCursor(event) {
+    if (!readSession() || editorState.mode === "preview" || editorState.isDragging || editorState.isResizing || isCmsChrome(event.target)) return;
+    const target = blockTargetFromEvent(event);
+    const side = target?.canResize ? resizeSideFromPoint(target.element, event.clientX, event.clientY) : "";
+    document.documentElement.classList.toggle("salsav-cms-edge-ready", Boolean(side));
+    document.documentElement.dataset.cmsResizeSide = side || "";
+  }
+
+  function clearPendingDrag() {
+    if (!editorState.pendingDrag) return;
+    document.removeEventListener("pointermove", editorState.pendingDrag.onMove, true);
+    document.removeEventListener("pointerup", editorState.pendingDrag.onUp, true);
+    editorState.pendingDrag = null;
+  }
+
+  function setupDirectDrag(target, event) {
+    if (!target?.canDrag || event.button !== 0 || event.target.closest("[data-cms-collection-field],[data-cms-key],img,input,textarea,select,button")) return;
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startEvent = event;
+    const onMove = (moveEvent) => {
+      const distance = Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY);
+      if (distance < 9) return;
+      clearPendingDrag();
+      startDrag(target, startEvent);
+      dragMove(moveEvent);
+    };
+    const onUp = () => clearPendingDrag();
+    editorState.pendingDrag = { onMove, onUp };
+    document.addEventListener("pointermove", onMove, true);
+    document.addEventListener("pointerup", onUp, true);
+  }
+
   function bindPageEvents() {
     document.addEventListener("mousemove", (event) => {
       if (!readSession() || editorState.isDragging || editorState.isResizing || editorState.mode === "preview" || isCmsChrome(event.target)) return;
+      updateDirectManipulationCursor(event);
+      placeImageChip(imageInfoFromElement(event.target));
       const target = getTargetFromPoint(event.clientX, event.clientY);
       const id = target ? target.id : null;
       if (id !== editorState.hoveredTargetId) {
@@ -1551,14 +2519,28 @@
       }
     }, true);
 
+    document.addEventListener("pointerdown", (event) => {
+      if (!readSession() || editorState.mode === "preview" || isCmsChrome(event.target) || editorState.inline) return;
+      const target = blockTargetFromEvent(event);
+      if (!target) return;
+      const side = target.canResize ? resizeSideFromPoint(target.element, event.clientX, event.clientY) : "";
+      if (side) {
+        selectTarget(target.id);
+        startResize(target, event, side);
+        return;
+      }
+      setupDirectDrag(target, event);
+    }, true);
+
     document.addEventListener("click", (event) => {
       if (!readSession() || editorState.mode === "preview" || isCmsChrome(event.target)) return;
+      closeImagePopover();
       const target = getTargetFromPoint(event.clientX, event.clientY);
       if (!target) return;
       event.preventDefault();
       event.stopPropagation();
       selectTarget(target.id);
-      if (editorState.mode === "text") openRichTextEditor(target);
+      if (editorState.mode === "text") startInlineEditor(target);
     }, true);
 
     editorState.actionLayer.addEventListener("pointerdown", (event) => {
@@ -1587,6 +2569,8 @@
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
+        closeInlineEditor();
+        closeImagePopover();
         closeRichEditor();
         document.querySelector(".salsav-cms-live-block-modal")?.classList.remove("salsav-cms-modal-open");
         editorState.selectedTargetId = null;
@@ -1598,6 +2582,7 @@
       }
     });
 
+    document.addEventListener("selectionchange", updateFormatToolbar);
     window.addEventListener("scroll", scheduleOverlay, { passive: true });
     window.addEventListener("resize", () => {
       buildTargetRegistry();
@@ -1611,13 +2596,36 @@
   function init() {
     if (!readSession()) return;
     editorState.pageId = pageId();
-    editorState.content = ensureContent(window.SALSAV_CMS_CONTENT || null);
+    const initialContent = window.SALSAV_CMS_CONTENT || null;
+    editorState.seedMerged = Boolean(initialContent && initialContent.__seedMerged);
+    editorState.content = ensureContent(initialContent);
+    editorState.baseContent = ensureContent(deepClone(editorState.content));
+    editorState.history = [{ label: "Start", content: snapshotContent() }];
+    editorState.historyIndex = 0;
     document.documentElement.classList.add("salsav-cms-admin");
     ensureOverlayLayer();
     ensureToolbar();
     buildTargetRegistry();
     bindPageEvents();
+    startBackgroundSync();
+    setSyncStatus("idle", "Ready");
     setMode("text");
+    if (editorState.seedMerged) {
+      queueSeedSync();
+    }
+  }
+
+  function queueSeedSync() {
+    if (editorState.seedSyncQueued || !readSession()) return;
+    editorState.seedSyncQueued = true;
+    queueAudit({
+      type: "seed_imported",
+      entityType: "site",
+      entityId: "salsav_site_content",
+      label: "Initial site content"
+    });
+    markDirty("Syncing initial content");
+    flushSync().catch(() => {});
   }
 
   window.SALSAVLiveEditor = {
@@ -1646,9 +2654,18 @@
 
   window.addEventListener("salsav:cms-hydrated", (event) => {
     editorState.pageId = event.detail.pageId || pageId();
-    editorState.content = ensureContent(event.detail.content || editorState.content);
+    const hydratedContent = event.detail.content || editorState.content;
+    editorState.seedMerged = Boolean(hydratedContent && hydratedContent.__seedMerged);
+    editorState.content = ensureContent(hydratedContent);
+    editorState.baseContent = ensureContent(deepClone(editorState.content));
+    if (!editorState.history.length) {
+      editorState.history = [{ label: "Start", content: snapshotContent() }];
+      editorState.historyIndex = 0;
+    }
     document.querySelector(".salsav-cms-page-chip")?.replaceChildren(document.createTextNode(editorState.pageId));
     buildTargetRegistry();
+    updateDockState();
+    if (editorState.seedMerged) queueSeedSync();
   });
 
   window.addEventListener("salsav:live-layout-applied", () => {

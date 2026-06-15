@@ -22,6 +22,15 @@
     })[char]);
   }
 
+  function richText(value) {
+    const text = String(value == null ? "" : value);
+    if (!/<\/?[a-z][\s>/]/i.test(text)) return escapeHtml(text);
+    if (window.SALSAVCMSCore && typeof window.SALSAVCMSCore.sanitizeHtml === "function") {
+      return window.SALSAVCMSCore.sanitizeHtml(text);
+    }
+    return escapeHtml(text);
+  }
+
   function safeUrl(value, fallback) {
     const url = String(value || "").trim();
     if (!url) return fallback || "#";
@@ -98,18 +107,18 @@
       const target = article.openInNewTab === false ? "" : ' target="_blank" rel="noopener noreferrer"';
       const image = safeUrl(article.imageSrc, fallbackImage);
       return `
-        <a href="${escapeHtml(href)}"${target} class="news-card" data-category="${escapeHtml(article.category)}" data-cms-block-id="${escapeHtml(article.id)}" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles">
+        <a href="${escapeHtml(href)}"${target} class="news-card" data-category="${escapeHtml(article.category)}" data-cms-block-id="${escapeHtml(article.id)}" data-cms-block-type="newsArticle" data-cms-parent-canvas="news.articles" data-cms-link-field="url">
           <div class="news-image-wrapper">
-            <img src="${escapeHtml(image)}" alt="${escapeHtml(article.imageAlt || `Preview of ${article.title || "SALSAV news"}`)}" loading="lazy" onerror="this.onerror=null;this.src='${fallbackImage}';">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(article.imageAlt || `Preview of ${article.title || "SALSAV news"}`)}" loading="lazy" onerror="this.onerror=null;this.src='${fallbackImage}';" data-cms-image-field="imageSrc" data-cms-image-alt-field="imageAlt">
           </div>
           <div class="news-card-content">
-            <span class="tag">${escapeHtml(article.category)}</span>
-            <h3>${escapeHtml(article.title)}</h3>
+            <span class="tag" data-cms-collection-field="category" data-cms-field-label="Category">${escapeHtml(article.category)}</span>
+            <h3 data-cms-collection-field="title" data-cms-field-label="Headline">${richText(article.title)}</h3>
             <div class="news-card-meta">
-              <span>${escapeHtml(article.source)}</span>
-              <span>${escapeHtml(article.displayDate || article.date)}</span>
+              <span data-cms-collection-field="source" data-cms-field-label="Source">${escapeHtml(article.source)}</span>
+              <span data-cms-collection-field="displayDate" data-cms-field-label="Date">${escapeHtml(article.displayDate || article.date)}</span>
             </div>
-            <p>${escapeHtml(article.description)}</p>
+            <p data-cms-collection-field="description" data-cms-field-label="Summary">${richText(article.description)}</p>
           </div>
         </a>`;
     }).join("");
@@ -126,21 +135,21 @@
     const image = safeUrl(member.imageSrc, fallbackImage);
     if (isPi) {
       return `
-        <a href="${escapeHtml(href)}"${target} class="pi-profile" data-cms-block-id="${escapeHtml(member.id)}" data-cms-block-type="teamMember" data-cms-parent-canvas="team.principal_investigator">
-          <div class="pi-image"><img src="${escapeHtml(image)}" alt="${escapeHtml(member.imageAlt || `Photo of ${member.name}`)}" onerror="this.onerror=null;this.src='${fallbackImage}';"></div>
+        <a href="${escapeHtml(href)}"${target} class="pi-profile" data-cms-block-id="${escapeHtml(member.id)}" data-cms-block-type="teamMember" data-cms-parent-canvas="team.principal_investigator" data-cms-link-field="profileUrl">
+          <div class="pi-image"><img src="${escapeHtml(image)}" alt="${escapeHtml(member.imageAlt || `Photo of ${member.name}`)}" onerror="this.onerror=null;this.src='${fallbackImage}';" data-cms-image-field="imageSrc" data-cms-image-alt-field="imageAlt"></div>
           <div class="pi-details">
-            <h3>${escapeHtml(member.name)}</h3>
-            <p class="pi-title">${escapeHtml(member.title)}</p>
-            <p>${escapeHtml(member.description)}</p>
+            <h3 data-cms-collection-field="name" data-cms-field-label="Name">${richText(member.name)}</h3>
+            <p class="pi-title" data-cms-collection-field="title" data-cms-field-label="Role">${richText(member.title)}</p>
+            <p data-cms-collection-field="description" data-cms-field-label="Bio">${richText(member.description)}</p>
           </div>
         </a>`;
     }
     return `
-      <a href="${escapeHtml(href)}"${target} class="researcher-card" data-cms-block-id="${escapeHtml(member.id)}" data-cms-block-type="teamMember" data-cms-parent-canvas="team.${escapeHtml(member.sectionId || "key_contributors")}">
-        <div class="researcher-image-container"><img src="${escapeHtml(image)}" alt="${escapeHtml(member.imageAlt || `Photo of ${member.name}`)}" onerror="this.onerror=null;this.src='${fallbackImage}';"></div>
-        <h4>${escapeHtml(member.name)}</h4>
-        <p class="researcher-title">${escapeHtml(member.title)}</p>
-        <p class="researcher-description">${escapeHtml(member.description)}</p>
+      <a href="${escapeHtml(href)}"${target} class="researcher-card" data-cms-block-id="${escapeHtml(member.id)}" data-cms-block-type="teamMember" data-cms-parent-canvas="team.${escapeHtml(member.sectionId || "key_contributors")}" data-cms-link-field="profileUrl">
+        <div class="researcher-image-container"><img src="${escapeHtml(image)}" alt="${escapeHtml(member.imageAlt || `Photo of ${member.name}`)}" onerror="this.onerror=null;this.src='${fallbackImage}';" data-cms-image-field="imageSrc" data-cms-image-alt-field="imageAlt"></div>
+        <h4 data-cms-collection-field="name" data-cms-field-label="Name">${richText(member.name)}</h4>
+        <p class="researcher-title" data-cms-collection-field="title" data-cms-field-label="Role">${richText(member.title)}</p>
+        <p class="researcher-description" data-cms-collection-field="description" data-cms-field-label="Bio">${richText(member.description)}</p>
       </a>`;
   }
 
@@ -234,13 +243,29 @@
       if (!override) return;
       hasLayout = true;
       if (override.canvasId && !block.getAttribute("data-cms-parent-canvas")) block.setAttribute("data-cms-parent-canvas", override.canvasId);
-      if (Number.isFinite(Number(override.gridColumn))) block.style.setProperty("--cms-grid-column", String(Math.max(1, Number(override.gridColumn))));
-      if (Number.isFinite(Number(override.gridRow))) block.style.setProperty("--cms-grid-row", String(Math.max(1, Number(override.gridRow))));
-      if (Number.isFinite(Number(override.colSpan))) block.style.setProperty("--cms-col-span", String(Math.max(1, Number(override.colSpan))));
-      if (Number.isFinite(Number(override.rowSpan))) block.style.setProperty("--cms-row-span", String(Math.max(1, Number(override.rowSpan))));
+      if (override.gridColumn !== null && override.gridColumn !== "" && Number.isFinite(Number(override.gridColumn))) block.style.setProperty("--cms-grid-column", String(Math.max(1, Number(override.gridColumn))));
+      if (override.gridRow !== null && override.gridRow !== "" && Number.isFinite(Number(override.gridRow))) block.style.setProperty("--cms-grid-row", String(Math.max(1, Number(override.gridRow))));
+      if (override.colSpan !== null && override.colSpan !== "" && Number.isFinite(Number(override.colSpan))) block.style.setProperty("--cms-col-span", String(Math.max(1, Number(override.colSpan))));
+      if (override.rowSpan !== null && override.rowSpan !== "" && Number.isFinite(Number(override.rowSpan))) block.style.setProperty("--cms-row-span", String(Math.max(1, Number(override.rowSpan))));
       if (Number.isFinite(Number(override.x))) block.style.setProperty("--cms-x", `${Number(override.x)}px`);
       if (Number.isFinite(Number(override.y))) block.style.setProperty("--cms-y", `${Number(override.y)}px`);
-      if (override.width) {
+      if (override.flexBasis) {
+        block.style.flexBasis = override.flexBasis;
+        block.style.maxWidth = override.flexBasis;
+      }
+      if (override.colSpan !== null && override.colSpan !== "" && Number.isFinite(Number(override.colSpan))) {
+        const parent = block.parentElement;
+        const columns = Math.max(1, Math.min(12, Number(parent?.getAttribute("data-cms-grid") || 12) || 12));
+        if (parent && getComputedStyle(parent).display.includes("grid")) {
+          parent.classList.add("salsav-cms-managed-grid");
+          parent.style.setProperty("--cms-grid-columns", String(columns));
+        }
+        block.style.gridColumn = `span ${Math.max(1, Math.min(columns, Number(override.colSpan)))}`;
+      }
+      if (override.rowSpan !== null && override.rowSpan !== "" && Number.isFinite(Number(override.rowSpan))) {
+        block.style.gridRow = `span ${Math.max(1, Number(override.rowSpan))}`;
+      }
+      if (override.width && !(override.colSpan !== null && override.colSpan !== "" && Number.isFinite(Number(override.colSpan)))) {
         block.style.setProperty("--cms-block-width", override.width);
         block.style.width = override.width;
       }

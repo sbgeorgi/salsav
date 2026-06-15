@@ -9,8 +9,34 @@
   --cms-block-width: auto;
   --cms-block-min-height: auto;
   --cms-image-height: auto;
+  --cms-col-span: 4;
   --cms-x: 0px;
   --cms-y: 0px;
+}
+
+@media (min-width: 761px) {
+  html.salsav-cms-admin .salsav-cms-managed-grid,
+  html.salsav-cms-has-layout .salsav-cms-managed-grid {
+    display: grid !important;
+    grid-template-columns: repeat(var(--cms-grid-columns, 12), minmax(0, 1fr)) !important;
+    align-items: stretch;
+  }
+
+  html.salsav-cms-admin .salsav-cms-managed-grid > [data-cms-block-id],
+  html.salsav-cms-has-layout .salsav-cms-managed-grid > [data-cms-block-id] {
+    grid-column: span var(--cms-col-span, 4) !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .salsav-cms-managed-grid > [data-cms-block-id] {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
 }
 
 .salsav-cms-toolbar {
@@ -909,18 +935,371 @@ html.salsav-cms-preview .salsav-cms-overlay-layer {
   display: none;
 }
 
+:root {
+  --cms-glass-bg: rgba(255, 255, 255, 0.72);
+  --cms-glass-strong: rgba(255, 255, 255, 0.88);
+  --cms-glass-border: rgba(26, 61, 52, 0.16);
+  --cms-ink: #17372d;
+  --cms-muted-ink: #5c7068;
+  --cms-accent-warm: #e87a24;
+  --cms-accent-cool: #2f8f83;
+  --cms-danger: #dc2626;
+  --cms-shadow-soft: 0 18px 50px rgba(21, 46, 39, 0.18);
+  --cms-shadow-tight: 0 10px 26px rgba(21, 46, 39, 0.16);
+}
+
+.salsav-cms-toolbar {
+  left: 50%;
+  bottom: max(1.15rem, env(safe-area-inset-bottom));
+  gap: 0.38rem;
+  width: auto;
+  max-width: min(calc(100vw - 1.25rem), 980px);
+  min-height: 3.15rem;
+  padding: 0.42rem;
+  color: var(--cms-ink);
+  background: var(--cms-glass-bg);
+  border: 1px solid var(--cms-glass-border);
+  border-radius: 999px;
+  box-shadow: var(--cms-shadow-soft);
+  backdrop-filter: blur(22px) saturate(1.28);
+  -webkit-backdrop-filter: blur(22px) saturate(1.28);
+}
+
+.salsav-cms-toolbar-title {
+  padding: 0 0.45rem 0 0.55rem;
+  color: var(--cms-ink);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.salsav-cms-sync-status {
+  min-width: 4rem;
+  padding-inline: 0.45rem;
+  color: var(--cms-muted-ink);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.salsav-cms-toolbar[data-sync-status="saving"] .salsav-cms-sync-status,
+.salsav-cms-toolbar[data-sync-status="dirty"] .salsav-cms-sync-status {
+  color: var(--cms-accent-warm);
+}
+
+.salsav-cms-toolbar[data-sync-status="saved"] .salsav-cms-sync-status {
+  color: var(--cms-accent-cool);
+}
+
+.salsav-cms-toolbar[data-sync-status="error"] .salsav-cms-sync-status {
+  color: var(--cms-danger);
+}
+
+.salsav-cms-button,
+.salsav-cms-icon-button,
+.salsav-cms-mini-button,
+.salsav-cms-mini-select,
+.salsav-cms-format-toolbar button {
+  min-height: 2.28rem;
+  color: var(--cms-ink);
+  background: rgba(255, 255, 255, 0.54);
+  border: 1px solid rgba(26, 61, 52, 0.14);
+  border-radius: 999px;
+  box-shadow: none;
+  transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.salsav-cms-button:hover,
+.salsav-cms-icon-button:hover,
+.salsav-cms-mini-button:hover,
+.salsav-cms-format-toolbar button:hover {
+  color: var(--cms-ink);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(47, 143, 131, 0.35);
+  transform: translateY(-1px);
+}
+
+.salsav-cms-button:disabled,
+.salsav-cms-icon-button:disabled {
+  opacity: 0.42;
+  cursor: default;
+  transform: none;
+}
+
+.salsav-cms-button-primary,
+.salsav-cms-button-active,
+.salsav-cms-mode-active,
+.salsav-cms-sync-button {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--cms-accent-cool), #3aa56f);
+  border-color: rgba(47, 143, 131, 0.42);
+}
+
+.salsav-cms-dock-add {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--cms-accent-warm), #d45f1a);
+  border-color: rgba(232, 122, 36, 0.42);
+}
+
+.salsav-cms-icon-button {
+  width: auto;
+  min-width: 2.28rem;
+  padding: 0 0.7rem;
+  font-size: 0.76rem;
+}
+
+.salsav-cms-secondary-action {
+  color: var(--cms-muted-ink);
+}
+
+html.salsav-cms-editing [data-cms-key],
+html.salsav-cms-editing [data-cms-collection-field],
+html.salsav-cms-editing [data-cms-attr-alt],
+html.salsav-cms-editing [data-cms-attr-title],
+html.salsav-cms-editing [data-cms-attr-aria-label],
+html.salsav-cms-editing [data-cms-attr-placeholder],
+html.salsav-cms-editing [data-cms-attr-content],
+html.salsav-cms-editing [data-cms-attr-src] {
+  outline: 0;
+  cursor: text;
+}
+
+html.salsav-cms-editing [data-cms-key]:hover,
+html.salsav-cms-editing [data-cms-collection-field]:hover {
+  box-shadow: 0 0 0 4px rgba(232, 122, 36, 0.13);
+  border-radius: 6px;
+}
+
+.salsav-cms-inline-active {
+  outline: 2px solid rgba(232, 122, 36, 0.78) !important;
+  outline-offset: 5px !important;
+  border-radius: 7px;
+  cursor: text !important;
+}
+
+.salsav-cms-inline-active:focus {
+  outline: 2px solid rgba(47, 143, 131, 0.9) !important;
+  box-shadow: 0 0 0 6px rgba(47, 143, 131, 0.13);
+}
+
+.salsav-cms-format-toolbar,
+.salsav-cms-image-popover,
+.salsav-cms-block-actions {
+  position: fixed;
+  z-index: 2147483200;
+  color: var(--cms-ink);
+  background: var(--cms-glass-strong);
+  border: 1px solid var(--cms-glass-border);
+  border-radius: 999px;
+  box-shadow: var(--cms-shadow-tight);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+}
+
+.salsav-cms-format-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.24rem;
+  max-width: min(96vw, 42rem);
+  padding: 0.28rem;
+  border-radius: 18px;
+}
+
+.salsav-cms-format-toolbar[hidden],
+.salsav-cms-image-popover[hidden],
+.salsav-cms-image-chip[hidden] {
+  display: none;
+}
+
+.salsav-cms-format-toolbar button {
+  min-width: 2.1rem;
+  padding: 0 0.62rem;
+  font-size: 0.78rem;
+}
+
+.salsav-cms-link-form {
+  margin: 0;
+}
+
+.salsav-cms-link-form input,
+.salsav-cms-image-popover input {
+  width: min(250px, 72vw);
+  min-height: 2.25rem;
+  padding: 0 0.85rem;
+  color: var(--cms-ink);
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(47, 143, 131, 0.22);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.86rem;
+  outline: none;
+}
+
+.salsav-cms-image-chip {
+  position: fixed;
+  z-index: 2147483190;
+  min-height: 2.1rem;
+  padding: 0 0.7rem;
+  color: #ffffff;
+  background: rgba(23, 55, 45, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  box-shadow: var(--cms-shadow-tight);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.salsav-cms-image-popover {
+  padding: 0.35rem;
+  border-radius: 18px;
+}
+
+.salsav-cms-section-add,
+.salsav-cms-card-trash,
+.salsav-cms-card-move {
+  position: absolute;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  box-shadow: var(--cms-shadow-tight);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.salsav-cms-section-add {
+  top: -0.75rem;
+  right: -0.25rem;
+  width: 2.55rem;
+  height: 2.55rem;
+  color: #ffffff;
+  background: rgba(47, 143, 131, 0.9);
+  border-radius: 50%;
+}
+
+.salsav-cms-card-trash {
+  top: 0.55rem;
+  right: 0.55rem;
+  min-height: 2rem;
+  padding: 0 0.65rem;
+  color: #ffffff;
+  background: rgba(220, 38, 38, 0.9);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  opacity: 0;
+  transform: translateY(-2px);
+}
+
+.salsav-cms-card-move {
+  top: 0.55rem;
+  left: 0.55rem;
+  min-height: 2rem;
+  padding: 0 0.72rem;
+  color: #ffffff;
+  background: rgba(23, 55, 45, 0.84);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  opacity: 0;
+  transform: translateY(-2px);
+  cursor: grab;
+}
+
+.salsav-cms-card-move:active {
+  cursor: grabbing;
+}
+
+[data-cms-block-type="teamMember"]:hover > .salsav-cms-card-trash,
+[data-cms-block-type="newsArticle"]:hover > .salsav-cms-card-trash,
+[data-cms-block-id]:hover > .salsav-cms-card-move,
+.salsav-cms-card-trash:focus-visible,
+.salsav-cms-card-move:focus-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.salsav-cms-section-add:hover,
+.salsav-cms-card-trash:hover,
+.salsav-cms-card-move:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.salsav-cms-hover-box {
+  border: 1.5px solid rgba(47, 143, 131, 0.72);
+  background: rgba(47, 143, 131, 0.07);
+  box-shadow: 0 0 0 4px rgba(47, 143, 131, 0.08);
+}
+
+.salsav-cms-selected-box {
+  border: 2px solid rgba(232, 122, 36, 0.9);
+  background: rgba(232, 122, 36, 0.08);
+  box-shadow: 0 0 0 5px rgba(232, 122, 36, 0.13), var(--cms-shadow-tight);
+}
+
+.salsav-cms-overlay-label {
+  color: #ffffff;
+  background: rgba(23, 55, 45, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.salsav-cms-block-actions {
+  padding: 0.3rem;
+  gap: 0.3rem;
+  max-width: min(92vw, 680px);
+}
+
+.salsav-cms-resize-handle {
+  display: none !important;
+}
+
+html.salsav-cms-edge-ready,
+html.salsav-cms-edge-ready * {
+  cursor: ew-resize !important;
+}
+
+html.salsav-cms-edge-ready[data-cms-resize-side="bottom"],
+html.salsav-cms-edge-ready[data-cms-resize-side="bottom"] * {
+  cursor: ns-resize !important;
+}
+
+html.salsav-cms-edge-ready[data-cms-resize-side="bottom-right"],
+html.salsav-cms-edge-ready[data-cms-resize-side="bottom-right"] * {
+  cursor: nwse-resize !important;
+}
+
+html.salsav-cms-preview .salsav-cms-section-add,
+html.salsav-cms-preview .salsav-cms-card-trash,
+html.salsav-cms-preview .salsav-cms-card-move,
+html.salsav-cms-preview .salsav-cms-format-toolbar,
+html.salsav-cms-preview .salsav-cms-image-chip,
+html.salsav-cms-preview .salsav-cms-image-popover {
+  display: none !important;
+}
+
 @media (max-width: 760px) {
   .salsav-cms-toolbar {
-    left: 0.75rem;
-    right: 0.75rem;
+    left: 50%;
+    right: auto;
     bottom: max(0.75rem, env(safe-area-inset-bottom));
-    width: auto;
+    width: min(calc(100vw - 1rem), 620px);
     flex-wrap: wrap;
-    transform: none;
+    justify-content: center;
+    border-radius: 22px;
+    transform: translateX(-50%);
   }
 
   .salsav-cms-toolbar-title {
-    width: 100%;
+    width: auto;
   }
 
   .salsav-cms-editor-panel {
