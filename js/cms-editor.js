@@ -336,7 +336,7 @@
 
   function syncErrorMessage(error) {
     const text = String(error?.message || "");
-    if (/429|rate/i.test(text)) return "Pantry is busy, retrying...";
+    if (/429|rate|cors|failed to fetch/i.test(text)) return "Pantry is busy, retrying...";
     return "Network error, retrying...";
   }
 
@@ -383,7 +383,13 @@
         const latest = ensureContent(await window.SALSAVPantry.getContent());
         const merged = mergeContentForSync(latest, localSnapshot);
         await window.SALSAVPantry.saveContent(merged);
-        await Promise.all(audits.map((event) => window.SALSAVPantry.appendAudit(event).catch(() => {})));
+        if (audits.length) {
+          if (typeof window.SALSAVPantry.appendAuditEvents === "function") {
+            await window.SALSAVPantry.appendAuditEvents(audits).catch(() => {});
+          } else {
+            await Promise.all(audits.map((event) => window.SALSAVPantry.appendAudit(event).catch(() => {})));
+          }
+        }
         editorState.baseContent = ensureContent(deepClone(merged));
         if (editorState.changeId === syncChangeId) {
           editorState.content = ensureContent(deepClone(merged));
@@ -400,7 +406,7 @@
       } catch (error) {
         editorState.pendingAudits.unshift(...audits);
         editorState.dirty = true;
-        const rateLimited = /429|rate/i.test(String(error?.message || ""));
+        const rateLimited = /429|rate|cors|failed to fetch/i.test(String(error?.message || ""));
         const minimumBackoff = rateLimited ? 30000 : 5000;
         editorState.syncBackoffMs = editorState.syncBackoffMs ? Math.min(editorState.syncBackoffMs * 2, 120000) : minimumBackoff;
         editorState.syncBackoffMs = Math.max(editorState.syncBackoffMs, minimumBackoff);

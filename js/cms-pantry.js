@@ -2,6 +2,49 @@
   const config = window.SALSAV_CMS_CONFIG || {};
   const baskets = config.baskets || {};
   let seedContentPromise = null;
+  const basketCooldowns = new Map();
+  const cooldownStorageKey = `${config.sessionKey || "salsav_cms"}_pantry_cooldowns`;
+
+  function readStoredCooldowns() {
+    try {
+      return JSON.parse(sessionStorage.getItem(cooldownStorageKey) || "{}") || {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writeStoredCooldown(basketName, until) {
+    try {
+      const stored = readStoredCooldowns();
+      stored[basketName] = until;
+      sessionStorage.setItem(cooldownStorageKey, JSON.stringify(stored));
+    } catch (error) {
+      // Session storage is best-effort only.
+    }
+  }
+
+  function cooldownMsForError(errorOrStatus) {
+    const text = String(errorOrStatus?.message || errorOrStatus || "");
+    if (/429|too many|rate/i.test(text)) return 120000;
+    if (/failed to fetch|cors|network|temporarily unavailable/i.test(text)) return 45000;
+    return 15000;
+  }
+
+  function markBasketCooldown(basketName, errorOrStatus) {
+    const ms = cooldownMsForError(errorOrStatus);
+    const until = Date.now() + ms;
+    basketCooldowns.set(basketName, until);
+    writeStoredCooldown(basketName, until);
+    return ms;
+  }
+
+  function assertBasketReady(basketName) {
+    const until = Math.max(basketCooldowns.get(basketName) || 0, Number(readStoredCooldowns()[basketName] || 0));
+    if (Date.now() < until) {
+      const seconds = Math.max(1, Math.ceil((until - Date.now()) / 1000));
+      throw new Error(`Pantry basket "${basketName}" is rate limited; retrying in ${seconds}s.`);
+    }
+  }
 
   function cloneWithoutMetadata(value) {
     if (!value || typeof value !== "object") return value;
@@ -20,15 +63,18 @@
   }
 
   async function requestBasket(basketName, options) {
+    assertBasketReady(basketName);
     let response;
     try {
       response = await fetch(basketUrl(basketName), options);
     } catch (error) {
-      throw new Error(`Unable to reach Pantry basket "${basketName}": ${error.message}`);
+      markBasketCooldown(basketName, error);
+      throw new Error(`Unable to reach Pantry basket "${basketName}" because Pantry is rate limited or blocked by CORS. ${error.message}`);
     }
 
     if (!response.ok) {
       const text = await response.text().catch(() => "");
+      if (response.status === 429) markBasketCooldown(basketName, `${response.status} ${text || response.statusText}`);
       throw new Error(`Pantry basket "${basketName}" returned ${response.status}: ${text || response.statusText}`);
     }
 
@@ -194,15 +240,21 @@
     return saveBasket(baskets.audit, nextPayload);
   }
 
-  async function appendAudit(event) {
-    const audit = await getAudit();
+  async function appendAuditEvents(eventsToAppend) {
+    const nextEvents = (Array.isArray(eventsToAppend) ? eventsToAppend : [eventsToAppend]).filter(Boolean);
+    if (!nextEvents.length) return null;
+    const audit = await getBasket(baskets.audit);
     const events = Array.isArray(audit.events) ? audit.events : [];
-    events.push({
+    nextEvents.forEach((event) => events.push({
       id: `audit-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       at: new Date().toISOString(),
       ...(event || {})
-    });
+    }));
     return saveAudit({ ...audit, events: events.slice(-300) });
+  }
+
+  async function appendAudit(event) {
+    return appendAuditEvents([event]);
   }
 
   async function getDrafts() {
@@ -228,6 +280,7 @@
     getAudit,
     saveAudit,
     appendAudit,
+    appendAuditEvents,
     getDrafts,
     saveDrafts,
     stripMetadata: cloneWithoutMetadata
