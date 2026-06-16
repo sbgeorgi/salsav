@@ -1083,6 +1083,7 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
 
 .salsav-cms-format-toolbar,
 .salsav-cms-image-popover,
+.salsav-cms-link-popover,
 .salsav-cms-block-actions {
   position: fixed;
   z-index: 2147483200;
@@ -1107,6 +1108,7 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
 
 .salsav-cms-format-toolbar[hidden],
 .salsav-cms-image-popover[hidden],
+.salsav-cms-link-popover[hidden],
 .salsav-cms-image-chip[hidden] {
   display: none;
 }
@@ -1122,7 +1124,8 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
 }
 
 .salsav-cms-link-form input,
-.salsav-cms-image-popover input {
+.salsav-cms-image-popover input,
+.salsav-cms-link-popover input {
   width: min(250px, 72vw);
   min-height: 2.25rem;
   padding: 0 0.85rem;
@@ -1153,14 +1156,17 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
   cursor: pointer;
 }
 
-.salsav-cms-image-popover {
+.salsav-cms-image-popover,
+.salsav-cms-link-popover {
   padding: 0.35rem;
   border-radius: 18px;
 }
 
 .salsav-cms-section-add,
 .salsav-cms-card-trash,
-.salsav-cms-card-move {
+.salsav-cms-card-move,
+.salsav-cms-card-link,
+.salsav-cms-card-section {
   position: absolute;
   z-index: 20;
   display: inline-flex;
@@ -1213,22 +1219,72 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
   cursor: grab;
 }
 
+.salsav-cms-card-link {
+  top: 0.55rem;
+  left: 4.25rem;
+  min-height: 2rem;
+  padding: 0 0.72rem;
+  color: #ffffff;
+  background: rgba(47, 143, 131, 0.9);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  opacity: 0;
+  transform: translateY(-2px);
+}
+
+.salsav-cms-card-section {
+  left: 0.55rem;
+  bottom: 0.55rem;
+  gap: 0.16rem;
+  padding: 0.18rem;
+  background: rgba(7, 17, 32, 0.82);
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.salsav-cms-card-section button {
+  min-height: 1.72rem;
+  padding: 0 0.5rem;
+  color: rgba(255, 255, 255, 0.78);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.salsav-cms-card-section button:hover,
+.salsav-cms-card-section .salsav-cms-card-section-active {
+  color: #ffffff;
+  background: rgba(232, 122, 36, 0.92);
+}
+
 .salsav-cms-card-move:active {
   cursor: grabbing;
 }
 
 [data-cms-block-type="teamMember"]:hover > .salsav-cms-card-trash,
 [data-cms-block-type="newsArticle"]:hover > .salsav-cms-card-trash,
+[data-cms-block-type="teamMember"]:hover > .salsav-cms-card-link,
+[data-cms-block-type="newsArticle"]:hover > .salsav-cms-card-link,
+[data-cms-block-type="teamMember"]:hover > .salsav-cms-card-section,
 [data-cms-block-id]:hover > .salsav-cms-card-move,
 .salsav-cms-card-trash:focus-visible,
-.salsav-cms-card-move:focus-visible {
+.salsav-cms-card-move:focus-visible,
+.salsav-cms-card-link:focus-visible,
+.salsav-cms-card-section:focus-within {
   opacity: 1;
   transform: translateY(0);
 }
 
 .salsav-cms-section-add:hover,
 .salsav-cms-card-trash:hover,
-.salsav-cms-card-move:hover {
+.salsav-cms-card-move:hover,
+.salsav-cms-card-link:hover {
   transform: translateY(-1px) scale(1.02);
 }
 
@@ -1280,9 +1336,12 @@ html.salsav-cms-edge-ready[data-cms-resize-side="bottom-right"] * {
 html.salsav-cms-preview .salsav-cms-section-add,
 html.salsav-cms-preview .salsav-cms-card-trash,
 html.salsav-cms-preview .salsav-cms-card-move,
+html.salsav-cms-preview .salsav-cms-card-link,
+html.salsav-cms-preview .salsav-cms-card-section,
 html.salsav-cms-preview .salsav-cms-format-toolbar,
 html.salsav-cms-preview .salsav-cms-image-chip,
-html.salsav-cms-preview .salsav-cms-image-popover {
+html.salsav-cms-preview .salsav-cms-image-popover,
+html.salsav-cms-preview .salsav-cms-link-popover {
   display: none !important;
 }
 

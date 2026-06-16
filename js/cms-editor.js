@@ -54,6 +54,7 @@
     formatToolbar: null,
     imageChip: null,
     imagePopover: null,
+    linkPopover: null,
     raf: 0,
     drag: null,
     pendingDrag: null,
@@ -638,6 +639,32 @@
     };
   }
 
+  function linkInfoFromTarget(target) {
+    if (!target || !["teamMember", "newsArticle"].includes(target.blockType)) return null;
+    const block = target.element;
+    const collectionType = target.collectionType || collectionTypeForBlock(block);
+    const field = block.getAttribute("data-cms-link-field") || (target.blockType === "newsArticle" ? "url" : "profileUrl");
+    const link = block.matches("a") ? block : block.querySelector("a[href]") || block.closest("a[href]");
+    if (!collectionType || !field || !target.blockId || !link) return null;
+    return {
+      mode: "collection",
+      element: link,
+      block,
+      collectionType,
+      blockType: target.blockType,
+      id: target.blockId,
+      field,
+      label: fieldLabels[field] || "Link"
+    };
+  }
+
+  function currentTeamSection(target) {
+    if (target?.blockType !== "teamMember") return "";
+    const item = ensureContent(editorState.content).collections.teamMembers.find((member) => member.id === target.blockId);
+    const canvasSection = (target.element.getAttribute("data-cms-parent-canvas") || "").split(".").pop();
+    return item?.sectionId || teamSectionFromList(target.listElement) || canvasSection || "key_contributors";
+  }
+
   function hydrateRuntimeImageKeys() {
     if (!editorState.content) return;
     document.querySelectorAll("img").forEach((img) => {
@@ -650,7 +677,7 @@
   }
 
   function isCmsChrome(element) {
-    return Boolean(element && element.closest(".salsav-cms-toolbar,.salsav-cms-overlay-layer,.salsav-cms-modal,.salsav-cms-toast-tray,.salsav-cms-format-toolbar,.salsav-cms-image-chip,.salsav-cms-image-popover,.salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move"));
+    return Boolean(element && element.closest(".salsav-cms-toolbar,.salsav-cms-overlay-layer,.salsav-cms-modal,.salsav-cms-toast-tray,.salsav-cms-format-toolbar,.salsav-cms-image-chip,.salsav-cms-image-popover,.salsav-cms-link-popover,.salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move,.salsav-cms-card-link,.salsav-cms-card-section"));
   }
 
   function isSiteNavigationChrome(element) {
@@ -1055,6 +1082,7 @@
         return;
       }
       layer.append(button("Edit", "edit-block"));
+      if (linkInfoFromTarget(target)) layer.append(button("Link", "edit-link"));
       if (target.canDuplicate) layer.append(button("Duplicate", "duplicate-block"));
       if (target.canArchive) layer.append(button("Archive", "archive-block"));
       layer.append(button("Delete", "delete-block", true));
@@ -1115,6 +1143,38 @@
       select.append(option);
     });
     return select;
+  }
+
+  function teamSectionShortLabel(section) {
+    if (section.id === "principal_investigator") return "PI";
+    if (section.id === "key_contributors") return "Team";
+    if (section.id === "alumni") return "Alumni";
+    return section.label || "Move";
+  }
+
+  function teamSectionControl(target) {
+    const group = document.createElement("div");
+    group.className = "salsav-cms-card-section";
+    group.setAttribute("role", "group");
+    group.setAttribute("aria-label", "Move team member to section");
+    const current = currentTeamSection(target);
+    ensureContent(editorState.content).collections.teamSections
+      .filter((section) => section.id !== "team_summary")
+      .forEach((section) => {
+        const option = document.createElement("button");
+        option.type = "button";
+        option.textContent = teamSectionShortLabel(section);
+        option.title = `Move to ${section.label}`;
+        option.className = section.id === current ? "salsav-cms-card-section-active" : "";
+        option.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (section.id === currentTeamSection(target)) return;
+          moveTeamSection(target, section.id).catch((error) => toast(error.message || "Section move failed.", "error"));
+        });
+        group.append(option);
+      });
+    return group;
   }
 
   function setMode(mode) {
@@ -1484,6 +1544,7 @@
   }
 
   function openImagePopover(info) {
+    closeLinkPopover();
     const popover = ensureImagePopover();
     const rect = info.element.getBoundingClientRect();
     popover._imageInfo = info;
@@ -1498,6 +1559,83 @@
 
   function closeImagePopover() {
     if (editorState.imagePopover) editorState.imagePopover.hidden = true;
+  }
+
+  function ensureLinkPopover() {
+    if (editorState.linkPopover) return editorState.linkPopover;
+    const popover = document.createElement("form");
+    popover.className = "salsav-cms-link-popover";
+    popover.hidden = true;
+    popover.innerHTML = `<input type="text" inputmode="url" placeholder="Paste destination URL" aria-label="Paste destination URL">`;
+    popover.addEventListener("submit", (event) => {
+      event.preventDefault();
+      saveLinkPopover(popover, true).catch((error) => toast(error.message || "Link update failed.", "error"));
+    });
+    popover.querySelector("input").addEventListener("input", () => {
+      window.clearTimeout(popover._timer);
+      popover._timer = window.setTimeout(() => {
+        saveLinkPopover(popover, false).catch(() => {});
+      }, 520);
+    });
+    document.body.appendChild(popover);
+    editorState.linkPopover = popover;
+    return popover;
+  }
+
+  function openLinkPopover(info) {
+    if (!info) return;
+    closeImagePopover();
+    const popover = ensureLinkPopover();
+    const rect = info.element.getBoundingClientRect();
+    popover._linkInfo = info;
+    popover.hidden = false;
+    popover.style.left = `${Math.min(window.innerWidth - 300, Math.max(10, rect.left + rect.width / 2 - 150))}px`;
+    popover.style.top = `${Math.min(window.innerHeight - 74, Math.max(10, rect.top + 14))}px`;
+    const input = popover.querySelector("input");
+    input.value = info.element.getAttribute("href") || "";
+    input.focus();
+    input.select();
+  }
+
+  function closeLinkPopover() {
+    if (!editorState.linkPopover) return;
+    window.clearTimeout(editorState.linkPopover._timer);
+    editorState.linkPopover.hidden = true;
+  }
+
+  async function saveLinkPopover(popover, final) {
+    const info = popover._linkInfo;
+    if (!info) return;
+    const input = popover.querySelector("input");
+    const value = input.value.trim();
+    await applyLinkUrl(info, value, final);
+    if (final) closeLinkPopover();
+  }
+
+  async function applyLinkUrl(info, url, final) {
+    if (!isSafeUrl(url, false)) throw new Error("That link cannot be used.");
+    if (!collectionItem(editorState.content, info)) throw new Error("Refresh the page once before editing this card link.");
+    const href = url || "#";
+    info.element.setAttribute("href", href);
+    await mutateContentLocally((content) => {
+      const item = collectionItem(content, info);
+      if (!item) return;
+      item[info.field] = url;
+      if (href && href !== "#" && item.openInNewTab !== false) {
+        item.openInNewTab = true;
+        info.element.setAttribute("target", "_blank");
+        info.element.setAttribute("rel", "noopener noreferrer");
+      } else if (href === "#") {
+        info.element.removeAttribute("target");
+        info.element.removeAttribute("rel");
+      }
+      item.updatedAt = new Date().toISOString();
+    }, final ? {
+      type: info.blockType === "teamMember" ? "team_member_updated" : "news_article_updated",
+      entityType: info.blockType,
+      entityId: info.id,
+      label: info.label
+    } : null, { label: info.label, render: false, history: final, toast: final ? "Link saved." : "" });
   }
 
   async function applyImageUrl(info, url) {
@@ -1789,7 +1927,7 @@
 
   function decorateLiveChrome() {
     if (!readSession() || editorState.mode === "preview") return;
-    document.querySelectorAll(".salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move").forEach((node) => node.remove());
+    document.querySelectorAll(".salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move,.salsav-cms-card-link,.salsav-cms-card-section").forEach((node) => node.remove());
 
     if (editorState.pageId === "team") {
       document.querySelectorAll(".team-grid").forEach((grid) => {
@@ -1849,6 +1987,22 @@
     document.querySelectorAll('[data-cms-block-type="teamMember"], [data-cms-block-type="newsArticle"]').forEach((card) => {
       if (isSiteNavigationChrome(card) || !isVisible(card)) return;
       if (getComputedStyle(card).position === "static") card.style.position = "relative";
+      const target = targetFromBlockElement(card);
+      const linkInfo = linkInfoFromTarget(target);
+      if (linkInfo) {
+        const link = document.createElement("button");
+        link.type = "button";
+        link.className = "salsav-cms-card-link";
+        link.textContent = "Link";
+        link.setAttribute("aria-label", "Edit link");
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          openLinkPopover(linkInfoFromTarget(target));
+        });
+        card.append(link);
+      }
+      if (target.blockType === "teamMember") card.append(teamSectionControl(target));
       const trash = document.createElement("button");
       trash.type = "button";
       trash.className = "salsav-cms-card-trash";
@@ -1857,7 +2011,6 @@
       trash.addEventListener("click", (event) => {
         event.preventDefault();
         event.stopPropagation();
-        const target = targetFromBlockElement(card);
         archiveVisualCard(target).catch((error) => toast(error.message || "Could not remove.", "error"));
       });
       card.append(trash);
@@ -2073,6 +2226,7 @@
     event.preventDefault();
     event.stopPropagation();
     editorState.isDragging = true;
+    if (target.blockType === "teamMember") target.element.dataset.cmsOriginalSection = currentTeamSection(target);
     const rect = target.element.getBoundingClientRect();
     const placeholder = document.createElement(target.element.tagName === "TR" ? "tr" : "div");
     placeholder.className = "salsav-cms-drop-placeholder";
@@ -2094,6 +2248,7 @@
       baseY: readCssPx(target.element, "--cms-y"),
       placeholder,
       listElement: target.listElement,
+      originalSection: target.element.dataset.cmsOriginalSection || "",
       mode: target.listElement ? "reorder" : "free"
     };
     document.addEventListener("pointermove", dragMove);
@@ -2180,9 +2335,10 @@
         });
         toast("Position saved.", "success");
       } else if (drag.placeholder.parentElement) {
-        drag.placeholder.parentElement.insertBefore(drag.target.element, drag.placeholder);
+        const destinationList = drag.placeholder.parentElement;
+        destinationList.insertBefore(drag.target.element, drag.placeholder);
         drag.placeholder.remove();
-        await persistDomOrder(drag.target.listElement || drag.target.element.closest("[data-cms-list]"), drag.target);
+        await persistDomOrder(destinationList, drag.target, drag.listElement);
         toast("Order saved.", "success");
       }
     } catch (error) {
@@ -2302,10 +2458,12 @@
     return Number.isFinite(parsed) ? parsed : 0;
   }
 
-  async function persistDomOrder(list, target) {
+  async function persistDomOrder(list, target, sourceList) {
     if (!list || !target) return;
     const ids = Array.from(list.querySelectorAll(":scope > [data-cms-block-id]")).map((node) => node.getAttribute("data-cms-block-id"));
     const section = teamSectionFromList(list);
+    const sourceIds = sourceList && sourceList !== list ? Array.from(sourceList.querySelectorAll(":scope > [data-cms-block-id]")).map((node) => node.getAttribute("data-cms-block-id")) : [];
+    const sourceSection = sourceList && sourceList !== list ? teamSectionFromList(sourceList) : "";
     await saveContentPatch((content) => {
       if (target.blockType === "newsArticle") {
         ids.forEach((id, index) => {
@@ -2320,6 +2478,14 @@
             if (section) item.sectionId = section;
           }
         });
+        sourceIds.forEach((id, index) => {
+          const item = content.collections.teamMembers.find((member) => member.id === id);
+          if (item) {
+            item.order = (index + 1) * 10;
+            if (sourceSection) item.sectionId = sourceSection;
+          }
+        });
+        normalizeListOrder(content.collections.teamMembers, "sectionId");
       } else {
         const key = `${editorState.pageId}.${listIdForElement(list)}`;
         content.collections.genericBlocks[key] = ids.map((id, index) => ({
@@ -2375,6 +2541,7 @@
     if (action === "reset-size") return resetBlockSize(target);
     if (action === "reset-page-layout") return resetPageLayout();
     if (action === "move-section") return moveTeamSection(target, value);
+    if (action === "edit-link") return openLinkPopover(linkInfoFromTarget(target));
 
     try {
       await saveContentPatch((content) => {
@@ -2427,7 +2594,9 @@
       await saveContentPatch((content) => {
         const item = content.collections.teamMembers.find((member) => member.id === target.blockId);
         if (!item) return;
+        if (item.sectionId === sectionId) return;
         item.sectionId = sectionId;
+        item.order = nextOrder(content.collections.teamMembers, "sectionId", sectionId);
         item.updatedAt = new Date().toISOString();
         normalizeListOrder(content.collections.teamMembers, "sectionId");
       }, {
@@ -2570,6 +2739,7 @@
     document.addEventListener("click", (event) => {
       if (!readSession() || editorState.mode === "preview" || isCmsChrome(event.target)) return;
       closeImagePopover();
+      closeLinkPopover();
       const target = getTargetFromPoint(event.clientX, event.clientY);
       if (!target) return;
       event.preventDefault();
@@ -2606,6 +2776,7 @@
       if (event.key === "Escape") {
         closeInlineEditor();
         closeImagePopover();
+        closeLinkPopover();
         closeRichEditor();
         document.querySelector(".salsav-cms-live-block-modal")?.classList.remove("salsav-cms-modal-open");
         editorState.selectedTargetId = null;
