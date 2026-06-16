@@ -4,6 +4,19 @@
   let seedContentPromise = null;
   const basketCooldowns = new Map();
   const cooldownStorageKey = `${config.sessionKey || "salsav_cms"}_pantry_cooldowns`;
+  const contentCacheKey = `${config.localDraftKey || "salsav_cms"}_content_cache`;
+  const contentCacheAtKey = `${config.localDraftKey || "salsav_cms"}_content_cache_at`;
+  const publicContentCacheMs = 300000;
+  const adminContentCacheMs = 15000;
+
+  function hasAdminSession() {
+    try {
+      const session = JSON.parse(sessionStorage.getItem(config.sessionKey) || "null");
+      return Boolean(session && session.expiresAt && Date.now() < Number(session.expiresAt));
+    } catch (error) {
+      return false;
+    }
+  }
 
   function readStoredCooldowns() {
     try {
@@ -85,8 +98,7 @@
   async function getBasket(basketName) {
     const payload = await requestBasket(basketName, {
       method: "GET",
-      headers: { Accept: "application/json" },
-      cache: "no-store"
+      headers: { "Content-Type": "application/json" }
     });
     return cloneWithoutMetadata(payload || {});
   }
@@ -99,7 +111,6 @@
     await requestBasket(basketName, {
       method: "POST",
       headers: {
-        Accept: "application/json",
         "Content-Type": "application/json"
       },
       body: JSON.stringify(nextPayload)
@@ -131,6 +142,26 @@
       .then((payload) => payload ? normalizeContentPayload(cloneWithoutMetadata(payload)) : null)
       .catch(() => null);
     return seedContentPromise;
+  }
+
+  function readCachedContent(maxAgeMs) {
+    try {
+      const cachedAt = Number(localStorage.getItem(contentCacheAtKey) || 0);
+      if (!cachedAt || Date.now() - cachedAt > maxAgeMs) return null;
+      const raw = localStorage.getItem(contentCacheKey);
+      return raw ? normalizeContentPayload(JSON.parse(raw)) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function writeCachedContent(payload) {
+    try {
+      localStorage.setItem(contentCacheKey, JSON.stringify(cloneWithoutMetadata(payload || {})));
+      localStorage.setItem(contentCacheAtKey, String(Date.now()));
+    } catch (error) {
+      // Local cache is best-effort only.
+    }
   }
 
   function mergePlainObject(seed, remote, state) {
@@ -204,14 +235,26 @@
     return normalizeContentPayload(merged);
   }
 
-  async function getContent() {
-    const payload = normalizeContentPayload(await getBasket(baskets.content));
+  async function getContent(options = {}) {
+    const maxAgeMs = hasAdminSession() ? adminContentCacheMs : publicContentCacheMs;
+    const cached = !options.force ? readCachedContent(maxAgeMs) : null;
     const seed = await getSeedContent();
-    return mergeSeedContent(payload, seed);
+    if (cached) return mergeSeedContent(cached, seed);
+    try {
+      const payload = normalizeContentPayload(await getBasket(baskets.content));
+      writeCachedContent(payload);
+      return mergeSeedContent(payload, seed);
+    } catch (error) {
+      const fallbackCache = readCachedContent(Number.MAX_SAFE_INTEGER);
+      if (fallbackCache) return mergeSeedContent(fallbackCache, seed);
+      throw error;
+    }
   }
 
   async function saveContent(payload) {
-    return saveBasket(baskets.content, payload);
+    const saved = await saveBasket(baskets.content, payload);
+    writeCachedContent(saved);
+    return saved;
   }
 
   async function getSettings() {

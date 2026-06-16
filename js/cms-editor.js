@@ -70,6 +70,9 @@
     lastSyncErrorAt: 0,
     syncBackoffMs: 0,
     syncBackoffUntil: 0,
+    auditBackoffUntil: 0,
+    auditBackoffMs: 0,
+    lastAuditErrorAt: 0,
     changeId: 0,
     seedMerged: false,
     seedSyncQueued: false,
@@ -363,6 +366,38 @@
       pageId: editorState.pageId,
       ...event
     });
+    if (editorState.pendingAudits.length > 200) {
+      editorState.pendingAudits = editorState.pendingAudits.slice(-200);
+    }
+  }
+
+  function drainAuditEvents(events) {
+    const audits = (Array.isArray(events) ? events : []).filter(Boolean);
+    if (!audits.length || !window.SALSAVPantry) return;
+    if (editorState.auditBackoffUntil && Date.now() < editorState.auditBackoffUntil) {
+      editorState.pendingAudits.push(...audits);
+      if (editorState.pendingAudits.length > 200) editorState.pendingAudits = editorState.pendingAudits.slice(-200);
+      return;
+    }
+    const write = typeof window.SALSAVPantry.appendAuditEvents === "function"
+      ? window.SALSAVPantry.appendAuditEvents(audits)
+      : Promise.all(audits.map((event) => window.SALSAVPantry.appendAudit(event)));
+    write.then(() => {
+      editorState.auditBackoffMs = 0;
+      editorState.auditBackoffUntil = 0;
+    }).catch((error) => {
+      editorState.pendingAudits.push(...audits);
+      if (editorState.pendingAudits.length > 200) editorState.pendingAudits = editorState.pendingAudits.slice(-200);
+      const rateLimited = /429|rate|cors|failed to fetch/i.test(String(error?.message || ""));
+      const minimumBackoff = rateLimited ? 120000 : 30000;
+      editorState.auditBackoffMs = editorState.auditBackoffMs ? Math.min(editorState.auditBackoffMs * 2, 300000) : minimumBackoff;
+      editorState.auditBackoffMs = Math.max(editorState.auditBackoffMs, minimumBackoff);
+      editorState.auditBackoffUntil = Date.now() + editorState.auditBackoffMs;
+      if (!editorState.lastAuditErrorAt || Date.now() - editorState.lastAuditErrorAt > 60000) {
+        console.warn("[SALSAV CMS] Audit sync paused:", error?.message || error);
+        editorState.lastAuditErrorAt = Date.now();
+      }
+    });
   }
 
   async function flushSync(options = {}) {
@@ -380,16 +415,10 @@
     setSyncStatus("saving", "Saving");
     editorState.syncInFlight = (async () => {
       try {
-        const latest = ensureContent(await window.SALSAVPantry.getContent());
+        const latest = ensureContent(editorState.baseContent || window.SALSAV_CMS_CONTENT || {});
         const merged = mergeContentForSync(latest, localSnapshot);
         await window.SALSAVPantry.saveContent(merged);
-        if (audits.length) {
-          if (typeof window.SALSAVPantry.appendAuditEvents === "function") {
-            await window.SALSAVPantry.appendAuditEvents(audits).catch(() => {});
-          } else {
-            await Promise.all(audits.map((event) => window.SALSAVPantry.appendAudit(event).catch(() => {})));
-          }
-        }
+        if (audits.length) drainAuditEvents(audits);
         editorState.baseContent = ensureContent(deepClone(merged));
         if (editorState.changeId === syncChangeId) {
           editorState.content = ensureContent(deepClone(merged));
@@ -448,7 +477,7 @@
 
   async function loadLatest() {
     if (!window.SALSAVPantry) throw new Error("SALSAVPantry is unavailable.");
-    const latest = await window.SALSAVPantry.getContent();
+    const latest = await window.SALSAVPantry.getContent({ force: true });
     editorState.seedMerged = Boolean(latest && latest.__seedMerged);
     editorState.content = ensureContent(latest);
     editorState.baseContent = ensureContent(deepClone(editorState.content));
@@ -2623,6 +2652,9 @@
 
   function queueSeedSync() {
     if (editorState.seedSyncQueued || !readSession()) return;
+    const seedSessionKey = `${config.sessionKey || "salsav_cms"}_seed_sync_attempted`;
+    if (sessionStorage.getItem(seedSessionKey) === "true") return;
+    sessionStorage.setItem(seedSessionKey, "true");
     editorState.seedSyncQueued = true;
     queueAudit({
       type: "seed_imported",

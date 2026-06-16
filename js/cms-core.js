@@ -177,7 +177,7 @@
   async function refreshContent() {
     const nextPageId = inferPageId();
     if (!window.SALSAVPantry) throw new Error("SALSAVPantry is unavailable.");
-    const content = await window.SALSAVPantry.getContent();
+    const content = await window.SALSAVPantry.getContent({ force: true });
     applyContent(content, nextPageId);
     return content;
   }
