@@ -1,7 +1,24 @@
 (function () {
   const allowedAttr = new Set(["alt", "title", "aria-label", "placeholder", "content", "src"]);
   const allowedTags = new Set(["A", "STRONG", "B", "EM", "I", "U", "BR", "SPAN", "SUP", "SUB", "SMALL", "P", "UL", "OL", "LI", "BLOCKQUOTE"]);
-  const allowedClasses = new Set(["cms-accent", "cms-muted", "cms-highlight", "cms-small", "cms-bold", "cms-italic"]);
+  const allowedClasses = new Set([
+    "cms-accent",
+    "cms-muted",
+    "cms-highlight",
+    "cms-small",
+    "cms-bold",
+    "cms-italic",
+    "cms-font-sans",
+    "cms-font-serif",
+    "cms-font-display",
+    "cms-font-mono",
+    "cms-size-xs",
+    "cms-size-sm",
+    "cms-size-base",
+    "cms-size-lg",
+    "cms-size-xl",
+    "cms-size-2xl"
+  ]);
   const allowedProtocols = new Set(["http:", "https:", "mailto:"]);
   let seedFallbackPromise = null;
 
@@ -52,6 +69,11 @@
               }
               if (name === "href" && !isSafeUrl(value, false)) child.removeAttribute(attr.name);
               if (name === "target" && value === "_blank") child.setAttribute("rel", "noopener noreferrer");
+              if (name === "class") {
+                const kept = value.split(/\s+/).filter((className) => allowedClasses.has(className));
+                if (kept.length) child.setAttribute("class", kept.join(" "));
+                else child.removeAttribute(attr.name);
+              }
               return;
             }
             if (name === "class") {

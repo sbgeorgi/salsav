@@ -2,7 +2,9 @@
   const config = window.SALSAV_CMS_CONFIG || {};
   const modes = ["text", "move", "resize", "blocks", "preview"];
   const safeAttrs = ["alt", "title", "aria-label", "placeholder", "content", "src"];
-  const allowedRichClasses = new Set(["cms-accent", "cms-muted", "cms-highlight", "cms-small", "cms-bold", "cms-italic"]);
+  const richFontClasses = ["cms-font-sans", "cms-font-serif", "cms-font-display", "cms-font-mono"];
+  const richSizeClasses = ["cms-size-xs", "cms-size-sm", "cms-size-base", "cms-size-lg", "cms-size-xl", "cms-size-2xl"];
+  const allowedRichClasses = new Set(["cms-accent", "cms-muted", "cms-highlight", "cms-small", "cms-bold", "cms-italic", ...richFontClasses, ...richSizeClasses]);
   const allowedRichTags = new Set(["A", "STRONG", "B", "EM", "I", "U", "BR", "SPAN", "SUP", "SUB", "SMALL", "P", "UL", "OL", "LI", "BLOCKQUOTE"]);
   const fallbackImage = "static/salsa-logo.png";
   const syncIntervalMs = 3000;
@@ -32,6 +34,33 @@
     imageSrc: "Image",
     imageAlt: "Image description"
   };
+  const visualBlockSelector = [
+    "[data-cms-block-id]",
+    ".news-card",
+    ".researcher-card",
+    ".pi-profile",
+    ".project-table tbody tr",
+    ".slide",
+    ".partner-logo-link",
+    ".proof-card",
+    ".site-card",
+    ".education-card",
+    ".research-card",
+    ".content-image",
+    ".alternating-item",
+    ".alternating-item__text",
+    ".alternating-item__image",
+    ".challenge-card",
+    ".challenge-card-link",
+    ".chart-card",
+    ".school-item",
+    ".schools-row",
+    ".schools-grid",
+    ".pillar-item",
+    ".pillar-image",
+    ".video-wrapper",
+    ".map-container"
+  ].join(", ");
 
   const editorState = {
     mode: "text",
@@ -51,10 +80,13 @@
     selectedBox: null,
     dropIndicator: null,
     actionLayer: null,
+    moveHandle: null,
+    gridLayer: null,
     formatToolbar: null,
     imageChip: null,
     imagePopover: null,
     linkPopover: null,
+    formatToolbarInteracting: false,
     raf: 0,
     drag: null,
     pendingDrag: null,
@@ -677,7 +709,7 @@
   }
 
   function isCmsChrome(element) {
-    return Boolean(element && element.closest(".salsav-cms-toolbar,.salsav-cms-overlay-layer,.salsav-cms-modal,.salsav-cms-toast-tray,.salsav-cms-format-toolbar,.salsav-cms-image-chip,.salsav-cms-image-popover,.salsav-cms-link-popover,.salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move,.salsav-cms-card-link,.salsav-cms-card-section"));
+    return Boolean(element && element.closest(".salsav-cms-toolbar,.salsav-cms-overlay-layer,.salsav-cms-modal,.salsav-cms-toast-tray,.salsav-cms-format-toolbar,.salsav-cms-image-chip,.salsav-cms-image-popover,.salsav-cms-link-popover,.salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move,.salsav-cms-floating-move,.salsav-cms-card-image,.salsav-cms-card-link,.salsav-cms-card-section"));
   }
 
   function isSiteNavigationChrome(element) {
@@ -771,8 +803,11 @@
   function targetFromBlockElement(element) {
     const canvas = nearestCanvas(element);
     const canvasId = element.getAttribute("data-cms-parent-canvas") || (canvas ? ensureCanvasAttributes(canvas) : "");
-    const blockId = element.getAttribute("data-cms-block-id") || `${editorState.pageId}_${slug(element.className || element.tagName)}_${Array.from(document.querySelectorAll("[data-cms-block-id],.news-card,.researcher-card,.pi-profile")).indexOf(element) + 1}`;
+    const blockId = element.getAttribute("data-cms-block-id") || `${editorState.pageId}_${slug(element.className || element.tagName)}_${Array.from(document.querySelectorAll(visualBlockSelector)).indexOf(element) + 1}`;
     const blockType = element.getAttribute("data-cms-block-type") || inferBlockType(element);
+    if (!element.getAttribute("data-cms-block-id")) element.setAttribute("data-cms-block-id", blockId);
+    if (!element.getAttribute("data-cms-block-type")) element.setAttribute("data-cms-block-type", blockType);
+    if (canvasId && !element.getAttribute("data-cms-parent-canvas")) element.setAttribute("data-cms-parent-canvas", canvasId);
     const list = nearestList(element);
     const listType = list?.getAttribute("data-cms-list-type") || inferListType(list, blockType);
     const canGridMove = Boolean(canvasId);
@@ -818,6 +853,11 @@
     if (!element || element.matches("a.navbar-link, li, td, th, span, small, strong, em")) return false;
     if (element.closest(".navbar,.nav-menu") && !element.matches(".hero-content,.hero-text")) return false;
     return element.matches("[data-cms-block-id],.news-card,.researcher-card,.pi-profile,.site-card,.education-card,.research-card,.proof-card,.partner-logo-link,.video-wrapper,.chart-card,.content-image,.slide,h1,h2,h3,h4,h5,h6,p,.cta-button");
+  }
+
+  function applyRuntimeLayout() {
+    if (!editorState.content || !window.SALSAVLiveLayout?.applyLayout) return;
+    window.SALSAVLiveLayout.applyLayout(editorState.content);
   }
 
   function buildTargetRegistry() {
@@ -881,7 +921,7 @@
       });
     });
 
-    document.querySelectorAll("[data-cms-block-id], .news-card, .researcher-card, .pi-profile, .project-table tbody tr, .slide, .partner-logo-link, .proof-card, .site-card, .education-card, .research-card").forEach((element) => {
+    document.querySelectorAll(visualBlockSelector).forEach((element) => {
       if (!isUsableTargetElement(element) || seenElements.has(element)) return;
       seenElements.add(element);
       const target = targetFromBlockElement(element);
@@ -914,6 +954,7 @@
 
     if (editorState.selectedTargetId && !editorState.targets.has(editorState.selectedTargetId)) editorState.selectedTargetId = null;
     if (editorState.hoveredTargetId && !editorState.targets.has(editorState.hoveredTargetId)) editorState.hoveredTargetId = null;
+    applyRuntimeLayout();
     scheduleOverlay();
     decorateLiveChrome();
     return editorState.targets;
@@ -933,7 +974,7 @@
       }
     }
     if (mode === "move" || mode === "resize" || mode === "blocks") {
-      const block = element.closest("[data-cms-block-id],.news-card,.researcher-card,.pi-profile,.project-table tbody tr,.slide,.partner-logo-link,.proof-card,.site-card,.education-card,.research-card");
+      const block = element.closest(visualBlockSelector);
       if (block) {
         return Array.from(editorState.targets.values()).find((target) => target.type === "block" && target.element === block) || null;
       }
@@ -963,7 +1004,11 @@
   }
 
   function selectTarget(targetId) {
+    document.querySelectorAll(".salsav-cms-selected-live-card").forEach((node) => node.classList.remove("salsav-cms-selected-live-card"));
     editorState.selectedTargetId = targetId && editorState.targets.has(targetId) ? targetId : null;
+    const selected = editorState.selectedTargetId ? editorState.targets.get(editorState.selectedTargetId) : null;
+    const selectedBlock = selected?.type === "block" ? selected.element : selected?.element?.closest?.(visualBlockSelector);
+    if (selectedBlock && !isCmsChrome(selectedBlock) && !isSiteNavigationChrome(selectedBlock)) selectedBlock.classList.add("salsav-cms-selected-live-card");
     scheduleOverlay();
     return editorState.selectedTargetId ? editorState.targets.get(editorState.selectedTargetId) : null;
   }
@@ -973,16 +1018,29 @@
     const overlay = document.createElement("div");
     overlay.className = "salsav-cms-overlay-layer";
     overlay.innerHTML = `
+      <div class="salsav-cms-grid-layer" hidden></div>
       <div class="salsav-cms-hover-box" hidden><span class="salsav-cms-overlay-label"></span></div>
       <div class="salsav-cms-selected-box" hidden><span class="salsav-cms-overlay-label"></span></div>
       <div class="salsav-cms-drop-indicator" hidden></div>
+      <button type="button" class="salsav-cms-floating-move" hidden aria-label="Move selected block">Move</button>
       <div class="salsav-cms-block-actions" hidden></div>`;
     document.body.appendChild(overlay);
     editorState.overlay = overlay;
+    editorState.gridLayer = overlay.querySelector(".salsav-cms-grid-layer");
     editorState.hoverBox = overlay.querySelector(".salsav-cms-hover-box");
     editorState.selectedBox = overlay.querySelector(".salsav-cms-selected-box");
     editorState.dropIndicator = overlay.querySelector(".salsav-cms-drop-indicator");
+    editorState.moveHandle = overlay.querySelector(".salsav-cms-floating-move");
     editorState.actionLayer = overlay.querySelector(".salsav-cms-block-actions");
+    editorState.moveHandle?.addEventListener("pointerdown", (event) => {
+      const target = editorState.moveHandle._target;
+      if (!target || !target.canDrag) return;
+      event.preventDefault();
+      event.stopPropagation();
+      selectTarget(target.id);
+      if (editorState.inline?.element) editorState.inline.element.blur();
+      startDrag(target, event);
+    });
     return overlay;
   }
 
@@ -1009,8 +1067,80 @@
     if (label) label.textContent = targetLabel(target);
   }
 
+  function canvasForTarget(target) {
+    if (!target) return null;
+    if (target.type === "list") return target.element;
+    return target.canvasElement || nearestCanvas(target.element);
+  }
+
+  function renderGridLayer(activeTarget) {
+    const layer = editorState.gridLayer;
+    if (!layer) return;
+    const show = readSession() && editorState.mode !== "preview";
+    layer.hidden = !show;
+    layer.innerHTML = "";
+    if (!show) return;
+    const activeCanvas = canvasForTarget(activeTarget);
+    const canvases = Array.from(document.querySelectorAll("[data-cms-canvas]")).filter((canvas) => {
+      if (!isVisible(canvas) || isCmsChrome(canvas)) return false;
+      const rect = canvas.getBoundingClientRect();
+      return rect.bottom >= 0 && rect.right >= 0 && rect.top <= window.innerHeight && rect.left <= window.innerWidth;
+    });
+    canvases.slice(0, 32).forEach((canvas) => {
+      const rect = canvas.getBoundingClientRect();
+      const columns = Math.max(1, Math.min(12, Number(canvas.getAttribute("data-cms-grid") || 12) || 12));
+      const rowHeight = Math.max(8, Number(getComputedStyle(canvas).getPropertyValue("--cms-row-height").replace("px", "")) || 24);
+      const grid = document.createElement("div");
+      grid.className = `salsav-cms-grid-canvas${canvas === activeCanvas ? " salsav-cms-grid-canvas-active" : ""}`;
+      grid.style.left = `${Math.max(0, rect.left)}px`;
+      grid.style.top = `${Math.max(0, rect.top)}px`;
+      grid.style.width = `${Math.min(window.innerWidth, rect.right) - Math.max(0, rect.left)}px`;
+      grid.style.height = `${Math.min(window.innerHeight, rect.bottom) - Math.max(0, rect.top)}px`;
+      grid.style.setProperty("--cms-grid-columns", String(columns));
+      grid.style.setProperty("--cms-row-height", `${rowHeight}px`);
+      layer.append(grid);
+    });
+  }
+
   function targetLabel(target) {
     return humanTargetName(target);
+  }
+
+  function movableTargetFor(target) {
+    if (!target) return null;
+    if (target.canDrag) return target;
+    const block = target.element?.closest?.(visualBlockSelector);
+    if (!block || isCmsChrome(block) || isSiteNavigationChrome(block) || !isVisible(block)) return null;
+    const existing = Array.from(editorState.targets.values()).find((item) => item.type === "block" && item.element === block);
+    const blockTarget = existing || targetFromBlockElement(block);
+    if (blockTarget && !editorState.targets.has(blockTarget.id)) editorState.targets.set(blockTarget.id, blockTarget);
+    return blockTarget?.canDrag ? blockTarget : null;
+  }
+
+  function renderFloatingMoveHandle(target) {
+    const handle = editorState.moveHandle;
+    if (!handle) return;
+    const movable = movableTargetFor(target);
+    const hasCardMoveHandle = movable && ["teamMember", "newsArticle"].includes(movable.blockType);
+    const show = Boolean(movable && !hasCardMoveHandle && editorState.mode !== "preview" && editorState.mode !== "move" && !editorState.isDragging && !editorState.isResizing && isVisible(movable.element));
+    handle._target = show ? movable : null;
+    handle.hidden = !show;
+    if (!show) return;
+    const rect = movable.element.getBoundingClientRect();
+    handle.style.visibility = "hidden";
+    handle.style.left = "0px";
+    handle.style.top = "0px";
+    const width = Math.max(66, handle.offsetWidth || 66);
+    const height = Math.max(34, handle.offsetHeight || 34);
+    const margin = 12;
+    let left = rect.right - width;
+    let top = rect.top - height - margin;
+    if (top < 8) top = rect.bottom + margin;
+    left = clamp(left, 8, window.innerWidth - width - 8);
+    top = clamp(top, 8, window.innerHeight - height - 8);
+    handle.style.left = `${left}px`;
+    handle.style.top = `${top}px`;
+    handle.style.visibility = "";
   }
 
   function renderOverlay() {
@@ -1020,8 +1150,10 @@
     if (preview) return;
     const hovered = editorState.hoveredTargetId ? editorState.targets.get(editorState.hoveredTargetId) : null;
     const selected = editorState.selectedTargetId ? editorState.targets.get(editorState.selectedTargetId) : null;
+    renderGridLayer(selected || hovered);
     placeBox(editorState.hoverBox, hovered && hovered !== selected ? hovered : null);
     placeBox(editorState.selectedBox, selected);
+    renderFloatingMoveHandle(selected || hovered);
     renderActionLayer(selected);
   }
 
@@ -1033,10 +1165,10 @@
       layer.hidden = true;
       return;
     }
-    const rect = target.element.getBoundingClientRect();
     layer.hidden = false;
-    layer.style.left = `${Math.min(window.innerWidth - 260, Math.max(8, rect.left))}px`;
-    layer.style.top = `${Math.max(8, rect.top - 44)}px`;
+    layer.style.visibility = "hidden";
+    layer.style.left = "0px";
+    layer.style.top = "0px";
 
     if (editorState.mode === "text") {
       if (target.canTextEdit) {
@@ -1044,26 +1176,30 @@
       } else {
         layer.append(reason("Click visible copy to edit it."));
       }
+      placeActionLayer(target, "text");
       return;
     }
 
     if (editorState.mode === "move") {
       if (!target.canDrag) {
         layer.append(reason(target.type === "text" ? "This element can be edited as text only." : "This block cannot be moved safely."));
+        placeActionLayer(target, "move");
         return;
       }
       layer.append(dragHandle(target));
-      layer.append(reason(target.listElement ? "Reorder in list" : "Free move"));
-      if (target.listElement) {
+      layer.append(reason(dragModeForTarget(target) === "reorder" ? "Reorder in list" : "Snap to grid"));
+      if (dragModeForTarget(target) === "reorder" && target.listElement) {
         layer.append(button("Up", "move-up"));
         layer.append(button("Down", "move-down"));
       }
+      placeActionLayer(target, "move");
       return;
     }
 
     if (editorState.mode === "resize") {
       if (!target.canResize) {
         layer.append(reason(target.type === "text" ? "This element can be edited as text only." : "This block cannot be resized safely."));
+        placeActionLayer(target, "resize");
         return;
       }
       layer.append(resizeHandle("right"));
@@ -1071,6 +1207,7 @@
       layer.append(resizeHandle("corner"));
       layer.append(button("Reset size", "reset-size"));
       layer.append(button("Reset page layout", "reset-page-layout"));
+      placeActionLayer(target, "resize");
       return;
     }
 
@@ -1079,6 +1216,7 @@
         if (editorState.pageId === "news") layer.append(button("+ Article", "add-article"));
         else if (editorState.pageId === "team") layer.append(button("+ Team Member", "add-member"));
         else layer.append(button("+ Card", "add-generic"));
+        placeActionLayer(target, "blocks");
         return;
       }
       layer.append(button("Edit", "edit-block"));
@@ -1092,7 +1230,52 @@
       }
       if (target.blockType === "teamMember") layer.append(teamSectionSelect(target));
       layer.append(button("Reset size", "reset-size"));
+      placeActionLayer(target, "blocks");
     }
+  }
+
+  function clamp(value, min, max) {
+    if (max < min) return min;
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function placeActionLayer(target, intent) {
+    const layer = editorState.actionLayer;
+    if (!layer || !target?.element) return;
+    const rect = target.element.getBoundingClientRect();
+    const width = Math.max(72, layer.offsetWidth || 72);
+    const height = Math.max(36, layer.offsetHeight || 36);
+    const margin = 12;
+    const viewport = { width: window.innerWidth, height: window.innerHeight };
+    const bottomLeft = {
+      x: rect.left,
+      y: rect.bottom + margin,
+      name: "bottom-left"
+    };
+    const topRight = {
+      x: rect.right - width,
+      y: rect.top - height - margin,
+      name: "top-right"
+    };
+    const fallbackBottomRight = {
+      x: rect.right - width,
+      y: rect.bottom + margin,
+      name: "bottom-right"
+    };
+    const preferred = intent === "text" ? bottomLeft : topRight;
+    const fallback = intent === "text"
+      ? { x: rect.left, y: rect.top - height - margin, name: "top-left" }
+      : fallbackBottomRight;
+    const candidate = preferred.y < 8 || preferred.y + height > viewport.height - 8 ? fallback : preferred;
+    const positioned = {
+      ...candidate,
+      x: clamp(candidate.x, 8, viewport.width - width - 8),
+      y: clamp(candidate.y, 8, viewport.height - height - 8)
+    };
+    layer.style.left = `${Math.round(positioned.x)}px`;
+    layer.style.top = `${Math.round(positioned.y)}px`;
+    layer.dataset.placement = positioned.name || "fallback";
+    layer.style.visibility = "";
   }
 
   function button(label, action, danger) {
@@ -1268,6 +1451,28 @@
     toolbar.className = "salsav-cms-format-toolbar";
     toolbar.hidden = true;
     toolbar.innerHTML = `
+      <label class="salsav-cms-format-select" aria-label="Font family">
+        <span>Font</span>
+        <select data-format-select="font">
+          <option value="">Auto</option>
+          <option value="cms-font-sans">Sans</option>
+          <option value="cms-font-serif">Serif</option>
+          <option value="cms-font-display">Display</option>
+          <option value="cms-font-mono">Mono</option>
+        </select>
+      </label>
+      <label class="salsav-cms-format-select" aria-label="Text size">
+        <span>Size</span>
+        <select data-format-select="size">
+          <option value="">Auto</option>
+          <option value="cms-size-xs">XS</option>
+          <option value="cms-size-sm">Small</option>
+          <option value="cms-size-base">Base</option>
+          <option value="cms-size-lg">Large</option>
+          <option value="cms-size-xl">XL</option>
+          <option value="cms-size-2xl">2XL</option>
+        </select>
+      </label>
       <button type="button" data-format="bold" aria-label="Bold"><strong>B</strong></button>
       <button type="button" data-format="italic" aria-label="Italic"><em>I</em></button>
       <button type="button" data-format="underline" aria-label="Underline"><u>U</u></button>
@@ -1282,8 +1487,21 @@
         <input type="url" placeholder="Paste link URL" aria-label="Paste link URL">
       </form>`;
     document.body.appendChild(toolbar);
+    toolbar.addEventListener("pointerdown", () => {
+      editorState.formatToolbarInteracting = true;
+    }, true);
+    toolbar.addEventListener("focusin", () => {
+      editorState.formatToolbarInteracting = true;
+    });
+    toolbar.addEventListener("focusout", () => {
+      window.setTimeout(() => {
+        if (toolbar.contains(document.activeElement)) return;
+        editorState.formatToolbarInteracting = false;
+        updateFormatToolbar();
+      }, 0);
+    });
     toolbar.addEventListener("mousedown", (event) => {
-      if (event.target.closest("input")) return;
+      if (event.target.closest("input,select")) return;
       event.preventDefault();
     });
     toolbar.addEventListener("click", (event) => {
@@ -1297,6 +1515,15 @@
         return;
       }
       applyFormatAction(action);
+      window.setTimeout(() => {
+        if (!toolbar.contains(document.activeElement)) editorState.formatToolbarInteracting = false;
+      }, 0);
+    });
+    toolbar.addEventListener("change", (event) => {
+      const select = event.target.closest("[data-format-select]");
+      if (!select) return;
+      applyFormatAction(select.dataset.formatSelect, select.value);
+      select.value = "";
     });
     toolbar.querySelector(".salsav-cms-link-form").addEventListener("submit", (event) => {
       event.preventDefault();
@@ -1306,6 +1533,7 @@
         toast("That link cannot be used.", "error");
         return;
       }
+      restoreInlineSelection();
       document.execCommand("createLink", false, url);
       const selection = window.getSelection();
       const anchor = selection?.anchorNode?.parentElement?.closest("a");
@@ -1322,9 +1550,14 @@
     return toolbar;
   }
 
-  function applyFormatAction(action) {
+  function applyFormatAction(action, value) {
     if (!editorState.inline) return;
-    if (action === "blockquote") {
+    restoreInlineSelection();
+    if (action === "font") {
+      applyRichClassToSelection(richFontClasses, value);
+    } else if (action === "size") {
+      applyRichClassToSelection(richSizeClasses, value);
+    } else if (action === "blockquote") {
       document.execCommand("formatBlock", false, "blockquote");
     } else if (action === "clear") {
       document.execCommand("removeFormat");
@@ -1336,15 +1569,85 @@
     updateFormatToolbar();
   }
 
+  function selectionInsideInline(range) {
+    const active = editorState.inline;
+    if (!active || !range) return false;
+    const node = range.commonAncestorContainer;
+    const element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+    return Boolean(element && active.element.contains(element));
+  }
+
+  function restoreInlineSelection() {
+    const active = editorState.inline;
+    if (!active?.savedRange) return false;
+    const selection = window.getSelection();
+    if (!selection) return false;
+    selection.removeAllRanges();
+    selection.addRange(active.savedRange);
+    return true;
+  }
+
+  function stripRichClassGroup(root, classes) {
+    const nodes = root.nodeType === Node.ELEMENT_NODE ? [root, ...root.querySelectorAll("*")] : Array.from(root.querySelectorAll ? root.querySelectorAll("*") : []);
+    nodes.forEach((node) => {
+      classes.forEach((className) => node.classList?.remove(className));
+      if (node.classList && !node.classList.length) node.removeAttribute("class");
+    });
+  }
+
+  function applyRichClassToSelection(groupClasses, className) {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
+    const range = selection.getRangeAt(0);
+    if (!selectionInsideInline(range)) return;
+    const fragment = range.extractContents();
+    stripRichClassGroup(fragment, groupClasses);
+    let insertedNode = null;
+    if (className) {
+      const span = document.createElement("span");
+      span.className = className;
+      span.append(fragment);
+      range.insertNode(span);
+      insertedNode = span;
+    } else {
+      range.insertNode(fragment);
+    }
+    if (insertedNode) {
+      const nextRange = document.createRange();
+      nextRange.selectNodeContents(insertedNode);
+      selection.removeAllRanges();
+      selection.addRange(nextRange);
+      if (editorState.inline) editorState.inline.savedRange = nextRange.cloneRange();
+    }
+  }
+
   function updateFormatToolbar() {
     const toolbar = ensureFormatToolbar();
     const active = editorState.inline;
     const selection = window.getSelection();
-    if (!active || !selection || selection.rangeCount === 0 || selection.isCollapsed || !active.element.contains(selection.anchorNode)) {
+    if (!active) {
       toolbar.hidden = true;
       return;
     }
-    const range = selection.getRangeAt(0);
+
+    let range = null;
+    if (selection && selection.rangeCount > 0 && !selection.isCollapsed && active.element.contains(selection.anchorNode)) {
+      const selectedRange = selection.getRangeAt(0);
+      if (selectionInsideInline(selectedRange)) {
+        range = selectedRange;
+        active.savedRange = selectedRange.cloneRange();
+      }
+    }
+
+    if (!range && (editorState.formatToolbarInteracting || toolbar.contains(document.activeElement)) && active.savedRange) {
+      range = active.savedRange;
+    }
+
+    if (!range) {
+      toolbar.hidden = true;
+      return;
+    }
+
     const rect = range.getBoundingClientRect();
     if (!rect.width && !rect.height) {
       toolbar.hidden = true;
@@ -1355,12 +1658,23 @@
     toolbar.style.top = `${Math.max(10, rect.top - toolbar.offsetHeight - 12)}px`;
   }
 
+  function editableCloneWithoutChrome(element) {
+    const clone = element.cloneNode(true);
+    clone.querySelectorAll('[class*="salsav-cms-"], [data-overlay-action], [data-salsav-cms-action]').forEach((node) => node.remove());
+    return clone;
+  }
+
+  function removeEditorChromeFromElement(element) {
+    element?.querySelectorAll?.('[class*="salsav-cms-"], [data-overlay-action], [data-salsav-cms-action]').forEach((node) => node.remove());
+  }
+
   function plainTextFromEditable(element) {
-    return String(element.innerText || element.textContent || "").replace(/\u00a0/g, " ").trim();
+    const clone = editableCloneWithoutChrome(element);
+    return String(clone.innerText || clone.textContent || "").replace(/\u00a0/g, " ").trim();
   }
 
   function editableHtml(element) {
-    return sanitizeRichHtml(element.innerHTML || "");
+    return sanitizeRichHtml(editableCloneWithoutChrome(element).innerHTML || "");
   }
 
   function editableHasFormatting(element, existingType) {
@@ -1450,10 +1764,21 @@
       element.removeAttribute("spellcheck");
       element.classList.remove("salsav-cms-inline-active");
       if (editorState.inline === active) editorState.inline = null;
+      editorState.formatToolbarInteracting = false;
       ensureFormatToolbar().hidden = true;
       if (!options.keepSelection) window.getSelection()?.removeAllRanges();
       buildTargetRegistry();
     });
+  }
+
+  function deferInlineBlur(event) {
+    const related = event?.relatedTarget;
+    if (related && isCmsChrome(related)) return;
+    window.setTimeout(() => {
+      const activeElement = document.activeElement;
+      if (activeElement && isCmsChrome(activeElement)) return;
+      closeInlineEditor();
+    }, 0);
   }
 
   function startInlineEditor(target) {
@@ -1464,13 +1789,15 @@
     if (editorState.inline?.element === target.element) return true;
     closeInlineEditor({ keepSelection: true });
     const element = collectionInfo ? collectionInfo.element : pageInfo.element;
+    removeEditorChromeFromElement(element);
     editorState.inline = {
       mode: collectionInfo ? "collection" : "field",
       info: collectionInfo || pageInfo,
       element,
       timer: 0,
       committing: false,
-      onBlur: () => closeInlineEditor(),
+      savedRange: null,
+      onBlur: deferInlineBlur,
       onPaste: (event) => {
         event.preventDefault();
         const text = event.clipboardData?.getData("text/plain") || "";
@@ -1517,13 +1844,23 @@
     const popover = document.createElement("form");
     popover.className = "salsav-cms-image-popover";
     popover.hidden = true;
-    popover.innerHTML = `<input type="url" placeholder="Paste Image URL" aria-label="Paste Image URL">`;
-    popover.addEventListener("submit", (event) => event.preventDefault());
+    popover.innerHTML = `<input type="url" placeholder="Paste image URL" aria-label="Paste image URL">`;
+    popover.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = popover.querySelector("input");
+      const value = input.value.trim();
+      if (!value) return;
+      applyImageUrl(popover._imageInfo, value).catch((error) => toast(error.message || "Image update failed.", "error"));
+    });
     popover.querySelector("input").addEventListener("input", (event) => {
+      window.clearTimeout(popover._timer);
       const value = event.target.value.trim();
       const info = popover._imageInfo;
       if (!info || !value) return;
-      applyImageUrl(info, value).catch((error) => toast(error.message || "Image update failed.", "error"));
+      popover._timer = window.setTimeout(() => {
+        if (!isSafeUrl(value, true)) return;
+        applyImageUrl(info, value).catch((error) => toast(error.message || "Image update failed.", "error"));
+      }, 450);
     });
     document.body.appendChild(popover);
     editorState.imagePopover = popover;
@@ -1538,12 +1875,27 @@
     }
     const rect = info.element.getBoundingClientRect();
     chip.hidden = false;
+    chip.style.visibility = "hidden";
     chip._imageInfo = info;
-    chip.style.left = `${Math.min(window.innerWidth - 86, Math.max(10, rect.right - 76))}px`;
-    chip.style.top = `${Math.max(10, rect.top + 10)}px`;
+    const width = Math.max(68, chip.offsetWidth || 68);
+    const height = Math.max(34, chip.offsetHeight || 34);
+    const margin = 10;
+    const preferred = { x: rect.right - width, y: rect.top - height - margin, name: "top-right" };
+    const fallback = { x: rect.right - width, y: rect.bottom + margin, name: "bottom-right" };
+    const candidate = preferred.y < 8 ? fallback : preferred;
+    const placed = {
+      ...candidate,
+      x: clamp(candidate.x, 8, window.innerWidth - width - 8),
+      y: clamp(candidate.y, 8, window.innerHeight - height - 8)
+    };
+    chip.style.left = `${Math.round(placed.x)}px`;
+    chip.style.top = `${Math.round(placed.y)}px`;
+    chip.dataset.placement = placed.name || "fallback";
+    chip.style.visibility = "";
   }
 
   function openImagePopover(info) {
+    if (!info) return;
     closeLinkPopover();
     const popover = ensureImagePopover();
     const rect = info.element.getBoundingClientRect();
@@ -1558,7 +1910,9 @@
   }
 
   function closeImagePopover() {
-    if (editorState.imagePopover) editorState.imagePopover.hidden = true;
+    if (!editorState.imagePopover) return;
+    window.clearTimeout(editorState.imagePopover._timer);
+    editorState.imagePopover.hidden = true;
   }
 
   function ensureLinkPopover() {
@@ -1639,6 +1993,7 @@
   }
 
   async function applyImageUrl(info, url) {
+    if (!info) throw new Error("Choose an image first.");
     if (!isSafeUrl(url, true)) throw new Error("That image URL cannot be used.");
     info.element.setAttribute("src", url);
     await mutateContentLocally((content) => {
@@ -1652,7 +2007,7 @@
         setPageFieldValue(content, info, url, "attr");
       }
     }, {
-      type: "text_updated",
+      type: info.blockType === "teamMember" ? "team_member_updated" : info.blockType === "newsArticle" ? "news_article_updated" : "text_updated",
       entityType: info.blockType || "image",
       entityId: info.id || info.key,
       label: "Image"
@@ -1882,7 +2237,7 @@
       entityId: item.id,
       label: "New article"
     }, "New article");
-    focusNewCollectionField(item.id, "title");
+    focusNewCollectionImage(item.id, "title");
   }
 
   async function createVisualMember(sectionId) {
@@ -1908,7 +2263,7 @@
       entityId: item.id,
       label: "New team member"
     }, "New team member");
-    focusNewCollectionField(item.id, "name");
+    focusNewCollectionImage(item.id, "name");
   }
 
   function focusNewCollectionField(id, field) {
@@ -1925,9 +2280,32 @@
     }, 80);
   }
 
+  function focusNewCollectionImage(id, fallbackField) {
+    window.setTimeout(() => {
+      buildTargetRegistry();
+      const block = document.querySelector(`[data-cms-block-id="${CSS.escape(id)}"]`);
+      const img = block?.querySelector?.("img[data-cms-image-field], img[data-cms-attr-src], img");
+      if (!block || !img) {
+        if (fallbackField) focusNewCollectionField(id, fallbackField);
+        return;
+      }
+      block.scrollIntoView({ behavior: "smooth", block: "center" });
+      const target = Array.from(editorState.targets.values()).find((item) => item.type === "block" && item.element === block) || targetFromBlockElement(block);
+      if (target) selectTarget(target.id);
+      const info = imageInfoFromElement(img);
+      if (info) {
+        placeImageChip(info);
+        openImagePopover(info);
+        toast("Paste an image URL to replace the preview.", "info");
+      } else if (fallbackField) {
+        focusNewCollectionField(id, fallbackField);
+      }
+    }, 120);
+  }
+
   function decorateLiveChrome() {
     if (!readSession() || editorState.mode === "preview") return;
-    document.querySelectorAll(".salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move,.salsav-cms-card-link,.salsav-cms-card-section").forEach((node) => node.remove());
+    document.querySelectorAll(".salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move,.salsav-cms-card-image,.salsav-cms-card-link,.salsav-cms-card-section").forEach((node) => node.remove());
 
     if (editorState.pageId === "team") {
       document.querySelectorAll(".team-grid").forEach((grid) => {
@@ -1965,29 +2343,41 @@
       }
     }
 
-    document.querySelectorAll('[data-cms-block-id]').forEach((card) => {
-      if (isSiteNavigationChrome(card) || !isVisible(card)) return;
-      const target = targetFromBlockElement(card);
-      if (!target.canDrag) return;
-      if (getComputedStyle(card).position === "static") card.style.position = "relative";
-      const move = document.createElement("button");
-      move.type = "button";
-      move.className = "salsav-cms-card-move";
-      move.textContent = "Move";
-      move.setAttribute("aria-label", "Move");
-      move.addEventListener("pointerdown", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        selectTarget(target.id);
-        startDrag(target, event);
-      });
-      card.append(move);
-    });
-
     document.querySelectorAll('[data-cms-block-type="teamMember"], [data-cms-block-type="newsArticle"]').forEach((card) => {
       if (isSiteNavigationChrome(card) || !isVisible(card)) return;
       if (getComputedStyle(card).position === "static") card.style.position = "relative";
       const target = targetFromBlockElement(card);
+      if (target.canDrag) {
+        const move = document.createElement("button");
+        move.type = "button";
+        move.className = "salsav-cms-card-move";
+        move.textContent = "Move";
+        move.setAttribute("aria-label", "Move card");
+        move.addEventListener("pointerdown", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          selectTarget(target.id);
+          if (editorState.inline?.element) editorState.inline.element.blur();
+          startDrag(target, event);
+        });
+        card.append(move);
+      }
+      const image = card.querySelector("img[data-cms-image-field], img[data-cms-attr-src], img");
+      const imageInfo = imageInfoFromElement(image);
+      if (imageInfo) {
+        const imageButton = document.createElement("button");
+        imageButton.type = "button";
+        imageButton.className = "salsav-cms-card-image";
+        imageButton.textContent = "Image";
+        imageButton.setAttribute("aria-label", "Edit image URL");
+        imageButton.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const freshInfo = imageInfoFromElement(image);
+          if (freshInfo) openImagePopover(freshInfo);
+        });
+        card.append(imageButton);
+      }
       const linkInfo = linkInfoFromTarget(target);
       if (linkInfo) {
         const link = document.createElement("button");
@@ -2221,6 +2611,80 @@
     }));
   }
 
+  function dragModeForTarget(target) {
+    if (!target?.listElement) return "free";
+    if (target.blockType === "teamMember" && target.listType === "teamMembers") return "reorder";
+    if (target.blockType === "newsArticle" && (target.listType === "newsArticles" || target.listId === "news.articles")) return "reorder";
+    if (target.blockType === "teamSummaryRow") return "reorder";
+    return "free";
+  }
+
+  function snapNumber(value, step) {
+    const size = Number(step);
+    if (!Number.isFinite(size) || size <= 1) return Math.round(value);
+    return Math.round(value / size) * size;
+  }
+
+  function dragSnapContext(target, rect) {
+    const canvas = target.canvasElement || nearestCanvas(target.element);
+    if (!canvas || !isVisible(canvas)) return null;
+    ensureCanvasAttributes(canvas);
+    const canvasRect = canvas.getBoundingClientRect();
+    const columns = Math.max(1, Math.min(12, Number(canvas.getAttribute("data-cms-grid") || 12) || 12));
+    const columnWidth = Math.max(8, canvasRect.width / columns);
+    const rowHeight = Math.max(8, Number(getComputedStyle(canvas).getPropertyValue("--cms-row-height").replace("px", "")) || 24);
+    return { canvas, canvasRect, columns, columnWidth, rowHeight, startLeft: rect.left, startTop: rect.top, width: rect.width, height: rect.height };
+  }
+
+  function snappedDragPosition(drag, rawX, rawY) {
+    const snap = drag.snap;
+    if (!snap) return { x: rawX, y: rawY };
+    let left = snap.startLeft + rawX - drag.baseX;
+    let top = snap.startTop + rawY - drag.baseY;
+    left = snap.canvasRect.left + snapNumber(left - snap.canvasRect.left, snap.columnWidth);
+    top = snap.canvasRect.top + snapNumber(top - snap.canvasRect.top, snap.rowHeight);
+    const maxLeft = snap.canvasRect.right - Math.min(snap.width, snap.canvasRect.width);
+    const maxTop = snap.canvasRect.bottom - Math.min(snap.height, snap.canvasRect.height);
+    if (maxLeft > snap.canvasRect.left) left = Math.max(snap.canvasRect.left, Math.min(maxLeft, left));
+    if (maxTop > snap.canvasRect.top) top = Math.max(snap.canvasRect.top, Math.min(maxTop, top));
+    return {
+      x: Math.round(drag.baseX + left - snap.startLeft),
+      y: Math.round(drag.baseY + top - snap.startTop)
+    };
+  }
+
+  function removeCmsChromeFromClone(element) {
+    element.querySelectorAll?.(".salsav-cms-section-add,.salsav-cms-card-trash,.salsav-cms-card-move,.salsav-cms-card-image,.salsav-cms-card-link,.salsav-cms-card-section").forEach((node) => node.remove());
+  }
+
+  function createDragGhost(target, rect) {
+    const ghost = target.element.cloneNode(true);
+    removeCmsChromeFromClone(ghost);
+    ghost.classList.add("salsav-cms-drag-ghost");
+    ghost.removeAttribute("id");
+    ghost.style.position = "fixed";
+    ghost.style.left = `${Math.round(rect.left)}px`;
+    ghost.style.top = `${Math.round(rect.top)}px`;
+    ghost.style.width = `${Math.round(rect.width)}px`;
+    ghost.style.height = `${Math.round(rect.height)}px`;
+    ghost.style.display = getComputedStyle(target.element).display;
+    ghost.style.margin = "0";
+    ghost.style.pointerEvents = "none";
+    ghost.style.transform = "scale(1.015)";
+    ghost.style.transformOrigin = "top left";
+    ghost.style.zIndex = "2147483300";
+    document.body.append(ghost);
+    return ghost;
+  }
+
+  function moveDragGhost(drag, event) {
+    if (!drag.ghost) return;
+    const left = Math.round(event.clientX - drag.ghostOffsetX);
+    const top = Math.round(event.clientY - drag.ghostOffsetY);
+    drag.ghost.style.left = `${left}px`;
+    drag.ghost.style.top = `${top}px`;
+  }
+
   function startDrag(target, event) {
     if (!target || !target.canDrag) return;
     event.preventDefault();
@@ -2228,6 +2692,7 @@
     editorState.isDragging = true;
     if (target.blockType === "teamMember") target.element.dataset.cmsOriginalSection = currentTeamSection(target);
     const rect = target.element.getBoundingClientRect();
+    const mode = dragModeForTarget(target);
     const placeholder = document.createElement(target.element.tagName === "TR" ? "tr" : "div");
     placeholder.className = "salsav-cms-drop-placeholder";
     if (placeholder.tagName === "TR") {
@@ -2239,6 +2704,14 @@
       placeholder.style.width = `${rect.width}px`;
       placeholder.style.height = `${rect.height}px`;
     }
+    const originalInlineDisplay = target.element.style.display;
+    let ghost = null;
+    if (mode === "reorder" && target.element.parentElement) {
+      target.element.parentElement.insertBefore(placeholder, target.element);
+      ghost = createDragGhost(target, rect);
+      target.element.style.display = "none";
+      placeDropIndicator(placeholder);
+    }
     target.element.classList.add("salsav-cms-sortable-row-is-dragging");
     editorState.drag = {
       target,
@@ -2247,9 +2720,14 @@
       baseX: readCssPx(target.element, "--cms-x"),
       baseY: readCssPx(target.element, "--cms-y"),
       placeholder,
+      ghost,
+      ghostOffsetX: event.clientX - rect.left,
+      ghostOffsetY: event.clientY - rect.top,
+      originalInlineDisplay,
       listElement: target.listElement,
       originalSection: target.element.dataset.cmsOriginalSection || "",
-      mode: target.listElement ? "reorder" : "free"
+      mode,
+      snap: dragSnapContext(target, rect)
     };
     document.addEventListener("pointermove", dragMove);
     document.addEventListener("pointerup", commitDrag, { once: true });
@@ -2259,19 +2737,21 @@
     const drag = editorState.drag;
     if (!drag) return;
     if (drag.mode === "free") {
-      const x = Math.round(drag.baseX + event.clientX - drag.startX);
-      const y = Math.round(drag.baseY + event.clientY - drag.startY);
-      drag.target.element.style.setProperty("--cms-x", `${x}px`);
-      drag.target.element.style.setProperty("--cms-y", `${y}px`);
+      const rawX = Math.round(drag.baseX + event.clientX - drag.startX);
+      const rawY = Math.round(drag.baseY + event.clientY - drag.startY);
+      const position = snappedDragPosition(drag, rawX, rawY);
+      drag.target.element.style.setProperty("--cms-x", `${position.x}px`);
+      drag.target.element.style.setProperty("--cms-y", `${position.y}px`);
       drag.target.element.style.transform = `translate(var(--cms-x, 0px), var(--cms-y, 0px))`;
       scheduleOverlay();
       return;
     }
+    moveDragGhost(drag, event);
     const drop = findDropTarget(event.clientX, event.clientY, drag.target);
     if (!drop || !drop.list) return;
-    if (!drag.placeholder.parentElement) drop.list.insertBefore(drag.placeholder, drop.before);
-    else drop.list.insertBefore(drag.placeholder, drop.before);
+    drop.list.insertBefore(drag.placeholder, drop.before);
     placeDropIndicator(drag.placeholder);
+    scheduleOverlay();
   }
 
   function findDropTarget(x, y, draggedTarget) {
@@ -2288,11 +2768,33 @@
       });
     }
     if (!list) return null;
-    const children = Array.from(list.querySelectorAll(":scope > [data-cms-block-id]")).filter((child) => child !== draggedTarget.element && child !== editorState.drag.placeholder);
+    const children = Array.from(list.querySelectorAll(":scope > [data-cms-block-id]")).filter((child) => child !== draggedTarget.element && child !== editorState.drag.placeholder && isVisible(child));
+    if (!children.length) return { list, before: null };
+    const style = getComputedStyle(list);
+    const isGrid = style.display.includes("grid");
+    const isWrappedFlex = style.display.includes("flex") && style.flexWrap !== "nowrap";
+    const isCardGrid = isGrid || isWrappedFlex || list.matches("#news-grid-container,.news-grid,.team-grid");
+    if (isCardGrid && !list.matches("tbody")) {
+      const closest = children.reduce((best, child, index) => {
+        const rect = child.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const rowWeight = Math.max(1, rect.height * 1.2);
+        const colWeight = Math.max(1, rect.width);
+        const distance = Math.abs(y - centerY) / rowWeight + Math.abs(x - centerX) / colWeight;
+        return !best || distance < best.distance ? { child, index, rect, centerX, centerY, distance } : best;
+      }, null);
+      if (!closest) return { list, before: null };
+      const pointerIsBefore = Math.abs(y - closest.centerY) > closest.rect.height * 0.42
+        ? y < closest.centerY
+        : x < closest.centerX;
+      return { list, before: pointerIsBefore ? closest.child : children[closest.index + 1] || null };
+    }
+    const horizontal = list.scrollWidth > list.clientWidth && !list.matches("tbody");
     const before = children.find((child) => {
       const rect = child.getBoundingClientRect();
-      const axisPoint = list.matches("tbody") ? y : (list.scrollWidth > list.clientWidth ? x : y);
-      const midpoint = list.matches("tbody") ? rect.top + rect.height / 2 : (list.scrollWidth > list.clientWidth ? rect.left + rect.width / 2 : rect.top + rect.height / 2);
+      const axisPoint = horizontal ? x : y;
+      const midpoint = horizontal ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
       return axisPoint < midpoint;
     }) || null;
     return { list, before };
@@ -2322,12 +2824,14 @@
     editorState.drag = null;
     if (!drag) return;
     drag.target.element.classList.remove("salsav-cms-sortable-row-is-dragging");
+    drag.target.element.style.display = drag.originalInlineDisplay || "";
+    drag.ghost?.remove();
     editorState.dropIndicator.hidden = true;
     try {
       if (drag.mode === "free") {
         const x = readCssPx(drag.target.element, "--cms-x");
         const y = readCssPx(drag.target.element, "--cms-y");
-        await saveLayoutPatch(drag.target.blockId, { x, y, positionMode: "translate" }, {
+        await saveLayoutPatch(drag.target.blockId, { x, y, canvasId: drag.target.canvasId, positionMode: "translate", snap: "grid" }, {
           type: "block_reordered",
           entityType: drag.target.blockType || "genericBlock",
           entityId: drag.target.blockId,
@@ -2342,11 +2846,15 @@
         toast("Order saved.", "success");
       }
     } catch (error) {
+      drag.target.element.style.display = drag.originalInlineDisplay || "";
       toast(error.message || "Move failed.", "error");
       refreshContent();
     } finally {
+      drag.ghost?.remove();
+      drag.target.element.style.display = drag.originalInlineDisplay || "";
       drag.placeholder.remove();
       buildTargetRegistry();
+      scheduleOverlay();
     }
   }
 
@@ -2672,7 +3180,7 @@
   }
 
   function blockTargetFromEvent(event) {
-    const block = event.target?.closest?.("[data-cms-block-id],.news-card,.researcher-card,.pi-profile,.project-table tbody tr,.slide,.partner-logo-link,.proof-card,.site-card,.education-card,.research-card");
+    const block = event.target?.closest?.(visualBlockSelector);
     if (!block || isCmsChrome(block) || isSiteNavigationChrome(block)) return null;
     return Array.from(editorState.targets.values()).find((target) => target.type === "block" && target.element === block) || targetFromBlockElement(block);
   }
@@ -2693,7 +3201,8 @@
   }
 
   function setupDirectDrag(target, event) {
-    if (!target?.canDrag || event.button !== 0 || event.target.closest("[data-cms-collection-field],[data-cms-key],img,input,textarea,select,button")) return;
+    const protectedSelector = editorState.mode === "move" ? "input,textarea,select,button" : "[data-cms-collection-field],[data-cms-key],img,input,textarea,select,button";
+    if (!target?.canDrag || event.button !== 0 || event.target.closest(protectedSelector)) return;
     const startX = event.clientX;
     const startY = event.clientY;
     const startEvent = event;
@@ -2779,8 +3288,7 @@
         closeLinkPopover();
         closeRichEditor();
         document.querySelector(".salsav-cms-live-block-modal")?.classList.remove("salsav-cms-modal-open");
-        editorState.selectedTargetId = null;
-        scheduleOverlay();
+        selectTarget(null);
       }
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s" && editorState.activeField) {
         event.preventDefault();

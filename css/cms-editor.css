@@ -73,7 +73,8 @@
 html.salsav-cms-preview .salsav-cms-toolbar,
 html.salsav-cms-preview .salsav-cms-drag-handle-live,
 html.salsav-cms-preview .salsav-cms-resize-handle,
-html.salsav-cms-preview .salsav-cms-block-bubble {
+html.salsav-cms-preview .salsav-cms-block-bubble,
+html.salsav-cms-preview .salsav-cms-floating-move {
   display: none !important;
 }
 
@@ -581,7 +582,7 @@ html.salsav-cms-editing [data-cms-attr-content]:hover {
 }
 
 .salsav-cms-sortable-row-is-dragging {
-  opacity: 0.58;
+  opacity: 0.35;
   transform: scale(0.99);
 }
 
@@ -827,6 +828,7 @@ html.salsav-cms-editing [data-cms-attr-content]:hover {
 .salsav-cms-selected-box,
 .salsav-cms-drop-indicator {
   position: fixed;
+  z-index: 2;
   box-sizing: border-box;
   border-radius: 8px;
   pointer-events: none;
@@ -912,16 +914,72 @@ html.salsav-cms-editing [data-cms-attr-content]:hover {
   cursor: nwse-resize;
 }
 
-.salsav-cms-drag-ghost,
-.salsav-cms-sortable-row-is-dragging {
-  opacity: 0.44;
+.salsav-cms-floating-move {
+  position: fixed;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.15rem;
+  padding: 0 0.78rem;
+  color: #ffffff;
+  background: rgba(23, 55, 45, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 999px;
+  box-shadow: 0 12px 28px rgba(7, 17, 32, 0.24);
+  pointer-events: auto;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: grab;
+  transition: transform 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.salsav-cms-floating-move[hidden] {
+  display: none !important;
+}
+
+.salsav-cms-floating-move:hover,
+.salsav-cms-floating-move:focus-visible {
+  background: rgba(47, 143, 131, 0.96);
+  box-shadow: 0 16px 34px rgba(7, 17, 32, 0.28);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.salsav-cms-floating-move:active {
+  cursor: grabbing;
+  transform: translateY(0) scale(0.98);
+}
+
+.salsav-cms-drag-ghost {
+  opacity: 0.94;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22), 0 0 0 2px rgba(47, 143, 131, 0.24);
+  transform: scale(1.015);
+  cursor: grabbing;
 }
 
 .salsav-cms-drop-placeholder {
-  min-height: 56px;
-  border: 2px dashed #2f8f83;
-  border-radius: 8px;
-  background: rgba(47, 143, 131, 0.08);
+  min-height: 72px;
+  border: 2px dashed rgba(47, 143, 131, 0.74);
+  border-radius: 10px;
+  background: rgba(47, 143, 131, 0.1);
+  box-shadow: inset 0 0 0 4px rgba(47, 143, 131, 0.08);
+  transition: transform 0.14s ease, opacity 0.14s ease;
+}
+
+#news-grid-container > .salsav-cms-drop-placeholder,
+.news-grid > .salsav-cms-drop-placeholder,
+.team-grid > .salsav-cms-drop-placeholder {
+  min-height: 220px;
+}
+
+html.salsav-cms-admin #news-grid-container > [data-cms-block-id],
+html.salsav-cms-admin .news-grid > [data-cms-block-id],
+html.salsav-cms-admin .team-grid > [data-cms-block-id] {
+  transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease;
 }
 
 .salsav-cms-mode-active {
@@ -933,6 +991,41 @@ html.salsav-cms-editing [data-cms-attr-content]:hover {
 .salsav-cms-preview-mode .salsav-cms-overlay-layer,
 html.salsav-cms-preview .salsav-cms-overlay-layer {
   display: none;
+}
+
+.salsav-cms-grid-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.salsav-cms-grid-layer[hidden] {
+  display: none;
+}
+
+.salsav-cms-grid-canvas {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(47, 143, 131, 0.18);
+  border-radius: 10px;
+  background-image:
+    linear-gradient(to right, rgba(47, 143, 131, 0.18) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(232, 122, 36, 0.12) 1px, transparent 1px);
+  background-size:
+    calc(100% / var(--cms-grid-columns, 12)) 100%,
+    100% var(--cms-row-height, 24px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  opacity: 0.28;
+}
+
+.salsav-cms-grid-canvas-active {
+  border-color: rgba(47, 143, 131, 0.48);
+  background-image:
+    linear-gradient(to right, rgba(47, 143, 131, 0.34) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(232, 122, 36, 0.2) 1px, transparent 1px);
+  box-shadow: 0 0 0 4px rgba(47, 143, 131, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.38);
+  opacity: 0.72;
 }
 
 :root {
@@ -998,6 +1091,7 @@ html.salsav-cms-preview .salsav-cms-overlay-layer {
 .salsav-cms-icon-button,
 .salsav-cms-mini-button,
 .salsav-cms-mini-select,
+.salsav-cms-format-select,
 .salsav-cms-format-toolbar button {
   min-height: 2.28rem;
   color: var(--cms-ink);
@@ -1011,6 +1105,7 @@ html.salsav-cms-preview .salsav-cms-overlay-layer {
 .salsav-cms-button:hover,
 .salsav-cms-icon-button:hover,
 .salsav-cms-mini-button:hover,
+.salsav-cms-format-select:hover,
 .salsav-cms-format-toolbar button:hover {
   color: var(--cms-ink);
   background: rgba(255, 255, 255, 0.92);
@@ -1101,7 +1196,7 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
   align-items: center;
   flex-wrap: wrap;
   gap: 0.24rem;
-  max-width: min(96vw, 42rem);
+  max-width: min(96vw, 52rem);
   padding: 0.28rem;
   border-radius: 18px;
 }
@@ -1117,6 +1212,34 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
   min-width: 2.1rem;
   padding: 0 0.62rem;
   font-size: 0.78rem;
+}
+
+.salsav-cms-format-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  padding: 0 0.34rem 0 0.62rem;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.salsav-cms-format-select span {
+  white-space: nowrap;
+}
+
+.salsav-cms-format-select select {
+  min-height: 1.72rem;
+  max-width: 7.2rem;
+  padding: 0 1.7rem 0 0.58rem;
+  color: var(--cms-ink);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(47, 143, 131, 0.18);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+  outline: none;
 }
 
 .salsav-cms-link-form {
@@ -1162,9 +1285,56 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
   border-radius: 18px;
 }
 
+.cms-font-sans {
+  font-family: "Source Sans 3", Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+.cms-font-serif {
+  font-family: Georgia, "Times New Roman", serif !important;
+}
+
+.cms-font-display {
+  font-family: Poppins, Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+.cms-font-mono {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace !important;
+}
+
+.cms-size-xs {
+  font-size: 0.72em !important;
+  line-height: 1.35;
+}
+
+.cms-size-sm {
+  font-size: 0.86em !important;
+  line-height: 1.38;
+}
+
+.cms-size-base {
+  font-size: 1em !important;
+  line-height: inherit;
+}
+
+.cms-size-lg {
+  font-size: 1.18em !important;
+  line-height: 1.22;
+}
+
+.cms-size-xl {
+  font-size: 1.42em !important;
+  line-height: 1.14;
+}
+
+.cms-size-2xl {
+  font-size: 1.78em !important;
+  line-height: 1.08;
+}
+
 .salsav-cms-section-add,
 .salsav-cms-card-trash,
 .salsav-cms-card-move,
+.salsav-cms-card-image,
 .salsav-cms-card-link,
 .salsav-cms-card-section {
   position: absolute;
@@ -1206,8 +1376,10 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
 }
 
 .salsav-cms-card-move {
-  top: 0.55rem;
-  left: 0.55rem;
+  right: 0.55rem;
+  bottom: 0.55rem;
+  left: auto;
+  top: auto;
   min-height: 2rem;
   padding: 0 0.72rem;
   color: #ffffff;
@@ -1215,13 +1387,26 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
   border-radius: 999px;
   font-size: 0.72rem;
   opacity: 0;
-  transform: translateY(-2px);
+  transform: translateY(4px);
   cursor: grab;
+}
+
+.salsav-cms-card-image {
+  top: 0.55rem;
+  left: 0.55rem;
+  min-height: 2rem;
+  padding: 0 0.72rem;
+  color: #ffffff;
+  background: rgba(23, 55, 45, 0.9);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  opacity: 0;
+  transform: translateY(-2px);
 }
 
 .salsav-cms-card-link {
   top: 0.55rem;
-  left: 4.25rem;
+  left: 4.75rem;
   min-height: 2rem;
   padding: 0 0.72rem;
   color: #ffffff;
@@ -1269,12 +1454,20 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
 
 [data-cms-block-type="teamMember"]:hover > .salsav-cms-card-trash,
 [data-cms-block-type="newsArticle"]:hover > .salsav-cms-card-trash,
+.salsav-cms-selected-live-card > .salsav-cms-card-trash,
+[data-cms-block-type="teamMember"]:hover > .salsav-cms-card-image,
+[data-cms-block-type="newsArticle"]:hover > .salsav-cms-card-image,
+.salsav-cms-selected-live-card > .salsav-cms-card-image,
 [data-cms-block-type="teamMember"]:hover > .salsav-cms-card-link,
 [data-cms-block-type="newsArticle"]:hover > .salsav-cms-card-link,
+.salsav-cms-selected-live-card > .salsav-cms-card-link,
 [data-cms-block-type="teamMember"]:hover > .salsav-cms-card-section,
+.salsav-cms-selected-live-card > .salsav-cms-card-section,
 [data-cms-block-id]:hover > .salsav-cms-card-move,
+.salsav-cms-selected-live-card > .salsav-cms-card-move,
 .salsav-cms-card-trash:focus-visible,
 .salsav-cms-card-move:focus-visible,
+.salsav-cms-card-image:focus-visible,
 .salsav-cms-card-link:focus-visible,
 .salsav-cms-card-section:focus-within {
   opacity: 1;
@@ -1284,6 +1477,7 @@ html.salsav-cms-editing [data-cms-collection-field]:hover {
 .salsav-cms-section-add:hover,
 .salsav-cms-card-trash:hover,
 .salsav-cms-card-move:hover,
+.salsav-cms-card-image:hover,
 .salsav-cms-card-link:hover {
   transform: translateY(-1px) scale(1.02);
 }
@@ -1336,11 +1530,13 @@ html.salsav-cms-edge-ready[data-cms-resize-side="bottom-right"] * {
 html.salsav-cms-preview .salsav-cms-section-add,
 html.salsav-cms-preview .salsav-cms-card-trash,
 html.salsav-cms-preview .salsav-cms-card-move,
+html.salsav-cms-preview .salsav-cms-card-image,
 html.salsav-cms-preview .salsav-cms-card-link,
 html.salsav-cms-preview .salsav-cms-card-section,
 html.salsav-cms-preview .salsav-cms-format-toolbar,
 html.salsav-cms-preview .salsav-cms-image-chip,
 html.salsav-cms-preview .salsav-cms-image-popover,
+html.salsav-cms-preview .salsav-cms-floating-move,
 html.salsav-cms-preview .salsav-cms-link-popover {
   display: none !important;
 }
