@@ -1,0 +1,12 @@
+alter function grants.apply_fetch_result(jsonb) reset search_path;
+alter function grants.claim_sources(uuid, integer, integer, integer, integer) reset search_path;
+alter function grants.finish_run(uuid, jsonb) reset search_path;
+alter function grants.get_last_text(uuid) reset search_path;
+alter function grants.host_load(text[]) reset search_path;
+alter function grants.host_save(jsonb) reset search_path;
+alter function grants.name_key(text) reset search_path;
+alter function grants.register_source(jsonb, text, text) reset search_path;
+alter function grants.remaining_due(integer, integer) reset search_path;
+alter function grants.start_run(text, integer, integer, uuid, integer) reset search_path;
+alter function grants.touch_updated_at() reset search_path;
+alter function grants.url_norm(text) reset search_path;

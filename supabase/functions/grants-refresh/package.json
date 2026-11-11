@@ -1,0 +1,13 @@
+{
+  "name": "grants-refresh",
+  "private": true,
+  "type": "module",
+  "description": "Edge function tests run under Node 22; production runs on Deno (see deno.json).",
+  "scripts": {
+    "test": "node --experimental-strip-types --test --test-concurrency=1 --test-timeout=240000 tests/*.test.ts"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0",
+    "postgres": "3.4.5"
+  }
+}
