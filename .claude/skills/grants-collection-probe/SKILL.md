@@ -18,6 +18,7 @@ Steps:
 - A calls funder with opps 0 but raw > 0 is a working watch whose filter matched nothing yet (the call is not posted); raw 0 means the channel itself listed nothing: test it with the filter removed before calling it broken.
 - A result missing from body.results was cut by the run budget: re-probe those ids alone.
 Pitfalls:
+- A local adapter_check ok true runs on the operator's PC, not the datacenter: a new config counts as collectable only after a production probe agrees with it (discovery-task.md COLLECTION e). The 2026-11-12 pass-2 run marked 4 funders verified on local checks alone; the later probe matched (FEMSA 1, NextEnergy 0, Mosaic 0, NADBank cycle text_len 3006) but nothing had proven it.
 - Saved execute_sql output is a JSON wrapper with a result string: parse the outer JSON, then the inner array; do not regex it.
 - A dry run writes only the run record, so it cannot change snapshots, leases or deadlines.
 - In execute_sql, remove a key from a jsonb value with a typed literal, as in (r#>'{body,stats}') - 'hosts'::text; a bare literal fails with an operator-not-unique error.
