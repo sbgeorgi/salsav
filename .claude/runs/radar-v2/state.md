@@ -48,4 +48,4 @@ Accepted residual risks (report under Found): crafted-markup parser slowness (as
 grants-refresh live = version 6 (disk equal except extract.ts \u escapes written literally). EU eu_ft fixed (Deno failed reading the gzip body: Accept-Encoding identity + cause chain in errors): HTTP 200, 16 candidate calls; FARM2FORK-02 promoted to vetted, horizon 6 -> 7 vetted future calls, dashboard shows 8 open calls, 23 of 30 collected automatically (browser check on live feed 2026-11-12, no console errors). public.grants_admin_import: DROP declined by the server, execute revoked from public/anon/authenticated (live 20261112061124); 015_drop_admin_import.sql is for the dashboard SQL editor. Tests 198 + 38 + 20 + 8 pass. Secret scan: 4 classified false positives; grants.gov fixture token redacted.
 
 ## Next step
-Commit on funding-radar-v2 (exclude pages.json, .claude/launch.json). User: run 015_drop_admin_import.sql in the SQL editor; push when ready.
+Committed (99a92e8). User ran 015_drop_admin_import.sql 2026-11-12; checked: public.grants_admin_import gone. Push is the user's.
