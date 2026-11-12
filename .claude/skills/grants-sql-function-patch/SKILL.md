@@ -18,4 +18,5 @@ Pitfalls:
 - Inside E'' strings write \\n and doubled quotes; a $m$ or $t$ inside the body breaks the dollar quoting.
 - Check that fixture rows get the expected stored status, not only that the call succeeds.
 - Never leave test rows in grants.funders.
+- A feed filter that matches one state (vet_status = 'vetted') hides every row in the other states: assert the row count before and after the rewrite in the test.
 - A replaced body that declares a plpgsql variable (for example o) breaks any query that uses the same name as a table alias or loop row: alias them to names the function does not declare, or the patch fails with a column-ambiguous error.

@@ -22,3 +22,5 @@ Pitfalls:
 - A dry run writes only the run record, so it cannot change snapshots, leases or deadlines.
 - In execute_sql, remove a key from a jsonb value with a typed literal, as in (r#>'{body,stats}') - 'hosts'::text; a bare literal fails with an operator-not-unique error.
 - Before engine v10 a dry run sent the stored ETag and got 304 not_modified, which hides extraction; v10+ drops validators on dry runs.
+- A date regex on the engine's raw text must allow \s+ between words, not \s{0,5}: the raw text has long tab and newline runs. Test it in node on the live text, then replay it at past dates.
+- A deadline phrase changes tense between rounds ("will be accepted from" becomes "were accepted from"): write the verb as (?:are|were|will be), or the regex silently stops matching once the round closes and the source reads raw 0 (McKnight, 2026-11-12).

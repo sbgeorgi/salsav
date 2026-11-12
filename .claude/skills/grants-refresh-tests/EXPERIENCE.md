@@ -24,3 +24,8 @@ evidence: reflect R20261112T153101-a16f0c96
 situation: reflect patch
 lesson: Running tests/engine.test.ts in this session failed with ECONNREFUSED because no local Postgres was running; the skill listed only the handler suites as needing one.
 evidence: reflect R20261112T153644-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: A worker deploying v10 sent partial file sets twice and was denied by the boundary-guard stamp hook; the full 19-file single call then succeeded. This is a repeatable deploy pitfall for this edge function and the skill already covers the gate and deploy steps.
+evidence: reflect R20261112T162038-747f15c5

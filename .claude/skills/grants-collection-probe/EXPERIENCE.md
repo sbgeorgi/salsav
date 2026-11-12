@@ -9,3 +9,8 @@ evidence: reflect R20261112T153644-747f15c5
 situation: reflect patch
 lesson: Reading probe_result stats with a bare 'hosts' key failed on the jsonb minus operator; the cast fixed it. Saves a retry when reading probe output.
 evidence: reflect R20261112T154907-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: A deadline regex with \s{0,5} could never match the engine's raw text, so two funders (McKnight, BIRD) silently missed every call; the fix was \s+ and a replay at past dates proved it.
+evidence: reflect R20261112T163201-747f15c5

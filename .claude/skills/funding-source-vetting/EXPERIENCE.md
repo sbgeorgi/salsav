@@ -164,3 +164,13 @@ evidence: reflect R20261112T142636-747f15c5
 situation: reflect patch
 lesson: The run hit two schema-name errors (funders.collect_mode, funders.collection_verified_at, discovery_log.created_at) that the task file's own step 7 query used, costing retries.
 evidence: reflect R20261112T145055-a16f0c96
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The discovery review query took the 30 most recently seen candidates, so older calls with near deadlines were never checked.
+evidence: reflect R20261112T163201-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Candidates now appear on the radar at once (migration 021), so the old rule that they stay hidden is wrong and would mislead future runs.
+evidence: reflect R20261112T163201-747f15c5

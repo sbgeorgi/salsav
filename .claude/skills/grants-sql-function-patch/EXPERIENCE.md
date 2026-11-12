@@ -9,3 +9,8 @@ evidence: reflect R20261112T135553-747f15c5
 situation: reflect patch
 lesson: A string-replace patch of apply_fetch_result added a loop alias o that clashed with a declared variable; the DO test rejected it and the alias had to be renamed before apply_migration succeeded.
 evidence: reflect R20261112T154907-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Widening the feed filter to include candidate calls changed the feed from 23 to 62 rows; the test caught the count change before apply.
+evidence: reflect R20261112T163201-747f15c5
