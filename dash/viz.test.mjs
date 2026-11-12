@@ -1,7 +1,7 @@
 // node dash/viz.test.mjs  (no dependencies)
 import assert from 'node:assert/strict';
 import { fitBar, ring, spark, hbars, scatter, funnel, meter, stackedBars, esc } from './viz.js';
-import { horizonLayout, EMPTY } from './horizon.js';
+import { horizonLayout, unverifiedPoints, EMPTY } from './horizon.js';
 import { readFileSync } from 'node:fs';
 
 let n = 0;
@@ -190,6 +190,21 @@ t('horizon layout: only dated funders in range, compact height, crowded days spi
   const crowd = horizonLayout(Array.from({ length: 60 }, (_, i) => R(30, i)), { w: 360 });
   assert.ok(crowd.H >= 120 && crowd.H <= 170); assert.ok(crowd.pts.every((p) => p.n < 9)); assert.equal(crowd.pts.length, 60);
 });
+t('horizon: unverified calls of listed funders become their own points, skipping dupes of the funder date', () => {
+  const now = new Date('2026-11-12T12:00:00Z'), rows = [{ id: 'a', name: 'A', bucket: 'federal', deadline: '2026-12-01' }, { id: 'b', name: 'B', bucket: 'private', deadline: null }];
+  const opps = [
+    { funder_id: 'a', vet_status: 'candidate', title: 'same day', deadline: '2026-12-01' },
+    { funder_id: 'a', vet_status: 'candidate', title: 'A2', deadline: '2026-12-20' },
+    { funder_id: 'b', vet_status: 'candidate', title: 'B1', deadline: '2026-11-29' },
+    { funder_id: 'b', vet_status: 'vetted', title: 'ok', deadline: '2026-11-30' },
+    { funder_id: 'b', vet_status: 'candidate', title: 'undated', deadline: null },
+    { funder_id: 'gone', vet_status: 'candidate', title: 'filtered out', deadline: '2026-12-05' }];
+  const u = unverifiedPoints(rows, opps, now);
+  assert.deepEqual(u.map((p) => [p.id, p.title, p._days, p.bucket, p._uv]), [['a', 'A2', 38, 'federal', true], ['b', 'B1', 17, 'private', true]]);
+  assert.equal(horizonLayout([...rows.map((r) => ({ ...r, _days: r.deadline ? 19 : null })), ...u]).items.length, 3);
+  assert.deepEqual(unverifiedPoints(rows, undefined, now), []);
+});
+
 t('horizon.js carries no colour literals', () => {
   assert.ok(!/#[0-9a-f]{3,8}\b|rgb\(|hsl\(/i.test(readFileSync(new URL('./horizon.js', import.meta.url), 'utf8')));
 });

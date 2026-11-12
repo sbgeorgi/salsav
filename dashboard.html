@@ -107,7 +107,7 @@
 <script type="module">
 import * as D from './dashboard.js';
 import { fitBar, spark } from './dash/viz.js';
-import { horizon } from './dash/horizon.js';
+import { horizon, unverifiedPoints } from './dash/horizon.js';
 
 const API = 'https://iuzgfldgvueuehybgntm.supabase.co/rest/v1/rpc/';
 const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1emdmbGRndnVldWVoeWJnbnRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4Mjc0MjUsImV4cCI6MjA3MjQwMzQyNX0.do919Hvw2AK-Ql-2V5guoRRH2yx4Rmset4eeVXi__o8'; // public anon key by design
@@ -368,8 +368,9 @@ function renderKpis() {
 }
 function renderHorizon() {
   const box = $('#horizon'), md = S.feed.min_days ?? 14;
-  box.hidden = false; $('#hzNote').textContent = `Shaded band: closes before the ${md}-day cutoff, too soon to prepare. Select a dot for details.`;
-  $('#hzBody').replaceChildren(horizon(S.list, { w: Math.max(280, Math.floor($('#hzBody').clientWidth || box.clientWidth || 600)), now: S.now, minDays: md, onOpen: openDrawer }));
+  const uv = unverifiedPoints(S.list, S.feed.opportunities, S.now);
+  box.hidden = false; $('#hzNote').textContent = `Shaded band: closes before the ${md}-day cutoff, too soon to prepare.${uv.length ? ' Dashed dots: unverified calls, checked on the next discovery pass.' : ''} Select a dot for details.`;
+  $('#hzBody').replaceChildren(horizon([...S.list, ...uv], { w: Math.max(280, Math.floor($('#hzBody').clientWidth || box.clientWidth || 600)), now: S.now, minDays: md, onOpen: openDrawer }));
 }
 function renderPicks() {
   const host = $('#picks'), picks = S.feed ? D.recommend(S.rows, S.now, 5) : [];

@@ -79,6 +79,7 @@
 .hz .today { stroke: var(--ink); stroke-width: 1.2; }
 .hz .dot { fill: var(--c, var(--primary)); stroke: var(--surface); stroke-width: 1; cursor: pointer; transition: r var(--dur) var(--ease); }
 .hz .dot.dq { fill: var(--surface); stroke: var(--c, var(--primary)); stroke-width: 1.6; }
+.hz .dot.uv { fill: var(--surface); stroke: var(--c, var(--primary)); stroke-width: 1.6; stroke-dasharray: 2.4 1.6; }
 .hz .dot:hover { stroke: var(--ink); stroke-width: 1.5; }
 .hz-empty { color: var(--muted); font-size: var(--t-sm); margin: 0; padding: var(--sp-3) 0; }
 @media (prefers-reduced-motion: reduce) { .hz .dot { transition: none; } }
