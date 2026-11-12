@@ -1,0 +1,44 @@
+{
+  "id": "ad51c9f2-ffa9-477c-88d9-43cb88b59e8c",
+  "name": "USDA NIFA",
+  "program": "Hispanic-Serving Institutions Education Grants Program (USDA-NIFA-HSI-011903)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.nifa.usda.gov/grants/funding-opportunities/hispanic-serving-institutions-education-grants-program",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-NIFA",
+    "keyword": "Hispanic-Serving",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "also_page": true,
+    "auto_vet": true,
+    "filter": {
+      "any": [
+        "Hispanic-Serving",
+        "Hispanic Serving"
+      ],
+      "fields": "title"
+    }
+  },
+  "collect_note": "Open and upcoming USDA NIFA calls are read from Grants.gov twice a day and kept only when the title says Hispanic-Serving or Hispanic Serving (the HSI Education Grants). The deadline comes from the posting. Currently one call, closing December 3, 2026.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Hispanic-Serving Institutions Education Grants Program",
+        "deadline": "2026-12-03",
+        "url": "https://www.grants.gov/search-results-detail/363846"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP (python urllib, desktop UA): POST https://api.grants.gov/v1/api/search2 with {rows:25, oppStatuses:forecasted|posted, agencies:USDA-NIFA, keyword:Hispanic-Serving} returned 3 hits, of which USDA-NIFA-HSI-011903 (posted, close 12/03/2026, open 09/10/2026, CFDA 10.223) is the HSI call; the other two are AFRI calls dropped by the title filter. Probes also showed aln:10.223 returns unrelated HHS hits (key ignored). NIFA page https://www.nifa.usda.gov/grants/funding-opportunities/hispanic-serving-institutions-education-grants-program returned HTTP 200 with the same dates; checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

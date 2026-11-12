@@ -1,0 +1,37 @@
+{
+  "key": "b8ff1258",
+  "funder": "U.S. Department of Defense, SERDP and ESTCP",
+  "lens": "replay-and-stability",
+  "verdict": "structured_needs_new_adapter",
+  "accept": false,
+  "method": "sitemap + detail pages (server-rendered)",
+  "reproduced": {
+    "sitemap": "GET https://serdp-estcp.mil/sitemap/contentSitemap1.xml with UA SALSAV-GrantWatch/1.0, no cookies: 200 text/xml 595065 bytes, two fetches 5 s apart byte-identical (cmp SAME), 188 callforproposal ids, all unique UUIDs, no query params in loc.",
+    "lastmod_window": "today 2026-11-11: 60d -> 22 urls, 30d -> 11, 7d -> 10, 3d -> 0.",
+    "detail_page": "GET callforproposal?id=ff39d83f-5747-49ab-a42b-08f2bb01504b: 200 text/html 81750 bytes, no cookie sent, full content. Set-Cookie antiforgery cookie is sent but not required for reads.",
+    "prototype_60d": "python -I serdp_sitemap_probe.py 60 -> {sitemap_cfp_urls:188, since:2026-09-12, recent:22}; 10 FY 2028 rows, e.g. ff39d83f-5747-49ab-a42b-08f2bb01504b | Development of Residuals Management Options of PFAS-Impacted Wastewater Streams | FY 2028 | Released November 5, 2026 | Due Date January 7, 2027.",
+    "field_coverage_22_pages": "title parsed on 22/22; program on 22/22; FY on 22/22; Released on 21/22 (one FY 2025 page has none); Due Date on 11/22 (the FY 2026 and FY 2027 pages have no Due Date line, so deadline is null there); the one FY 2025 page with a due date (October 31, 2024) is past.",
+    "grants_gov_HQ003423NFOEASD07": "adapter_check.mjs ok=true count=1 http=200 deadline 2028-01-08 status open. Output: {\"ok\":true,\"count\":1,\"sample\":[{\"external_id\":\"HQ003423NFOEASD07\",\"title\":\"DoW&rsquo;s Energy, Installations, and Environment Innovation Partners Programs\",\"deadline\":\"2028-01-08\",\"status\":\"open\",\"url\":\"https://www.grants.gov/search-results-detail/348830\"}],\"error\":null,\"http\":200,\"bytes\":1598}. This is the DoW umbrella NOFO, not a SERDP/ESTCP-owned call.",
+    "row_fix_url_listing": "GET https://serdp-estcp.mil/workwithus/pastcallforproposal returns 200, 70736 bytes, but contains 0 callforproposal?id= links in static HTML. The proposed row_fix.url cannot serve as a listing for any html or json adapter."
+  },
+  "issues": [
+    "The sitemap_detail adapter does not exist in the engine. The prototype is Python and was never run through a real engine code path, so the edge function cannot yet produce these rows.",
+    "lastmod_window_days=60 is a design flaw. A still-open call whose sitemap lastmod is older than 60 days is silently dropped even though its deadline is in the future. Fix: use the sitemap only to discover candidate ids, keep a cache of known ids and re-fetch open ones until deadline passes, or key the filter on deadline and not on lastmod.",
+    "max_detail_fetches=25 truncates silently. Today 22 are recent, so the cap is within limit, but a bulk lastmod touch above 25 would drop rows without an error. The engine must log the truncation and carry the overflow to the next run.",
+    "Title and field parsing relies on the English boilerplate line 'For mobile, landscape view is recommended.' and the labels 'Due Date', 'Released', 'SERDP,', 'ESTCP,' and FY n. These are template strings that will break silently on a site redesign. The engine must fail loudly when title is null for an id it expected.",
+    "Deadline is absent on FY 2026 and FY 2027 pages. Those rows are kept only if posted within 180 days, which is correct today, but the rule means a FY 2027 call that is still open with no Due Date would be dropped. This needs a documented decision.",
+    "row_fix.url (pastcallforproposal) contains no call links in static HTML, so the row URL must not be used as the listing for an html or json adapter. The row fix should point at the sitemap, or the grants_gov row should be the primary.",
+    "The grants_gov HQ003423NFOEASD07 row is a DoW umbrella NOFO and proves the adapter works, but it is not SERDP or ESTCP's own call. Treat it as a secondary source, not as coverage for this funder.",
+    "Anti-forgery tokens differ on every detail-page fetch (hidden __RequestVerificationToken inputs). They are unused by the parser, so this is harmless, but the engine must not key change detection on the raw HTML hash."
+  ],
+  "stable": "The sitemap is byte-identical across two fetches and the detail pages are plain HTTP without cookies. The ids are stable UUIDs in the URL. The source itself is structured and replayable; only the adapter spec above needs changes.",
+  "check": {
+    "sitemap_size_bytes": 595065,
+    "sitemap_cfp_urls": 188,
+    "recent_60d": 22,
+    "recent_30d": 11,
+    "fy2028_rows_60d": 10,
+    "detail_fetch_http": 200,
+    "listing_page_call_links": 0
+  }
+}

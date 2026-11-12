@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { euFt, getPath, grantsGov, jsonApi, samGov } from "../adapters/api.ts";
+import { readFileSync } from "node:fs";
+import { euFt, getPath, grantsGov, jsonApi, money, plainText, samGov } from "../adapters/api.ts";
 import { looksLikeFeed, parseFeed } from "../adapters/feed.ts";
 import { BACKOFF_BASE_MS, BACKOFF_CAP_MS, fullJitter, parseRetryAfter } from "../backoff.ts";
 import { checkUrl, GuardError } from "../guard.ts";
@@ -164,7 +165,9 @@ test("grants.gov: Simpler API only when GRANTS_GOV_API_KEY is set", () => {
 test("EU F&T: multipart query with default open/forthcoming filter; response mapping", async () => {
   const r = euFt.request(src({ adapter: "eu_ft" }), { allowLocal: false }, new Date());
   assert.match(r.url, /apiKey=SEDIA&text=\*&pageSize=50/);
-  const q = JSON.parse(await ((r.body as FormData).get("query") as Blob).text());
+  const form = await new Response(r.body, { headers: { "content-type": r.headers!["Content-Type"] } }).formData(); // a standard parser accepts the hand-written body
+  const q = JSON.parse(await (form.get("query") as Blob).text());
+  assert.deepEqual(JSON.parse(await (form.get("languages") as Blob).text()), ["en"]);
   assert.deepEqual(q.bool.must[1].terms.status, ["31094501", "31094502"]);
   const o = euFt.parse({ totalResults: 2, results: [
     { reference: "HORIZON-X", summary: "Soil health", metadata: { identifier: ["HORIZON-CL6-2027-01"], title: ["Soil topic"], deadlineDate: ["2027-04-15T00:00:00.000+0000"], status: ["31094501"] } },
@@ -201,4 +204,134 @@ test("robots: hostile wildcard pattern cannot cause catastrophic backtracking (l
   assert.equal(isAllowed(r, "/x-y-z/more"), true); // $ anchors the end
   assert.equal(isAllowed(r, "/xyz"), false);
   assert.ok(performance.now() - t0 < 20, `took ${performance.now() - t0} ms`);
+});
+
+// ---------- API adapters: upgrades (fixtures recorded from the live APIs, 2026-11-12) ----------
+const fixture = (name: string): any => JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), "utf8"));
+
+test("grants.gov detail: limit from adapter_config (true = 3, number capped at 5, else 0)", () => {
+  const lim = (detail: unknown) => grantsGov.detail!.limit(src({ adapter: "grants_gov", adapter_config: { detail } }));
+  assert.equal(lim(true), 3);
+  assert.equal(lim(2), 2);
+  assert.equal(lim(9), 5);
+  assert.equal(lim(0), 0);
+  assert.equal(lim("x"), 0);
+  assert.equal(lim(undefined), 0);
+});
+
+test("grants.gov detail: request is POST fetchOpportunity with the numeric id from the item url", () => {
+  const items = grantsGov.parse(fixture("api-grants-gov-search.json"), src());
+  const r = grantsGov.detail!.request(items[0], src(), { allowLocal: false }) as NonNullable<ReturnType<NonNullable<typeof grantsGov.detail>["request"]>>;
+  assert.equal(r.url, "https://api.grants.gov/v1/api/fetchOpportunity");
+  assert.equal(r.method, "POST");
+  assert.deepEqual(JSON.parse(r.body as string), { opportunityId: 361169 });
+  assert.equal(grantsGov.detail!.request({ external_id: "x", title: "t", url: null }, src(), { allowLocal: false }), null);
+  assert.equal(grantsGov.detail!.request({ external_id: "x", title: "t", url: "https://www.grants.gov/other" }, src(), { allowLocal: false }), null);
+});
+
+test("grants.gov detail: posted response (data.synopsis) fills award floor/ceiling and plain-text description", () => {
+  const o = { external_id: "USDA-NIFA-AFRI-011596", title: "t", description: "agency" } as any;
+  grantsGov.detail!.apply(o, fixture("api-grants-gov-detail-posted.json"));
+  assert.equal(o.award_max_usd, 650000);
+  assert.equal(o.award_min_usd, 10000);
+  assert.match(o.description, /^The Agriculture and Food Research Initiative/);
+  assert.ok(!/[<>]/.test(o.description) && o.description.length <= 2000);
+});
+
+test("grants.gov detail: forecasted response (data.forecast) fills the same fields", () => {
+  const o = { external_id: "MP-CPI-25-001", title: "t" } as any;
+  grantsGov.detail!.apply(o, fixture("api-grants-gov-detail-forecasted.json"));
+  assert.equal(o.award_max_usd, 600000);
+  assert.equal(o.award_min_usd, 450000);
+  assert.match(o.description, /^The Office of Minority Health announces/);
+});
+
+test("grants.gov detail: apply never throws and maps 'none', 0 and junk to null", () => {
+  for (const bad of [null, undefined, "junk", 42, [], { data: null }, { data: { synopsis: "x" } }]) {
+    const o = { external_id: "x", title: "t" } as any;
+    assert.doesNotThrow(() => grantsGov.detail!.apply(o, bad));
+  }
+  const o = { external_id: "x", title: "t" } as any;
+  grantsGov.detail!.apply(o, { data: { synopsis: { awardCeiling: "none", awardFloor: "0", synopsisDesc: "<p>Hi <b>there</b></p>" } } });
+  assert.deepEqual([o.award_max_usd, o.award_min_usd, o.description], [null, null, "Hi there"]);
+});
+
+test("money: numeric strings with commas and $, numbers, and non-amounts", () => {
+  assert.equal(money("650000"), 650000);
+  assert.equal(money("$1,250,000.50"), 1250000.5);
+  assert.equal(money(500), 500);
+  for (const v of ["none", "0", 0, "", null, undefined, "12.5k", "n/a"]) assert.equal(money(v), null, String(v));
+});
+
+test("plainText: strips tags, decodes entities, collapses whitespace", () => {
+  assert.equal(plainText("<p>Solar &amp; <b>Wind</b>\n call &#8220;A&#8221;</p>"), "Solar & Wind call “A”");
+  assert.equal(plainText("  "), null);
+  assert.equal(plainText(null), null);
+});
+
+test("eu_ft: pageSize and text come from adapter_config (URL-encoded), defaults stay 50 and *", () => {
+  const dflt = euFt.request(src({ adapter: "eu_ft" }), { allowLocal: false }, new Date());
+  assert.match(dflt.url, /[?&]text=\*&pageSize=50&pageNumber=1$/);
+  const r = euFt.request(src({ adapter: "eu_ft", adapter_config: { pageSize: 100, text: "agri crop*" } }), { allowLocal: false }, new Date());
+  assert.match(r.url, /text=agri%20crop\*&pageSize=100&pageNumber=1$/);
+  const clamped = euFt.request(src({ adapter: "eu_ft", adapter_config: { pageSize: 5000 } }), { allowLocal: false }, new Date());
+  assert.match(clamped.url, /pageSize=100/);
+});
+
+test("eu_ft: deadline is the nearest date on or after today, else the last one (live topic fixture)", () => {
+  const topic = fixture("api-eu-ft-topic.json"); // deadlines 2027-04-08 and 2027-09-14
+  const pick = (today: string) => euFt.parse(topic, src({ adapter: "eu_ft" }), today)[0].deadline;
+  assert.equal(pick("2026-11-12"), "2027-04-08");
+  assert.equal(pick("2027-04-08"), "2027-04-08");
+  assert.equal(pick("2027-05-01"), "2027-09-14");
+  assert.equal(pick("2030-01-01"), "2027-09-14");
+  const o = euFt.parse(topic, src({ adapter: "eu_ft" }), "2026-11-12")[0];
+  assert.deepEqual([o.external_id, o.status], ["HORIZON-CL6-2027-02-FARM2FORK-02-two-stage", "open"]);
+});
+
+test("eu_ft: multi-date deadlines pick by today; default today is the current UTC date", () => {
+  const raw = { results: [{ reference: "R", metadata: { identifier: ["ID-1"], title: ["T"], status: ["31094501"], deadlineDate: ["2026-02-15T00:00:00.000+0000", "2026-07-01T00:00:00.000+0000", "2027-06-01T00:00:00.000+0000", "2027-02-14T00:00:00.000+0000"] } }] };
+  assert.equal(euFt.parse(raw, src(), "2026-11-12")[0].deadline, "2027-02-14");
+  assert.equal(euFt.parse(raw, src(), "2027-07-01")[0].deadline, "2027-06-01");
+  assert.equal(euFt.parse(raw, src(), "2027-12-31")[0].deadline, "2027-06-01");
+  assert.equal(euFt.parse(raw, src())[0].deadline, euFt.parse(raw, src(), new Date().toISOString().slice(0, 10))[0].deadline);
+});
+
+test("eu_ft: live search fixture parses, forthcoming item stays forecasted", () => {
+  const o = euFt.parse(fixture("api-eu-ft-search.json"), src(), "2026-11-12");
+  assert.equal(o.length, 3);
+  assert.equal(o[1].deadline, "2027-02-03");
+  assert.equal(o[2].status, "forecasted");
+});
+
+test("grants.gov search fixture (live) parses to 3 items with urls", () => {
+  const o = grantsGov.parse(fixture("api-grants-gov-search.json"), src());
+  assert.equal(o.length, 3);
+  assert.equal(o[0].external_id, "USDA-NIFA-AFRI-011596");
+  assert.equal(o[0].url, "https://www.grants.gov/search-results-detail/361169");
+});
+
+test("json_api: items_path '$' reads a root array; open_date and award_max map; HTML stripped from title", () => {
+  const s = src({ adapter: "json_api", adapter_config: { url: "https://wp.example/wp-json/wp/v2/grants", items_path: "$", map: { external_id: "id", title: "title.rendered", url: "link", description: "content.rendered", deadline: "acf.close", open_date: "acf.open", award_max: "acf.max" } } });
+  const json = [
+    { id: 9, title: { rendered: "<em>Solar</em> &amp; Wind &#8211; 2027" }, link: "https://x.org/9", content: { rendered: "<ul><li>One</li><li>Two</li></ul>" }, acf: { close: "2027-05-01", open: "2027-01-10", max: "250,000" } },
+    { id: 10, title: { rendered: "Second" }, acf: { max: 75000, close: "", open: "" } },
+    { id: 11, title: { rendered: "Third" }, acf: { max: "none" } },
+  ];
+  const o = jsonApi.parse(json, s);
+  assert.deepEqual(o.map((x) => [x.external_id, x.title, x.open_date, x.deadline, x.award_max_usd]), [
+    ["9", "Solar & Wind – 2027", "2027-01-10", "2027-05-01", 250000],
+    ["10", "Second", null, null, 75000],
+    ["11", "Third", null, null, null],
+  ]);
+  assert.equal(o[0].url, "https://x.org/9");
+  assert.equal(o[0].description, "One Two");
+  assert.equal(jsonApi.parse({ items: [] }, s).length, 0);
+});
+
+test("json_api: unmapped url key yields null, not '[object Object]'", () => {
+  const s = src({ adapter: "json_api", adapter_config: { items_path: "", map: { external_id: "id", title: "name" } } });
+  const o = jsonApi.parse([{ id: "a", name: "Call A" }], s);
+  assert.equal(o[0].url, null);
+  assert.equal(o[0].award_max_usd, null);
 });

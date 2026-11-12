@@ -1,5 +1,6 @@
 // One shard invocation: claim -> fetch politely per host (parallel across hosts) -> detect changes -> record -> release.
 import { fetchSource } from "./adapters/index.ts";
+import { newBudget } from "./safe_regex.ts";
 import { computeChange } from "./diff.ts";
 import { findDeadlines } from "./extract.ts";
 import { DEFAULT_POLITENESS, Politeness, type PolitenessOpts } from "./politeness.ts";
@@ -14,6 +15,7 @@ export interface EngineDeps {
   store: Store;
   clock: Clock;
   fetchImpl: typeof fetch;
+  fetchH1?: typeof fetch;
   env: Env;
   requestTimeoutMs?: number;
   politeness?: Partial<PolitenessOpts>;
@@ -40,6 +42,7 @@ export interface RunResult {
   results: SourceReport[];
 }
 
+const API_ADAPTER_NAMES = new Set(["grants_gov", "sam_gov", "eu_ft", "json_api"]);
 const hostOf = (url: string) => {
   try {
     return new URL(url).host;
@@ -47,6 +50,8 @@ const hostOf = (url: string) => {
     return "invalid";
   }
 };
+// API adapters talk to their own endpoint, not to the funder's page host: group (and cool down) them apart from it
+const groupOf = (s: Source) => (API_ADAPTER_NAMES.has(s.adapter) ? `api:${s.adapter}` : hostOf(s.url));
 
 async function toPayload(deps: EngineDeps, src: Source, f: Fetched, run: string, today: string): Promise<ResultPayload> {
   const base = { id: src.id, run, kind: f.kind, http_status: f.http_status ?? null };
@@ -94,10 +99,10 @@ export async function runShard(deps: EngineDeps, req: RunRequest): Promise<RunRe
     const claimed = req.dry_run ? await store.peek(req) : await store.claim(run, req, deps.leaseS ?? 240);
     stats.planned = claimed.length;
     const byHost = new Map<string, Source[]>();
-    for (const s of claimed) byHost.set(hostOf(s.url), [...(byHost.get(hostOf(s.url)) ?? []), s]);
+    for (const s of claimed) byHost.set(groupOf(s), [...(byHost.get(groupOf(s)) ?? []), s]);
     for (const row of await store.hostLoad([...byHost.keys()])) pol.seed(row);
 
-    const http = { pol, fetchImpl: deps.fetchImpl, env: deps.env, deadline, requestTimeoutMs: deps.requestTimeoutMs ?? 20_000, maxTries: deps.maxTries };
+    const http = { pol, fetchImpl: deps.fetchImpl, fetchH1: deps.fetchH1, env: deps.env, deadline, requestTimeoutMs: deps.requestTimeoutMs ?? 20_000, maxTries: deps.maxTries };
     const exhausted = new Map<string, number>(); // host -> cooldown ms set during this run
     let budgetHit = false;
 
@@ -122,7 +127,7 @@ export async function runShard(deps: EngineDeps, req: RunRequest): Promise<RunRe
       try {
         f = cool
           ? { kind: "error", error: "host cooling down after repeated throttling", cooldownMs: cool, host }
-          : await fetchSource({ d: http, today, now: new Date(clock.now()) }, src);
+          : await fetchSource({ d: http, today, now: new Date(clock.now()), budget: newBudget() }, src);
         if (!f) {
           budgetHit = true;
           return;

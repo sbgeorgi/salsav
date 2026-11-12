@@ -1,0 +1,94 @@
+{
+ "key": "27cd8a3f",
+ "verdict": "structured_needs_new_adapter",
+ "method": "html_listing",
+ "adapter": "html_cards (proposed new adapter)",
+ "confidence": "medium",
+ "feed_url": null,
+ "summary": "The official BSF homepage (plain HTTP, 200, server-rendered, no cookies) carries a funding card per program with the submission date. The card for BSF Climate Solutions reads April 7, 2027. This is the same date the prior round rejected as an aggregator forecast, so the prior rejection was wrong. The program subpage still says To be announced, so the date is official but its pre-proposal/full-proposal labelling and the Sept 2027 full-proposal date are unconfirmed.",
+ "attempted": [
+  "feed/ rss: 200 but zero <item> entries (empty channel)",
+  "sitemap.xml and sitemap_index.xml: 200, index only; page-sitemap.xml has per-page lastmod (new-program/submission lastmod 2022-04-06, new-program/about 2025-01-08, new-program root 2026-10-08)",
+  "post-sitemap.xml: 0 urls; robots.txt: Sitemap line only",
+  "wp-json root 200 but wp/v2 (types, search, pages?slug) returns 401 shield_block_anon_restapi",
+  "funding-opportunities/ and new-program/ subpages with browser UA: 200, no challenge (prior 403 not reproduced)",
+  "announcements/ and about/announcements/: 200, dated announcement list; latest climate item is Jan 9 2025 (pre-proposals by April 2 2025)",
+  "calendar/: 200, dated list of BSF dates (Sept 1 2026, Dec 2 2026, Dec 16 2026); no climate entry; html adapter extracted only 308 chars",
+  "homepage /: 200, 147 KB server-rendered; li.funding-block cards with h4 title, fill-link href, div.funding-block__date-date text; Climate card = April 7, 2027",
+  "search-grant/ and press-releases/: no climate call data",
+  "WebSearch: found the same 2027 date on homepage; a third-party snippet claimed Sept 8 2027 full-proposal date, not found on official pages fetched",
+  "bulk JS grep of theme bundle: not run (cards already in static HTML)"
+ ],
+ "evidence": [
+  "homepage card: <h4 class=\"funding-block__title\">BSF Climate Solutions</h4> ... <div class=\"funding-block__date-date\">April 7, 2027</div>",
+  "submission subpage (adapter html ok, text_len 5046): Pre-Proposals To be announced; Full Proposals (Invitation Only) 00,000 per grant, up to 2 grants per round",
+  "cycle is biennial: calls in 2022 (pre-proposals Apr 3 2022), 2025 (Apr 2 2025), next Apr 7 2027",
+  "prototype is deterministic: two runs md5 2345a13731880844c0d25b25e3a09177"
+ ],
+ "adapter_config": {
+  "url": "https://www.bsf.org.il/",
+  "selector": "li.funding-block",
+  "fields": {
+   "title": "h4.funding-block__title",
+   "url": "a.funding-block__fill-link@href",
+   "deadline": "div.funding-block__date-date"
+  },
+  "match_title": "Climate Solutions",
+  "deadline_source": "funder_homepage_card"
+ },
+ "engine_requirements": "New adapter html_cards (plain GET, no cookies, edge UA). Fetch https://www.bsf.org.il/. Parse each <li class=\"funding-block...\"> block: title from h4.funding-block__title, url from a.funding-block__fill-link href, deadline text from div.funding-block__date-date (format \"Month D, YYYY\"). Emit one opportunity per card: external_id=url, title, url, deadline=parsed date, status=open if deadline >= today else closed. Store deadline_text and deadline_source=funder_homepage_card. If zero cards parse, raise an error and keep the last good rows (never store empty). Alert when the page cannot be fetched or the program card disappears. Cross-check: the submission subpage text must not contradict a dated card; when it says To be announced, store a verification_note, not a second deadline. Other BSF programs on the same homepage (BSF Research Grants Dec 2 2026, Rahamimoff Dec 16 2026) also parse with this adapter but are out of scope for this row.",
+ "check": {
+  "adapter_check_html_homepage": {
+   "ok": true,
+   "mode": "page",
+   "kind": "ok",
+   "http": 200,
+   "count": 0,
+   "open": 0,
+   "text_len": 9964,
+   "sample": [],
+   "error": null,
+   "expect_min": 1,
+   "fetchability": "easy"
+  },
+  "adapter_check_html_submission": {
+   "ok": true,
+   "mode": "page",
+   "kind": "ok",
+   "http": 200,
+   "count": 0,
+   "open": 0,
+   "text_len": 5046,
+   "sample": [],
+   "error": null,
+   "expect_min": 1,
+   "fetchability": "easy"
+  },
+  "note": "html adapter stores no rows; count 0 is expected for monitor mode. Proof of extraction is the prototype below, not adapter_check."
+ },
+ "prototype": "python -I proto_bsf_cards.py (scratchpad). Fetches https://www.bsf.org.il/ with browser UA and regex-parses li.funding-block cards.",
+ "prototype_output": {
+  "http_bytes": 147045,
+  "cards": 5,
+  "climate_row": {
+   "external_id": "https://www.bsf.org.il/funding-opportunities/new-program/about/",
+   "title": "BSF Climate Solutions",
+   "url": "https://www.bsf.org.il/funding-opportunities/new-program/about/",
+   "deadline_text": "April 7, 2027"
+  }
+ },
+ "row_fix": {
+  "url": "https://www.bsf.org.il/funding-opportunities/new-program/about/",
+  "program": "BSF Climate Solutions",
+  "reason": "Row points at atomgrants aggregator; the funder own page gives the dated card. Keep the aggregator only as a title cross-check."
+ },
+ "issues": [
+  "Prior round said April 7 2027 was an invented aggregator forecast. The official homepage card shows the same date, so it is official but labelled only Submission Date.",
+  "Official submission subpage still says Pre-Proposals To be announced; contradiction must be stored as a verification note, not resolved silently.",
+  "Full-proposal date (Sept 8 2027 per a third-party snippet) is not on any official page fetched; do not store.",
+  "The html adapter (monitor mode) stores no rows; without the new html_cards adapter the row yields no opportunity.",
+  "Calendar page text extraction returned only 308 chars with the html adapter, so do not rely on calendar for change detection.",
+  "Freshness: homepage cards are the funder own source and were live today (2026-11-11); alert when the card is missing."
+ ],
+ "verifier_notes": "Round 2 corrects round 1: the 2027-04-07 date is confirmed by the official homepage. Status open with deadline 2027-04-07 is supported by the homepage card, not by the aggregator."
+}

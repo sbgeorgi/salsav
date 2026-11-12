@@ -1,0 +1,641 @@
+[
+  {
+    "id": "061b878e-a17f-4471-8836-616dcfcbdd44",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "adjacent",
+        "why": "Funds clean energy access and just energy transition R&D for communities; no agrivoltaics named, but a solar-farming proposal could fit.",
+        "quote": "garantizar el acceso equitativo a energías limpias, promover la innovación local y fortalecer las capacidades técnicas y sociales necesarias para una transición energética justa en las regiones"
+      },
+      "activity": {
+        "level": "research_demo",
+        "why": "Supports research, development and innovation projects led by alliances that include a higher education institution.",
+        "quote": "apoyar el desarrollo de proyectos de investigación, desarrollo e innovación (I+D+i) enfocados en soluciones energéticas sostenibles"
+      },
+      "geography": {
+        "level": "outside",
+        "why": "Colombian territories only; SALSAV has no Colombian site, so a local partner would be needed.",
+        "quote": ""
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or UA funding history found for this call.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "amount_confidence": "unknown",
+      "award_note": "Pool above COP 370 billion for the whole call; no per-project amount published.",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "open_now": null,
+      "eligibility_note": "Alliance must include a Colombian SNCTI actor, a community energy group or civil society actor, and a higher education institution. The page does not say whether a foreign university can join or lead.",
+      "themes": [
+        "solar & clean energy",
+        "energy access",
+        "research",
+        "technology & innovation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.6
+    },
+    "evidence": {
+      "eligibility": {
+        "quote": "Los proyectos deberán ser presentados por alianzas conformadas por al menos un actor del Sistema Nacional de Ciencia, Tecnología e Innovación (SNCTI)",
+        "url": "https://minciencias.gov.co/node/9324"
+      }
+    },
+    "vet_note": "Colombian-only R&D call on just energy transition; a foreign university would need a Colombian SNCTI lead, so treat as a partnership play at best.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 3,
+      "quotes_removed": 0,
+      "fit": 47,
+      "changes": []
+    }
+  },
+  {
+    "id": "ac46aa57-0dc7-4922-ad25-5b1c0699ba19",
+    "verdict": "demote",
+    "reason": "Loan-based commodity facility that puts research outside its mandate; fit score 33 is under the 40-point gate.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Smallholder commodity value chains and climate-smart practices; agrivoltaics would be a stretch and is not named.",
+        "quote": "enabling farmers to access high-value markets, adopt climate-smart practices, add value locally, and protect biodiversity."
+      },
+      "activity": {
+        "level": "mismatch",
+        "why": "Lends to enterprises with audited accounts; research and education are outside its mandate, so a lab cannot take part.",
+        "quote": "Matters covered by other international organisations, such as research, humanitarian aid, educational, medical issues fall outside the CFC’s mandate."
+      },
+      "geography": {
+        "level": "global",
+        "why": "Commodity-dependent developing countries that are CFC member states; SALSAV countries are allowed but not prioritized.",
+        "quote": "The goal of the CFC is to advance development in commodity-dependent developing countries."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or UA precedent found on the page; the funder finances commodity enterprises.",
+        "quote": "",
+        "url": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "award_max_usd": 1500000,
+      "amount_confidence": "published",
+      "award_note": "Loans and other debt instruments, not grants; USD 1.5M regular maximum, USD 300,000 Fast-Track.",
+      "cycle": "annual_recurring",
+      "next_deadline": null,
+      "deadline_note": "29th call closed 1 October 2026; the 30th call has no dates yet.",
+      "open_now": false,
+      "eligibility_note": "Finances enterprises with a 3-year track record and audited accounts through loans, and says research is outside its mandate. The page does not say universities or US applicants are excluded.",
+      "requirements": {
+        "loi": false,
+        "cost_share": "",
+        "indirect_cap": "",
+        "registrations": []
+      },
+      "themes": [
+        "smallholder farmers",
+        "agriculture",
+        "climate adaptation",
+        "rural livelihoods",
+        "international partnerships"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.7
+    },
+    "evidence": {
+      "award": {
+        "quote": "The maximum amount is USD 1.5 million for regular projects, and up to USD 300,000 under the Fast-Track procedure.",
+        "url": "https://www.common-fund.org/index.php/call-for-proposals"
+      },
+      "deadline": {
+        "quote": "29th Call for Proposals was closed on 1 October 2026.",
+        "url": "https://www.common-fund.org/index.php/call-for-proposals"
+      },
+      "eligibility": {
+        "quote": "Eligible proposals must demonstrate a track record of at least 3 years (addressing substantive as well as financial issues).",
+        "url": "https://www.common-fund.org/index.php/call-for-proposals"
+      }
+    },
+    "vet_note": "CFC lends to commodity businesses and excludes research, so it is not a grant source for a university agrivoltaics lab.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 6,
+      "quotes_removed": 0,
+      "fit": 33,
+      "changes": [
+        "ua_eligibility unlikely -> unknown: page never excludes universities or US applicants (it only says research is outside the mandate)",
+        "eligibility quote replaced: loan sentence did not show who may apply; now the 3-year track record sentence",
+        "verdict stays demote, now on fit 33 not the unlikely gate"
+      ]
+    }
+  },
+  {
+    "id": "958fd069-fc22-47f9-bbcf-1fc1387e4c90",
+    "verdict": "demote",
+    "reason": "Reimbursable Brazilian credit line for enterprises, not a research grant; fit score 37 is under the 40-point gate.",
+    "fit": {
+      "mission": {
+        "level": "adjacent",
+        "why": "Finances clean energy, climate adaptation and water projects in Brazil; no agrivoltaics or farming line is named.",
+        "quote": "Apoiar a adoção de fontes de energia limpa, envolvendo a modernização das redes de energia"
+      },
+      "activity": {
+        "level": "other",
+        "why": "A loan product for deployments and equipment; a university lab could only be a minor partner.",
+        "quote": "Apoiar a implantação de empreendimentos, a aquisição de máquinas e equipamentos e o desenvolvimento tecnológico"
+      },
+      "geography": {
+        "level": "outside",
+        "why": "Brazilian national fund; SALSAV has no Brazilian site or partner.",
+        "quote": "O Fundo Clima é um dos instrumentos da Política Nacional sobre Mudança do Clima"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or UA funding history found.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "Reimbursable credit, no maximum amount stated; not a grant.",
+      "cycle": "rolling",
+      "next_deadline": null,
+      "open_now": null,
+      "eligibility_note": "The 'Quem pode solicitar' section does not load in the stored or live copy, so who may borrow is unconfirmed. This is a BNDES loan line, not a grant.",
+      "themes": [
+        "solar & clean energy",
+        "climate adaptation",
+        "water",
+        "technology & innovation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.5
+    },
+    "evidence": {},
+    "vet_note": "BNDES Fundo Clima is a Brazilian loan line for climate projects, so it is not a grant a University of Arizona lab can win.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 3,
+      "quotes_removed": 0,
+      "fit": 37,
+      "changes": [
+        "geography quote replaced: old fragment did not show a Brazil-only scope; now the national climate policy sentence"
+      ]
+    }
+  },
+  {
+    "id": "de1314cc-eee3-45dc-9cbc-f7542b0a2992",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "strong",
+        "why": "Names the water-energy-food nexus across water, food security and renewable energy; agrivoltaics is not named.",
+        "quote": "This integrated approach, known as the water-energy-food nexus, strengthens climate action, resilience, sustainability and economic development."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Policy dialogue, knowledge exchange and business links run for Dutch embassies; a lab could only be a minor partner.",
+        "quote": "Providing policy advice and supporting dialogue;"
+      },
+      "geography": {
+        "level": "home",
+        "why": "Kenya (flex) and Mexico (focus) are partner countries, both SALSAV sites or partner locations.",
+        "quote": "Mexico"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or UA funding found; a search showed only Kenya water and private sector calls.",
+        "quote": "",
+        "url": "https://english.rvo.nl/subsidies-financing/cwf"
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "amount_confidence": "unknown",
+      "award_note": "No budget or award size stated; the facility funds embassy-led activities.",
+      "cycle": "open_ended",
+      "next_deadline": null,
+      "deadline_note": "No application window; the page label is 'Open for application' and it was checked on 3 February 2026.",
+      "eligibility_note": "Run for Dutch embassies and consulates; no open application route for universities. Other organisations may email cwf@rvo.nl for information.",
+      "themes": [
+        "water",
+        "food security",
+        "solar & clean energy",
+        "climate adaptation",
+        "international partnerships"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.7
+    },
+    "evidence": {
+      "eligibility": {
+        "quote": "CWF is a facility for Dutch embassies and consulates, so-called diplomatic missions.",
+        "url": "https://english.rvo.nl/subsidies-financing/cwf"
+      }
+    },
+    "vet_note": "The Dutch CWF facility backs water-energy-food work in Kenya and Mexico but only through embassies, so UA would need an embassy relationship first.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 4,
+      "quotes_removed": 0,
+      "fit": 54,
+      "changes": []
+    }
+  },
+  {
+    "id": "850cf25e-9394-4a91-9bfb-3bb9bef96c45",
+    "verdict": "demote",
+    "reason": "Carbon and biodiversity credit pipeline for eight Central American countries with no UA route, amount or deadline published; score 27 is under the 40-point gate.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Looks for carbon and biodiversity credit projects; agrivoltaics is not named and would be a stretch.",
+        "quote": "busca identificar proyectos de carbono y biodiversidad en ocho países"
+      },
+      "activity": {
+        "level": "other",
+        "why": "Builds a project pipeline and links projects to investors and carbon markets; a lab could only be a minor partner.",
+        "quote": "facilitar su vinculación con asistencia técnica especializada, estándares y mecanismos de certificación, inversionistas, potenciales compradores"
+      },
+      "geography": {
+        "level": "outside",
+        "why": "Eight Central American countries and the Dominican Republic; Mexico is not listed and SALSAV has no site there.",
+        "quote": "Guatemala, Belice, El Salvador, Honduras, Nicaragua, Costa Rica, Panamá y República Dominicana"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or University of Arizona precedent found on the page.",
+        "quote": "",
+        "url": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "amount_confidence": "unknown",
+      "award_note": "No amount published; the call is not yet launched.",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "deadline_note": "Launch planned for November 2026 at COP31; rules and deadlines to be announced at launch.",
+      "open_now": false,
+      "eligibility_note": "Open to initiatives at any stage; applicant types are not stated and the official BCIE site shows no call page yet.",
+      "requirements": {
+        "loi": false,
+        "cost_share": "",
+        "indirect_cap": "",
+        "registrations": []
+      },
+      "themes": [
+        "climate adaptation",
+        "land & conservation",
+        "international partnerships"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.5
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "El lanzamiento oficial de la convocatoria está previsto para noviembre de 2026",
+        "url": "https://www.revistaeyn.com/finanzas/bcie-prepara-convocatoria-de-proyectos-para-generar-creditos-de-carbono-y-biodiversidad-EA32544088"
+      },
+      "eligibility": {
+        "quote": "",
+        "url": "https://www.revistaeyn.com/finanzas/bcie-prepara-convocatoria-de-proyectos-para-generar-creditos-de-carbono-y-biodiversidad-EA32544088"
+      }
+    },
+    "vet_note": "BCIE's planned call is a carbon and biodiversity credit pipeline for Central America, not a research grant, so it does not fit an agrivoltaics lab.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 4,
+      "quotes_removed": 1,
+      "fit": 27,
+      "changes": [
+        "eligibility quote removed: it says initiatives at any stage may join but names no applicant type, so it does not back an eligibility answer (stays unknown)",
+        "source is a trade-magazine article, not a BCIE page; flagged, quotes are real"
+      ]
+    }
+  },
+  {
+    "id": "13efc86c-abfa-404f-99f7-51414e6cdf8e",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "2026 priorities are irrigation, grazing, nutrients and soil health; solar is not named, so agrivoltaics would be a stretch.",
+        "quote": "applications will be accepted from eligible entities for projects addressing at least one of the following priorities: irrigation management technologies, new and innovative grazing land management solutions, nutrient management"
+      },
+      "activity": {
+        "level": "capacity",
+        "why": "Awardees recruit producers and pay them incentives to adopt and test practices; this is deployment led by any eligible entity with a producer network, so a lab can lead a work package.",
+        "quote": "awardees recruit producers and provide them with technical assistance and incentive payments to stimulate the adoption and evaluation of innovative conservation approaches."
+      },
+      "geography": {
+        "level": "region",
+        "why": "US-wide program on private lands; foreign organizations are ineligible, so Mexico, Kenya and Israel partners would be subrecipients.",
+        "quote": "Foreign organizations and foreign public entities"
+      },
+      "precedent": {
+        "level": "direct",
+        "why": "NRCS Oregon CIG awards included agrivoltaics research on soil and forage under solar panels (the quote is on the cited Oregon news page, not the funder page).",
+        "quote": "The aim of this research is to quantify the effect of agrivoltaics system on soil and plants.",
+        "url": "https://www.nrcs.usda.gov/state-offices/oregon/news/nrcs-oregon-awards-two-conservation"
+      }
+    },
+    "facts": {
+      "ua_eligibility": "eligible",
+      "award_min_usd": 250000,
+      "award_max_usd": 5000000,
+      "amount_confidence": "published",
+      "award_note": "Up to $50 million total for about 30 awards in FY2026; $250,000 minimum, $5,000,000 maximum per award.",
+      "cycle": "annual_recurring",
+      "next_deadline": null,
+      "deadline_note": "FY2026 round closed 27 July 2026 and the notice is archived; the FY2027 round is not yet announced.",
+      "open_now": false,
+      "eligibility_note": "Public and private institutions of higher education are eligible. One entity must submit, partners may be subrecipients, and applicants need a network of producers for trials on private lands.",
+      "requirements": {
+        "loi": false,
+        "cost_share": "None required",
+        "indirect_cap": "",
+        "registrations": [
+          "Grants.gov"
+        ]
+      },
+      "themes": [
+        "agriculture",
+        "water",
+        "technology & innovation",
+        "research",
+        "drought & heat"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.8
+    },
+    "evidence": {
+      "award": {
+        "quote": "$250,000\nAward Minimum\n$5,000,000\nAward Maximum",
+        "url": "https://simpler.grants.gov/opportunity/5c9be202-40a2-497c-a9c3-12e732256980"
+      },
+      "deadline": {
+        "quote": "Application deadline: Submit through Grants.gov by 11:59 pm Eastern Time on July 27, 2026.",
+        "url": "https://simpler.grants.gov/opportunity/5c9be202-40a2-497c-a9c3-12e732256980"
+      },
+      "eligibility": {
+        "quote": "Public and state institutions of higher education",
+        "url": "https://simpler.grants.gov/opportunity/5c9be202-40a2-497c-a9c3-12e732256980"
+      }
+    },
+    "vet_note": "NRCS on-farm trials let a public university be the single applicant with up to $5M per award and have funded agrivoltaics before, though the 2026 priorities do not name solar and the round is archived.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 7,
+      "quotes_removed": 0,
+      "fit": 65,
+      "changes": [
+        "activity research_demo -> capacity: on-farm adoption trials with producer incentives, not research led by research institutions",
+        "precedent quote is absent from the stored funder page but verified verbatim on the cited Oregon NRCS page; kept"
+      ]
+    }
+  },
+  {
+    "id": "227ec790-7a16-4cae-b919-0d32623b0cec",
+    "verdict": "demote",
+    "reason": "Tropical forest alliance that takes no unsolicited proposals and funds systems and policy change; score 28 is under the 40-point gate.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Targets tropical deforestation and forest rights; farming appears only as a shift in production and trade, so agrivoltaics would be a stretch.",
+        "quote": "we support those working to change the systems and power structures that drive tropical deforestation and undermine people’s rights and well-being."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Member foundations pick grantees for governance, policy and movement change; a university lab could be only a minor partner.",
+        "quote": "The Climate and Land Use Alliance member foundations work closely together to identify funding opportunities and make grants aligned with our shared priorities."
+      },
+      "geography": {
+        "level": "global",
+        "why": "Five focus areas, mostly tropical forest countries; Mexico and Central America is one, but SALSAV's Mexican sites are semi-arid.",
+        "quote": "Mexico & Central America"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or University of Arizona grant shown on its pages; its grants are listed by member foundations.",
+        "quote": "",
+        "url": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "amount_confidence": "unknown",
+      "award_note": "No award sizes published; grants are listed by the member foundations.",
+      "cycle": "invite_only",
+      "next_deadline": null,
+      "deadline_note": "No deadline; no unsolicited proposals.",
+      "open_now": false,
+      "eligibility_note": "Member foundations choose grantees themselves; no open application is offered.",
+      "requirements": {
+        "loi": false,
+        "cost_share": "",
+        "indirect_cap": "",
+        "registrations": []
+      },
+      "themes": [
+        "land & conservation",
+        "climate adaptation",
+        "rural livelihoods",
+        "international partnerships"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.7
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "We unfortunately do not accept unsolicited grant proposals.",
+        "url": "https://www.climateandlandusealliance.org/grants/"
+      }
+    },
+    "vet_note": "CLUA funds tropical forest and rights work by invitation only, so it is not an open source for an agrivoltaics lab.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 4,
+      "quotes_removed": 0,
+      "fit": 28,
+      "changes": []
+    }
+  },
+  {
+    "id": "4417a7e2-926d-4228-a314-befe5f67e80d",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "adjacent",
+        "why": "Funds agroecological research for smallholder resilience; agrivoltaics is not named but fits as a climate-resilient farming proposal.",
+        "quote": "We take a holistic, ecosystem approach to agriculture, supporting research and partnerships that lead to increased crop productivity, improved livelihoods, better nutrition, and increased equity."
+      },
+      "activity": {
+        "level": "research_demo",
+        "why": "Funds collaborative agroecological systems research with research institutes and farmer networks, which a university lab can join or lead.",
+        "quote": "collaborative agroecological systems research and knowledge-sharing that strengthen the capacities of smallholder farmers, research institutes, and development organizations"
+      },
+      "geography": {
+        "level": "home",
+        "why": "CRFS regions of focus include Kenya, where SALSAV has a partner, plus the Andes and West Africa.",
+        "quote": "West Africa (Mali, Burkina Faso, Niger), and/or East and Southern Africa (Kenya, Tanzania, Uganda, Malawi)"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "Search found no McKnight grant for agrivoltaics or the University of Arizona; its funded work is agroecology research.",
+        "quote": "",
+        "url": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "award_min_usd": 100000,
+      "award_max_usd": 400000,
+      "amount_confidence": "estimated",
+      "award_note": "From the 2024 thematic open call: awards of $100,000 to $400,000 each (the call was earmarked $400,000 overall); most funding goes to invited organizations. Not a current offer.",
+      "cycle": "invite_only",
+      "next_deadline": null,
+      "deadline_note": "No thematic open call is open now; the 2024 calls closed on 15 May 2024.",
+      "open_now": false,
+      "eligibility_note": "Mostly invite-only; Global North organizations are eligible in open calls, with preference for Global South leads. Informal queries are welcome.",
+      "requirements": {
+        "loi": false,
+        "cost_share": "",
+        "indirect_cap": "",
+        "registrations": []
+      },
+      "themes": [
+        "agriculture",
+        "smallholder farmers",
+        "food security",
+        "climate adaptation",
+        "research"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.75
+    },
+    "evidence": {
+      "award": {
+        "quote": "We anticipate making at most 4 awards ranging from $100,000-$400,000 each, with project durations of 1-3 years.",
+        "url": "https://www.mcknight.org/programs/global-foods/how-to-apply/"
+      },
+      "deadline": {
+        "quote": "There are not currently any thematic open calls for CRFS funding.",
+        "url": "https://www.mcknight.org/programs/global-foods/how-to-apply/"
+      },
+      "eligibility": {
+        "quote": "The program has an invite-only application process with occasional thematic open calls.",
+        "url": "https://www.mcknight.org/programs/global-foods/"
+      }
+    },
+    "vet_note": "McKnight's food systems program funds agroecology research in Kenya and the Andes but is mostly invite-only, so SALSAV would start with an informal query.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 6,
+      "quotes_removed": 0,
+      "fit": 57,
+      "changes": [
+        "geography quote replaced: old text is on neither McKnight page; now the CRFS regions-of-focus sentence naming Kenya (level home kept)",
+        "award and deadline quotes are not on the stored program page but verified verbatim on the cited how-to-apply page; kept, award stays estimated because the range comes from a closed 2024 call"
+      ]
+    }
+  },
+  {
+    "id": "69f063ba-b2b1-425c-89de-f2d676d5a6fa",
+    "verdict": "demote",
+    "reason": "Already a hidden candidate; it fails the gates: broad nominator-only environmental prize with no university application route, score 28 is under 40.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "General environmental prize for nature, air, oceans, waste and climate; agrivoltaics is not named and would be a stretch.",
+        "quote": "We search the globe for game-changing examples of leadership in Nature, Air, Oceans, Waste and Climate"
+      },
+      "activity": {
+        "level": "other",
+        "why": "A prize for proven solutions chosen by nominators, not a research grant a lab can apply for.",
+        "quote": "celebrating 15 Finalists and five Winners each year"
+      },
+      "geography": {
+        "level": "global",
+        "why": "Searches worldwide through Official Nominators; SALSAV countries are allowed but not prioritized.",
+        "quote": "We work with hundreds of hugely experienced Official Nominators worldwide"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or University of Arizona prize found on the page.",
+        "quote": "",
+        "url": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "amount_confidence": "unknown",
+      "award_note": "Five winners each get GBP 1 million per year (not converted); winners are found through nominators.",
+      "cycle": "annual_recurring",
+      "next_deadline": null,
+      "deadline_note": "No nomination dates are published; the 2026 awards are on 17 November 2026.",
+      "open_now": false,
+      "eligibility_note": "The page describes Official Nominators finding solutions and states no self-application route or eligibility rules for universities.",
+      "requirements": {
+        "loi": false,
+        "cost_share": "",
+        "indirect_cap": "",
+        "registrations": []
+      },
+      "themes": [
+        "climate adaptation",
+        "land & conservation",
+        "technology & innovation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.7
+    },
+    "evidence": {
+      "award": {
+        "quote": "five Earthshot Finalists each winning £1 million to accelerate the impact of their innovative solutions.",
+        "url": "https://www.earthshotprize.org/"
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "We work with hundreds of hugely experienced Official Nominators worldwide to help us find the most impactful solutions to our Earthshots",
+        "url": "https://www.earthshotprize.org/"
+      }
+    },
+    "vet_note": "The Earthshot Prize rewards proven environmental solutions found through nominators, so it is not an application route for an agrivoltaics lab.",
+    "source": "live_page",
+    "checked": {
+      "quotes_ok": 5,
+      "quotes_removed": 0,
+      "fit": 28,
+      "changes": []
+    }
+  }
+]

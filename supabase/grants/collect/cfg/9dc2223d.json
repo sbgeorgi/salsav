@@ -1,0 +1,25 @@
+{
+  "id": "9dc2223d-158a-4d84-b631-d8e2f80b2beb",
+  "name": "Thornburg Foundation",
+  "program": "Initiatives (Water, Land, K-12 Education, Housing, Community Funding)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.thornburgfoundation.org/news",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "No public call list exists: the Foundation says it does not accept unsolicited proposals. Its news page is watched twice a day and any change is flagged for review. No deadlines are collected. Not every news post is a funding announcement.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET (desktop UA, 30 s): https://www.thornburgfoundation.org/ 200 (105697 bytes); /grantees, /initiatives/community-funding, /initiatives/pursuing-public-funds 200 with the unsolicited-proposals sentence; /sitemap.xml 200 (no calls URLs: about, board, careers, financials, grantees, initiatives/*, news/*); /feed 200 returns HTML not a feed; /rss, /grants, /apply, /grant-opportunities 404; /wp-json/wp/v2/types 403. Checked 2026-11-12. Re-checked 2026-11-12: homepage, /initiatives/community-funding, /news, /grantees all carry 'The Thornburg Foundation does not accept unsolicited proposals'; no deadline or application wording found.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "page_reason": "Thornburg states on its homepage and initiative pages that it does not accept unsolicited proposals (contact info@thornburgfoundation.org if your work aligns with a current initiative), so there is no public call list, feed, API or labelled deadline. Grant rounds appear only as news posts without deadlines, so the news page is watched for a new announcement.",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

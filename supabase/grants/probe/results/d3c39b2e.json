@@ -1,0 +1,57 @@
+{
+  "key": "d3c39b2e",
+  "verdict": "structured_needs_new_adapter",
+  "method": "rss",
+  "adapter": "rss_filtered (new: rss + title/description regex filter)",
+  "feed_url": "https://www.nsf.gov/rss/rss_www_funding.xml",
+  "adapter_config": {
+    "feed_url": "https://www.nsf.gov/rss/rss_www_funding.xml",
+    "match": "Industry[- /]?University Cooperative Research|\bIUCRC\b",
+    "status_default": "open"
+  },
+  "row_fix": {
+    "url": "https://www.nsf.gov/funding/opportunities/iucrc-industry-university-cooperative-research-centers-program/505789",
+    "program": "IUCRC Program (next solicitation expected later in 2026)",
+    "reason": "Canonical NSF program record; its 'Status of NSF IUCRC program' text changes when the new solicitation posts; sitemap lastmod also moves. Use for interim html monitoring."
+  },
+  "confidence": "medium",
+  "summary": "No machine-readable IUCRC opportunity exists today (not accepting proposals; no posted or forecasted Grants.gov record). The only live structured NSF funding source is the NSF-wide funding RSS (rss_www_funding.xml, 20 items, pubDate, guid=URL). It does not contain an IUCRC item now, and the existing rss adapter would wrongly ingest all 20 unrelated NSF items as open. A title/description regex filter on that feed would catch the next IUCRC solicitation automatically.",
+  "attempted": [
+    "NSF-wide funding RSS rss_www_funding.xml: 200, 20 items (MRI, Astro, GRFP, MPS, ENG...), zero IUCRC items",
+    "Directorate-split RSS guesses (rss_www_funding_eng/geo/mps/cise/all/dcl/...): all 404",
+    "nsf.gov/sitemap.xml -> 8 sitemap pages, 16,010 URLs: IUCRC program URLs are /funding/opportunities/iucrc-industry-university-cooperative-research-centers-program/5501 (+/nsf17-516, /505789 +/nsf20-570, both 'Archived') and /505789/updates/119856 (lastmod 2025-05-21); no new NSF 26-xxx IUCRC solicitation URL",
+    "nsf.gov program page /505789 and /updates/119856: 'currently active; however, it is not accepting proposals... expects to release an updated solicitation later in 2025' (last updated 2025-05-21)",
+    "nsf.gov /5501 and /505789 pages: sub-page status Archived (NSF 17-516 and NSF 20-570); no drupal JSON API or data endpoint found; funding search page /funding/opps returns 202 with empty body",
+    "nsf.gov/funding/opportunities/iucrc-industry-university-cooperative-research-centers(-program/-iucrc) slug guesses: 404/301",
+    "Grants.gov search2 posted|forecasted, keyword 'Industry/University Cooperative Research' (NSF): 115 hits, all unrelated; keyword 'IUCRC': 0; keyword 'Cooperative Research Centers' NSF: 116 hits, none IUCRC",
+    "Grants.gov search2 with archived/closed included: NSF 12-516 Industry/University Cooperative Research Centers Program only (archived 2011-2013)",
+    "iucrc.nsf.gov: robots.txt 200; sitemap.xml 200 (192 URLs, no funding listing); /feed/ 404; wp-json reached a 301 (no JSON pages probe); prior round covered /feed /rss /atom.xml /jsonapi",
+    "Prototype: filtered RSS parse of the live feed with the production IUCRC pattern -> 0 matches (correct: nothing posted); demo pattern 'Research Programs' -> 7 real matches, proving the parse and filter"
+  ],
+  "engine_requirements": "Add adapter 'rss_filtered' (or an optional adapter_config.match on the rss adapter). Request: plain GET https://www.nsf.gov/rss/rss_www_funding.xml with UA. Parse RSS 2.0 channel/item: title, link, guid (use guid, fallback link), pubDate, description (strip tags, unescape entities, collapse whitespace). Keep an item only if regex adapter_config.match (case-insensitive, applied to title + ' ' + description) matches. Map external_id = guid, title = title, url = link, published = pubDate, deadline = first 'deadline|due|closing date' phrase with a date in the description, else null, status = 'open'. Since the feed is a rolling window of about 20 items, the edge function must upsert by external_id and must not mark items missing from a later fetch as closed. Respect 2s host spacing. Never ingest unfiltered items for a single-program row.",
+  "prototype": "import re, sys, urllib.request, html\nfrom xml.etree import ElementTree as ET\nFEED = \"https://www.nsf.gov/rss/rss_www_funding.xml\"\n# IUCRC filter (production pattern). Argument overrides it for the demo run.\nPATTERN = sys.argv[1] if len(sys.argv) > 1 else r\"Industry[- /]?University Cooperative Research|\\bIUCRC\\b\"\nreq = urllib.request.Request(FEED, headers={\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36 SALSAV-GrantWatch/1.0\"})\nraw = urllib.request.urlopen(req, timeout=30).read()\nroot = ET.fromstring(raw)\nitems = root.findall(\"./channel/item\")\nrx = re.compile(PATTERN, re.I)\nout = []\nfor it in items:\n    title = (it.findtext(\"title\") or \"\").strip()\n    link = (it.findtext(\"link\") or \"\").strip()\n    guid = (it.findtext(\"guid\") or link).strip()\n    desc = html.unescape(re.sub(r\"<[^>]+>\", \" \", it.findtext(\"description\") or \"\"))\n    desc = re.sub(r\"\\s+\", \" \", desc).strip()\n    if not rx.search(title + \" \" + desc):\n        continue\n    m = re.search(r\"(?:deadline|due|closing date|submission deadline)[^.]{0,80}?(\\d{1,2}/\\d{1,2}/\\d{4}|[A-Z][a-z]+ \\d{1,2}, \\d{4})\", desc, re.I)\n    out.append({\"external_id\": guid, \"title\": title, \"url\": link,\n                \"published\": it.findtext(\"pubDate\"), \"deadline\": m.group(1) if m else None,\n                \"status\": \"open\"})\nprint(\"feed_items\", len(items), \"matched\", len(out))\nfor o in out[:5]:\n    print(o)\n",
+  "check": {
+    "rss_unfiltered_adapter_check": {
+      "ok": true,
+      "count": 20,
+      "open": 20,
+      "sample_first": "MRI (deadline null, status open)",
+      "note": "shows the trap: unfiltered rss ingests all NSF items for this funder"
+    },
+    "html_nsf_program_page_adapter_check": {
+      "ok": true,
+      "mode": "page",
+      "count": 0,
+      "text_len": 5240,
+      "note": "monitor only; ok because text >=1500 chars"
+    },
+    "prototype_filtered_run_production_pattern": "feed_items 20 matched 0",
+    "prototype_filtered_run_demo_pattern_Research_Programs": "feed_items 20 matched 7; first: MPS Physics Research Programs (MPS Physics) published Thu, 13 Aug 2026 09:26:57 -0400",
+    "grants_gov_posted_forecasted_IUCRC_keyword": "hitCount 0",
+    "grants_gov_keyword_Cooperative_Research_Centers_posted_forecasted": "hitCount 116, none IUCRC"
+  },
+  "evidence": [
+    "NSF IUCRC program page 505789/updates/119856: 'currently active; however, it is not accepting proposals at this time'",
+    "Grants.gov keyword IUCRC posted|forecasted: 0 hits"
+  ]
+}

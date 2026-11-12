@@ -1,0 +1,36 @@
+{
+  "id": "00c5697a-eb43-4349-a81b-d0f8bb9ad2d2",
+  "name": "Bureau of Reclamation (WaterSMART)",
+  "program": "Cooperative Watershed Management Program (Funding Opportunity R26AS00349)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.usbr.gov/watersmart/cwmp/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "WaterSMART Cooperative Watershed Management Program",
+      "deadline_regex": "Round \\d: ([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads the next application deadline for the Bureau of Reclamation Cooperative Watershed Management Program from its own page twice a day. Right now that is Round 2, closing Feb 24, 2027. Only this one program is tracked; once the last listed round passes, nothing is shown until new dates are posted.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "WaterSMART Cooperative Watershed Management Program",
+        "deadline": "2027-02-24",
+        "url": "https://www.usbr.gov/watersmart/cwmp/"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP POST https://api.grants.gov/v1/api/search2 with body {rows:50, oppStatuses:'forecasted|posted', agencies:'DOI-BOR'}, HTTP 200, 5 hits total (R26AS00349, R26AS00034, R26AS00079, R26AS00017, R26AS00021), checked 2026-11-12. Keyword probe 'WaterSMART' returned 4 DOI-BOR hits; page GET https://www.usbr.gov/watersmart/cwmp/ HTTP 200, 23 KB, static HTML, no JavaScript needed. Filter replay: 4 of 5 pass (desalination dropped).",
+  "edge_risk": "none",
+  "confidence": "high",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

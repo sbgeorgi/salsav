@@ -1,0 +1,73 @@
+{
+  "key": "71f3a111",
+  "funder": "Rockefeller Foundation",
+  "verdict": "structured_supported",
+  "method": "wp_rest",
+  "confidence": "medium",
+  "summary": "Round 2 found one live, open grant call on the funder site: Cities Deliver (RF + OpenAI Foundation, USD 50M, call live since 2026-10-14, first-round deadline 2026-11-29 11:59pm ET, round 2 due 2027-03-01). It is exposed as WordPress REST page record id 94440 (slug cities-deliver-ai-solutions-for-public-services), which json_api reads with plain HTTP. Limits: the record has no deadline field (deadline lives only in body text, so deadline is null) and json_api hardcodes status open, so the row will stay open after the deadline passes unless removed. Application itself is on citiesdeliver.rockefellerfoundation.org (SimplyRQ, login-gated, not usable). No other open grant call found on the funder site.",
+  "attempted": [
+    "wp-json/wp/v2/rfp?per_page=100: 200, 6 vendor procurement RFPs (Aug 2026 newest), none grant calls",
+    "wp-json/ root namespaces and routes: only wp/v2 core plus plugin namespaces (yoast, popup-maker, metaslider, oasis-workflow); no custom grant/opportunity route; /graphql 404",
+    "wp-json/wp/v2/search across calls, open call, applications are now open, request for proposals, apply by, letter of inquiry, expression of interest, RFCC: finds Cities Deliver page (open call), Bellagio Center Targeted Call for Convening Proposals (convening, not grants), news posts, awarded grant records",
+    "sitemap.xml: 17 sub-sitemaps incl. page, news_post, initiative, rfp, grant; no separate call/opportunity sitemap",
+    "robots.txt 200 (2389 bytes); /feed/rfp/, /rfp-feed/, /open-calls/, /opportunities/, /funding-opportunities/, /work-with-us/, /cities-deliver/, /mission-300/: all 404",
+    "homepage: OPEN CALL banner links to Cities Deliver page with EXPLORE THE OPEN CALL",
+    "initiative list (wp/v2/initiative, 45 items): 0 open calls in listing; mission-300, food-system-vision-prize, zero-gap-fund, food-is-medicine, yieldwise, regenerative-school-meals pages checked: only mailchimp signup, partner and research links, no apply/call text",
+    "cities-deliver page (plain HTTP 200, 143 KB): timeline text (Oct 14 2026 call live, Nov 29 2026 round 1 due, Mar 1 2027 round 2 due), Apply Now links to citiesdeliver.rockefellerfoundation.org, PDFs for FAQ and T&C",
+    "citiesdeliver.rockefellerfoundation.org: 200 IIS/ASP.NET, server-rendered; login-gated customer portal (Create account); Set-Cookie ASPSESSIONID; no public JSON, /robots.txt, /sitemap.xml, /api/grants, /api/opportunities, /api/calls all 404 or empty; JS RQ_Template.js has only login/profile endpoints (save-user, .asp profile pages); RQ API hosts (rqapi.simplyrq.com) are used by the app, not a public list",
+    "adapter_check json_api on wp/v2/pages?slug=cities-deliver-ai-solutions-for-public-services: ok=true count=1 (real, live call), deadline null",
+    "adapter_check html on the call page: ok=true text_len 7717 (page mode; next_deadline not printed by this check, labeled-date extraction unverified here)"
+  ],
+  "adapter": "json_api",
+  "adapter_config": {
+    "url": "https://www.rockefellerfoundation.org/wp-json/wp/v2/pages?slug=cities-deliver-ai-solutions-for-public-services&_fields=id,title,link,excerpt,modified",
+    "method": "GET",
+    "items_path": "",
+    "map": {
+      "external_id": "id",
+      "title": "title.rendered",
+      "url": "link",
+      "description": "excerpt.rendered"
+    }
+  },
+  "row_fix": {
+    "url": "https://www.rockefellerfoundation.org/cities-deliver-ai-solutions-for-public-services/",
+    "program": "Cities Deliver: AI Solutions for Public Services call for proposals (USD 50M with OpenAI Foundation). Round 1 due 2026-11-29; round 2 due 2027-03-01. Only open grant call found on the funder site; the foundation otherwise does not accept unsolicited proposals.",
+    "reason": "Only live grant call. Earlier row pointed at homepage and /rfps/ (vendor procurement only)."
+  },
+  "feed_url": null,
+  "check": {
+    "ok": true,
+    "mode": "calls",
+    "kind": "ok",
+    "http": 200,
+    "count": 1,
+    "open": 1,
+    "text_len": 66,
+    "sample": [
+      {
+        "title": "Cities Deliver: AI Solutions for Public Services",
+        "deadline": null,
+        "status": "open",
+        "url": "https://www.rockefellerfoundation.org/cities-deliver-ai-solutions-for-public-services/",
+        "award_max_usd": null
+      }
+    ],
+    "error": null,
+    "expect_min": 1,
+    "fetchability": null,
+    "html_page_check": {
+      "ok": true,
+      "mode": "page",
+      "http": 200,
+      "text_len": 7717,
+      "error": null
+    }
+  },
+  "engine_requirements": "Use json_api as configured in adapter_config. Known gaps the parent should decide on before enabling: (1) deadline is not a field in the WP record, so json_api leaves it null; a deadline would need the body text (\"November 29, 2026\" after \"Eligibility Screening, Round 1\") parsed by a new rule. (2) json_api sets status open for every item, so this row stays open after 2026-11-29 unless the row is expired by hand or the function drops rows whose stored deadline is past. Alternative: the html adapter on the call page gives change detection plus next_deadline from labeled future dates, with no opportunity row.",
+  "evidence": [
+    "Cities Deliver call page text: Call for proposals goes live October 14 2026; Eligibility Screening Round 1 due November 29 2026 11:59pm ET; Round 2 due March 1 2027 11:59pm ET",
+    "WP REST page record id 94440 modified 2026-11-05",
+    "Apply Now destination citiesdeliver.rockefellerfoundation.org (login-gated)"
+  ]
+}

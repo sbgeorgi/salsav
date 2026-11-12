@@ -1,0 +1,54 @@
+{
+  "id": "061b878e-a17f-4471-8836-616dcfcbdd44",
+  "name": "Minciencias (Ministerio de Ciencia, Tecnologia e Innovacion, Colombia)",
+  "program": "Minciencias convocatorias (research and innovation calls)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://minciencias.gov.co/convocatorias/todas",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://minciencias.gov.co/convocatorias/todas",
+      "item": "table tbody tr",
+      "title": "td.views-field-title a",
+      "link": "td.views-field-title a",
+      "date_label": true,
+      "detail": {
+        "max": 3,
+        "deadline_regex": "Cierre\\s+(?:[a-záéíóú]+\\s+)?(\\d{1,2}\\s+[a-záéíóú]+\\s+\\d{4})"
+      }
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "The five newest Minciencias (Colombia) calls are read twice a day from its list of all calls, of every theme, and wait for review. Closing dates are read from three call pages per run, so two older calls may show as open without a date even if closed. Older list pages are not read.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Convocatoria especial para la financiación de macroproyectos nacionales para el fortalecimiento de las capacidades cient",
+        "deadline": "2026-11-13",
+        "url": "https://minciencias.gov.co/node/9581"
+      },
+      {
+        "title": "Convocatoria 54 convocatoria especial para la financiación de proyectos para el fortalecimiento de las capacidades cient",
+        "deadline": "2026-11-13",
+        "url": "https://minciencias.gov.co/node/9582"
+      },
+      {
+        "title": "Convocatoria para el fortalecimiento de capacidades de ciencia, tecnología e innovación en el departamento de córdoba, a",
+        "deadline": null,
+        "url": "https://minciencias.gov.co/node/9573"
+      }
+    ]
+  },
+  "evidence": "GET https://minciencias.gov.co/convocatorias/todas HTTP 200 text/html (checked 2026-11-12), 5 calls on page 0 (nodes 9581, 9582, 9577, 9573, 9572); node pages 9581, 9577, 9573 HTTP 200 each carry 'Cierre <weekday> <d> <month> <yyyy> hh:mm pm' (13 nov, 3 nov, 23 oct 2026); harness without filter: count 5, open 4, deadlines read for 3; with filter: count 1 (node 9573, closed). Page 1 (?page=1) holds older calls (978 health, 48 biodiversity/bioeconomy opened 2026-06-16, 977 Publindex). Old url node/9324 was a news article about the closed Convocatoria 49 (cierre 8 May 2026); GET /rss.xml is press releases only.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 5,
+    "open": 4,
+    "checked": "2026-11-12"
+  }
+}

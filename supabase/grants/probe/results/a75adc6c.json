@@ -1,0 +1,53 @@
+{
+  "key": "a75adc6c",
+  "funder": "FFEM (Fonds francais pour l'environnement mondial)",
+  "verdict": "monitor_html_only",
+  "method": "html_listing",
+  "adapter": "html",
+  "adapter_config": {},
+  "feed_url": null,
+  "row_fix": {
+    "url": "https://www.ffem.fr/en/calls-for-projects/list",
+    "program": "FFEM project financing (paused for new proposals until end 2026)",
+    "reason": "The FAQ URL is not the calls list. The calls list page is the only place a new call would appear, so monitor it instead."
+  },
+  "confidence": "high",
+  "summary": "No machine-readable open-calls source exists for FFEM right now. The calls list is a Drupal view that renders server-side and returns zero calls even with all three status filters checked. The FAQ says no new proposals are accepted until end 2026. Keep the html monitor on the calls list page so the function flags when a call appears. Opportunity rows need a new adapter or manual entry once a call opens.",
+  "attempted": [
+    "Round 2: real status filter names are status[ongoing], status[soon], status[closed] (checkboxes, default checked). Requested with curl -g: 'No calls for projects found' for all-checked and closed-only",
+    "Round 2: sitemap.xml (1819 URLs) lists the real calls paths /fr/appels-a-projets/liste and /en/calls-for-projects/list (round 1 used /calls-for-projects paths that 404). Both 200, both empty",
+    "Round 2: Drupal drupalSettings JSON on the calls list: no views ajax payload, no data, only path/analytics/user settings",
+    "Round 2: /views/ajax 404; /fr/appels-projets?_format=json 406 'only supports the HTML format'; /en/calls-for-projects/list?_format=json 406; ?_format=rss 406; /feed variants on the list 404",
+    "Round 2: RSS found at /rss.xml, /fr/rss.xml, /en/rss.xml (200 application/rss+xml). Only 10 site-wide news/resource items (COP31, evaluation summaries, publications). No calls. Not usable as opportunity rows, only as a change signal",
+    "Round 2: /taxonomy/term/1/feed is RSS 200 but lists funded projects (e.g. XOCHIMILCO, StovePlus), not calls. Rejected",
+    "Round 2: sitemap news posts for calls: 'nouvel appel' articles are dated 2017, 2018, 2019 (chemicals call open 24 Jun to 4 Oct 2019), 2022 (PPI 6), 2024 (One Health, closed 30 Apr 2024), 2025 (refrigeration, PPI). Sitemap lastmod (e.g. 2026-09-25) is a site-migration date, not a publication date. No open call",
+    "Round 2: /fr/cloture-appel-projets-one-health: 'CLOTURE', closed 30 April 2024",
+    "Round 2: FAQ text: 'not able to receive new project proposals for funding until the end of 2026'; 'follow news for resumption or new calls following 2027-2030 programming'",
+    "Round 2: third-party PPI (programmeppi.org/aap/, run by UICN French committee, FFEM-funded): 'Nous n'avons pas d'appel a projets en cours'. WordPress REST (/wp-json) returns 403 to plain HTTP, so no structured feed",
+    "Round 2: WebSearch for FFEM API, open data, data.gouv.fr dataset: no FFEM dataset or API; hits are ANR, FNSO, regional funders",
+    "Round 2: adapter_check html on https://www.ffem.fr/en/calls-for-projects/list: ok=true, text_len 2027, count 0 (expected for monitor mode)",
+    "Round 2: adapter_check html on https://www.ffem.fr/fr/appels-a-projets/liste: ok=true, text_len 2107, count 0"
+  ],
+  "check": {
+    "ok": true,
+    "mode": "page",
+    "kind": "ok",
+    "http": 200,
+    "count": 0,
+    "open": 0,
+    "text_len": 2027,
+    "sample": [],
+    "error": null,
+    "expect_min": 1,
+    "fetchability": "easy"
+  },
+  "evidence": [
+    "calls list HTML: 'No calls for projects found' for every status filter combination tested (round 2 retest with correct checkbox names)",
+    "sitemap.xml lists https://www.ffem.fr/en/calls-for-projects/list and /fr/appels-a-projets/liste",
+    "rss.xml: 10 items, site-wide news, no calls",
+    "FAQ: no new proposals until end 2026"
+  ],
+  "engine_requirements": "No new adapter needed now. Keep html monitor on https://www.ffem.fr/en/calls-for-projects/list. When a call opens, the list will show call cards. A future structured adapter would need: GET the list page (plain HTTP, no cookies), parse each card for title, status (Ongoing / Opening soon / Closed call), deadline text, and detail URL; then GET each detail page for the deadline. Status values are the English labels on the list. Do this only once a real call card is present in live HTML, since no card markup exists to test against right now.",
+  "prototype": "",
+  "note": "Re-run this probe when the FAQ resumption date passes (2027). Or when news announces a new call."
+}

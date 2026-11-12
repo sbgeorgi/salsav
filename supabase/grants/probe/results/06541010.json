@@ -1,0 +1,53 @@
+{
+  "key": "06541010",
+  "funder": "Green Climate Fund",
+  "verdict": "monitor_html_only",
+  "method": "html_listing",
+  "adapter": "html",
+  "feed_url": null,
+  "confidence": "medium",
+  "adapter_config": {},
+  "row_fix": {
+    "url": "https://www.greenclimate.fund/access-funding/other-funding-options",
+    "program": "Other funding options (Request for proposals windows: Enhancing Direct Access, REDD+ RBP); project approval / SAP / PPF are open-ended routes",
+    "reason": "Homepage is not a funding listing; this page lists the live RFP windows with their status (Request for proposals active / ended)."
+  },
+  "summary": "GCF has no machine-readable feed of live funding calls with deadlines. The only live call is the Enhancing Direct Access RFP, shown as 'Request for proposals active' on an HTML page with no deadline. The Project approval, SAP and PPF routes are open-ended, so there is no date to extract. The html adapter can watch the windows page for status changes. It cannot create opportunity rows. The Drupal portfolio fragment that exposes plain JSON is real and stable, but it lists approved and under-implementation projects, not opportunities, so it is not a funding feed for SALSAV.",
+  "attempted": [
+    "endpoint_recon.py on https://www.greenclimate.fund/ (verdict html_ok; Drupal; no JSON:API, no NEXT_DATA, no ld+json; /jsonapi/node/article 404)",
+    "curl with SALSAV-GrantWatch UA: /feed, /rss, /wp-json/wp/v2/types, /projects/search all 404",
+    "robots.txt: Allow / with Disallow admin, search, user; no Sitemap line",
+    "sitemap.xml index with 11 children: projects, landings, events, decisions (903 b-decision URLs), articles (968), documents; lastmod present, but no deadline fields and no open-call items",
+    "Read access-funding index and all subpages: project-approval-process, simplified-approval-process, project-preparation-facility, other-funding-options (404 on the guessed /project-funding-options and /funding-pathways slugs; real slugs taken from links)",
+    "other-funding-options page: EDA 'Request for proposals active'; REDD+ RBP 'permanent window, accepts concept notes on a running basis'; MSME, MFS and REDD+ pilot RFPs marked ended",
+    "EDA RFP page (/access-funding/other-funding-options/rfp/enhancing-direct-access): no deadline string found; guidelines PDF dated 02 Nov 2021",
+    "Portfolio explorer: /portfolio/all HTML loads cards via /gcf/fragments/projects-browse (JSON with results_html, 19 cards per page, plain HTTP 200, no cookies) and /gcf/facets (JSON counts). Cards are approved projects (status Approved / Under implementation / Completed); not opportunities",
+    "Oracle Fusion tender portal linked from 'Browse current tenders' (iaayou.fa.ocs.oraclecloud.com NegotiationAbstracts): page is a JS app, guessed REST path returned 404; this is GCF procurement (consultancies), not funding for SALSAV, so not pursued",
+    "data.greenclimate.fund (GCF Open Data Library): Next.js SPA with _next/static chunks; not pursued, it reports funded activities, not calls",
+    "Board meeting pages (/about/governance/board-meetings): listing of B.23 to B.46 only, no upcoming-meeting or pipeline table in HTML",
+    "/tenders, /about/governance/board-meetings/b47: 404"
+  ],
+  "check": {
+    "html_candidate": {
+      "command": "node --experimental-strip-types C:/HELLOWORLD/salsav_codex/supabase/grants/tools/adapter_check.mjs cand_html.json",
+      "output": "{\"ok\":true,\"count\":0,\"sample\":[],\"error\":null,\"http\":200,\"text_len\":3680,\"links\":4}"
+    },
+    "json_candidate_rejected": {
+      "url": "https://www.greenclimate.fund/gcf/fragments/projects-browse",
+      "output": "{\"ok\":false,\"count\":0,\"sample\":[],\"error\":\"parsed 0 opportunities\",\"http\":200,\"bytes\":104517}",
+      "why": "Top-level JSON has results_html (an HTML string) instead of an item array, so json_api items_path cannot reach the cards. Even a parser would return approved projects, not opportunities."
+    }
+  },
+  "engine_requirements": "No new adapter is recommended for opportunities. Keep the html adapter on https://www.greenclimate.fund/access-funding/other-funding-options so status changes to the RFP windows are detected. Optional, not for the opportunities table: a new json_api-style parser for https://www.greenclimate.fund/gcf/fragments/projects-browse, which needs to parse results_html (card a[href^=/portfolio/projects/fp] and p.f-body-bold for the title) to build a funded-precedent list. Plain HTTP, no key, no pagination needed for round 1.",
+  "evidence": [
+    "https://www.greenclimate.fund/access-funding/other-funding-options shows 'Enhancing Direct Access (EDA) Request for proposals active'",
+    "https://www.greenclimate.fund/access-funding/other-funding-options/redd-plus says REDD+ RBP is a permanent window accepting concept notes on a running basis (no closing date)",
+    "https://www.greenclimate.fund/gcf/fragments/projects-browse returns application/json 200 with results_html (approved projects, FP310 to FP328 seen)",
+    "https://www.greenclimate.fund/sitemap.xml 200 application/xml, 11 child sitemaps"
+  ],
+  "prototype": null,
+  "notes": [
+    "Round 1 only. A date-bearing call would need a closing date on the page; none was found for the EDA RFP.",
+    "Procurement tenders (Oracle portal) are GCF's own purchasing and are out of scope for SALSAV funding."
+  ]
+}

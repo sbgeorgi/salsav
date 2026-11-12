@@ -1,0 +1,23 @@
+{
+  "key": "cad6a9e4",
+  "funder": "BARD call for proposals",
+  "lens": "replay-and-stability",
+  "accept": false,
+  "verdict_checked": "structured_supported (json_api) - replay confirmed, status/deadline fields unreliable",
+  "checks": {
+    "adapter_check_run1": "ok=true count=11 http=200 bytes=4560",
+    "adapter_check_run2_after_20s": "ok=true count=11 http=200 bytes=4560 (identical sample)",
+    "curl_no_cookie_ua": "HTTP 200 application/json, cloudflare, x-wp-total 11, no challenge markers",
+    "page2": "HTTP 400 (single page confirmed)",
+    "no_ua": "HTTP 200"
+  },
+  "issues": [
+    "status is hardcoded open for all 11 items; single-record content shows closed/past dates (id 1322 Closed; id 4002 Next submission date March 31, 2026; id 98 portal not open)",
+    "deadline is always null; real dates are in content.rendered free text in varying formats (Submission date: January 15th, 2027; Pre-proposal: July 1, 2026; Submission Deadline: 3 months following workshop)",
+    "date field is the WP publish/modify date (2024/2026), not a deadline; must not be used as deadline",
+    "catalog is program-level (11 programs), so a row maps to program pages, not per-call instances",
+    "some items (Pioneer Funding Track, Research Grants) carry notice text about the 2026 round; status cannot be derived from list endpoint"
+  ],
+  "recommended": "Either accept only with status suppressed/unknown, or add a json_api detail step (fetch /wp-json/wp/v2/opportunities/{id}?_fields=id,content per item, regex Submission date|Next submission deadline|Submission Deadline). Needs new engine support; prototype not run.",
+  "endpoint": "https://www.bard-isus.org/wp-json/wp/v2/opportunities?per_page=100&_fields=id,link,title,excerpt,date"
+}

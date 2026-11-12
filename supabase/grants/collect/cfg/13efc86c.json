@@ -1,0 +1,40 @@
+{
+  "id": "13efc86c-abfa-404f-99f7-51414e6cdf8e",
+  "name": "USDA Natural Resources Conservation Service (NRCS)",
+  "program": "Conservation Innovation Grants (CIG), On-Farm Conservation Innovation Trials (annual cycle; FY2026 NOFO USDA-NRCS-NHQ-CIGOFT-26-NOFO0001447)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://simpler.grants.gov/opportunity/5c9be202-40a2-497c-a9c3-12e732256980",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-NRCS",
+    "keyword": "Conservation Innovation",
+    "oppStatuses": "forecasted|posted",
+    "rows": 50,
+    "also_page": true,
+    "auto_vet": false,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "conservation innovation",
+        "cig"
+      ]
+    },
+    "max_items": 40
+  },
+  "collect_note": "Grants.gov is checked twice a day for NRCS Conservation Innovation Grants calls, national and state, once posted or forecasted. None is open today: the 2026 national calls closed in July. The program page is also watched for changes. Relevance is reviewed by a person.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "POST https://api.grants.gov/v1/api/search2 (HTTP 200): agencies USDA-NRCS + keyword Conservation Innovation, all statuses: 554 hits, all CIG NOFOs archived or closed (e.g. USDA-NRCS-NHQ-CIGOFT-26-NOFO0001447 archived, close 07/27/2026); forecasted|posted: only USDA-NHQ-ACEP-26-NOFO0001456 (Easement Restoration, not CIG, removed by filter). oppNum lookup for the FY2026 number returned 0 hits. Funder page https://simpler.grants.gov/opportunity/5c9be202-40a2-497c-a9c3-12e732256980 HTTP 200, title Conservation Innovation Grants (CIG) On-Farm Conservation Innovation Trials FY2026, plain HTTP text 6461 chars. NRCS program page timed out once. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  },
+  "zero_reason": "No CIG NOFO is posted or forecast on 2026-11-12. Grants.gov search2 (agencies USDA-NRCS, keyword Conservation Innovation, forecasted|posted) returns 1 hit: USDA-NHQ-ACEP-26-NOFO0001456 'Easement Restoration and Stewardship' (not CIG). The last national CIG NOFO, USDA-NRCS-NHQ-CIGOFT-26-NOFO0001447, is closed: 'Archived opportunity ... Archived: August 26, 2026' at https://simpler.grants.gov/opportunity/5c9be202-40a2-497c-a9c3-12e732256980. NRCS program page https://www.nrcs.usda.gov/programs-initiatives/cig-conservation-innovation-grants: '2026 CIG Projects Announced. USDA has awarded $65 million to 34 CIG projects.' The title filter ('conservation innovation') matches that NOFO's title 'Conservation Innovation Grants (CIG) On-Farm Conservation Innovation Trials for fiscal year (FY) 2026', so the next CIG call will be collected."
+}

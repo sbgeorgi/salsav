@@ -1,0 +1,40 @@
+{
+  "id": "27cd8a3f-85e1-41d0-bb8a-a52561922167",
+  "name": "BSF (US-Israel Binational Science Foundation), in memory of Prof. Anton Post",
+  "program": "BSF Climate Solutions",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.bsf.org.il/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "list": {
+      "url": "https://www.bsf.org.il/",
+      "item": "li.funding-block",
+      "title": "h4.funding-block__title",
+      "link": "a.funding-block__fill-link",
+      "date": "div.funding-block__date-date",
+      "match": "Climate Solutions"
+    }
+  },
+  "collect_note": "The BSF Climate Solutions card on the official BSF homepage is read twice a day. It shows a pre-proposal submission date of April 7, 2027. The program's own pages still say 'to be announced', so confirm the date with BSF before relying on it.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "BSF Climate Solutions",
+        "deadline": "2027-04-07",
+        "url": "https://www.bsf.org.il/funding-opportunities/new-program/about/"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP 2026-11-12: https://www.bsf.org.il/ HTTP 200, homepage card 'BSF Climate Solutions / More about BSF Climate Solutions / Submission Date / April 7, 2027'; other cards (BSF Research Grants Dec 2 2026, NSF-BSF Joint Research Grants, Prof. Rahamimoff Travel Grants Dec 16 2026, NEH-BSF Programs) do not contain 'Climate Solutions'. https://www.bsf.org.il/funding-opportunities/new-program/ shows 'To be announced - Submission Date Pre-Proposals' and the about page says 'Early April: Pre-Proposals deadline' (consistent with early April 2027, cycle is bi-annual; 2025 call was pre-proposals Apr 2 2025). Announcements list (https://www.bsf.org.il/about/announcements/) only has the Jan 9 2025 call. Web search found no 2027 call document.",
+  "edge_risk": "bot_protection",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

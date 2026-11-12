@@ -1,0 +1,15 @@
+{
+  "id": "1cbc1a63-2aca-4d30-83ad-db8ed6138583",
+  "name": "McKnight Foundation",
+  "program": "Global Collaboration for Resilient Food Systems (CRFS), invitation-only grantmaking (formerly Collaborative Crop Research Program)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.mcknight.org/en_ca/programs/global-foods/how-to-apply/",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch only: CRFS states there are currently no thematic open calls and that most grantmaking is invitation-only, so no public call rows exist to collect. The how-to-apply page is watched for a new open call, which would show as a text change. The 'Past Thematic Open Calls' are historical and are not collected as calls. There is no RSS feed (/feed/ returns 500) and no grants API covering open calls; the Grants.gov/EU sources do not apply to a private foundation.",
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "GET https://www.mcknight.org/en_ca/programs/global-foods/how-to-apply/ HTTP 200, 126817 bytes, plain urllib with desktop UA; text states 'There are not currently any thematic open calls for CRFS funding' and 'the majority of the program's grantmaking ... invite-only'. GET https://www.mcknight.org/programs/global-foods/ HTTP 200 (no open call listed). GET https://www.mcknight.org/feed/ HTTP 500. Grants search page HTTP 200 lists awarded grants only. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

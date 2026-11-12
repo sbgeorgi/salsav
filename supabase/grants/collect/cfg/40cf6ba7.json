@@ -1,0 +1,25 @@
+{
+  "id": "40cf6ba7-069c-4d12-b4b3-a2853f0e2526",
+  "name": "XPRIZE Foundation",
+  "program": "XPRIZE Adaptive Plants (Food + Water + Waste)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.xprize.org/prizes/adaptive-plants",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "No call is open: XPRIZE Adaptive Plants is still seeking sponsors and lists no registration or deadline. Its program page is watched twice a day and any change, such as a team registration opening, is flagged for review.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12 with desktop UA, 30 s timeout: https://www.xprize.org/prizes/adaptive-plants HTTP 200 (93 KB, text ~3.8 KB, no JS needed); /competitions/adaptive-plants HTTP 200 (same content, 'Become a sponsor' CTA, no deadline or registration date); /competitions?status=Active HTTP 200 (no 'adaptive' string; competitions listed: accelerate-learning, healthspan, qc-apps, water, wildfire, criticalminerals, interspecies-communication, ovarianhealth, carbonremoval, rainforest); /feed HTTP 200 but HTML page, not RSS; /wp-json/wp/v2/types HTTP 404; pop.xprize.org/prizes HTTP 200 with no 'adaptive' string.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "page_reason": "XPRIZE Adaptive Plants is still in the fundraising stage: the program page only asks for sponsors ('Become a sponsor', 'Who can fund this challenge?') and lists no registration window, deadline or purse, so there is no call list, feed or dated cycle to read. A prize launch with team registration would appear first on this page (and in the Active list at /competitions?status=Active).",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

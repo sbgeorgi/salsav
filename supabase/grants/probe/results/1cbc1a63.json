@@ -1,0 +1,49 @@
+{
+  "key": "1cbc1a63",
+  "verdict": "monitor_html_only",
+  "method": "html_listing",
+  "adapter": "html",
+  "adapter_config": {},
+  "feed_url": null,
+  "confidence": "high",
+  "summary": "Round 2 found no machine-readable live opportunity source for McKnight CRFS. Open calls are invite-only with occasional thematic open calls; the only listed call is historical. The html adapter on the how-to-apply page is the correct monitor; it will flag a new open call when posted.",
+  "attempted": [
+    "how-to-apply page fetch: states no current thematic open calls, invite-only, only past agroecology call listed",
+    "program page /programs/global-foods/: says invite-only with occasional thematic open calls, no list of open calls",
+    "wp-json root: 26 namespaces, 523 routes; no opportunity CPT, no grant/open-call route (hub-connector, rrj-advanced-charts are internal)",
+    "wp/v2/types: post, page, media, wp_block, wp_template, soliloquy only; no opportunity type",
+    "wp/v2/search for open call, request for proposals, funding opportunity, invitation, rfp: news posts only (2019-2024 era), no current call",
+    "sitemap.xml: 21 sub-sitemaps incl. program_area, post, resource, investment_status; post-sitemap has 516 URLs, not enumerated for open calls (WP listing already covered via search)",
+    "feed/ and en_ca/feed/: HTTP 500 (text/xml)",
+    "robots.txt: no API or feed hints",
+    "grants/ and grants/search-our-grants: historical grant database (past grants, with grant_program filter), not open calls; no JSON endpoint identified in page source",
+    "grant portal: Fluxx at mcknight.fluxx.io (grantee login portal). Root returns 200; /opportunities, /opportunities.json, /api/opportunities, /sitemap.xml return 404; robots.txt is Disallow: / so no automated access attempted beyond the root",
+    "Wayback: CDX endpoint offline; availability API returned a 2026-03-05 snapshot of how-to-apply only (not used as a feed)",
+    "adapter_check.mjs html: ok=true, text_len 19620, http 200, count 0 (html mode monitors text only)"
+  ],
+  "evidence": [
+    "how-to-apply: There are not currently any thematic open calls for CRFS funding. Open calls below are historical...",
+    "Fluxx portal robots.txt: User-Agent: * Disallow: /"
+  ],
+  "check": {
+    "ok": true,
+    "mode": "page",
+    "kind": "ok",
+    "http": 200,
+    "count": 0,
+    "open": 0,
+    "text_len": 19620,
+    "sample": [],
+    "error": null,
+    "expect_min": 1,
+    "fetchability": "easy"
+  },
+  "row_fix": {
+    "url": "https://www.mcknight.org/programs/global-foods/how-to-apply/",
+    "program": "Global Collaboration for Resilient Food Systems (CRFS), invitation-only; html monitor for thematic open calls",
+    "reason": "Current row points at how-to-apply page, which is the correct monitor page. Program text is accurate."
+  },
+  "engine_requirements": "none (html adapter already sufficient for monitoring)",
+  "prototype": "",
+  "rounds": 2
+}

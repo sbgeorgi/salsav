@@ -1,0 +1,51 @@
+{
+  "key": "b8ff1258",
+  "funder": "U.S. Department of Defense, SERDP and ESTCP",
+  "lens": "relevance-and-completeness",
+  "verifier_accept": false,
+  "verdict_confirmed": "structured_needs_new_adapter",
+  "method_confirmed": "sitemap_detail (plain HTTP, server-rendered ASP.NET detail pages, no JS)",
+  "checks": {
+    "sitemap": "GET https://serdp-estcp.mil/sitemap/contentSitemap1.xml -> 188 callforproposal URLs with lastmod in 2022-2026. Confirmed.",
+    "lastmod_window": "lastmod is a page-modified date, not a release date. 2026-10-23 entry c07c1121 is FY2025 (Open Sep 26 2024, Due Oct 31 2024). The deadline>=today filter is mandatory, not optional.",
+    "fy2028_detail_pages": "ff39d83f shows 'Released November 5, 2026', 'Due Date January 7, 2027', 'FY 2028'. Confirmed.",
+    "format_variants": "Older pages use 'Open <date>' not 'Released <date>' (FY2025 c07c1121). FY2026 and FY2027 pages have 'Released <date>' and no 'Due Date' line. The posted regex must accept Open|Released.",
+    "listing_hub": "/workwithus/pastcallforproposal/listing?navigationPage=... returns the same 68417-byte shell with and without X-Requested-With, with 0 callforproposal links. No plain-HTTP hub listing was found, so sitemap parity with the funder's own list is UNVERIFIED.",
+    "html_fallback": "adapter_check html on /workwithus/pastcallforproposal: ok=false, text_len 700 (<1500). The html adapter would store nothing.",
+    "grants_gov_HQ003423NFOEASD07": "adapter_check ok=true, count 1, deadline 2028-01-08, status open, title 'DoW's Energy, Installations, and Environment Innovation Partners Programs'. It is an umbrella DoW EIE notice; SERDP/ESTCP ownership is UNVERIFIED. Title also keeps the raw &rsquo; entity (minor decode issue in grants_gov parse)."
+  },
+  "prototype_run_verified": {
+    "command": "python -I serdp_sitemap_probe.py 30",
+    "output_head": "{\"sitemap_cfp_urls\": 188, \"since\": \"2026-10-12\", \"recent\": 11}",
+    "rows_returned": 10,
+    "all_fy2028": true,
+    "titles": [
+      "Development of Residuals Management Options of PFAS-Impacted Wastewater Streams (ERP)",
+      "Development of Integrated Conceptual Site Models and Coupled Modeling Frameworks for Stormwater and Transport of Chemicals of Concern (ERP)",
+      "Quantifying and Improving Environmental Benefits of Cold Spray and Other Solid-State Manufacturing for Corrosion Repair (Weapons)",
+      "Evaluating Performance of Resource Management Practices on Military Installations (RMR)",
+      "Data Fusion for Monitoring Conditions of Natural Infrastructure and Decision Support on Military Installations (RMR)",
+      "Technologies for Critical Mineral Refining Unit Operations (Weapons)",
+      "Advanced Performance Coatings (Weapons)",
+      "Identification of Plants and Favorable Growing Conditions to Produce Optimal Nitrocellulose (Weapons + RMR)",
+      "Development of Alternative Water Production and Resilience Technologies (ERP)",
+      "Integrated Flow Diversion, Retention, and Synergistic Treatment Trains for Stormwater Management (ERP)"
+    ],
+    "deadlines": ["2027-01-07 (8 rows)", "2027-03-11 (1 row)"]
+  },
+  "issues": [
+    "FLOOD RISK: the config has no program or topic filter. All 10 FY2028 rows reach the dashboard, and about 5 (Weapons Systems: cold spray, critical mineral refining, coatings, nitrocellulose) are not Energy & Water. Needed: a title/program allowlist (e.g. program matches Environmental Restoration or Resource Management, or title matches /water|storm|wastewater|PFAS|installation|natural infrastructure|soil|land|energy|solar|grid/i). The user must confirm the allowlist, since fit is out of scope here.",
+    "COMPLETENESS UNVERIFIED: the sitemap is the only plain-HTTP enumeration. The funder's own past-calls listing is AJAX-only with no hub endpoint found. A call missing from the sitemap, or one whose lastmod is not bumped, would be missed.",
+    "PARSE SPEC GAP: posted must accept 'Open <date>' and 'Released <date>'. Deadline is absent on FY2026 and FY2027 pages (deadline null, posted older than 180 days, so dropped). Still-open calls without a Due Date would be silently excluded.",
+    "WINDOW: the spec says lastmod 60 days, but the prototype ran with 30 days (since 2026-10-12). The 60-day window adds 4 FY2026 pages from 2026-09-16 that the deadline/posted rule drops. Use 60 days and keep the rule.",
+    "EDGE BUDGET: 25 detail fetches at 2 s spacing is about 50 s plus the 595 KB sitemap. Under the function's wall-clock limit, but the cap must stay at 25.",
+    "PROTOTYPE NOT EDGE: the python prototype is not the edge code. Nothing has run through adapter_check because the sitemap_detail adapter does not exist. Verdict stays structured_needs_new_adapter.",
+    "ROW FIX: the row url should change to https://serdp-estcp.mil/workwithus/pastcallforproposal (or the sitemap url). The funders.json row still has adapter html and url https://serdp-estcp.mil/."
+  ],
+  "accept_reason": "The core claim holds: plain HTTP gives 10 real, current FY2028 SERDP calls with Released and Due dates, and the method is structured. Not accepted yet because the config would flood the dashboard with unrelated Weapons Systems calls, completeness against the funder's list is unverified, and the posted parse misses 'Open' pages.",
+  "recommended_next": [
+    "Add adapter sitemap_detail with: sitemap_url, url_match, lastmod_window_days 60, max_detail_fetches 25, detail_spacing_ms 2000, posted regex (Open|Released), deadline regex (Due Date), title and program allowlist.",
+    "Decide the allowlist with the user, then rerun the prototype and paste the filtered output."
+  ],
+  "scratch": "C:/Users/georg/AppData/Local/Temp/claude/f76d9bc5f4d34b7f/9671fccb-adf9-4753-918f-ba882814c960/scratchpad/b8ff-verify/"
+}

@@ -1,0 +1,56 @@
+{
+ "key": "e0c23608",
+ "verdict": "structured_supported",
+ "method": "grants_gov",
+ "adapter": "grants_gov",
+ "adapter_config": {
+  "keyword": "CBET",
+  "agencies": "NSF",
+  "oppStatuses": "forecasted|posted",
+  "rows": 25
+ },
+ "feed_url": null,
+ "confidence": "medium",
+ "attempted": [
+  "Round 1 oppNum 26-518 config re-verified (found in round 1, still returns the same 1 hit)",
+  "api.grants.gov search2 keyword sweeps (agencies NSF): \"Chemical Bioengineering Energy Transport\" 11 hits incl. 26-518, 25-537 (NSF-DFG CPS/TP lead agency), PD-26-366Y Transport Phenomena, PD-26-367Y Chemical Process Systems, plus unrelated programs; \"CBET\" 2 hits: 26-518 and 25-537",
+  "adapter_check grants_gov keyword CBET agencies NSF: ok, count 2 (26-518 and 25-537), http 200",
+  "adapter_check grants_gov keyword \"Chemical Process Systems Transport Phenomena\": ok but count 25 of unrelated NSF programs (Plasma Physics, Arctic, Cognitive Neuroscience): keyword is loose, rejected",
+  "nsf.gov solicitation HTML: Full Proposal Deadline = Proposals Accepted Anytime (re-confirmed)",
+  "nsf.gov rss_www_funding_pgm_annc_inf.xml: HTTP 200, not a per-solicitation source (round 1)"
+ ],
+ "summary": "The CBET umbrella is on Grants.gov, and a keyword config (keyword CBET, agencies NSF) returns both live CBET-run opportunities: 26-518 (id 363616) and 25-537 NSF-DFG Lead Agency CPS/TP (id 359499). It is better than the single oppNum because it also catches the lead-agency call. Grants.gov closeDate is the 2076 placeholder for both rolling calls (10/05/2076, 10/06/2076), so the engine must map far-future closeDate to deadline null and status rolling before this row goes live.",
+ "check": {
+  "ok": true,
+  "count": 2,
+  "sample": [
+   {
+    "title": "Engineering (ENG): Chemical, Bioengineering, Energy, and Transport Systems (CBET)",
+    "deadline": "2076-10-05",
+    "status": "open",
+    "url": "https://www.grants.gov/search-results-detail/363616"
+   },
+   {
+    "title": "NSF-DFG Lead Agency Opportunity in Chemistry and Chemical Process and Transport Systems",
+    "deadline": "2076-10-06",
+    "status": "open",
+    "url": "https://www.grants.gov/search-results-detail/359499"
+   }
+  ],
+  "error": null,
+  "http": 200
+ },
+ "engine_requirements": "No new adapter. Engine change in grants_gov (api.ts): if closeDate year >= 2070, store deadline null and status rolling (the placeholder is 2076 here; 2099 threshold would miss it). Optional: a zero-hit alert for this row, since oppNum is exact and a re-issue under a new number silently drops out. Limit to state on the row: PD-26-366Y (Transport Phenomena) and PD-26-367Y (Chemical Process Systems) are CBET program listings on Grants.gov that the CBET keyword does not return; they are not verified as in scope and would need their own oppNum rows.",
+ "evidence": [
+  "NSF solicitation text: Full Proposal Deadline(s): Proposals Accepted Anytime; LOI not required",
+  "Grants.gov search2 keyword CBET agencies NSF: hitCount 2 (363616 and 359499)",
+  "adapter_check keyword CBET: ok, count 2, http 200"
+ ],
+ "row_fix": null,
+ "prototype": null,
+ "unverified": [
+  "PD-26-366Y and PD-26-367Y scope for this row (titles only, detail not fetched)",
+  "Keyword stability over time (loose match; a future unrelated CBET-named call would be picked up)"
+ ],
+ "accept_note": "Accept only after the engine maps closeDate placeholder (2070+) to deadline null, status rolling."
+}

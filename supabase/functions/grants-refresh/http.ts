@@ -15,6 +15,7 @@ const MAX_ROBOTS_BYTES = 500_000;
 export interface HttpDeps {
   pol: Politeness;
   fetchImpl: typeof fetch;
+  fetchH1?: typeof fetch; // HTTP/1.1-only fetch, used once after an HTTP/2 stream/connection error
   env: Env;
   deadline: number; // epoch ms: never wait or request past this
   requestTimeoutMs: number;
@@ -28,6 +29,7 @@ export interface Req {
   body?: string | FormData;
   cond?: { etag?: string | null; lastModified?: string | null };
   robots?: boolean; // default true; API adapters pass false
+  sameHostOnly?: boolean; // detail pages: a redirect to another hostname (or https to http) is an error, not followed
 }
 
 export type HttpOutcome =
@@ -64,6 +66,18 @@ async function readBody(res: Response, max: number): Promise<{ bytes: Uint8Array
   return { bytes, truncated };
 }
 
+/** Error text with its cause chain (Deno puts the real reason, e.g. a decode or reset error, in the cause). */
+function errText(e: Error): string {
+  const parts: string[] = [];
+  for (let x: unknown = e, i = 0; x && i < 4; x = (x as Error).cause, i++) {
+    const m = x instanceof Error ? x.message : String(x);
+    if (m && !parts.includes(m)) parts.push(m);
+  }
+  return parts.join(": ").slice(0, 300) || "fetch failed";
+}
+
+const H2_ERROR = /stream error|connection error|http2|h2 protocol|error reading a body/i;
+
 type Attempt = Extract<HttpOutcome, { t: "response" | "throttled" | "budget" | "error" }>;
 
 async function attempt(d: HttpDeps, u: URL, req: Req, maxRead: number): Promise<Attempt> {
@@ -80,13 +94,22 @@ async function attempt(d: HttpDeps, u: URL, req: Req, maxRead: number): Promise<
     try {
       const headers = { ...(req.headers ?? pageHeaders(pol.profileFor(u.host, () => pickProfile(clock.random)), req.cond)) };
       const signal = AbortSignal.timeout(Math.min(d.requestTimeoutMs, Math.max(1000, d.deadline - clock.now())));
-      const r = await d.fetchImpl(u.href, { method: req.method ?? "GET", headers, body: req.body, redirect: "manual", signal });
-      const isRedirect = r.status >= 300 && r.status < 400;
-      if (isRedirect) await r.body?.cancel().catch(() => {});
-      const body = isRedirect ? { bytes: new Uint8Array(0), truncated: false } : await readBody(r, maxRead);
-      res = { status: r.status, headers: r.headers, ...body };
+      const go = async (f: typeof fetch) => {
+        const r = await f(u.href, { method: req.method ?? "GET", headers, body: req.body, redirect: "manual", signal });
+        const isRedirect = r.status >= 300 && r.status < 400;
+        if (isRedirect) await r.body?.cancel().catch(() => {});
+        const body = isRedirect ? { bytes: new Uint8Array(0), truncated: false } : await readBody(r, maxRead);
+        return { status: r.status, headers: r.headers, ...body };
+      };
+      try {
+        res = await go(d.fetchImpl);
+      } catch (e) {
+        // some hosts reset HTTP/2 streams for our client only: one retry over HTTP/1.1 (same guards, same limiter slot)
+        if (!d.fetchH1 || !H2_ERROR.test(errText(e as Error))) throw e;
+        res = await go(d.fetchH1);
+      }
     } catch (e) {
-      failure = (e as Error).name === "TimeoutError" || (e as Error).name === "AbortError" ? "timeout" : String((e as Error).cause ?? (e as Error).message);
+      failure = (e as Error).name === "TimeoutError" || (e as Error).name === "AbortError" ? "timeout" : errText(e as Error);
     } finally {
       release();
     }
@@ -153,6 +176,7 @@ export async function politeGet(d: HttpDeps, req: Req, maxRead = MAX_READ_BYTES)
       if (req.method === "POST" && r.status !== 307 && r.status !== 308) return { t: "error", message: `unexpected redirect on POST (${r.status})` };
       const next = new URL(loc, u);
       if (req.method === "POST" && next.origin !== origin0) return { t: "error", message: "cross-origin redirect on POST refused" };
+      if (req.sameHostOnly && !(next.hostname === u.hostname && (next.protocol === u.protocol || (u.protocol === "http:" && next.protocol === "https:")))) return { t: "error", message: "redirect to another host refused" };
       url = next.href;
       continue;
     }

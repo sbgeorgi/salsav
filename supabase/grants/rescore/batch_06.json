@@ -1,0 +1,549 @@
+[
+ {
+  "id": "cc0131bb-bb8d-49cb-a7a3-d5cd99754c4a",
+  "verdict": "demote",
+  "reason": "Score about 24 is under the 40 floor: the page names no mission theme, no open call and no route for universities.",
+  "fit": {
+   "mission": {
+    "level": "none",
+    "why": "The homepage names no theme at all; the climate and water programs claimed earlier are not on the page.",
+    "quote": ""
+   },
+   "activity": {
+    "level": "other",
+    "why": "Avina co-invests and convenes multi-sector alliances; no research or field-trial funding is described.",
+    "quote": "Coinvertimos de manera catalítica, acompañamos procesos y articulamos alianzas multisectoriales para construir agendas comunes."
+   },
+   "geography": {
+    "level": "global",
+    "why": "Latin American philanthropy with global reach, but the page names no country, so Mexico is not confirmed.",
+    "quote": "Somos una organización filantrópica latinoamericana con alcance global que genera impacto a través de la colaboración."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "One search for Avina and agrivoltaics found no funded project.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "open_now": false,
+   "themes": [
+    "international partnerships"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "",
+    "url": ""
+   }
+  },
+  "vet_note": "Latin American foundation that co-invests in alliances; its homepage names no climate, water or farming focus and no open call, so watch only.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 2,
+   "quotes_removed": 1,
+   "fit": 24,
+   "changes": [
+    "mission quote not on the page: removed, level weak->none",
+    "geography region->global: page names no country",
+    "themes cut to what the page supports",
+    "reason and vet_note no longer claim climate and water programs"
+   ]
+  }
+ },
+ {
+  "id": "dfb9ed53-8346-47d7-841c-006c2ff082f9",
+  "verdict": "demote",
+  "reason": "Score about 36 is under the 40 floor: youth employment is the mission, no open call, no published route or award size for a US university.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Agriculture is one sector for youth jobs in Africa; solar, water or agrivoltaics are not named, so a proposal would be a stretch.",
+    "quote": "We focus on leading sectors for youth employment, including education, agriculture, and the digital economy."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Funds partner-run youth employment programs; a university lab would be a minor partner at most.",
+    "quote": "Through our partners, we support more than 1,000 programs across Africa and in Canada."
+   },
+   "geography": {
+    "level": "region",
+    "why": "Works across more than 40 African countries including Kenya (Nairobi office), so the Kenya site is in range.",
+    "quote": "Our work spans more than 40 countries in Africa and coast-to-coast in Canada."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "One search found Mastercard Foundation grants to Arizona State for scholarships and e-learning, not UA or farming-solar work.",
+    "quote": "",
+    "url": "https://mastercardfdn.org/en/news/mastercard-foundation-united-states-international-university-africa-and-arizona-state-university-partner-to-strengthen-e-learning-capacity-in-africa-and-beyond/"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "open_now": false,
+   "themes": [
+    "agriculture",
+    "education & workforce",
+    "rural livelihoods",
+    "international partnerships"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "",
+    "url": ""
+   }
+  },
+  "vet_note": "Large Africa foundation focused on youth employment with agriculture as one sector; no open call or university route is published, so watch only.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 3,
+   "quotes_removed": 0,
+   "fit": 36,
+   "changes": [
+    "removed unverified site name from geography why"
+   ]
+  }
+ },
+ {
+  "id": "14c4588b-222c-44f7-b692-9b898cd3e953",
+  "verdict": "demote",
+  "reason": "Score about 37 is under the 40 floor: readiness money goes to developing-country governments and accredited entities for planning, not to university research.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Funds country climate planning and institutions; farming and solar are not named, so agrivoltaics would be a stretch.",
+    "quote": "The Readiness and Preparatory Support Programme supports country-driven initiatives to strengthen their institutional capacities, governance mechanisms, and planning and programming frameworks"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Pays for national strategies, accreditation and project pipelines; a university lab could only be a minor adviser.",
+    "quote": "Readiness funding can also be deployed to strengthen Direct Access Entities."
+   },
+   "geography": {
+    "level": "global",
+    "why": "Open to all developing-country Parties, so Mexico and Kenya qualify but are not prioritized; Israel and Arizona do not.",
+    "quote": "Readiness support is provided to developing country Parties of the UNFCCC through the National Designated Authorities (NDAs) and/or focal points."
+   },
+   "precedent": {
+    "level": "direct",
+    "why": "GCF approved a 4 MW agrophotovoltaic project in Fiji in 2020 (now terminated), through its project window rather than Readiness.",
+    "quote": "financing a 4 MW solar agrophotovoltaic (APV) system and 5MW battery energy storage system (BESS) in Ovalau, Fiji’s sixth largest island.",
+    "url": "https://www.greenclimate.fund/project/sap016"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "amount_confidence": "unknown",
+   "award_note": "No per-country or per-award maximum is stated on the page.",
+   "cycle": "fixed_deadline",
+   "next_deadline": "2027-03-31",
+   "deadline_note": "Countries and Direct Access Entities are encouraged to submit by this date; the Readiness strategy ends 31 Dec 2027.",
+   "open_now": true,
+   "eligibility_note": "The page names only developing-country Parties (through NDAs or focal points) and Direct Access Entities; it does not say whether a US university can take part.",
+   "themes": [
+    "climate adaptation",
+    "international partnerships",
+    "technology & innovation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "GCF encourages countries and Direct Access Entities to submit their Readiness proposals through the GCF Partner Portal by 31 March 2027.",
+    "url": "https://www.greenclimate.fund/access-funding/readiness-preparatory-support"
+   },
+   "eligibility": {
+    "quote": "Readiness support is provided to developing country Parties of the UNFCCC through the National Designated Authorities (NDAs) and/or focal points.",
+    "url": "https://www.greenclimate.fund/access-funding/readiness-preparatory-support"
+   }
+  },
+  "vet_note": "Green Climate Fund readiness grants help developing countries plan climate action through national authorities; UA has no stated applicant role, so this is a partner-of-a-government route at best.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 6,
+   "quotes_removed": 0,
+   "fit": 37,
+   "changes": []
+  }
+ },
+ {
+  "id": "3f50eab5-8727-4c92-b052-4d9b291f0971",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "adjacent",
+    "why": "Innovation grants cover adaptation themes incl. agriculture, food security and water; agrivoltaics is a natural proposal but is not named.",
+    "quote": "Agriculture; Coastal zone management; Disaster risk reduction; Enhancement and protection of cultural heritage; Focus on communities; Food security;"
+   },
+   "activity": {
+    "level": "capacity",
+    "why": "Pays accredited entities to pilot and scale innovations; a university could lead a work package for them, not apply itself.",
+    "quote": "Innovative adaptation practices, tools and technologies that have demonstrated viability at a small scale piloted at larger scales"
+   },
+   "geography": {
+    "level": "global",
+    "why": "Open to Paris Agreement and Kyoto Protocol Parties worldwide; Mexico and Kenya could qualify, the US and Israel not prioritized.",
+    "quote": "invites eligible Parties to the Kyoto Protocol or the Paris Agreement to submit proposals for large innovation projects"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "A web search found no Adaptation Fund grant for agrivoltaics; the one agrivoltaics project found was funded by the Green Climate Fund.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_min_usd": null,
+   "award_max_usd": 5000000,
+   "amount_confidence": "published",
+   "award_note": "Up to US$5M per grant from an indicative US$30M set-aside; project formulation grants up to US$150k.",
+   "cycle": "rolling",
+   "next_deadline": null,
+   "deadline_note": "Apply page says all windows accept proposals on a rolling basis; this page says the Board considers them twice a year.",
+   "open_now": true,
+   "eligibility_note": "Only accredited National, Regional or Multilateral Implementing Entities may submit; the page gives universities no role, so UA would need to work through one of them.",
+   "requirements": {
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": [
+     "Accredited NIE, RIE or MIE status",
+     "Designated Authority letter of endorsement"
+    ]
+   },
+   "themes": [
+    "climate adaptation",
+    "technology & innovation",
+    "agriculture",
+    "food security",
+    "water"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "This funding opportunity makes available grants of up to US$ 5 million to NIEs, RIEs and MIEs",
+    "url": "https://www.adaptation-fund.org/apply-funding/innovation-grants/large-grants-for-innovation/"
+   },
+   "deadline": {
+    "quote": "Submissions for all funding windows are now accepted on a rolling basis (Decision B.40/59).",
+    "url": "https://www.adaptation-fund.org/apply-funding/"
+   },
+   "eligibility": {
+    "quote": "must be a National Implementing Entity (NIE), Regional Implementing Entity (RIE) or Multilateral Implementing Entity (MIE) to the Adaptation Fund",
+    "url": "https://www.adaptation-fund.org/apply-funding/innovation-grants/large-grants-for-innovation/"
+   }
+  },
+  "vet_note": "Adaptation Fund large innovation grants (up to $5M) pay accredited entities to scale new climate adaptation tools in farming and water, so UA could only join as a delivery partner.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 6,
+   "quotes_removed": 0,
+   "fit": 53,
+   "changes": [
+    "mission quote swapped for the theme list that actually names agriculture and food security; ua_eligibility kept unknown (page gives no university or partner role); award 5M is a single grant quoted on page"
+   ]
+  }
+ },
+ {
+  "id": "3f5656d5-2d73-478d-abed-d7e1285d099c",
+  "verdict": "demote",
+  "reason": "Score about 32 is under the 40 floor: a gateway page for accredited entities with no award size, no sector focus and no role for universities.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "General adaptation finance page; it names no sector, so agrivoltaics would be a stretch here.",
+    "quote": "Parties seeking financial resources from the Adaptation Fund must submit their project and programme proposals through accredited National, Regional, or Multilateral Implementing Entities."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Describes accreditation and the routes for implementing entities; a university lab could only be a minor partner.",
+    "quote": "Only institutions accredited by the Adaptation Fund may receive funding for adaptation projects."
+   },
+   "geography": {
+    "level": "global",
+    "why": "Aimed at developing countries worldwide; Mexico and Kenya could qualify but are not prioritized.",
+    "quote": "Direct Access allows developing countries to strengthen capacity to adapt to climate change and build on local expertise."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "A web search found no Adaptation Fund grant for agrivoltaics; the one agrivoltaics project found was funded by the Green Climate Fund.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "amount_confidence": "unknown",
+   "award_note": "No award size on this page; see the window pages.",
+   "cycle": "rolling",
+   "next_deadline": null,
+   "deadline_note": "All windows accept proposals at any time.",
+   "open_now": true,
+   "eligibility_note": "Only accredited implementing entities may receive funding; the page does not mention universities.",
+   "themes": [
+    "climate adaptation",
+    "international partnerships",
+    "technology & innovation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "Submissions for all funding windows are now accepted on a rolling basis (Decision B.40/59).",
+    "url": "https://www.adaptation-fund.org/apply-funding/"
+   },
+   "eligibility": {
+    "quote": "Only institutions accredited by the Adaptation Fund may receive funding for adaptation projects.",
+    "url": "https://www.adaptation-fund.org/apply-funding/"
+   }
+  },
+  "vet_note": "Adaptation Fund gateway page: money flows only through accredited national, regional or multilateral entities, so it is not a direct route for UA.",
+  "source": "last_text",
+  "checked": {
+   "quotes_ok": 5,
+   "quotes_removed": 0,
+   "fit": 32,
+   "changes": []
+  }
+ },
+ {
+  "id": "6cc2c30d-b795-446d-acd2-c5e53787d8e7",
+  "verdict": "demote",
+  "reason": "Score about 38 is under the 40 floor: locally-led adaptation grants go to accredited entities and the page names no farming or solar focus.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Funds locally decided adaptation projects; farming and solar are not named, so agrivoltaics would be a stretch.",
+    "quote": "The objective of the Single Country LLA Funding Window under the Fund is to empower developing country recipients of international climate finance"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Pays accredited entities for community-led adaptation; a university lab could only be a minor partner.",
+    "quote": "The grants are available to accredited national implementing entities (NIEs),regional implementing entities (RIEs) and multilateral implementing entities (MIEs) of the Adaptation Fund."
+   },
+   "geography": {
+    "level": "global",
+    "why": "Open to Paris Agreement and Kyoto Protocol Parties worldwide; Mexico and Kenya could qualify but are not prioritized.",
+    "quote": "The AFB invites eligible Parties to the Paris Agreement and/or the Kyoto Protocol to submit proposals for Single Country LLA grants."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "A web search found no Adaptation Fund grant for agrivoltaics; the one agrivoltaics project found was funded by the Green Climate Fund.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_min_usd": null,
+   "award_max_usd": 5000000,
+   "amount_confidence": "published",
+   "award_note": "Up to US$5M per project; project formulation grants up to US$150k plus up to US$100k case by case. The 2025-26 envelope was US$26.5M and has ended.",
+   "cycle": "rolling",
+   "next_deadline": null,
+   "deadline_note": "The apply page says all windows accept proposals at any time; this page gives no date for a later envelope.",
+   "open_now": true,
+   "eligibility_note": "MIEs, NIEs and RIEs with Accredited status apply; the page does not mention universities.",
+   "requirements": {
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": [
+     "Accredited NIE, RIE or MIE status",
+     "Designated Authority letter of endorsement"
+    ]
+   },
+   "themes": [
+    "climate adaptation",
+    "international partnerships"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "The funding available through the Single country LLA window is up to US$ 5 million per project/programme.",
+    "url": "https://www.adaptation-fund.org/apply-funding/locally-led-adaptation/lla-single-country-grants/"
+   },
+   "deadline": {
+    "quote": "Submissions for all funding windows are now accepted on a rolling basis (Decision B.40/59).",
+    "url": "https://www.adaptation-fund.org/apply-funding/"
+   },
+   "eligibility": {
+    "quote": "MIEs, NIEs and RIEs applying for Single Country LLA grants must have an accreditation status of “Accredited” with the AF.",
+    "url": "https://www.adaptation-fund.org/apply-funding/locally-led-adaptation/lla-single-country-grants/"
+   }
+  },
+  "vet_note": "Adaptation Fund locally-led adaptation grants (up to $5M) go through accredited national or regional entities and do not name farming or solar, so UA has no direct route.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 6,
+   "quotes_removed": 0,
+   "fit": 38,
+   "changes": [
+    "kept demote: page names no sector, 38 < 40"
+   ]
+  }
+ },
+ {
+  "id": "49efeb1d-8a69-4502-b3a5-46404c23e315",
+  "verdict": "demote",
+  "reason": "Score about 32 is under the 40 floor: Global Gateway is an investment plan with no open call, no award size and no stated route for universities.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Investment framework covering clean energy and climate resilience; it names no farming or agrivoltaics funding, so a proposal would be a stretch.",
+    "quote": "Global Gateway invests in climate mitigation and resilience, as well as clean energy"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Mobilises investment in infrastructure with private partners and member-state banks; a university lab could only be a minor partner.",
+    "quote": "Through a 'Team Europe approach', we bring together the EU, its Member States and their financial and development institutions, working with the private sector to leverage investment"
+   },
+   "geography": {
+    "level": "global",
+    "why": "Covers Africa, Asia and Latin America; Kenya and Mexico fall inside but are not prioritized.",
+    "quote": "The Investment Hub is the single-entry point for private investors seeking EU support for projects in Sub-Saharan Africa, Asia or Latin America."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No Global Gateway agrivoltaics grant found; the EU's Horizon Europe funded an agrivoltaics project, but that is a different programme.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "amount_confidence": "unknown",
+   "award_note": "No award size published; the only amount on the page is a EUR 12M irrigation grant in Thailand, not a call.",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "The page lists no call or deadline, only events.",
+   "open_now": false,
+   "eligibility_note": "The page does not address university applicants; specific calls elsewhere would set the rules.",
+   "themes": [
+    "solar & clean energy",
+    "climate adaptation",
+    "international partnerships",
+    "education & workforce"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "",
+    "url": ""
+   }
+  },
+  "vet_note": "EU Global Gateway is a large overseas investment plan, not a grant call; UA would only reach it through a specific EU call or consortium.",
+  "source": "last_text",
+  "checked": {
+   "quotes_ok": 3,
+   "quotes_removed": 0,
+   "fit": 32,
+   "changes": []
+  }
+ },
+ {
+  "id": "96a6477c-726b-48c7-8807-4496155d2fb1",
+  "verdict": "demote",
+  "reason": "Score about 32 is under the 40 floor, but the official page is blocked and nothing was verified; re-check by hand before dropping it for good.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Official page blocked (HTTP 403); search results say climate adaptation for smallholders, but no quote was read, so the lower level is used.",
+    "quote": ""
+   },
+   "activity": {
+    "level": "other",
+    "why": "Search results say money flows through IFAD country projects, not open calls; a lab could only be a minor partner.",
+    "quote": ""
+   },
+   "geography": {
+    "level": "global",
+    "why": "Not confirmed from the page; aimed at low-income, agriculture-dependent countries, so Kenya may fall inside.",
+    "quote": ""
+   },
+   "precedent": {
+    "level": "none",
+    "why": "A search of ifad.org found no agrivoltaics grant and no University of Arizona grant under ASAP+.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "fetchability": "bot_protected",
+   "confidence": 0.3
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "",
+    "url": ""
+   }
+  },
+  "vet_note": "IFAD ASAP+ helps smallholder farmers adapt to climate change through IFAD government projects; the page is bot-blocked and gives UA no direct route.",
+  "source": "none",
+  "checked": {
+   "quotes_ok": 0,
+   "quotes_removed": 0,
+   "fit": 32,
+   "changes": [
+    "page blocked (HTTP 403 on retry): mission and geography levels are unverified; demoted on the floor, not on a confirmed poor fit"
+   ]
+  }
+ }
+]

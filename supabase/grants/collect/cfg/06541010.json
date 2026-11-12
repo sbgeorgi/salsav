@@ -1,0 +1,38 @@
+{
+  "id": "06541010-bb16-487a-b3b5-5a9dfcd1ba1d",
+  "name": "Green Climate Fund",
+  "program": "Requests for proposals and pilot programmes",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.greenclimate.fund/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.greenclimate.fund/access-funding/other-funding-options",
+      "item": "div[data-component=\"content-sections:sidebyside\"]",
+      "link": "a[href*=\"/rfp/\"]",
+      "match": "Request for proposals active",
+      "amount": false
+    }
+  },
+  "collect_note": "Reads the Green Climate Fund page of requests for proposals and pilot programmes and keeps only the one marked active (Enhancing Direct Access, for accredited direct access entities, no deadline listed). Ended pilots and Readiness support are skipped. A person should judge fit.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Enhancing Direct Access (EDA)",
+        "deadline": null,
+        "url": "https://www.greenclimate.fund/access-funding/other-funding-options/rfp/enhancing-direct-access"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP GET (desktop UA) https://www.greenclimate.fund/ = 200, 273 KB, Other funding options https://www.greenclimate.fund/access-funding/other-funding-options = 200. The listing holds 4 RFP cards: EDA (active, open), REDD+ pilot, MSME pilot, MFS pilot (all ended). Replayed the list config through adapters/collect.ts extractList on the fetched HTML: 4 items, 1 open, 3 closed, no deadlines on the listing or on the EDA RFP page. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

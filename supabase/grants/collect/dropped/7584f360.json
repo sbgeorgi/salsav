@@ -1,0 +1,27 @@
+{
+  "id": "7584f360-fa98-430e-b41e-b72a583f2dd9",
+  "name": "NSF and US-Israel Binational Science Foundation (BSF)",
+  "program": "NSF-BSF Joint Research Grants: CBET (NSF 26-518)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://trdf.technion.ac.il/en/calls-for-proposals/nsf-bsf-programs/",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "NSF",
+    "keyword": "CBET",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "filter": { "any": ["Chemical, Bioengineering"], "fields": "title" },
+    "auto_vet": true
+  },
+  "collect_note": "Grants.gov search2 for agency NSF + keyword CBET, kept only where the title is the CBET solicitation; that solicitation (NSF 26-518 today, successor numbers later) is the vehicle for the NSF-BSF joint grants, so the next CBET call appears without a new config. Grants.gov shows 2076-10-05 as the close date of rolling NOFOs, so that date is a placeholder, not a real deadline. BSF's own NSF-BSF page (bsf.org.il) and the Technion page have no dated calls and are kept as the funder url only; BSF has no public JSON or feed of calls.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      { "title": "Engineering (ENG): Chemical, Bioengineering, Energy, and Transport Systems (CBET)", "deadline": "2076-10-05", "url": "https://www.grants.gov/search-results-detail/363616" }
+    ]
+  },
+  "evidence": "Plain HTTP POST https://api.grants.gov/v1/api/search2 with body {rows:25, oppStatuses:forecasted|posted, agencies:NSF, keyword:CBET} on 2026-11-12: HTTP 200, 2 hits (26-518 posted, opened 2026-08-17; 25-537 NSF-DFG lead agency, dropped by title filter). Also checked: keyword BSF, NSF 26-518 oppNum and keyword Binational/Israel returned no BSF call; NSF funding RSS (nsf.gov/rss/rss_www_funding_pgm_annc_inf.xml) HTTP 200 lists CBET only as a title match in its 15 items. Funder url https://trdf.technion.ac.il/en/calls-for-proposals/nsf-bsf-programs/ HTTP 200 (no dated calls). https://www.bsf.org.il/funding-opportunities/nsf-bsf-joint-research-grants/ HTTP 200 (no dated calls). Harness not run: adapters/collect.ts and fetchSource in adapter_check.mjs are not present yet.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

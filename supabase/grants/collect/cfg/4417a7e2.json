@@ -1,0 +1,36 @@
+{
+  "id": "4417a7e2-926d-4228-a314-befe5f67e80d",
+  "name": "McKnight Foundation",
+  "program": "Global Collaboration for Resilient Food Systems (CRFS)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.mcknight.org/programs/global-foods/how-to-apply/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "self": {
+      "title": "McKnight CRFS thematic open call",
+      "deadline_regex": "(?:due(?: by)?|deadline(?: is)?|(?:are|will be) accepted from[^.]{0,40}?(?:\\u2013|-|to|through|until))\\s*:?\\s*([A-Z][a-z]+ \\d{1,2},? 20\\d\\d)"
+    }
+  },
+  "collect_note": "CRFS mostly funds invited groups; thematic open calls are occasional. The How to Apply page is read twice a day, and a call is listed only when the page shows a future due date or submission window with a year. None is open today, so nothing is listed.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://www.mcknight.org/programs/global-foods/how-to-apply/ (HTTP 200) via fetch_text and harness, 2026-11-12: quoted text above; the only past open calls (Agroecology as a Bold Climate Solution, Agroecology and One Health) were accepted 'March 1 - May 15, 2024'. No RSS feed of calls, no call post type, no sitemap call URLs (probe notes, program page /programs/global-foods/ says 'invite-only application process with occasional thematic open calls'). Harness: ok, cycle, http 200, count 0, open 0.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "zero_reason": {
+    "text": "There are not currently any thematic open calls for CRFS funding. ... For the majority of the program's grantmaking, it continues to be an invite-only application process where applications for funding are accepted only from organizations invited to apply.",
+    "url": "https://www.mcknight.org/programs/global-foods/how-to-apply/",
+    "summary": "invitation-only, no public deadline; the page is checked for a posted call or deadline",
+    "checked": "2026-11-12"
+  },
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

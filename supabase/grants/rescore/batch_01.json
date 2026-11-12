@@ -1,0 +1,621 @@
+[
+ {
+  "id": "7bd9bd74-1db6-41e7-93ce-f23182b83206",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "adjacent",
+    "why": "AFRI funds agriculture systems, bioenergy and natural resources research; agrivoltaics is a natural proposal but not named in the RFA text.",
+    "quote": "Bioenergy, Natural Resources, and Environment; Agriculture Systems and Technology",
+    "url": ""
+   },
+   "activity": {
+    "level": "research_demo",
+    "why": "Funds research-only, extension-only and integrated research, education and extension projects open to universities.",
+    "quote": "Research-only, extension-only, and integrated research, education and/or extension projects are solicited in this Request for Applications (RFA).",
+    "url": ""
+   },
+   "geography": {
+    "level": "region",
+    "why": "US-wide program; foreign and international organizations are excluded, so Mexico, Kenya and Israel partners cannot be funded.",
+    "quote": "Eligible institutions do not include foreign and international organizations.",
+    "url": ""
+   },
+   "precedent": {
+    "level": "direct",
+    "why": "NIFA funded a University of Illinois-led agrivoltaics project with a University of Arizona subaward (2021).",
+    "quote": "the grant features a combination of research, education, and extension subawards for the University of Arizona, Colorado State University, Auburn University, the University of Chicago, and the National Renewable Energy Laboratory.",
+    "url": "https://extension.illinois.edu/news-releases/shared-space-10-million-grant-examines-how-crops-solar-can-occupy-same-space"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible",
+   "award_min_usd": 10000,
+   "award_max_usd": 10000000,
+   "amount_confidence": "published",
+   "award_note": "Program funding $300,000,000; award floor $10,000, ceiling $10,000,000.",
+   "cycle": "fixed_deadline",
+   "next_deadline": "2026-12-31",
+   "deadline_note": "Closing date shown on Simpler.grants.gov for RFA-MOD1; per-program-area deadlines are not listed there.",
+   "open_now": true,
+   "eligibility_note": "Colleges and universities are eligible for single-function projects; integrated projects need an accredited public or nonprofit college or university. Foreign organizations excluded.",
+   "requirements": {
+    "cost_share": "None (cost sharing or matching requirement: No)",
+    "registrations": [
+     "Grants.gov"
+    ]
+   },
+   "themes": [
+    "agriculture",
+    "research",
+    "technology & innovation",
+    "education & workforce"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.85
+  },
+  "evidence": {
+   "award": {
+    "quote": "$10,000,000\nAward Maximum",
+    "url": "https://simpler.grants.gov/opportunity/10a7404c-3e2f-4355-9044-78c8bafc35cd"
+   },
+   "deadline": {
+    "quote": "Closing: December 31, 2026",
+    "url": "https://simpler.grants.gov/opportunity/10a7404c-3e2f-4355-9044-78c8bafc35cd"
+   },
+   "eligibility": {
+    "quote": "b) colleges and universities (including junior colleges offering associate degrees or higher);",
+    "url": "https://simpler.grants.gov/opportunity/10a7404c-3e2f-4355-9044-78c8bafc35cd"
+   }
+  },
+  "vet_note": "Open AFRI call (closes 2026-12-31, up to $10M, universities eligible, no cost share) where an agrivoltaics project fits the Agriculture Systems and Bioenergy/Natural Resources priority areas, and NIFA has funded UA agrivoltaics before.",
+  "source": "last_text",
+  "checked": {
+   "quotes_ok": 7,
+   "quotes_removed": 0,
+   "fit": 80,
+   "changes": [
+    "all 7 quotes found (6 in crawler copy, precedent on cited Illinois page)",
+    "removed theme water: the page never mentions water",
+    "Dec 31 2026 is the listing closing date, kept as stated; award $10M ceiling is stated by the funder"
+   ]
+  }
+ },
+ {
+  "id": "8b840ca1-314e-482c-ab46-b61d37e3249c",
+  "verdict": "demote",
+  "reason": "Rescored 32, below the 40-point minimum: no named agrivoltaics or farm-energy priority, no open call, and university eligibility not stated.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Climate programme funds clean energy access and farming practices, but not solar on farmland; agrivoltaics would be a stretch.",
+    "quote": "We support efforts that make clean energy more accessible, affordable, and fair."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Grants go to programme partners for energy, plastics and food change; a university lab would be a minor partner at best.",
+    "quote": ""
+   },
+   "geography": {
+    "level": "global",
+    "why": "Energy work covers Africa and Asia, food work Asia and Europe; no SALSAV site or Arizona focus.",
+    "quote": "Where we fund: Africa, Asia, India, Southeast Asia, Europe, and Brazil."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No Oak Foundation agrivoltaics or University of Arizona grant found.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_min_usd": 25000,
+   "amount_confidence": "unknown",
+   "award_note": "Maximum not published; Oak generally makes no programme grants under USD 25,000.",
+   "cycle": "invite_only",
+   "next_deadline": null,
+   "deadline_note": "No open calls; letters of enquiry are accepted but only a few are approved each year.",
+   "open_now": false,
+   "eligibility_note": "Excludes individuals, scholarships, religious and election work; the page does not say whether universities can apply.",
+   "requirements": {
+    "loi": true,
+    "registrations": []
+   },
+   "themes": [
+    "climate adaptation",
+    "solar & clean energy",
+    "international partnerships",
+    "energy access"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "Please note we do not have open calls for proposal at this time.",
+    "url": "https://oakfnd.org/submit-enquiry/"
+   },
+   "eligibility": {
+    "quote": "",
+    "url": ""
+   }
+  },
+  "vet_note": "Oak takes a single online enquiry and approves few; its climate work targets energy access and food practices, not agrivoltaics, so it is a long shot.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 3,
+   "quotes_removed": 0,
+   "fit": 32,
+   "changes": [
+    "mission and geography quotes are not in the stored copy but are verbatim on oakfnd.org/programmes/global-climate-initiatives (not cited by the row)",
+    "levels, money, date and eligibility checked, unchanged; page is silent on universities so unknown stands"
+   ]
+  }
+ },
+ {
+  "id": "d3c39b2e-cf73-494d-b043-3dbb433d0c7b",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "General industry-university research centers incl. an energy and environment area; no farming or agrivoltaics priority, so a proposal would be a stretch.",
+    "quote": "IUCRCs support areas of strategic interest to industry, offering resources to develop faster paths to market."
+   },
+   "activity": {
+    "level": "research_demo",
+    "why": "Funds university-led, pre-competitive research centers with industry members, work a university lab leads.",
+    "quote": "Conduct high-impact research to meet shared industrial needs in companies of all sizes;"
+   },
+   "geography": {
+    "level": "region",
+    "why": "US-wide program: centers are located nationwide; no Arizona or other SALSAV site is named.",
+    "quote": "Every year, more than 2,000 students engage in industrially-relevant research at Centers nationwide, giving them on the job training for a career in the private sector."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No IUCRC award to agrivoltaics or to the University of Arizona found.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible_with_partner",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "No award size published on the program pages.",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "Not accepting proposals now; NSF expects a new solicitation later in 2026, no date announced.",
+   "open_now": false,
+   "eligibility_note": "Universities host centers but industry and government members must join and pay fees; the page gives no formal eligibility list.",
+   "requirements": {
+    "registrations": []
+   },
+   "themes": [
+    "research",
+    "technology & innovation",
+    "education & workforce"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "it is not accepting proposals at this time. NSF expects to release an updated solicitation later in 2026, subject to availability of funds.",
+    "url": "https://iucrc.nsf.gov/"
+   },
+   "eligibility": {
+    "quote": "Universities, faculty, and students interested in deep engagement with industry;",
+    "url": "https://iucrc.nsf.gov/about/"
+   }
+  },
+  "vet_note": "NSF's industry-university research centers could host a SALSAV center with industry members, but the call is closed until a new solicitation and agrivoltaics is not a named priority.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 5,
+   "quotes_removed": 0,
+   "fit": 52,
+   "changes": [
+    "geography quote said nothing about location; replaced with the nationwide-centers sentence from the About page",
+    "dropped loi=true and theme solar & clean energy: neither is on the page",
+    "deadline quote is on iucrc.nsf.gov home page, not the stored /about/ copy"
+   ]
+  }
+ },
+ {
+  "id": "eb735d31-2b18-4866-aebd-f12aa1afc2c2",
+  "verdict": "demote",
+  "reason": "Rescored 23, below the 40-point minimum: Moore takes no unsolicited proposals and its environmental strategies target Andes-Amazon conservation and wildfire, not farm energy.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Conservation strategies aim to decouple food production from ecosystem loss; no solar or dryland farming priority, so agrivoltaics would be a stretch.",
+    "quote": "Decouple key economic sectors, food commodity production and transition mineral extraction along with associated financing, from ecosystem degradation."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Grants to conservation and finance organisations under tightly defined strategies; a university lab would be a minor partner at best.",
+    "quote": ""
+   },
+   "geography": {
+    "level": "outside",
+    "why": "Environmental programs focus on the Andes-Amazon, oceans and US wildfire; no SALSAV site or Southwest dryland focus.",
+    "quote": ""
+   },
+   "precedent": {
+    "level": "none",
+    "why": "Moore has funded UA physics and planetary science, but no agrivoltaics or related farming-energy work found.",
+    "quote": "",
+    "url": "https://moore.org/grants/list/GBMF4733"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "invitation_only",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "No published range; grant amounts are shown one by one in the awards database.",
+   "cycle": "invite_only",
+   "next_deadline": null,
+   "deadline_note": "No open call; the foundation does not accept unsolicited proposals.",
+   "open_now": false,
+   "eligibility_note": "Moore does not accept unsolicited grant proposals; it welcomes only a brief ~100-word email about work that fits its strategies.",
+   "requirements": {
+    "loi": true,
+    "registrations": []
+   },
+   "themes": [
+    "land & conservation",
+    "agriculture",
+    "climate adaptation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "Please note that we do not accept unsolicited grant proposals.",
+    "url": "https://www.moore.org/about/our-grantmaking"
+   },
+   "eligibility": {
+    "quote": "Please note that we do not accept unsolicited grant proposals.",
+    "url": "https://www.moore.org/about/our-grantmaking"
+   }
+  },
+  "vet_note": "Moore funds conservation strategies by invitation only and none targets agrivoltaics or dryland solar farming, so it is not a realistic SALSAV source.",
+  "source": "live_page",
+  "checked": {
+   "quotes_ok": 3,
+   "quotes_removed": 0,
+   "fit": 23,
+   "changes": [
+    "mission quote is verbatim on moore.org conservation-and-markets-initiative page, not in the crawler copy (none stored)",
+    "award_max_usd null clears the stored 30,000,000, which no page quote backs",
+    "unsolicited-proposals quote confirmed; page also invites a ~100-word email, so invitation_only stands"
+   ]
+  }
+ },
+ {
+  "id": "17a16c90-cfd5-4007-97fc-c5e7e2a719a6",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "adjacent",
+    "why": "Funds clean energy that raises smallholder farmer incomes (e.g. solar pumps) at commercial scale; agrivoltaics research is an indirect fit.",
+    "quote": "Shell Foundation supports clean energy solutions that raise incomes while cutting emissions for a smallholder farmer, a transporter and a micro-entrepreneur in Africa and Asia."
+   },
+   "activity": {
+    "level": "other",
+    "why": "De-risks technologies and scales commercial energy models with business partners; a university lab could only be a minor partner.",
+    "quote": "We de-risk new technologies and markets and drive innovation towards scale."
+   },
+   "geography": {
+    "level": "region",
+    "why": "Africa and Asia as a whole; Kenya is a SALSAV partner country but the funder names no country-level focus.",
+    "quote": "We co-design partnerships with proven sector leaders operating in Africa and Asia, those already reaching millions of people or with financial resources committed to scaling income-generating energy solutions."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No Shell Foundation agrivoltaics or University of Arizona grant found.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "invitation_only",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "Award sizes are not published.",
+   "cycle": "invite_only",
+   "next_deadline": null,
+   "deadline_note": "No open call or deadline; a short contact form is answered only if the foundation agrees.",
+   "open_now": false,
+   "eligibility_note": "No application route; it builds partnerships with innovators, scale partners and finance partners, and its contact form lists no university organisation type.",
+   "requirements": {
+    "loi": false,
+    "registrations": []
+   },
+   "themes": [
+    "energy access",
+    "smallholder farmers",
+    "rural livelihoods",
+    "solar & clean energy"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "If you think we’d be a good fit, let us know in this short form and we will be in touch if we agree.",
+    "url": "https://shellfoundation.org/partner-with-us/"
+   }
+  },
+  "vet_note": "Shell Foundation backs clean energy that raises smallholder incomes in Africa and Asia, but only through invited commercial partners, so SALSAV would need a relationship through a Kenyan solar-pump partner first.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 42,
+   "changes": [
+    "all 4 quotes found; eligibility quote is on the cited partner-with-us page",
+    "levels unchanged: no evidence they are too high"
+   ]
+  }
+ },
+ {
+  "id": "309fa522-ce06-422d-a1cd-133e43f2f464",
+  "verdict": "demote",
+  "reason": "Rescored 39, below the 40-point minimum: conservation habitat grants with no solar or farm-energy priority, and the pages do not say whether universities may apply.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Fish, wildlife and habitat conservation; one Pecos goal touches agricultural water but nothing funds solar on farmland.",
+    "quote": "Address water quality and scarcity concerns for wildlife and agricultural uses"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Funds habitat restoration and species recovery delivered by conservation partners; a university lab would be a minor partner.",
+    "quote": "The National Fish and Wildlife Foundation awards competitive grants through our programs to protect and conserve our nation’s fish, wildlife, plants and habitats."
+   },
+   "geography": {
+    "level": "region",
+    "why": "US-wide, with Southwest Rivers and Pecos landscapes in the Southwest, but no program is aimed at SALSAV sites or agrivoltaics.",
+    "quote": "The Foundation works with public and private partners in all 50 states and U.S. territories to solve the most challenging conservation problems."
+   },
+   "precedent": {
+    "level": "similar",
+    "why": "NFWF funded a $600,000 grant with a University of Arizona principal investigator for Santa Cruz River refuge planning; river conservation, not agrivoltaics.",
+    "quote": "",
+    "url": "https://news.arizona.edu/news/santa-cruz-river-moves-closer-national-designation-guidance-u-experts"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "No program-wide award range on the pages read; each program sets its own.",
+   "cycle": "annual_recurring",
+   "next_deadline": "2026-11-12",
+   "deadline_note": "Earliest listed due date is the Pecos Watershed Conservation Initiative (11/12/2026); Acres for America is due 12/02/2026 and Great Plains Grassland Fund 01/27/2027.",
+   "open_now": true,
+   "eligibility_note": "Pages read do not say whether universities may apply; eligibility is set in each program's request for proposals.",
+   "requirements": {
+    "loi": false,
+    "registrations": []
+   },
+   "themes": [
+    "land & conservation",
+    "water",
+    "climate adaptation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "11/12/2026 Pecos Watershed Conservation Initiative Full Proposal Due",
+    "url": "https://www.nfwf.org/grants"
+   },
+   "eligibility": {
+    "quote": "",
+    "url": ""
+   }
+  },
+  "vet_note": "NFWF runs a rolling series of conservation RFPs including Southwest rivers, but they fund habitat work, not solar farming, so SALSAV would only fit a narrow water-for-agriculture angle.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 39,
+   "changes": [
+    "deadline quote is on nfwf.org/grants, not the stored /programs copy; 2026-11-12 is stated for Pecos, one day out so it will not count as apply-now",
+    "mission quote is on the Pecos program page",
+    "removed Altar Valley from precedent why: not on the cited page",
+    "eligibility stays unknown: no page read lists applicant types"
+   ]
+  }
+ },
+ {
+  "id": "342fcbc1-c677-4be9-9dea-8b1bd16585c4",
+  "verdict": "demote",
+  "reason": "Rescored 37, below the 40-point minimum: invitation-only, no solar or farm-energy priority, and its one UA grant (2009 cassava markers) is not comparable work.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Funds smallholder crop research and climate-resilient agriculture; no solar or water-energy focus, so agrivoltaics would be a stretch.",
+    "quote": "provide farmers with many options for safely and sustainably adapting to the numerous challenges brought about by climate change, such as an increase in droughts, flooding, high temperatures"
+   },
+   "activity": {
+    "level": "capacity",
+    "why": "Funds crop science programs and delivery to smallholders where a university lab could lead a work package, mostly via invited partners.",
+    "quote": "We invest in crop research, with the goal of providing new advances that farmers can use to sustainably increase their productivity."
+   },
+   "geography": {
+    "level": "region",
+    "why": "Agriculture work targets sub-Saharan Africa and South Asia as regions; Kenya is a SALSAV partner country but no country focus is named.",
+    "quote": "We invest in agriculture across sub-Saharan Africa and South Asia"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "Gates funded a 2009 University of Arizona Foundation cassava marker grant; that is not dryland agriculture, solar or water work, so no comparable precedent.",
+    "quote": "",
+    "url": "https://www.gatesfoundation.org/about/committed-grants/2009/10/oppgd1493"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "invitation_only",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "Award sizes are not published on the pages read.",
+   "cycle": "invite_only",
+   "next_deadline": null,
+   "deadline_note": "No open call listed; grants go to organisations identified by foundation staff.",
+   "open_now": false,
+   "eligibility_note": "Most grants go to US 501(c)(3) and tax-exempt organisations identified by Gates staff; the page lists no open call for climate, agriculture or energy.",
+   "requirements": {
+    "loi": false,
+    "registrations": []
+   },
+   "themes": [
+    "agriculture",
+    "smallholder farmers",
+    "food security",
+    "climate adaptation",
+    "international partnerships"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "The foundation awards the majority of its grants to U.S. 501(c)(3) organizations and other tax-exempt organizations identified by our staff.",
+    "url": "https://www.gatesfoundation.org/about/how-we-work/grant-opportunities"
+   }
+  },
+  "vet_note": "Gates backs climate-resilient smallholder farming in Africa and South Asia but works by invitation and has no solar or energy priority, so it is a long-term relationship play at best.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 37,
+   "changes": [
+    "precedent lowered similar to none: 2009 cassava markers is not comparable to dryland, solar or water work",
+    "mission, activity and geography quotes are verbatim on the Gates agricultural-development page, not in the stored copy",
+    "verdict keep to demote: fit falls from 40 to 37"
+   ]
+  }
+ },
+ {
+  "id": "427c289b-dd79-4e97-8e59-ce965c9537d3",
+  "verdict": "demote",
+  "reason": "Rescored 28, below the 40-point minimum: it accepts no unsolicited funding requests and its climate work is not centred on farm solar or dryland agriculture.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Climate-mitigation funder with energy and land-and-food areas; no solar-on-farmland priority, so agrivoltaics would be a stretch.",
+    "quote": "We support locally led land and food stewardship as a greater force in fighting global warming."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Grants go to a few select partner organisations for climate programmes; a university lab would be a minor partner at best.",
+    "quote": "We support organisations making change happen."
+   },
+   "geography": {
+    "level": "global",
+    "why": "Energy work targets emerging economies and Africa is a stated focus, but no country or SALSAV site is named.",
+    "quote": "We help emerging economies grow and thrive without dependence on fossil fuels."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No IKEA Foundation agrivoltaics or University of Arizona grant found.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "invitation_only",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "Award sizes are not published; only totals (EUR 404M paid out in 2025).",
+   "cycle": "invite_only",
+   "next_deadline": null,
+   "deadline_note": "No open call or deadline; staff scout partners themselves.",
+   "open_now": false,
+   "eligibility_note": "No application route; the foundation concentrates resources on select partner organisations and does not take unsolicited funding requests.",
+   "requirements": {
+    "loi": false,
+    "registrations": []
+   },
+   "themes": [
+    "solar & clean energy",
+    "energy access",
+    "climate adaptation",
+    "land & conservation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "IKEA Foundation does not accept unsolicited funding requests.",
+    "url": "https://ikeafoundation.org/how-we-work/our-grants"
+   }
+  },
+  "vet_note": "IKEA Foundation funds climate work only through partners it picks itself and agrivoltaics is not a priority, so reaching it would go through an intermediary like AgroEcology Fund or GEAPP.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 28,
+   "changes": [
+    "all 4 quotes found; eligibility quote is on the cited our-grants page",
+    "levels unchanged"
+   ]
+  }
+ }
+]

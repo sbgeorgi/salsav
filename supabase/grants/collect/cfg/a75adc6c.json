@@ -1,0 +1,25 @@
+{
+  "id": "a75adc6c-51d2-4d90-9c68-c1b37c2a0852",
+  "name": "Fonds francais pour l'environnement mondial (FFEM)",
+  "program": "FFEM project financing (paused for new proposals until end 2026)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.ffem.fr/en/calls-for-projects/list",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "FFEM is not accepting new proposals until the end of 2026 and its calls list is empty. No calls are collected. The calls list page is watched, and a new call appearing there is flagged for review.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET (desktop UA): ffem.fr/en/calls-for-projects/list 200, 4.6 KB text, 'No calls for projects found' (status filters Ongoing / Opening soon / Closed call); ffem.fr/en/frequently-asked-questions 200, pause statement present; ffem.fr/en/call-projects 200 (editorial, only the One Health call open until 30 April 2024); ffem.fr/rss.xml 200 (news and evaluation items, no calls); www.ffem.fr/feed and /wp-json/wp/v2/types 404 (site is Drupal). Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "page_reason": "FFEM has no open or upcoming call: its FAQ says it cannot receive new project proposals until the end of 2026, and its calls list view shows 'No calls for projects found' (the list renders server-side, so no card markup exists yet to build a list selector on). Calls are announced ad hoc after the 2027-2030 programming and the earlier ones (One Health, closed 30 April 2024) were one-off thematic calls.",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

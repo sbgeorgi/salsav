@@ -1,0 +1,34 @@
+{
+  "key": "13efc86c",
+  "funder": "USDA Natural Resources Conservation Service (NRCS)",
+  "program": "Conservation Innovation Grants (CIG)",
+  "verdict": "structured_supported",
+  "method": "grants_gov",
+  "adapter": "grants_gov",
+  "adapter_config": {"agencies": "USDA-NRCS", "keyword": "Conservation Innovation Grants", "oppStatuses": "forecasted|posted", "rows": 25},
+  "url": "https://simpler.grants.gov/opportunity/5c9be202-40a2-497c-a9c3-12e732256980",
+  "feed_url": null,
+  "confidence": "medium",
+  "summary": "Grants.gov search2 (POST https://api.grants.gov/v1/api/search2, no key) lists NRCS opportunities with stable oppNum, title, openDate, closeDate and status. Use the grants_gov adapter with agencies USDA-NRCS. The CIG FY2026 On-Farm Trials NOFO (USDA-NRCS-NHQ-CIGOFT-26-NOFO0001447, closed 2026-07-27) is archived, so there is no live CIG call today. The only live NRCS hit is a different program (ACEP, USDA-NHQ-ACEP-26-NOFO0001456, closes 2026-11-19), which the keyword matches. The row is structured but its CIG-specific output is currently empty.",
+  "attempted": [
+    "endpoint_recon.py on simpler.grants.gov record: client-rendered Next.js, no usable data payload; Chrome XHR only shows analytics POSTs",
+    "simpler.grants.gov/api/v1/opportunities/<uuid>: Next.js 404 page, not a data API",
+    "api.grants.gov fetchOpportunity by simpler UUID: returns backend unavailable message (apply07 backend), not used",
+    "api.grants.gov search2 oppNum=USDA-NRCS-NHQ-CIGOFT-26-NOFO0001447: hit found, status archived, closed 07/27/2026",
+    "api.grants.gov search2 agencies=USDA-NRCS, all statuses, keyword 'Conservation Innovation': 554 hits, all CIG years archived or closed, none forecasted or posted",
+    "api.grants.gov search2 agencies=USDA-NRCS, forecasted|posted, no keyword: 1 hit (ACEP)",
+    "keyword sensitivity check: keyword 'zzzzqq' returns 0 hits, so the keyword does filter",
+    "nrcs.usda.gov CIG pages and sitemap via curl: connection timeouts (exit 28) from this host",
+    "headless browser text of nrcs.usda.gov CIG program page: three annual CIG NOFOs (Classic, On-Farm Trials, State CIG Classic); no live call listed in the text read",
+    "adapter_check.mjs on grants_gov row: ok=true, count=1 (ACEP sample)"
+  ],
+  "check": {
+    "ok": true,
+    "count": 1,
+    "sample": [{"external_id": "USDA-NHQ-ACEP-26-NOFO0001456", "title": "Easement Restoration and Stewardship", "deadline": "2026-11-19", "status": "open", "url": "https://www.grants.gov/search-results-detail/363920"}],
+    "error": null,
+    "http": 200,
+    "bytes": 2755
+  },
+  "engine_requirements": "None. Existing grants_gov adapter suffices. Set adapter_config.agencies to USDA-NRCS. Keyword is a real filter and matches cross-program NRCS calls, so expect non-CIG items (ACEP). For CIG-only output, the title must be checked for 'Conservation Innovation' in a later filter. The engine has no title filter today."
+}

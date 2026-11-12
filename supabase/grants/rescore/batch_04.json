@@ -1,0 +1,546 @@
+[
+  {
+    "id": "8aef81d0-29e2-4756-8f38-d51f4cbf6918",
+    "verdict": "demote",
+    "reason": "Score 36 is under the 40-point gate: mission is only tangential (youth employment and education) and no open call, award size or eligibility is published.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Funds youth employment, education and young-farmer livelihoods in Africa; agrivoltaics would be a stretch.",
+        "quote": "programs that focus on entrepreneurship, workforce development, and institutional strengthening in key sectors"
+      },
+      "activity": {
+        "level": "other",
+        "why": "Mostly scholarships, youth enterprise and workforce programs; a lab could only be a minor partner.",
+        "quote": "enabling highly talented, service-oriented young people, primarily young Africans, to pursue higher education"
+      },
+      "geography": {
+        "level": "region",
+        "why": "Focused on Africa as a whole, with Kenya among its offices; no Kenya or Arizona priority stated.",
+        "quote": "The Mastercard Foundation Scholars Program is a global initiative designed to develop the next generation of leaders by enabling highly talented, service-oriented young people, primarily young Africans"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "Only found support for Arizona State University scholars and e-learning, not dryland agriculture, solar or water research.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "themes": [
+        "agriculture",
+        "education & workforce",
+        "rural livelihoods",
+        "international partnerships"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.6
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "",
+        "url": ""
+      }
+    },
+    "vet_note": "Strategy-level African youth and education funder with no open call or published award size; too tangential to agrivoltaics to pursue now.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 3,
+      "quotes_removed": 0,
+      "fit": 36,
+      "changes": []
+    }
+  },
+  {
+    "id": "d9a3a59e-43e9-437f-93b5-56dd625d25ca",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "adjacent",
+        "why": "Funds sustainable agriculture research and education; the page does not name agrivoltaics, but it is a natural proposal.",
+        "quote": "advance sustainable agriculture at local and regional levels"
+      },
+      "activity": {
+        "level": "research_demo",
+        "why": "Pays for research plus education projects led by researchers with producers.",
+        "quote": "Projects must incorporate research and education, and bring together a team of researchers, students, ag professionals, and producers."
+      },
+      "geography": {
+        "level": "home",
+        "why": "Western region program that covers Arizona, where SALSAV is based.",
+        "quote": "Researchers from Western institutions may apply."
+      },
+      "precedent": {
+        "level": "direct",
+        "why": "Western SARE funded an agrivoltaics project (Jack's Solar Farm, Colorado, 2023, farmer and rancher grant); the cited page does not mention Arizona.",
+        "quote": "",
+        "url": "https://projects.sare.org/sare_project/fw23-413/"
+      }
+    },
+    "facts": {
+      "ua_eligibility": "eligible",
+      "award_max_usd": 350000,
+      "amount_confidence": "published",
+      "award_note": "Maximum project budget, 1 to 3 years",
+      "cycle": "annual_recurring",
+      "next_deadline": null,
+      "deadline_note": "Page says Closed, Opens 2027; no date given. Pre-proposal required before full proposal.",
+      "open_now": false,
+      "eligibility_note": "Researchers from Western institutions may apply; full proposals only from applicants with a successful pre-proposal.",
+      "requirements": {
+        "loi": true
+      },
+      "themes": [
+        "agriculture",
+        "research",
+        "education & workforce",
+        "climate adaptation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.85
+    },
+    "evidence": {
+      "award": {
+        "quote": "Project budget is $350,000 maximum, with project length 1-3 years.",
+        "url": "https://western.sare.org/grants/research-and-education/"
+      },
+      "deadline": {
+        "quote": "Closed - Opens 2027",
+        "url": "https://western.sare.org/grants/research-and-education/"
+      },
+      "eligibility": {
+        "quote": "Researchers from Western institutions may apply.",
+        "url": "https://western.sare.org/grants/research-and-education/"
+      }
+    },
+    "vet_note": "Annual USDA-funded Western region research and education grant (up to $350,000) that Arizona researchers can apply to directly; next round opens in 2027 and starts with a pre-proposal.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 6,
+      "quotes_removed": 0,
+      "fit": 79,
+      "changes": [
+        "precedent why: removed unsupported Arizona tour and University of Arizona claim (cited page has neither)"
+      ]
+    }
+  },
+  {
+    "id": "db669dcf-e662-4beb-8852-20567f6928de",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "DOE-wide funding portal; the homepage names no topic, so agrivoltaics is only a general link.",
+        "quote": "Bringing innovative ideas forward to drive impactful energy solutions"
+      },
+      "activity": {
+        "level": "other",
+        "why": "The page describes an application platform, not what research it pays for; a lab could only be a minor user.",
+        "quote": "The eXCHANGE system is the Department of Energy's platform for publishing"
+      },
+      "geography": {
+        "level": "region",
+        "why": "US federal agency platform; no state or country focus stated.",
+        "quote": "A .gov website belongs to an official government organization in the United States."
+      },
+      "precedent": {
+        "level": "direct",
+        "why": "DOE solar office funded agrivoltaics research (FARMS, 2022) including the University of Arizona.",
+        "quote": "",
+        "url": "https://www.energy.gov/eere/solar/foundational-agrivoltaic-research-megawatt-scale-farms-funding-program"
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "deadline_note": "No listings visible on the portal homepage; each DOE call has its own deadline.",
+      "themes": [
+        "solar & clean energy",
+        "research",
+        "technology & innovation"
+      ],
+      "confidence": 0.6
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "",
+        "url": ""
+      }
+    },
+    "vet_note": "DOE's portal for funding calls, where solar office agrivoltaics calls have appeared before; watch it for a new call rather than apply to the portal itself.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 3,
+      "quotes_removed": 1,
+      "fit": 41,
+      "changes": [
+        "mission adjacent->weak: homepage names no topic",
+        "activity capacity->other: portal is service delivery, page does not say what it funds",
+        "activity quote replaced with a single-line quote that matches the stored page text"
+      ]
+    }
+  },
+  {
+    "id": "0619867b-0f7d-4f1a-a096-fa4c71d976a8",
+    "verdict": "demote",
+    "reason": "Score 23 is under the 40-point gate: mission is only tangential (rivers and oceans), and the foundation takes no unsolicited proposals.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Funds rivers, oceans and education; farming or solar work is not named, so agrivoltaics would be a stretch.",
+        "quote": "We work in three areas: improving education, protecting rivers and oceans and the communities they support, and investing in our home region"
+      },
+      "activity": {
+        "level": "other",
+        "why": "Aims at systems-level change in each program; a lab could only be a minor partner.",
+        "quote": "we are working for systems-level change in each of our programs."
+      },
+      "geography": {
+        "level": "outside",
+        "why": "Page names no Southwest, Mexico, Kenya or Israel focus; the home region it names is Arkansas.",
+        "quote": "Promoting the highest level of design in Arkansas’ Benton and Washington counties"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No University of Arizona or agrivoltaics grant found (the web search was unavailable, so this is unconfirmed).",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "cycle": "invite_only",
+      "next_deadline": null,
+      "open_now": false,
+      "eligibility_note": "The foundation does not accept unsolicited proposals; a relationship comes first.",
+      "themes": [
+        "water",
+        "land & conservation",
+        "education & workforce"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.7
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "The foundation does not accept unsolicited proposals.",
+        "url": "https://www.waltonfamilyfoundation.org/grants"
+      }
+    },
+    "vet_note": "Large family foundation focused on rivers, oceans and education that accepts no unsolicited proposals; not a fit for agrivoltaics funding.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 4,
+      "quotes_removed": 0,
+      "fit": 23,
+      "changes": []
+    }
+  },
+  {
+    "id": "07e5a196-2595-46df-a3e8-e03a48951f15",
+    "verdict": "demote",
+    "reason": "Score 32 is under the 40-point gate: water and nature-based work, no agrivoltaics link, and the foundation's grants page says it takes no unsolicited proposals.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Funds nature-based water protection; farming appears only as improved practices, so agrivoltaics would be a stretch.",
+        "quote": "investing in projects that use the power of nature to improve water outcomes for people and ecosystems alike."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Strategy is policy, markets, legal protections and nature-based restoration; a lab could only be a minor partner.",
+        "quote": "We work to align policy, legal protections, financing and markets to advance nature-positive solutions for rivers, oceans and land."
+      },
+      "geography": {
+        "level": "region",
+        "why": "US-wide work with stories in Arizona and the Mississippi; no stated Southwest priority.",
+        "quote": "In southern Arizona, the Cocopah Indian Tribe is reconnecting with its roots by bringing neglected stretches of the river’s floodplain back to life"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No University of Arizona or agrivoltaics grant found (the web search was unavailable, so this is unconfirmed).",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "cycle": "invite_only",
+      "next_deadline": null,
+      "open_now": false,
+      "eligibility_note": "Same foundation as the Walton grants page, which states it does not accept unsolicited proposals.",
+      "themes": [
+        "water",
+        "land & conservation",
+        "climate adaptation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.65
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "The foundation does not accept unsolicited proposals.",
+        "url": "https://www.waltonfamilyfoundation.org/grants"
+      }
+    },
+    "vet_note": "Environment program of the Walton foundation: nature-based water work with no open application, so it does not fit an agrivoltaics proposal.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 4,
+      "quotes_removed": 0,
+      "fit": 32,
+      "changes": [
+        "eligibility quote exists on the cited /grants page, not on this row's own page (foundation-wide policy); the row's own evidence check may not match it"
+      ]
+    }
+  },
+  {
+    "id": "1cbc1a63-2aca-4d30-83ad-db8ed6138583",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Funds agroecology and climate-resilient food systems for smallholders; no solar or agrivoltaics, so a stretch.",
+        "quote": "Climate change poses one of the most pressing challenges for food systems globally."
+      },
+      "activity": {
+        "level": "research_demo",
+        "why": "Past calls paid for participatory field research led by research teams.",
+        "quote": "For decades, CRFS has funded participatory agroecological research on topics such as soil health, ecological pest and disease management, and agrobiodiversity"
+      },
+      "geography": {
+        "level": "home",
+        "why": "Focus regions include Kenya, where SALSAV has a partner, plus the Andes and West Africa.",
+        "quote": "East and Southern Africa (Kenya, Tanzania, Uganda, Malawi)."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No McKnight Foundation (Minnesota) grant to UA or agrivoltaics found; search returned only the unrelated Brain Research Foundation.",
+        "quote": "",
+        "url": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "award_min_usd": 100000,
+      "award_max_usd": 400000,
+      "amount_confidence": "estimated",
+      "award_note": "Range from a past open call (2024); no call open now",
+      "cycle": "invite_only",
+      "next_deadline": null,
+      "deadline_note": "No thematic open call now; most grantmaking is invitation only",
+      "open_now": false,
+      "eligibility_note": "Applications accepted only from organizations invited to apply; informal queries welcome. Past call preferred Global South teams.",
+      "requirements": {
+        "loi": false
+      },
+      "themes": [
+        "agriculture",
+        "smallholder farmers",
+        "climate adaptation",
+        "research",
+        "food security"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.8
+    },
+    "evidence": {
+      "award": {
+        "quote": "We anticipate making at most 4 awards ranging from $100,000-$400,000 each, with project durations of 1-3 years.",
+        "url": "https://www.mcknight.org/en_ca/programs/global-foods/how-to-apply/"
+      },
+      "deadline": {
+        "quote": "There are not currently any thematic open calls for CRFS funding.",
+        "url": "https://www.mcknight.org/en_ca/programs/global-foods/how-to-apply/"
+      },
+      "eligibility": {
+        "quote": "it continues to be an invite-only application process where applications for funding are accepted only from organizations invited to apply.",
+        "url": "https://www.mcknight.org/en_ca/programs/global-foods/how-to-apply/"
+      }
+    },
+    "vet_note": "Invitation-only food-systems research funder (past awards $100k to $400k) with Kenya in its focus; useful only by building a relationship with the regional team, not for an agrivoltaics call.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 6,
+      "quotes_removed": 0,
+      "fit": 47,
+      "changes": []
+    }
+  },
+  {
+    "id": "5cf5ce50-687d-4e25-a9b6-c68c3a563205",
+    "verdict": "demote",
+    "reason": "Fit is 32, below the 40 gate: the only call (urban heat finance and institutions) is closed and unrelated to farming or solar.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Climate philanthropy intermediary; its only call was urban heat resilience, no solar or farming focus.",
+        "quote": "Locally-led climate adaptation and resilience"
+      },
+      "activity": {
+        "level": "other",
+        "why": "The two calls funded finance tools and city or civil society capacity; research is a fund pillar but not part of these calls.",
+        "quote": "from municipal debt swaps and resilience bonds to community-based insurance and microfinance"
+      },
+      "geography": {
+        "level": "global",
+        "why": "The fund covers low- and middle-income countries; the heat calls named South Asia, Southeast Asia and Sub-Saharan Africa, so SALSAV sites are allowed but not prioritized.",
+        "quote": "extreme heat in urban areas across South Asia, Southeast Asia, and Sub-Saharan Africa"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or University of Arizona grant found on the funder site.",
+        "quote": "",
+        "url": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "Only a program total is stated (up to $9 million across the urban heat RFPs); no single award size",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "deadline_note": "Heat RFP closed September 19, 2025; no new call found",
+      "open_now": false,
+      "eligibility_note": "Pages do not say whether universities can apply.",
+      "themes": [
+        "climate adaptation",
+        "drought & heat",
+        "international partnerships"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.75
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "Note: This RFP is closed as of September 19, 2025",
+        "url": "https://www.climateworks.org/programs/adaptation-and-resilience/fund/"
+      },
+      "eligibility": {
+        "quote": "",
+        "url": ""
+      }
+    },
+    "vet_note": "Climate philanthropy intermediary whose only recent call (urban heat, closed Sept 2025) does not fit agrivoltaics research; watch only for a future agriculture or heat call.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 4,
+      "quotes_removed": 0,
+      "fit": 32,
+      "changes": [
+        "geography outside->global: Sub-Saharan Africa and low- and middle-income countries are in scope",
+        "activity why: page says the fund also pays for research",
+        "reason: fit total corrected 27 -> 32"
+      ]
+    }
+  },
+  {
+    "id": "6cff7b9c-36aa-4e3f-9fb3-f5d50708cbc9",
+    "verdict": "demote",
+    "reason": "Mission fit is none: the program says it does not fund agriculture, adaptation or clean technology, and it takes no unsolicited proposals (fit 24).",
+    "fit": {
+      "mission": {
+        "level": "none",
+        "why": "Program states it does not fund agriculture, adaptation or clean technology projects.",
+        "quote": "The Climate and Clean Energy program does not make grants on climate adaptation and resilience; land use, forestry, and agriculture; or clean technology projects."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Staff-sourced clean energy policy work; a lab could only be a minor partner.",
+        "quote": "Our program staff proactively identify and cultivate partnerships aligned with our strategic priorities and programs."
+      },
+      "geography": {
+        "level": "region",
+        "why": "Work based primarily in the United States.",
+        "quote": "The Climate and Clean Energy program supports work based primarily in the United States."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or University of Arizona grant found in the program pages.",
+        "quote": "",
+        "url": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "Award size not published",
+      "cycle": "invite_only",
+      "next_deadline": null,
+      "deadline_note": "No open call; staff invite partners",
+      "open_now": false,
+      "eligibility_note": "Does not accept unsolicited proposals; grants go primarily to US 501(c)(3) organizations.",
+      "themes": [
+        "solar & clean energy"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.9
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "The Climate and Clean Energy program does not accept unsolicited grant proposals.",
+        "url": "https://www.hsfoundation.org/programs/climate-clean-energy/"
+      },
+      "eligibility": {
+        "quote": "The Climate and Clean Energy program does not accept unsolicited grant proposals.",
+        "url": "https://www.hsfoundation.org/programs/climate-clean-energy/"
+      }
+    },
+    "vet_note": "Invitation-only clean energy policy funder that explicitly excludes agriculture and clean technology projects, so it is not a route for agrivoltaics research.",
+    "source": "live_page",
+    "checked": {
+      "quotes_ok": 5,
+      "quotes_removed": 0,
+      "fit": 24,
+      "changes": [
+        "themes: removed climate adaptation (program says it does not fund it)"
+      ]
+    }
+  }
+]

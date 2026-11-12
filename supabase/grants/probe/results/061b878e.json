@@ -1,0 +1,99 @@
+{
+ "key": "061b878e",
+ "verdict": "structured_needs_new_adapter",
+ "method": "html_listing",
+ "confidence": "medium",
+ "summary": "Minciencias publishes a server-rendered Drupal table of all calls at /convocatorias/todas (plain HTTP, 200, no cookies, apertura date in a machine-readable content attribute). Each call has a detail page /node/<id> with a plain-text Cierre (deadline) line. A new html_listing adapter with one detail hop yields real live calls. The existing html adapter stores no rows, so it cannot be used. The row url must change to the listing, because node/9324 is a news article and Convocatoria 49 (node/9321) closed 2026-05-08.",
+ "adapter": "html_listing (new; not in engine yet)",
+ "feed_url": null,
+ "row_fix": {
+  "url": "https://minciencias.gov.co/convocatorias/todas",
+  "program": "All calls on /convocatorias/todas (live filter by deadline; program-level keyword filter optional)",
+  "reason": "node/9324 is a news article; node/9321 (Convocatoria 49, energy) closed 2026-05-08"
+ },
+ "adapter_config": {
+  "listing_url": "https://minciencias.gov.co/convocatorias/todas",
+  "page_param": "page",
+  "max_pages": 10,
+  "window_days": 365,
+  "detail_url_pattern": "https://minciencias.gov.co/node/{id}",
+  "detail_deadline_regex": "Cierre (?:\\w+ )?(\\d{1,2}) ([a-záéíóúñ]+) (\\d{4})",
+  "locale_months": "es",
+  "delay_ms_per_host": 10000,
+  "detail_cache_by_node": true,
+  "recheck_statuses": [
+   "open",
+   "unknown"
+  ],
+  "keyword_any": null
+ },
+ "engine_requirements": "New adapter html_listing in engine (extract.ts or a new adapters/html_listing.ts). (1) Fetch GET listing_url?page=N with N=0,1,2... using the edge UA, no cookies, 10 s spacing per host (robots Crawl-delay 10, not 2 s). (2) Per row: match <tr\\s+class=\"[^\"]*\"\\s*> blocks; id and title from <a href=\"/node/(\\d+)\">TITLE</a>; apertura date from the first content=\"YYYY-MM-DDT...\" attribute in that row. Stop paging when apertura < today - window_days, when a page has no rows, or at max_pages. (3) Detail hop per node not cached or with status open/unknown: GET /node/<id> (follow the 301 alias), strip scripts and tags, regex Cierre <weekday?> <day> <Spanish month> <yyyy>, months enero..diciembre. Deadline open if >= today, closed if before. No Cierre line: status unknown (store, never drop, never mark closed). (4) Map to opportunity: external_id minciencias-node-<id>, title, url https://minciencias.gov.co/node/<id>, deadline, status, description = Descripcion cell plus apertura date. (5) Budget: 4 listing + 18 detail fetches at 10 s each is about 3.7 min on first run, so persist the detail cache across runs or cap detail fetches per invocation. Steady state is about 4 listing fetches plus the few open or unknown rows. (6) Optional keyword_any filter on title+description, because the list mixes health, education and doctoral calls.",
+ "prototype": "C:/Users/georg/AppData/Local/Temp/claude/f76d9bc5f4d34b7f/9671fccb-adf9-4753-918f-ba882814c960/scratchpad/mc/mc_listing.py (run: python -I mc_listing.py 10; output in run_delay10.json). Plain urllib, no cookies, 10 s delay.",
+ "check": {
+  "adapter_check_html_listing": "{\"ok\":true,\"mode\":\"page\",\"kind\":\"ok\",\"http\":200,\"count\":0,\"open\":0,\"text_len\":2543,\"sample\":[],\"error\":null,\"expect_min\":1,\"fetchability\":\"easy\"}  (monitor-only html adapter, count stays 0; not proof of rows)",
+  "prototype_output": {
+   "listing_pages_read": 4,
+   "rows_scanned": 18,
+   "detail_checked": 18,
+   "live_count": 2,
+   "unknown_count": 1,
+   "delay_s": 10.0
+  },
+  "sample": [
+   {
+    "node": "9581",
+    "title": "Convocatoria especial para la financiación de macroproyectos nacionales para el fortalecimiento de las capacidades científico-tecnológicas del país",
+    "opened": "2026-10-23",
+    "deadline": "2026-11-13",
+    "status": "open"
+   },
+   {
+    "node": "9582",
+    "title": "Convocatoria 54 convocatoria especial para la financiación de proyectos para el fortalecimiento de las capacidades científico - tecnológicas",
+    "opened": "2026-10-23",
+    "deadline": "2026-11-13",
+    "status": "open"
+   },
+   {
+    "node": "9542",
+    "title": "Convocatoria Fortalecimiento De Capacidades Nacionales Para La Soberanía Sanitaria De Colombia",
+    "opened": "2026-07-15",
+    "deadline": null,
+    "status": "unknown"
+   },
+   {
+    "node": "9321",
+    "title": "CONVOCATORIA ENERGÍA SOSTENIBLE PARA EL TERRITORIO: TRANSICIÓN JUSTA, COMUNITARIA E INNOVADORA. PLAN BIENAL DE CONVOCATORIAS SISTEMA GENERAL DE REGALÍAS 2025 – 2026",
+    "opened": "2026-03-12",
+    "deadline": "2026-05-08",
+    "status": "closed"
+   }
+  ]
+ },
+ "evidence": [
+  "curl with browser UA: /convocatorias/todas?page=0..3 HTTP 200 text/html, server-rendered table; rows have a tr class=\"odd views-row-first\" pattern with two spaces before class.",
+  "Apertura column has content=\"2026-10-23T00:00:00-05:00\" (machine readable).",
+  "node/9581 and node/9582 detail: \"Cierre viernes 13 noviembre 2026 04:00 pm\", status open, and the countdown \"Cierra en: 1 dia(s)\" is ignored.",
+  "node/9542 has no Cierre line (apertura 2026-07-15): status unknown.",
+  "node/9321 (Convocatoria 49, energy, the funders.json program) Cierre 08 mayo 2026: closed.",
+  "robots.txt: User-agent * Crawl-delay: 10; /convocatorias and /node/ not disallowed.",
+  "Views JSON endpoints tried: ?_format=json returns HTML; /views/ajax returns settings only; /api/v1/convocatorias 404; /rss.xml is press releases; sitemap lists news/gallery only."
+ ],
+ "attempted": [
+  "curl ?_format=json on listing: HTML, not JSON",
+  "views/ajax?view_name=convocatorias: settings JSON only, no rows",
+  "/api/v1/convocatorias: 404",
+  "/convocatorias and /convocatoriasfctei: checked, same CMS shell",
+  "listing pages 0-3 parsed with a regex row parser (18 rows within 365 days, 4 listing fetches at 10 s spacing)",
+  "detail pages for all 18 rows (18 fetches at 10 s): 2 open, 15 closed, 1 unknown",
+  "adapter_check html on the listing: ok true, count 0 (monitor-only, as expected)",
+  "Replay: prior round reported identical live nodes 9581 and 9582 with deadline 2026-11-13; this round reproduces them"
+ ],
+ "issues": [
+  "Relevance: both live calls are general SGR science calls (macroproyectos, CTeI capacity). Energy/agro keywords are rare, so a keyword filter is advisable.",
+  "Edge egress not tested from Supabase. Only plain curl and urllib were used (no cookies, browser UA).",
+  "Crawl-delay 10 makes a first full run about 3.7 min. Persist the detail cache or cap detail fetches per run to stay inside the edge wall-clock limit.",
+  "The html adapter (monitor-only) cannot produce rows, so the new adapter is required."
+ ],
+ "summary_short": "html_listing via /convocatorias/todas plus /node/<id> Cierre line. Real live calls found (node 9581, 9582, deadline 2026-11-13)."
+}

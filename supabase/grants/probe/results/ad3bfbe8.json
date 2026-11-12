@@ -1,0 +1,38 @@
+{
+  "key": "ad3bfbe8",
+  "funder": "European Commission (Horizon Europe, Cluster 6 Farm2Fork)",
+  "round": 2,
+  "verdict": "structured_supported",
+  "method": "json_api",
+  "adapter": "eu_ft",
+  "confidence": "medium",
+  "adapter_config": {
+    "query": {"bool": {"must": [{"terms": {"identifier": ["HORIZON-CL6-2027-02-FARM2FORK-02-two-stage"]}}]}}
+  },
+  "alternative_config_not_recommended": {
+    "query": {"bool": {"must": [{"terms": {"callIdentifier": ["HORIZON-CL6-2027-02-two-stage"]}}]}},
+    "returns": 3,
+    "note": "Also returns FARM2FORK-01 and CLIMATE-01 topics. Broader scope than the row's program (-02 only)."
+  },
+  "check": {
+    "exact_identifier": {"ok": true, "count": 1, "http": 200, "bytes": 32510, "sample": [{"external_id": "HORIZON-CL6-2027-02-FARM2FORK-02-two-stage", "title": "Optimising the water-nutrient-energy nexus for sustainable and climate smart agriculture in Africa (FNSSA)", "deadline": "2027-04-08", "status": "open"}], "error": null},
+    "call_identifier": {"ok": true, "count": 3, "http": 200, "bytes": 94680}
+  },
+  "summary": "The eu_ft adapter already reads the exact FNSSA topic from the SEDIA search API with an identifier filter. No new adapter is needed. Round 2 confirmed the replay with adapter_check. The source is an undocumented JSON POST endpoint with a public key apiKey=SEDIA. The status mapping and single-deadline pick need caveats.",
+  "lenses_tried_round2": [
+    "adapter_check with exact identifier config (ok, count 1)",
+    "adapter_check with callIdentifier config (ok, count 3, siblings included)",
+    "Reviewed api.ts euFt request and parse: query part is caller-supplied, apiKey=SEDIA and languages=[en] are hard-coded, deadline is deadlineDate[0] only, status from EU_STATUS map"
+  ],
+  "issues": [
+    "Undocumented endpoint: api.ts marks the multipart query shape as unverified against official docs. Fail loudly on schema change (0 items with no error is the silent failure mode).",
+    "Hard-coded public key apiKey=SEDIA: rotation would break the row with no fallback.",
+    "Status: EU_STATUS maps code 31094501 to open. Prior round recorded startDate 2027-02-04, which is after today (2026-11-11), so 'open' may mean not yet accepting applications. Not re-verified this round.",
+    "Stage-2 deadline 2027-09-14 is dropped by deadlineDate[0]. Acceptable for a stage-1 watch, must be stated.",
+    "Exact identifier pins one topic. When the topic closes or a new call replaces it, the row returns 0 items silently.",
+    "Egress not verified from Supabase edge; all runs were from a local machine (plain HTTP, no cookies, plain UA, HTTP 200 JSON)."
+  ],
+  "engine_requirements": "None new. Keep adapter eu_ft with the exact identifier query above. Recommended hardening (not required for the verdict): (1) treat 0 results as a warning, (2) show open_date and not status alone when startDate is in the future.",
+  "not_run": ["endpoint_recon.py and headless browser: not needed, the SEDIA JSON API is already structured and plain-HTTP reachable"],
+  "written_by": "round 2 probe"
+}

@@ -1,0 +1,36 @@
+{
+  "key": "f3de2256",
+  "funder": "USDA NIFA SCRI",
+  "verdict": "structured_needs_new_adapter",
+  "method": "json_api",
+  "confidence": "high",
+  "adapter": "grants_gov",
+  "adapter_config": {"aln": "10.309", "oppStatuses": "forecasted|posted", "rows": 25},
+  "feed_url": null,
+  "url": "https://www.nifa.usda.gov/grants/funding-opportunities/specialty-crop-research-initiative",
+  "engine_requirements": "Use the existing grants_gov adapter (POST https://api.grants.gov/v1/api/search2, no key). BUG to fix in supabase/functions/grants-refresh/adapters/api.ts grantsGov.request(): the non-key body copies config key 'aln' verbatim, but the Grants.gov search2 API ignores 'aln' and expects 'cfda'. Verified: body {aln:'10.309'} returns hitCount 83700 unrelated 2010 records; body {cfda:'10.309'} returns hitCount 28, all SCRI. Fix: when c.aln is set, send body.cfda = c.aln (keep copying other keys). Config to use: {aln:'10.309', oppStatuses:'forecasted|posted', rows:25}. Expected today: 0 live SCRI records (SCRI FY26 NOFO USDA-NIFA-SCRI-011676 is archived, closed 2026-06-15), so the row goes live the moment NIFA posts the FY27 SCRI as forecasted or posted. Interim without the fix: adapter_config {agencies:'USDA-NIFA', oppStatuses:'forecasted|posted', rows:25} passes ok=true but is agency-wide (returns AFRI, SBIR, HSI, Tribal Colleges), so it needs a title filter or should be avoided for this row. keyword is not a filter in this API.",
+  "prototype": "C:/Users/georg/AppData/Local/Temp/claude/f76d9bc5f4d34b7f/9671fccb-adf9-4753-918f-ba882814c960/scratchpad/proto_scri.py",
+  "attempted": [
+    "endpoint_recon.py on NIFA SCRI program page: plain HTML 7178 chars, no CMS, no next_data, no ld+json, no embedded JSON; only Grants.gov/NIFA links, no listing of opportunities",
+    "NIFA funding-opportunities/specialty-crop-research-initiative page: parsed; NOFO USDA-NIFA-SCRI-011676 posted 2026-04-13, closed 2026-06-15, ALN 10.309, linked to grants.gov/search-results-detail/361873 (archived)",
+    "Grants.gov search2 oppNum=USDA-NIFA-SCRI-011676: ok, hitCount 1, status archived",
+    "Grants.gov search2 keyword='Specialty Crop Research Initiative' all statuses: 50 hits, mostly SCRI archives plus unrelated SCBGP/SCMP/NCPN; keyword is not a filter",
+    "Grants.gov search2 keyword + forecasted|posted: only SCMP 2026 (AMS, posted) and NCPN (APHIS, closed) appear; no SCRI",
+    "Grants.gov search2 aln=10.309 (what the current adapter sends): hitCount 83700, unrelated records; aln key ignored",
+    "Grants.gov search2 cfda=10.309 all statuses: hitCount 28, all SCRI and Citrus SCRI records 2009-2026",
+    "Grants.gov search2 cfda=10.309 forecasted|posted: hitCount 0 (no live SCRI call today)",
+    "adapter_check grants_gov agencies=USDA-NIFA keyword/forecasted|posted: ok=true count 5 (AFRI, SBIR, HSI, TCRGP; not SCRI)",
+    "adapter_check grants_gov oppNum=USDA-NIFA-SCRI-011676: ok=true count 1, archived",
+    "adapter_check grants_gov aln=10.309: ok=true count 25 but all unrelated 2010 records (bug proof)",
+    "prototype with cfda key: live count 0, all-status count 28, sample parsed"
+  ],
+  "check": {
+    "ok": true,
+    "count": 1,
+    "sample": [{"external_id": "USDA-NIFA-SCRI-011676", "title": "Specialty Crop Research Initiative", "deadline": "2026-06-15", "status": "archived", "url": "https://www.grants.gov/search-results-detail/361873"}],
+    "note": "adapter_check output for oppNum config (real). Live SCRI count is 0 until FY27 NOFO posts; cfda fix needed for keyword-free ALN scoping."
+  },
+  "row_fix": {"url": "https://www.nifa.usda.gov/grants/funding-opportunities/specialty-crop-research-initiative", "program": "Specialty Crop Research Initiative (SCRI)", "reason": "Program page is a marketing page; the NOFO landing page lists the current call and the ALN 10.309 that scopes Grants.gov"},
+  "summary": "SCRI is machine-readable via Grants.gov search2 filtered by ALN/CFDA 10.309 (verified cfda returns 28 SCRI records, 0 live now). The current grants_gov adapter sends 'aln', which the API ignores, so SCRI rows would be wrong until api.ts maps aln to cfda. No live SCRI call exists today (FY26 NOFO archived, closed 2026-06-15); the row will fill when NIFA posts FY27.",
+  "cycle_note": "Annual cycle; FY26 closed 2026-06-15. Expect FY27 forecast/posting in roughly spring 2027 (inference from past cycles, unconfirmed)."
+}

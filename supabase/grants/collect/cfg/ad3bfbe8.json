@@ -1,0 +1,112 @@
+{
+  "id": "ad3bfbe8-defd-45f0-8393-0d24006267e8",
+  "name": "European Commission (Horizon Europe, Cluster 6 Farm2Fork)",
+  "program": "Horizon Europe Cluster 6 topics in SALSAV scope (incl. HORIZON-CL6-2027-02-FARM2FORK-02, water-nutrient-energy nexus, FNSSA)",
+  "mode": "calls",
+  "adapter": "eu_ft",
+  "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/HORIZON-CL6-2027-02-FARM2FORK-02-two-stage",
+  "feed_url": null,
+  "adapter_config": {
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "terms": {
+              "callIdentifier": [
+                "HORIZON-CL6-2026-04",
+                "HORIZON-CL6-2027-01",
+                "HORIZON-CL6-2027-01-two-stage",
+                "HORIZON-CL6-2027-02-two-stage",
+                "HORIZON-CL6-2027-02",
+                "HORIZON-CL6-2027-03",
+                "HORIZON-CL6-2028-02-two-stage",
+                "HORIZON-CL6-2028-02"
+              ]
+            }
+          },
+          {
+            "terms": {
+              "type": [
+                "1",
+                "2",
+                "8"
+              ]
+            }
+          }
+        ],
+        "must_not": [
+          {
+            "terms": {
+              "destination": [
+                "48080651"
+              ]
+            }
+          },
+          {
+            "terms": {
+              "identifier": [
+                "HORIZON-CL6-2027-01-ZEROPOLLUTION-01",
+                "HORIZON-CL6-2027-01-ZEROPOLLUTION-02",
+                "HORIZON-CL6-2027-01-ZEROPOLLUTION-04"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "filter": {
+      "any": [
+        "water",
+        "nutrient",
+        "nexus",
+        "agricultur",
+        "farm",
+        "crop",
+        "rural",
+        "irrigat",
+        "dryland",
+        "arid",
+        "solar",
+        "agrivolt"
+      ],
+      "none": [
+        "forestry",
+        "antarctic",
+        "arctic"
+      ],
+      "fields": "title+description"
+    },
+    "auto_vet": false,
+    "max_items": 40
+  },
+  "collect_note": "Farming, water and rural research topics from the EU's Horizon Europe Cluster 6 calls for 2026 to 2027 are read from the EU funding portal twice a day, each with its next deadline. Late-added or partnership-only topics may be missed. All items wait for review before showing.",
+  "harness": {
+    "ok": true,
+    "count": 16,
+    "open": 16,
+    "checked": "2026-11-12"
+  },
+  "expect": {
+    "min_items": 10,
+    "sample": [
+      {
+        "title": "Optimising the water-nutrient-energy nexus for sustainable and climate smart agriculture in Africa (FNSSA)",
+        "deadline": "2027-04-08",
+        "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/HORIZON-CL6-2027-02-FARM2FORK-02-two-stage"
+      },
+      {
+        "title": "Strengthening the resilience of European farmers through improved capacity in coping with risks and crises",
+        "deadline": "2027-05-11",
+        "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/HORIZON-CL6-2027-03-GOVERNANCE-01"
+      },
+      {
+        "title": "Enhancing the competitiveness of organic crop breeding: focus on intercropping adapted varieties",
+        "deadline": "2027-09-22",
+        "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/HORIZON-CL6-2027-01-BIODIV-09"
+      }
+    ]
+  },
+  "evidence": "POST https://api.tech.ec.europa.eu/search-api/prod/rest/search?apiKey=SEDIA&text=*&pageSize=50 (same wire format as adapters/api.ts euFt), checked 2026-11-12. callIdentifier values that exist with open or forthcoming Cluster 6 topics: 2026-04 (1 topic, forthcoming, deadline 2026-11-26), 2027-01 (23), 2027-01-two-stage (2), 2027-02 (16), 2027-02-two-stage (2), 2027-03 (7); 2027-03-two-stage, 2028-01, 2028-03, 2027-04 return 0 and are not listed; 2028-02 and 2028-02-two-stage return 0 today and stay as watch values from the earlier config. Response size: all six calls together are 1.82 MB, over the engine's 1.5 MB read cap (http.ts MAX_READ_BYTES), which truncates the JSON and silently yields count 0. must_not drops destination 48080651 (Circular economy and biobased sectors, 12 topics, none in scope) and three zero-pollution topics (biocides, air quality planning, industrial benchmarking): 36 results, 1.27 MB. Harness 2026-11-12: ok, http 200, count 16, open 16; every item is a Cluster 6 topic, deadlines from the API (nearest future deadline). Not collected: HORIZON-CL6-2023-GOVERNANCE-01-13 (NOSTRADAMUS) is a 2023 project-level open call without a Cluster 6 callIdentifier in this API; a query term for it would pull in third-party project calls of other programmes.",
+  "edge_risk": "Response is about 1.27 MB against the engine's 1.5 MB read cap; if Cluster 6 grows past the cap the read is truncated and returns zero items (min_items then flags it). Query depends on the portal's SEDIA search API, whose wire format is undocumented.",
+  "confidence": "medium"
+}

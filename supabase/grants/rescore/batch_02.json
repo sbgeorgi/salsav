@@ -1,0 +1,573 @@
+[
+  {
+    "id": "67815831-96fc-48c5-8a04-a6b286df4af9",
+    "verdict": "demote",
+    "reason": "Mission is only tangential (climate policy and U.S. West conservation) and the itemized score is 32, below the 40 gate.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Climate and western conservation strategies; no agriculture, solar-on-farmland or water-energy-food focus is named.",
+        "quote": "Hewlett views climate change as an interconnected challenge and seeks ways for all to benefit from a clean energy future."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Grants go to efforts that bring government, industry and communities together on emissions; mostly policy work, a lab would be a minor partner.",
+        "quote": "Our grantees support efforts to bring government, private industry, and communities together to reduce emissions."
+      },
+      "geography": {
+        "level": "global",
+        "why": "Climate work focuses on the U.S., Europe, China and India; Arizona and SALSAV sites are not named, so no priority.",
+        "quote": "We pay particular attention to the U.S., Europe, China, and India, key contributors to global emissions and emerging solutions."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No Hewlett grant for agrivoltaics or UA found; a search surfaced only a residential-solar policy grant.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "award_min_usd": null,
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "Award size not published on the program page.",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "open_now": false,
+      "eligibility_note": "Program page does not say who may apply or whether universities are eligible; no open call stated.",
+      "themes": [
+        "climate adaptation",
+        "solar & clean energy",
+        "land & conservation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.7
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "",
+        "url": ""
+      }
+    },
+    "vet_note": "Hewlett funds climate policy and western conservation through its own strategies, so agrivoltaics research is a stretch and there is no open call.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 3,
+      "quotes_removed": 1,
+      "fit": 32,
+      "changes": [
+        "geography lowered region -> global (US-West conservation quote was not the climate program; climate focus is four regions); quote replaced",
+        "score 36 -> 32, still demote"
+      ]
+    }
+  },
+  {
+    "id": "68dbe213-9bba-44ff-afc2-b03b2c3082fb",
+    "verdict": "demote",
+    "reason": "Does not review unsolicited funding requests, mission is only tangential (energy transition policy), score 28 is below the 40 gate.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Funds clean energy transition and climate policy; no agriculture or solar-with-farming focus is named.",
+        "quote": "Sequoia Climate Foundation believes in a world powered by clean energy, where all people are protected by policies that have averted the worst effects of climate change."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Example grantees are transition planning, energy systems integration and efficiency bodies; a field lab would be a minor partner at best.",
+        "quote": "Engineering a total systems approach to the energy transition"
+      },
+      "geography": {
+        "level": "global",
+        "why": "Page names global at-risk populations; example grants are international energy bodies and Southeast Asia, not SALSAV sites.",
+        "quote": "disproportionately impact underserved communities and at-risk global populations, including communities of color."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No Sequoia grant for agrivoltaics or UA found in a search.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "award_min_usd": null,
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "Award size not published.",
+      "cycle": "invite_only",
+      "next_deadline": null,
+      "deadline_note": "No application deadline; funder does not review unsolicited requests.",
+      "open_now": false,
+      "eligibility_note": "Funder states it does not review unsolicited funding requests, so there is no open route for a university to apply.",
+      "themes": [
+        "solar & clean energy",
+        "climate adaptation",
+        "technology & innovation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.85
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "Please note that we do not review unsolicited funding requests.",
+        "url": "https://www.sequoiaclimate.org/contact-us"
+      }
+    },
+    "vet_note": "Sequoia funds energy transition policy by invitation only and says it does not review unsolicited requests, so it is not an open route for SALSAV.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 4,
+      "quotes_removed": 1,
+      "fit": 28,
+      "changes": [
+        "geography quote was a grant title with no place; replaced with the page sentence on global populations and why reworded",
+        "eligibility quote is real but on /contact-us (cited url), not in the stored home-page copy"
+      ]
+    }
+  },
+  {
+    "id": "a4e045fd-88bd-42df-b9ba-dc4870a59a8c",
+    "verdict": "demote",
+    "reason": "No open RFP, unsolicited proposals are under 1 percent of grants, mission is only tangential, and the score of 27 is below the 40 gate.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Climate, ocean and tropical-forest initiatives; no agriculture, dryland or solar-with-farming program is named.",
+        "quote": "We champion bold climate solutions, an ocean that sustains us, and scientific innovation and discovery to secure the health and future of people and planet."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Grants are made primarily to tax-exempt charitable organizations for charitable, educational or scientific purposes; a lab is not the typical grantee.",
+        "quote": "Grants are made only for charitable, educational, or scientific purposes, primarily from tax-exempt charitable organizations."
+      },
+      "geography": {
+        "level": "outside",
+        "why": "Named initiatives are tropical deforestation and the ocean; no Arizona or SALSAV site focus appears.",
+        "quote": "Ending Tropical Deforestation for People and Climate"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No Packard grant for agrivoltaics or University of Arizona dryland work was found; not a confirmed absence.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "award_min_usd": null,
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "Award size not published on the funding opportunities page.",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "deadline_note": "No open RFPs listed.",
+      "open_now": false,
+      "eligibility_note": "Page does not name universities; says grants are primarily to tax-exempt charitable organizations and under one percent come from unsolicited proposals.",
+      "themes": [
+        "climate adaptation",
+        "land & conservation",
+        "research"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.7
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "There are currently no open RFPs at this time, please check back again soon.",
+        "url": "https://www.packard.org/grantees/funding-opportunties/"
+      },
+      "eligibility": {
+        "quote": "In a typical year, about 15 percent of our grants are awarded to first-time grantees and less than one percent come from unsolicited proposals.",
+        "url": "https://www.packard.org/grantees/funding-opportunties/"
+      }
+    },
+    "vet_note": "Packard funds climate, ocean and tropical-forest work, has no open RFP and takes almost no unsolicited proposals, so it is not a near-term route for SALSAV.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 5,
+      "quotes_removed": 1,
+      "fit": 27,
+      "changes": [
+        "geography quote had multi-space tag-join artifact; trimmed to the contiguous phrase",
+        "mission and geography quotes are real but live on packard.org/approach, not in the stored funding-opportunities copy (expect evidence_ok false)",
+        "precedent claim about Arizona astronomy fellowships and its url were unverified; removed"
+      ]
+    }
+  },
+  {
+    "id": "c7f5894e-e6c4-4993-8dd4-39d00b441e07",
+    "verdict": "demote",
+    "reason": "The foundation does not accept unsolicited grant proposals, there is no open call, and the itemized score of 38 is below the 40 gate.",
+    "fit": {
+      "mission": {
+        "level": "adjacent",
+        "why": "Funds food systems and electricity access broadly; agrivoltaics is not named but is a natural fit for the Food and Power focus areas.",
+        "quote": "create nutritious and sustainable food systems, connect people to electricity, and advance meaningful economic opportunity."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Works through its own strategy, contracts, convenings and finance; grants are solicited, so a lab could only be a minor partner.",
+        "quote": "Our current work aims to harness technological innovation, bold new ideas, and the power of unlikely partnerships"
+      },
+      "geography": {
+        "level": "global",
+        "why": "Works in the US, Africa, Asia and Latin America; Kenya and Mexico are in range but not prioritized.",
+        "quote": "deliver results for people in the United States and around the world."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or UA grant confirmed; the web search tool was unavailable, so this is not a confirmed absence.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "award_min_usd": null,
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "Award size not published.",
+      "cycle": "invite_only",
+      "next_deadline": null,
+      "deadline_note": "No open call or deadline.",
+      "open_now": false,
+      "eligibility_note": "Foundation states it does not accept unsolicited grant proposals.",
+      "themes": [
+        "food security",
+        "energy access",
+        "technology & innovation",
+        "international partnerships"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.85
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "No. The Rockefeller Foundation does not accept unsolicited grants proposals.",
+        "url": "https://www.rockefellerfoundation.org/grants/"
+      }
+    },
+    "vet_note": "Rockefeller's Food and Power focus areas are relevant but it only funds by invitation, so keep it as a relationship watch item.",
+    "source": "live_page",
+    "checked": {
+      "quotes_ok": 4,
+      "quotes_removed": 0,
+      "fit": 38,
+      "changes": [
+        "all quotes verified on the live grants page (stored copy is empty, expect evidence_ok false)"
+      ]
+    }
+  },
+  {
+    "id": "fce39bdc-f5a7-4c36-98c1-fbe4a5f36c16",
+    "verdict": "demote",
+    "reason": "The AI for Climate and Nature challenge has no open call, is AI-focused, and itemizes to 32, below the 40 gate.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "An AI challenge for climate and nature; renewable energy is only mentioned as one area AI helps, so agrivoltaics would be a stretch.",
+        "quote": "AI is already helping people monitor greenhouse gas emissions, detect forest fires, and advance renewable energy."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Funds AI-powered solutions scaled by innovators with frontier AI partners; a field lab could only be a minor partner.",
+        "quote": "We identify experts who are already solving hard problems and help them scale with AI."
+      },
+      "geography": {
+        "level": "global",
+        "why": "A worldwide challenge with no geographic focus; SALSAV sites are allowed but not prioritized.",
+        "quote": "Climate change is threatening lives and livelihoods around the world."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or University of Arizona grant found; the challenge funded AI, protein, biodiversity and grid projects.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "award_min_usd": null,
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "Page shows 39 grants totaling $30.3M; no single award size is stated.",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "deadline_note": "No open call, deadline or new round announced; Phase I grants were announced in May 2025.",
+      "open_now": false,
+      "eligibility_note": "Page says the 2024 challenge drew proposals from nonprofits and academic institutions but gives no eligibility rules for a future round.",
+      "themes": [
+        "technology & innovation",
+        "climate adaptation",
+        "solar & clean energy"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.8
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "",
+        "url": ""
+      },
+      "eligibility": {
+        "quote": "",
+        "url": ""
+      }
+    },
+    "vet_note": "Bezos Earth Fund's AI challenge is closed and aimed at AI tools, so it is a watch item only unless a new energy or water round opens.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 3,
+      "quotes_removed": 0,
+      "fit": 32,
+      "changes": []
+    }
+  },
+  {
+    "id": "175558a2-b659-47e3-bc81-f869961ec31f",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "adjacent",
+        "why": "Funds all agricultural R&D with US-Israel teams, including soil, water and renewable resources; agrivoltaics is not named but fits.",
+        "quote": "Covers all phases of agricultural R&D including strategic or applied research."
+      },
+      "activity": {
+        "level": "research_demo",
+        "why": "Pays for applied and strategic agricultural research by US and Israeli scientists, which a university lab can lead.",
+        "quote": "Covers all phases of agricultural R&D including strategic or applied research."
+      },
+      "geography": {
+        "level": "home",
+        "why": "Projects run jointly in the US and Israel, and Israel is a SALSAV partner site.",
+        "quote": "Funds projects conducted cooperatively by US and Israeli scientists."
+      },
+      "precedent": {
+        "level": "direct",
+        "why": "BARD gave a US university $570,000 for agrivoltaics research on a semi-transparent solar panel.",
+        "quote": "three-year, $570,000 award from the BARD (Binational Agricultural Research and Development fund) to develop a new spectrally-selective semi-transparent plastic bifacial solar panel design which may be used in co-located agrivoltaics",
+        "url": "https://www.egr.uh.edu/news/202607/food-water-energy-nexus-et%E2%80%99s-mohan-receives-570k-new-co-located-photovoltaic"
+      }
+    },
+    "facts": {
+      "ua_eligibility": "eligible_with_partner",
+      "award_min_usd": null,
+      "award_max_usd": 600000,
+      "amount_confidence": "published",
+      "award_note": "Page lists $310,000 for the standard Research Grant and $600,000 for the Pioneer track, the only research track BARD says it will consider for September 2026; $600,000 is the largest single award.",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "deadline_note": "The Research Grants entry shows no deadline and says the portal has not yet opened; the 2027-01-15 date on the page belongs to fellowships.",
+      "open_now": false,
+      "eligibility_note": "Projects must be run cooperatively by US and Israeli scientists, so an Israeli partner is needed; the page does not list eligible institution types.",
+      "themes": [
+        "agriculture",
+        "research",
+        "international partnerships",
+        "drought & heat"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.8
+    },
+    "evidence": {
+      "award": {
+        "quote": "Maximum award: $600,000 for a 3-year grant",
+        "url": "https://www.bard-isus.org/opportunities/research-grants/"
+      },
+      "deadline": {
+        "quote": "Please note: The submission portal has not yet opened due to technical difficulties",
+        "url": "https://www.bard-isus.org/opportunities/research-grants/"
+      },
+      "eligibility": {
+        "quote": "Funds projects conducted cooperatively by US and Israeli scientists.",
+        "url": "https://www.bard-isus.org/opportunities/research-grants/"
+      }
+    },
+    "vet_note": "BARD funds US-Israel agricultural research up to $600,000 (Pioneer track) and has backed an agrivoltaics project, so SALSAV's Israel link makes a joint proposal worth preparing.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 7,
+      "quotes_removed": 1,
+      "fit": 74,
+      "changes": [
+        "award_max_usd 310000 -> 600000: page states $600,000 max for the Pioneer track, the only track open for Sept 2026; award quote replaced",
+        "precedent quote is real on the cited Houston page, not on the BARD copy (expect evidence_ok false)",
+        "fit 72 -> 74"
+      ]
+    }
+  },
+  {
+    "id": "27cd8a3f-85e1-41d0-bb8a-a52561922167",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Funds cross-disciplinary climate solutions research in general; the page does not name agriculture, energy or water, so agrivoltaics is a stretch.",
+        "quote": "The BSF Climate Solutions in Memory of Prof. Anton Post grant funds U.S.-Israel interdisciplinary research for innovative, collaborative climate solutions."
+      },
+      "activity": {
+        "level": "research_demo",
+        "why": "Funds collaborative research to develop and implement climate solutions, led by scientists at universities and research institutions.",
+        "quote": "funds collaborative, interdisciplinary research projects that develop innovative solutions to climate challenges."
+      },
+      "geography": {
+        "level": "home",
+        "why": "Requires US and Israeli scientists to work together; Israel is a SALSAV partner site.",
+        "quote": "Research collaboration between Israeli and American scientists is seen by the BSF as a fundamental requirement."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or University of Arizona grant found for this program.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "eligible_with_partner",
+      "award_min_usd": null,
+      "award_max_usd": 600000,
+      "amount_confidence": "published",
+      "award_note": "Up to 2 grants per round; maximum request $600,000 over four years.",
+      "cycle": "annual_recurring",
+      "next_deadline": null,
+      "deadline_note": "Official page lists both rounds as to be announced and a yearly timeline (early April pre-proposals, late August full proposals by invitation); the 2027-04-07 date seen on an aggregator is not on the official page.",
+      "open_now": false,
+      "eligibility_note": "US higher-education institutions qualify, but an Israeli collaborator is required and PIs must be faculty with a PhD or equivalent.",
+      "requirements": {
+        "loi": true
+      },
+      "themes": [
+        "research",
+        "international partnerships",
+        "climate adaptation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.8
+    },
+    "evidence": {
+      "award": {
+        "quote": "Maximum grant request for a BSF research grant is $600,000 over four years.",
+        "url": "https://www.bsf.org.il/funding-opportunities/new-program/submission/"
+      },
+      "deadline": {
+        "quote": "Early April: Pre-Proposals deadline",
+        "url": "https://www.bsf.org.il/funding-opportunities/new-program/about/"
+      },
+      "eligibility": {
+        "quote": "BSF only funds scientists from institutions of higher learning, government research institutions, hospitals and other non-profit research organizations.",
+        "url": "https://www.bsf.org.il/funding-opportunities/new-program/submission/"
+      }
+    },
+    "vet_note": "BSF Climate Solutions pays up to $600,000 for US-Israel climate research, so a UA and Israeli team could pitch agrivoltaics once the next round date is announced.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 6,
+      "quotes_removed": 2,
+      "fit": 59,
+      "changes": [
+        "mission and activity quotes were not on the cited BSF pages; replaced with sentences from the stored copy",
+        "cycle closed_unknown -> annual_recurring (yearly timeline on official page); next_deadline stays null, clears the stored aggregator date 2027-04-07 (not on the official page)",
+        "stored copy is an Atom Grants aggregator login page; award, geography, deadline and eligibility quotes were checked on bsf.org.il"
+      ]
+    }
+  },
+  {
+    "id": "7584f360-fa98-430e-b41e-b72a583f2dd9",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "NSF engineering energy and transport program; solar for farming is not named, so agrivoltaics would have to fit a general energy proposal.",
+        "quote": "Chemical, Bioengineering, Energy and Transport Systems (CBET) – NSF 26-518"
+      },
+      "activity": {
+        "level": "research_demo",
+        "why": "US PIs submit research proposals to NSF and BSF funds the Israeli partner's share; a university lab leads the work.",
+        "quote": "The Israeli budget is funded by the BSF as follows: up to $114K/yr for experimental studies and $94K/yr for theoretical and computer-based studies."
+      },
+      "geography": {
+        "level": "home",
+        "why": "Joint US-Israel research, and Israel is a SALSAV partner site.",
+        "quote": "Israeli researchers can join research proposals submitted by US PI(s) to the NSF"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No NSF-BSF award for agrivoltaics found.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "eligible_with_partner",
+      "award_min_usd": null,
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "BSF funds only the Israeli side (up to $114K a year experimental); the US-side NSF award size is not stated on this page.",
+      "cycle": "rolling",
+      "next_deadline": null,
+      "deadline_note": "CBET (NSF 26-518) accepts proposals at any time.",
+      "open_now": true,
+      "eligibility_note": "A US PI submits to NSF and an Israeli researcher joins with BSF funding, so an Israeli partner is needed; two applications per calendar year.",
+      "themes": [
+        "solar & clean energy",
+        "research",
+        "international partnerships",
+        "technology & innovation"
+      ],
+      "confidence": 0.7
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": ""
+      },
+      "deadline": {
+        "quote": "Proposals are accepted anytime.",
+        "url": "https://trdf.technion.ac.il/en/calls-for-proposals/nsf-bsf-programs/"
+      },
+      "eligibility": {
+        "quote": "Israeli researchers can join research proposals submitted by US PI(s) to the NSF, in the programs listed below.",
+        "url": "https://trdf.technion.ac.il/en/calls-for-proposals/nsf-bsf-programs/"
+      }
+    },
+    "vet_note": "UA can send an NSF CBET energy proposal with an Israeli co-PI funded by BSF at any time, but the topic match to agrivoltaics is general.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 5,
+      "quotes_removed": 0,
+      "fit": 55,
+      "changes": [
+        "unverified claim that NSF funded UA agrivoltaics removed from precedent why"
+      ]
+    }
+  }
+]

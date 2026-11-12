@@ -1,0 +1,36 @@
+{
+ "key": "40cf6ba7",
+ "verdict": "monitor_html_only",
+ "method": "html_listing",
+ "adapter": "html",
+ "adapter_config": {},
+ "feed_url": null,
+ "confidence": "high",
+ "summary": "XPRIZE Adaptive Plants has no machine-readable opportunity feed and no open applicant call. The competition page is a fundraising appeal (Become a sponsor, Future/FUNDRAISING status on the listing), with no deadline, registration window or purse stated. Only the html adapter can monitor it for status change, so it stores no opportunity rows.",
+ "attempted": [
+  "endpoint_recon.py on /prizes/adaptive-plants: html_ok, 7067 chars, no CMS, no __NEXT_DATA__, no ld+json, no embedded JSON, no opportunity endpoint",
+  "Chrome XHR capture: only Application Insights telemetry POSTs and kc-usercontent SVG icons; no data API",
+  "sitemap.xml: 200, 2011 URLs; prize slug appears as xprize.org/competitions/adaptive-plants with no lastmod-based opportunity data",
+  "/articles/rss.xml, /rss.xml, /feed, /wp-json/wp/v2/types: 404 or HTML, no RSS/Atom or WP REST",
+  "/competitions?status=Future and ?status=Active: server-rendered card list with title, focus area, FUNDRAISING/Future tags; Adaptive Plants has no purse or dates on its card; the Active list does not include it",
+  "competition page text: no deadline, Register, Judging, Milestone or Prize Purse text; CTA is Become a sponsor",
+  "adapter_check html on /prizes/adaptive-plants: ok true, text_len 3850 (monitor-only, count 0 is expected)",
+  "adapter_check html on /competitions?status=Future: ok false, only 609 chars extracted from the listing, so that URL is not a usable monitor target"
+ ],
+ "evidence": [
+  "Competition copy: XPRIZE Adaptive Plants is a global competition; the page asks for sponsors (Fund the challenge to transform agriculture).",
+  "Listing Future tab shows Adaptive Plants under FUNDRAISING with no dollar figure; Critical Minerals on the same tab shows $10,000,000 USD, so the absence is specific to this prize."
+ ],
+ "check": {
+  "ok": true,
+  "count": 0,
+  "sample": [],
+  "error": null,
+  "http": 200,
+  "text_len": 3850,
+  "links": 1
+ },
+ "row_fix": null,
+ "prototype": "",
+ "engine_requirements": "None. Keep adapter html on https://www.xprize.org/prizes/adaptive-plants for status/change detection. Re-judge if the page gains a deadline or applicant registration; then a structured source would be the competitions detail page or a Future/Active card parser (html_listing: card title, focus area, status tag)."
+}

@@ -1,0 +1,77 @@
+{
+  "key": "b8ff1258",
+  "funder": "U.S. Department of Defense, SERDP and ESTCP",
+  "lens": "round2: card-listing endpoint discovered from workwithus page JS (ajax-href) + solicitation detail pages",
+  "verdict": "structured_needs_new_adapter",
+  "confidence": "high",
+  "method": "html_listing + detail_pages (server-rendered, plain HTTP, no cookies)",
+  "feed_url": null,
+  "row_fix": {
+    "url": "https://serdp-estcp.mil/workwithus/listingcardresults",
+    "program": "SERDP / ESTCP open solicitations (SERDP Core and SEED FY2028 currently listed; ESTCP not listed yet)",
+    "reason": "Replaces the html monitor on the homepage with the funder's own open-solicitation list; the homepage row stores no opportunity rows."
+  },
+  "adapter": "html_cards (new)",
+  "adapter_config": {
+    "listing_url": "https://serdp-estcp.mil/workwithus/listingcardresults",
+    "card_href_pattern": "/workwithus/solicitation\\?id=([0-9a-f-]{36})",
+    "detail_deadline_pattern": "(?:proposals are due|due)\\s+((?:January|February|March|April|May|June|July|August|September|October|November|December) \\d{1,2}, \\d{4})",
+    "max_detail_fetches": 10,
+    "spacing_ms": 2000
+  },
+  "engine_requirements": "1) GET listing_url with UA SALSAV-GrantWatch/1.0, no cookies (verified 200, 4741 bytes, with and without X-Requested-With). 2) For each match of <a href=\"/workwithus/solicitation?id=GUID\"> take the enclosing card: <time class=\"h8\">M/D/YYYY</time> -> released_date; <div class=\"h4\">TITLE</div> -> title (fail loudly if title or GUID is missing). external_id = GUID; url = https://serdp-estcp.mil + href. 3) GET each solicitation url (2 s spacing) and match the case-insensitive sentence 'Proposals are due <Month D, YYYY>' (fallback 'due <date>') -> deadline (ISO). status = open when deadline >= today; closed otherwise; if deadline is null keep status unknown and do not drop the row. 4) Pagination: the pager is a form POST with ApiRequestParams.NextLink; empty on the current page (single page). Follow only if non-empty, with a cap. 5) Cap detail fetches; log overflow. 6) Change detection on rows, not on raw HTML (the anti-forgery token changes on every request).",
+  "prototype": "C:/Users/georg/AppData/Local/Temp/claude/f76d9bc5f4d34b7f/9671fccb-adf9-4753-918f-ba882814c960/scratchpad/b8r2/proto/serdp_open_listing.py (python -I; plain urllib, no cookies)",
+  "check": {
+    "adapter_check_html_listing_url": "{\"ok\":false,\"mode\":\"page\",\"kind\":\"ok\",\"http\":200,\"count\":0,\"open\":0,\"text_len\":93,\"sample\":[],\"error\":null,\"expect_min\":1,\"fetchability\":\"easy\"}  (existing html adapter cannot read the card fragment)",
+    "prototype_output": {
+      "listing_bytes": 4741,
+      "rows": [
+        {
+          "id": "b9ff8482-b37f-4151-94ce-aa115aed9104",
+          "title": "SERDP SEED FY 2028 Solicitation",
+          "released": "2026-11-05",
+          "deadline": "2027-03-11",
+          "status": "open",
+          "url": "https://serdp-estcp.mil/workwithus/solicitation?id=b9ff8482-b37f-4151-94ce-aa115aed9104"
+        },
+        {
+          "id": "0ac3a009-ace9-457c-b92e-bd722e172f90",
+          "title": "SERDP Core FY 2028 Solicitation",
+          "released": "2026-11-05",
+          "deadline": "2027-01-07",
+          "status": "open",
+          "url": "https://serdp-estcp.mil/workwithus/solicitation?id=0ac3a009-ace9-457c-b92e-bd722e172f90"
+        }
+      ]
+    }
+  },
+  "sample_text_evidence": "Solicitation page: 'The SERDP Exploratory Development (SEED) FY 2028 solicitation was released November 5, 2026 ... Proposals are due March 11, 2027 at 2:00 p.m. Eastern Time.'",
+  "evidence": [
+    "Home and /workwithus pages load /workwithus/listing and /workwithus/listingcardresults via data-ajax-href (ajax-views.js), a plain GET with no cookie needed.",
+    "GET /workwithus/listingcardresults returns 2 open-solicitation cards (SERDP SEED FY2028, SERDP Core FY2028), both released 11/5/2026.",
+    "Solicitation detail pages give the deadline as a full sentence; prototype extracted 2027-03-11 and 2027-01-07 from live pages.",
+    "Query variants fiscalYear/page/pageNumber return the same 2 cards (static list). /sitemap.xml is 404; solicitation pages are not in contentSitemap1.xml.",
+    "ESTCP: no ESTCP call appears on the open list at this time; not proven that ESTCP calls will appear on this list when posted."
+  ],
+  "attempted": [
+    "Fetched homepage and workwithus HTML; extracted ajax-href endpoints (listing, listingcard) and script list",
+    "GET /workwithus/listing?fiscalYear=2027 and /workwithus/listingcard: shells (1041 and 1049 bytes), no cards",
+    "GET /workwithus/listingcardresults with UA SALSAV-GrantWatch/1.0 and browser UA: 200, 2 solicitation cards",
+    "Variants fiscalYear=2028, page=2, pageNumber=2: same 2 cards (no pagination observed)",
+    "GET /js/main.js and /js/ajax-views.js: no API route found; ajax-views posts only the anti-forgery token",
+    "Solicitation detail pages: deadline parsed from 'Proposals are due ...' sentence (2/2 pages)",
+    "sitemap.xml 404; contentSitemap1.xml has no solicitation URLs (only callforproposal, projects, etc.)",
+    "adapter_check html on listingcardresults: ok=false, text_len 93 (existing html adapter cannot read it)",
+    "Prototype serdp_open_listing.py run with python -I against live site: 2 rows, deadlines extracted",
+    "Not run: Chrome XHR capture (the listing is plain server-rendered HTML, so no JSON XHR is needed); SEMS portal (login-gated, prior round)"
+  ],
+  "summary": "SERDP exposes its open solicitations as a stable server-rendered card list at /workwithus/listingcardresults, with title, release date and a deadline on each solicitation page. The current adapters cannot read it. Needs a new html_cards adapter (spec above). Current open list: SERDP Core FY2028 (due 2027-01-07) and SERDP SEED FY2028 (due 2027-03-11). ESTCP has no open call on the list yet. The funder row should point to the listing URL, not the homepage. This replaces the round-1 sitemap approach, which had lastmod and 25-cap problems.",
+  "issues": [
+    "Edge engine has no html_cards adapter yet; nothing can be stored for this funder until one is built and deployed.",
+    "Card list shows open calls only; closed calls disappear from it. Store rows as they are seen so history persists.",
+    "If a solicitation page has no 'Proposals are due' sentence, deadline is null: keep the row with status unknown and log it.",
+    "ESTCP coverage unproven: no ESTCP call on the list now, and the same list may not carry ESTCP calls later.",
+    "Program/topic allowlist: the two rows are SERDP FY2028 calls; the funder row is already vetted, so no filter is proposed."
+  ],
+  "verifier_note": "Round-1 sitemap result kept as results/b8ff1258-round1.json"
+}

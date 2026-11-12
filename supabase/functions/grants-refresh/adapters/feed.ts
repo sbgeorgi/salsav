@@ -1,6 +1,6 @@
 // RSS 2.0 and Atom -> opportunities.
 import * as cheerio from "cheerio";
-import { findDeadlines, parseDate } from "../extract.ts";
+import { findDeadlines, loadHtml, parseDate } from "../extract.ts";
 import type { Opportunity } from "../types.ts";
 
 export const MAX_FEED_ITEMS = 50;
@@ -9,7 +9,7 @@ export function looksLikeFeed(contentType: string | null, body: string): boolean
   return /xml|rss|atom/i.test(contentType ?? "") && /<(rss|feed|rdf:RDF)\b/i.test(body.slice(0, 2000)) || /^\s*(<\?xml[^>]*>\s*)?<(rss|feed)\b/i.test(body.slice(0, 500));
 }
 
-const plain = (html: string) => cheerio.load(html).text().replace(/\s+/g, " ").trim();
+const plain = (html: string) => loadHtml(html).text().replace(/\s+/g, " ").trim();
 
 export function parseFeed(xml: string, today: string): Opportunity[] {
   const $ = cheerio.load(xml, { xmlMode: true });

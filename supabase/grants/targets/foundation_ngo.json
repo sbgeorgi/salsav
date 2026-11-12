@@ -1,0 +1,128 @@
+[
+  {
+    "org": "Thomas R. Brown Foundations (Thomas R. Brown Family Private Foundation, Tucson)",
+    "program_hint": "Research and education grants through the University of Arizona Foundation (invitation only)",
+    "url_hint": "https://brownfoundations.com/grant-guidelines",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 1,
+    "why": "This Tucson funder kept the University of Arizona agrivoltaics team (SALSA lab) going with multi-year money after federal grants were cancelled, but it takes no unsolicited proposals and grants only to 501(c)(3) bodies, so SALSAV must work through the UA Foundation and the existing relationship."
+  },
+  {
+    "org": "Waverley Street Foundation",
+    "program_hint": "Clean energy and healthy food and land grantmaking (invitation only, spend-down)",
+    "url_hint": "https://www.waverleystreet.org/work",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 2,
+    "why": "Funds clean energy, regenerative farming and solar-for-farm projects such as solar chillers for farmers; its FAQ says it takes no unsolicited proposals, so this is a cultivate target for a warm introduction."
+  },
+  {
+    "org": "Global Energy Alliance for People and Planet (GEAPP)",
+    "program_hint": "Energizing Agriculture and agri-solarization programs; Universal Access Coalition Financing Facility (Latin America and Caribbean)",
+    "url_hint": "https://energyalliance.org/",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 2,
+    "why": "Backs solar-powered irrigation and productive energy for farmers in India, Nigeria and Latin America at large scale, which fits SALSAV's Kenya and Mexico work if it can be a research or evaluation partner; no open university call was found."
+  },
+  {
+    "org": "Food Planet Prize (Curt Bergfors Foundation)",
+    "program_hint": "Food Planet Prize (USD 1.5M winner, USD 150,000 per finalist)",
+    "url_hint": "https://foodplanetprize.org/prize/",
+    "bucket": "foundation_ngo",
+    "lens": "prize",
+    "priority": 2,
+    "why": "Annual prize for food-system projects worldwide with a nomination form open year-round; a solar-and-farming scaling project like SALSAV could be nominated, though awards go to projects with proven impact."
+  },
+  {
+    "org": "The 11th Hour Project (Schmidt Family Foundation)",
+    "program_hint": "Food and Agriculture, Ag Tech and Energy programs",
+    "url_hint": "https://www.11thhourproject.org/faq/",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 3,
+    "why": "Runs separate food and agriculture, ag tech and energy programs that sit next to agrivoltaics; its FAQ says it generally does not respond to unsolicited proposals, so approach through a mutual contact."
+  },
+  {
+    "org": "Grantham Foundation for the Protection of the Environment",
+    "program_hint": "Climate change grants and investments (clean energy, regenerative agriculture)",
+    "url_hint": "https://granthamfoundation.org/",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 3,
+    "why": "Its grants page lists regenerative agriculture and clean energy work, which makes an agrivoltaics research or scaling proposal a natural fit, but no open call was found and it appears to fund by selection."
+  },
+  {
+    "org": "Wellcome (Climate and Health)",
+    "program_hint": "Climate and Health funding opportunities (extreme heat, food systems)",
+    "url_hint": "https://wellcome.org/what-we-do/climate-and-health",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 3,
+    "why": "Funds research worldwide on extreme heat, including outdoor workers, and on sustainable food systems; the heat and crop-shade angle of agrivoltaics is a possible pitch, but US-institution eligibility per scheme must be checked."
+  },
+  {
+    "org": "Quadrature Climate Foundation (Quadrature Charitable Foundation)",
+    "program_hint": "Climate risk and resilience grants (partner database)",
+    "url_hint": "https://www.qc.foundation/",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 3,
+    "why": "Large global climate funder now focused on climate risk to lives and livelihoods; an adaptation-for-farmers framing could work, but earlier annual accounts say it makes no grants in response to unsolicited applications."
+  },
+  {
+    "org": "Research Corporation for Science Advancement (Tucson)",
+    "program_hint": "Team Science Accelerator (up to USD 1M over two years)",
+    "url_hint": "https://rescorp.org/team-science-accelerator/",
+    "bucket": "foundation_ngo",
+    "lens": "research_collab",
+    "priority": 3,
+    "why": "Tucson-based funder of interdisciplinary teams of early and mid-career faculty at US institutions on big problems including climate resilience and sustainable energy; basic physical-science focus, so SALSAV would need a physics or materials angle."
+  },
+  {
+    "org": "W. M. Keck Foundation",
+    "program_hint": "Research Program (science and engineering, new application process announced September 2026)",
+    "url_hint": "https://www.wmkeck.org/",
+    "bucket": "foundation_ngo",
+    "lens": "research_collab",
+    "priority": 3,
+    "why": "Funds high-risk, high-reward university research with awards around USD 1M; an agrivoltaics project would have to be framed as a pioneering discovery, and Phase II is by invitation after a Phase I submission."
+  },
+  {
+    "org": "Frontiers Planet Prize",
+    "program_hint": "Frontiers Planet Prize (USD 1M per International Champion, annual)",
+    "url_hint": "https://www.nationalacademies.org/our-work/frontiers-planet-prize-to-accelerate-scientific-solutions-for-healthy-lives-on-a-healthy-planet/application-and-selection-process",
+    "bucket": "foundation_ngo",
+    "lens": "prize",
+    "priority": 3,
+    "why": "Annual prize for peer-reviewed research with scalable sustainability solutions, nominated through the National Academies in the US; the 2026 round closed 30 October, so SALSAV should line up a qualifying paper for the next edition."
+  },
+  {
+    "org": "Lemelson Foundation",
+    "program_hint": "Climate Action initiative (invention and innovation for climate)",
+    "url_hint": "https://www.lemelson.org/funding/climate-action/",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 3,
+    "why": "Funds invention-led climate solutions and engineering education at universities; the page does not state eligibility or award size, so check whether a solar-for-farming invention or training project fits."
+  },
+  {
+    "org": "Howard G. Buffett Foundation",
+    "program_hint": "Agriculture, soil and water grantmaking in Africa and Latin America (invitation only)",
+    "url_hint": "https://www.thehowardgbuffettfoundation.org/",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 3,
+    "why": "Large funder of farm soil, water and food security work in Africa and Latin America; its site could not be read by the fetch tool and older reports say it accepts no unsolicited proposals, so confirm current scope first."
+  },
+  {
+    "org": "Alfred P. Sloan Foundation",
+    "program_hint": "Energy and Environment program (letter of inquiry calls, early-career faculty call USD 150,000 to 250,000)",
+    "url_hint": "https://sloan.org/programs/research/energy-and-environment",
+    "bucket": "foundation_ngo",
+    "lens": "foundation",
+    "priority": 3,
+    "why": "Funds university research on the US low-carbon energy system through periodic open calls for letters of inquiry; agrivoltaics is a stretch for its energy-system focus and the site blocked the fetch tool, so check the live call list."
+  }
+]

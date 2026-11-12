@@ -1,0 +1,137 @@
+[
+  {
+    "org": "U.S. Department of Energy, Solar Energy Technologies Office (now listed under the Integrated Energy Systems Office)",
+    "program_hint": "Solar funding notices: past agrivoltaics calls FARMS and SolWEB2, and any new solar notice",
+    "url_hint": "https://www.energy.gov/eere/solar/funding-opportunities",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 1,
+    "why": "DOE solar office has funded agrivoltaics research directly (FARMS, SolWEB2) and a 2026 DOE environmental review covers an award to the University of Arizona for agrivoltaic treatments, so check for the next call."
+  },
+  {
+    "org": "National Laboratory of the Rockies (formerly NREL), InSPIRE agrivoltaics project",
+    "program_hint": "InSPIRE research partnership and affiliated research network",
+    "url_hint": "https://www.nlr.gov/solar/market-research-analysis/agrivoltaics",
+    "bucket": "us_federal",
+    "lens": "research_collab",
+    "priority": 1,
+    "why": "DOE-funded national research network on solar with agriculture that lists partnership opportunities; a way into DOE agrivoltaics money as a field-site partner, so check whether it offers subawards."
+  },
+  {
+    "org": "U.S. Department of Energy SBIR/STTR (Office of Technology Commercialization)",
+    "program_hint": "DOE SBIR/STTR Phase I and II releases (reauthorized April 2026)",
+    "url_hint": "https://science.osti.gov/sbir",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 2,
+    "why": "STTR funds a small business together with a university research partner on clean energy topics, which fits a UA plus AVS or YPV team; confirm which 2026 topics name solar with agriculture."
+  },
+  {
+    "org": "USDA National Institute of Food and Agriculture, SBIR/STTR",
+    "program_hint": "NIFA SBIR/STTR Phase I and II (reauthorized April 2026)",
+    "url_hint": "https://www.nifa.usda.gov/grants/programs/small-business-innovation-research-program-sbir",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 2,
+    "why": "Funds small businesses with a research-institution partner to develop agricultural technology, so a UA plus company team could take an agrivoltaics tool or crop system to market."
+  },
+  {
+    "org": "NSF America's Seed Fund (SBIR/STTR)",
+    "program_hint": "NSF SBIR/STTR Phase I and II",
+    "url_hint": "https://seedfund.nsf.gov/",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 3,
+    "why": "Funds small-business research and development with an optional university partner under STTR, a possible route for a company-led agrivoltaics or agricultural technology project with UA."
+  },
+  {
+    "org": "U.S. Department of Energy, Office of Indian Energy Policy and Programs",
+    "program_hint": "Unleashing Tribal Energy Development and Tribal Energy Capacity Expansion",
+    "url_hint": "https://www.energy.gov/indianenergy",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 3,
+    "why": "Pays tribes for community-scale energy deployment and planning (USD 250,000 and up per award in 2026) and tribal colleges can apply, so UA could join as a technical partner on solar for rural and farming communities."
+  },
+  {
+    "org": "NOAA Climate Program Office, Climate Adaptation Partnerships (formerly RISA)",
+    "program_hint": "Climate Adaptation Partnerships regional team competition (FY2026 closed June 2026)",
+    "url_hint": "https://cpo.noaa.gov/divisions-programs/climate-adaptation-partnerships/",
+    "bucket": "us_federal",
+    "lens": "research_collab",
+    "priority": 3,
+    "why": "UA already hosts the Southwest team (CLIMAS) funded by this program, so SALSAV could join as a partner on heat and drought adaptation for Southwest agriculture."
+  },
+  {
+    "org": "National Science Foundation, Advanced Technological Education (ATE)",
+    "program_hint": "NSF 24-584 ATE, annual proposals due first Thursday in October",
+    "url_hint": "https://www.nsf.gov/funding/opportunities/ate-advanced-technological-education",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 3,
+    "why": "Funds technician training in fields like solar and agricultural technology, led by two-year colleges with university partners, so a SALSAV workforce curriculum with a community college could fit."
+  },
+  {
+    "org": "U.S. Bureau of Reclamation, Desalination and Water Purification Research Program",
+    "program_hint": "DWPR Research Funding Opportunity (2026 round: up to USD 5.7 million, closed Sept 29, 2026)",
+    "url_hint": "https://www.usbr.gov/research/dwpr/",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 3,
+    "why": "Recurring federal funding for lab and pilot research on treating brackish and impaired water, which links to irrigation water and energy use in the Southwest."
+  },
+  {
+    "org": "USDA Natural Resources Conservation Service, Regional Conservation Partnership Program",
+    "program_hint": "RCPP Classic and Alternative Funding Arrangements (FY2026 round closed Aug 2026)",
+    "url_hint": "https://www.nrcs.usda.gov/programs-initiatives/rcpp-regional-conservation-partnership-program",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 3,
+    "why": "Large partner-led conservation awards where higher education institutions are eligible partners, a way to fund an agrivoltaics water and soil demonstration with growers and a lead partner."
+  },
+  {
+    "org": "USDA National Institute of Food and Agriculture, Organic Agriculture Research and Extension Initiative (OREI)",
+    "program_hint": "OREI Research Projects with Extension and/or Education Components (FY2026 round closed May 14, 2026)",
+    "url_hint": "https://www.nifa.usda.gov/grants/programs/organic-agriculture-research-extension-initiative-orei-program",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 3,
+    "why": "Annual grants of up to USD 3.5 million for research and extension with land-grant universities, useful if SALSAV trials run on organic or transition land."
+  },
+  {
+    "org": "National Science Foundation, Translation to Practice (NSF TTP)",
+    "program_hint": "NSF 25-540 TTP-E, TTP-T and TTP-P tracks (up to USD 600,000 to 2 million)",
+    "url_hint": "https://www.nsf.gov/funding/opportunities/nsf-ttp-national-science-foundation-translation-practice",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 3,
+    "why": "Pays university teams to move research results into real-world use with a partner, a possible next step for SALSAV findings if an NSF award already exists."
+  },
+  {
+    "org": "USDA Foreign Agricultural Service, Food for Progress",
+    "program_hint": "Food for Progress Program NOFO (FY2026 round closed July 6, 2026)",
+    "url_hint": "https://www.fas.usda.gov/programs/food-progress",
+    "bucket": "us_federal",
+    "lens": "federal",
+    "priority": 3,
+    "why": "Annual multi-year awards to universities and nonprofits for agricultural productivity abroad; the 2026 countries were outside SALSAV sites, so watch the FY2027 country list for Latin America or Africa."
+  },
+  {
+    "org": "Desert Southwest Cooperative Ecosystem Studies Unit (hosted by the University of Arizona)",
+    "program_hint": "Federal agency research agreements through the CESU network (17.5% indirect cap)",
+    "url_hint": "https://dscesu.arizona.edu/",
+    "bucket": "us_federal",
+    "lens": "research_collab",
+    "priority": 3,
+    "why": "UA-hosted network that lets federal land, water and conservation agencies fund university research on a fast agreement, a route for Arizona dryland and solar land-use projects."
+  },
+  {
+    "org": "National Alliance for Water Innovation (NAWI), DOE energy-water hub",
+    "program_hint": "NAWI industrial water reuse RFP (2026: USD 12 million, full proposals due Nov 24, 2026) and later RFPs",
+    "url_hint": "https://www.nawihub.org/funding/",
+    "bucket": "us_federal",
+    "lens": "research_collab",
+    "priority": 3,
+    "why": "DOE-funded hub that pays universities, labs and industry for energy-efficient water treatment and reuse pilots, an energy-water link to explore for farm and rural water."
+  }
+]

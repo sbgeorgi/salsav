@@ -110,6 +110,25 @@ test("extractPage keeps main content, drops chrome, captures typed links once", 
   assert.equal(links[0].label, "Guidelines PDF");
 });
 
+test("extractPage: a thin <main> beside the real content falls back to the body; chrome and cmplz banners stay out, nav links stay captured", () => {
+  const html = `<html><body><header>Site header</header><nav><a href="/rfp/2026">Open RFP</a></nav>
+   <div id="cmplz-cookiebanner-container"><div>Manage Consent We use cookies to store data</div></div>
+   <div class="alerts"><h2>Important notice</h2><p>${"Proposals are due in the fall and must follow the guide. ".repeat(8)}</p></div>
+   <main><h1>Program</h1><p>${"Short intro text for the program page. ".repeat(7)}</p></main>
+   <footer>Footer address</footer></body></html>`;
+  const { text, links } = extractPage(html, "https://f.org/");
+  assert.match(text, /Important notice/);
+  assert.match(text, /Proposals are due in the fall/);
+  assert.match(text, /Short intro text/);
+  for (const bad of ["Site header", "Footer address", "Manage Consent", "Open RFP"]) assert.ok(!text.includes(bad), bad);
+  assert.deepEqual(links.map((l) => l.url), ["https://f.org/rfp/2026"]);
+});
+
+test("extractPage: a main holding most of the page text is still preferred over side text", () => {
+  const html = `<html><body><div>Side promo</div><main><p>${"Real program content lives here. ".repeat(20)}</p></main></body></html>`;
+  assert.ok(!extractPage(html, "https://f.org/").text.includes("Side promo"));
+});
+
 test("content hash ignores volatile bits but not real changes", async () => {
   const a = await sha256Hex(extractPage(doc("Alpha.", "© 2026 Foo"), "https://f.org/").text);
   const b = await sha256Hex(extractPage(doc("Alpha.", "© 2027 Foo Inc. All rights reserved"), "https://f.org/").text);
@@ -204,4 +223,58 @@ test("volatile countdown / relative-time text does not change the normalized tex
   assert.match(a, /Deadline: March 15, 2027/);
   assert.equal(findDeadlines(a, TODAY).future, "2027-03-15");
   assert.equal(normalizeText(["Days left: 12", "12 hours remaining", "Updated 5 minutes ago", "Real content stays"].join(String.fromCharCode(10))), "Real content stays");
+});
+
+// ---- round 2: bounded CPU on a 600,000-character page (each case took 3 to 40 seconds before) ----
+import { assertShallow, MAX_NESTING, PageWorkError } from "../extract.ts";
+import { RegexBudgetError } from "../safe_regex.ts";
+
+const fast = <T>(f: () => T, ms = 1500): T => {
+  const t = performance.now();
+  const r = f();
+  const took = performance.now() - t;
+  assert.ok(took < ms, `took ${Math.round(took)} ms`);
+  return r;
+};
+
+test("normalizeText: a long run of whitespace after 'days left' is linear, and a countdown with a colon is still removed", () => {
+  assert.equal(normalizeText("days left : 12 end"), "end");
+  assert.equal(normalizeText("hours remaining:12 end"), "end");
+  for (const sp of [" ", "\u00a0", "\t"]) assert.equal(fast(() => normalizeText("day left" + sp.repeat(590_000) + "x")), "day left x");
+  assert.equal(fast(() => normalizeText("day left" + " ".repeat(300_000) + ":" + " ".repeat(300_000) + "x")), "day left : x");
+});
+
+test("findAmount: a long thousands chain without a currency word is linear; a chain with one still reads whole", () => {
+  assert.equal(fast(() => findAmount("Grants up to 1" + ",111".repeat(150_000) + " x")), null);
+  assert.deepEqual(findAmount("Awards of up to 1,234,567 USD each"), { value: 1234567, currency: "USD" });
+});
+
+test("extractPage: many sibling blocks, <br>, <nav> and <script> elements are linear", () => {
+  for (const s of ["<p>x</p>", "<br>", "<nav>x</nav>", "<script>1</script>", "<li>x"]) {
+    const out = fast(() => extractPage("<html><body>" + s.repeat(Math.ceil(590_000 / s.length)) + "</body></html>", "https://e.org/"), 2500);
+    assert.ok(out.text.length === 0 || out.text.startsWith("x"), s);
+  }
+});
+
+test("extractPage keeps its line structure without mutating the tree", () => {
+  const h = "<body><p>a</p><nav>no</nav><p>b<br>c</p><script>1</script><table><tr><td>d</td><td>e</td></tr></table><footer>no</footer><div>f</div></body>";
+  assert.equal(JSON.stringify(extractPage(h, "https://e.org/").raw), JSON.stringify("\na\n\nb\nc\n\n\nd e \n\n\nf\n"));
+  assert.equal(extractPage(h, "https://e.org/").text, "a\nb\nc\nd e\nf");
+});
+
+test("nesting: a page nested deeper than MAX_NESTING is refused at once, real shapes are not", () => {
+  for (const s of ["<div>x", "<b>x", "<ul><li>x", "<table><td>x", "<span>"]) {
+    const h = s.repeat(Math.ceil(590_000 / s.length));
+    const err = fast(() => assert.throws(() => extractPage(h, "https://e.org/"), PageWorkError), 500);
+    assert.ok(err === undefined);
+  }
+  assert.ok(new PageWorkError("x") instanceof RegexBudgetError); // every "never throws" caller lets it through
+  const ok = (h: string) => assert.doesNotThrow(() => assertShallow(h));
+  ok("<div>".repeat(MAX_NESTING) + "</div>".repeat(MAX_NESTING));
+  ok("<p>x".repeat(50_000)); // an unclosed <p> or <li> does not nest
+  ok("<li>x<tr><td>y".repeat(20_000));
+  ok("<svg>" + '<path d="M0 0"/>'.repeat(5000) + "</svg>");
+  ok("<script>" + "<div>".repeat(5000) + "</script><!-- " + "<div>".repeat(5000) + " --><div title='" + "<div>".repeat(3000) + "'>x</div>");
+  ok("</div>".repeat(100_000) + "<div>".repeat(500)); // stray end tags
+  assert.throws(() => assertShallow("<div>".repeat(MAX_NESTING + 1)), PageWorkError);
 });

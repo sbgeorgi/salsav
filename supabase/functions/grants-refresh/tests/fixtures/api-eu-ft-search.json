@@ -1,0 +1,91 @@
+{
+ "totalResults": 1187,
+ "pageSize": 50,
+ "pageNumber": 1,
+ "results": [
+  {
+   "reference": "13882COMPETITIVE_CALLen",
+   "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/competitive-calls-cs/46786367",
+   "summary": "Enhancing the Cybersecurity Capabilities of the Domestic SME Sector (SSNS-NCC-HU-FSTP-2026)",
+   "metadata": {
+    "identifier": [
+     "DIGITAL-ECCC-2024-DEPLOY-NCC-06-MS-COORDINATION"
+    ],
+    "title": [
+     "Deploying The Network of National Coordination Centres with Member States"
+    ],
+    "deadlineDate": [
+     "2026-06-28T22:59:00.000+0000"
+    ],
+    "startDate": [
+     "2026-03-24T00:00:00.000+0000"
+    ],
+    "status": [
+     "31094502"
+    ],
+    "type": [
+     "8"
+    ],
+    "deadlineModel": [
+     "single-stage"
+    ]
+   }
+  },
+  {
+   "reference": "12902COMPETITIVE_CALLen",
+   "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/competitive-calls-cs/46813062",
+   "summary": "Phortify Internship (Traineeship) Grants - Pilot Call",
+   "metadata": {
+    "identifier": [
+     "DIGITAL-2024-ADVANCED-DIGITAL-07-KEYCAPACITY"
+    ],
+    "title": [
+     "Specialised Education Programmes in Key Capacity Areas"
+    ],
+    "deadlineDate": [
+     "2027-02-03T23:59:00.000+0000"
+    ],
+    "startDate": [
+     "2026-02-04T00:00:00.000+0000"
+    ],
+    "status": [
+     "31094502"
+    ],
+    "type": [
+     "8"
+    ],
+    "deadlineModel": [
+     "single-stage"
+    ]
+   }
+  },
+  {
+   "reference": "13882COMPETITIVE_CALLen",
+   "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/competitive-calls-cs/46786367",
+   "summary": "Enhancing the Cybersecurity Capabilities of the Domestic SME Sector (SSNS-NCC-HU-FSTP-2026)",
+   "metadata": {
+    "identifier": [
+     "DIGITAL-ECCC-2024-DEPLOY-NCC-06-MS-COORDINATION"
+    ],
+    "title": [
+     "Deploying The Network of National Coordination Centres with Member States"
+    ],
+    "deadlineDate": [
+     "2026-06-28T22:59:00.000+0000"
+    ],
+    "startDate": [
+     "2026-03-24T00:00:00.000+0000"
+    ],
+    "status": [
+     "31094502"
+    ],
+    "type": [
+     "8"
+    ],
+    "deadlineModel": [
+     "single-stage"
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "71f3a111-3bbb-4753-b739-00ac1cd55880",
+  "name": "Rockefeller Foundation",
+  "program": "Food systems, Universal Energy Abundance (Mission 300 Africa), Latin America & Caribbean; Cities Deliver call (out of nexus)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.rockefellerfoundation.org/",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Rockefeller gives grants by invitation and posts no list of open calls, so only its home page is watched for a new call. The one open call now, Cities Deliver (AI for city services, due 2026-11-29), is outside our food, energy and water scope and is not collected.",
+  "page_reason": "Rockefeller does not accept unsolicited grant proposals (own FAQ at /our-grants/: \"The Rockefeller Foundation does not accept unsolicited grants proposals\"), and no page, feed or API on rockefellerfoundation.org lists grant calls as items: /wp-json/wp/v2/rfp holds only 6 vendor procurement RFPs (consultant and evaluation contracts, not grants), /feed/ is news, /our-grants/ lists awarded grants, and each open call is a one-off page. The one open call today, Cities Deliver: AI Solutions for Public Services (Rockefeller + OpenAI Foundation, Round 1 due 2026-11-29), is AI for city public services with nothing on food, energy, water or agriculture; the owner ruled it out of SALSAV scope, so it is deliberately not collected. The home page, where any new open call is announced first, is watched for changes.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://www.rockefellerfoundation.org/ -> 200 text/html, 105289 bytes, about 6500 chars of text after script/style strip (checked 2026-11-12). GET /feed/ 200 (news only). GET /wp-json/wp/v2/rfp -> 200, 6 vendor RFPs, no structured deadline field. GET /rfp/ -> 404, /sitemap.xml -> 200 (rfp-sitemap.xml lists the same 6). /our-grants/ 200 (grantee listings, no calls). /funding-opportunities/, /apply/, /open-calls/ -> 404. Re-checked 2026-11-12: wp-json search for call for proposals / open call / funding opportunities finds no listing of grant calls (only Cities Deliver, Bellagio residency/convening calls, news, awarded grants).",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "66282c14-64fd-4d61-beac-392c6bdf6db1",
+  "name": "USDA SARE (Western region)",
+  "program": "Western SARE Research and Education, Professional and Producer, Farmer/Rancher and Graduate Student grants",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://western.sare.org/grants/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "list": {
+      "item": "li.listing",
+      "title": "h3",
+      "link": "a.learn",
+      "date": "h4.grant-deadline"
+    },
+    "max_items": 40
+  },
+  "collect_note": "Reads the seven Western SARE grant cards from the official grants page twice a day, each with its round deadline. All are closed now (next round opens 2027); when a card is updated for a new round the new deadline appears by itself.",
+  "expect": {
+    "min_items": 7,
+    "sample": [
+      {
+        "title": "Graduate Student",
+        "deadline": "2026-10-28",
+        "url": "https://western.sare.org/grants/graduate-student-research-and-education/"
+      },
+      {
+        "title": "Professional + Producer",
+        "deadline": "2026-10-28",
+        "url": "https://western.sare.org/grants/professional-producer/"
+      },
+      {
+        "title": "Research and Education Pre-Proposal",
+        "deadline": "2026-06-15",
+        "url": "https://western.sare.org/grants/research-and-education"
+      }
+    ]
+  },
+  "evidence": "GET https://western.sare.org/grants/ HTTP 200 (60593 bytes, plain urllib with desktop UA), checked 2026-11-12: 7 li.listing cards, all showing 'Closed' with deadlines Oct 28 2026 (x5), Oct 5 2026, Jun 15 2026; program pages say 'Closed - Opens 2027'. Probes: /feed/ HTTP 500; /wp-json/wp/v2/types HTTP 401; api.grants.gov search2 with aln 10.215 returned unrelated agencies (filter not honored); keyword SARE returned 0; agencies USDA-NIFA returned AFRI/SBIR/HSI, no SARE calls.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 7,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

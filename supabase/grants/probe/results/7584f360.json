@@ -1,0 +1,58 @@
+{
+  "key": "7584f360",
+  "verdict": "structured_needs_new_adapter",
+  "method": "grants_gov",
+  "adapter": "grants_gov",
+  "adapter_config": {"oppNum": "26-518", "agencies": "NSF", "oppStatuses": "forecasted|posted", "rows": 5},
+  "feed_url": null,
+  "row_fix": {
+    "url": "https://www.grants.gov/search-results-detail/363616",
+    "program": "NSF-BSF Joint Research Grants: CBET (NSF 26-518)",
+    "reason": "The Grants.gov record for NSF 26-518 (CBET) is the exact solicitation the TRDF NSF-BSF hub lists as accepted anytime. The hub lists about 10 NSF solicitations; each needs its own row, because oppNum is exact-match and pipe lists return zero hits. TRDF stays as a monitor-only html row if wanted."
+  },
+  "confidence": "high",
+  "engine_requirements": "Small change to the grants_gov parse (adapters/api.ts, grants_gov block near line 61). Today parseDate(o.closeDate) passes Grants.gov sentinel closeDates through as real deadlines: NSF uses 10/0x/2076 for rolling calls (26-518 is 10/05/2076). Required rule: if the closeDate year is >= 2070, set deadline null and keep status open. Status cannot be 'rolling': the DB CHECK and types.ts allow only forecasted, open, closed, archived. Request: POST https://api.grants.gov/v1/api/search2 with JSON {oppNum, agencies:'NSF', oppStatuses:'forecasted|posted', rows:5}; use data.oppHits[0]; map number to external_id, title, id to url https://www.grants.gov/search-results-detail/<id>, closeDate to deadline with the sentinel rule. No headers, no cookies, no pagination.",
+  "attempted": [
+    "Read the TRDF NSF-BSF hub (curl, 200, 196 KB server-rendered WordPress): solicitations listed are BIO Core 26-517, MPS MathSci 26-520, MPS Physics 26-523, MPS Astro 26-522, MPS Chem 26-519, GEO Core 26-516, ECCS 26-514, CMMI 26-515, CBET 26-518, EFRI-WBC 26-524 (concept outline 2026-11-19, full 2027-02-11), CISE Future CoRe 25-543 (target dates 2026-09-10, 2027-02-04). Most say 'accepted anytime'.",
+    "BSF programs page (bsf.org.il .../the-programs/): plain fetch returns 403 Cloudflare 'Just a moment' challenge. Not usable by the edge function.",
+    "NSF public opportunities API (api.nsf.gov/services/v1/opportunities with ?keyword=, .json, /search, and the /awardapi-service/ path): all 404 from the gateway. Dead end; not proposed.",
+    "Grants.gov search2 keyword 'Binational Science Foundation' with agencies NSF: 105 hits, mostly unrelated NSF calls that mention BSF in text. Keyword is not a filter, so not usable as a source.",
+    "Grants.gov search2 keyword 'BSF': 0 hits. 'US-Israel' with no agency: 1 unrelated hit.",
+    "Grants.gov search2 oppNum pipe list '26-517|26-518|26-519|26-520|26-522|26-523|26-514|26-515|26-516|26-524': 0 hits. oppNum prefix '26-51': 0 hits. Single exact oppNum only.",
+    "Grants.gov search2 oppNum 26-518 by direct POST (no cookies): 200, errorcode 0, hitCount 1, id 363616, posted, open 08/17/2026, close 10/05/2076.",
+    "adapter_check grants_gov oppNum 26-518, run twice: identical output both times (see check.adapter_check_unpatched_run1 and run2).",
+    "adapter_check grants_gov oppNum 26-517 (BIO Core, adjacent hub entry): ok, count 1, http 200, title 'Core Research in Biological Sciences (BIO Core)', id 363615. Same pattern holds across hub entries.",
+    "Prototype (plain HTTP, sentinel-aware) for 26-518, run twice: identical output, deadline null, status open, real title.",
+    "Grep of supabase/functions/grants-refresh for 2076, rolling, sentinel, 2099: no matches. The sentinel is not handled today.",
+    "Checked allowed status values: types.ts and the SQL CHECK both allow forecasted, open, closed, archived only.",
+    "Round-1 claim 'No engine change' re-checked: wrong for the deadline, so this round reclassifies the verdict."
+  ],
+  "summary": "The TRDF NSF-BSF hub is server-rendered and plain-HTTP reachable. It lists NSF solicitations open to Israeli co-PIs, and each is live on Grants.gov under its own opportunity number. The existing grants_gov adapter returns real titles for them, but Grants.gov encodes rolling calls with a 2076 closeDate, which the engine would show as a real deadline. The fix is a small sentinel rule in the grants_gov parse, plus one row per NSF solicitation.",
+  "evidence": [
+    "TRDF hub: 'NSF 26-518 ... Proposals are accepted anytime.' and 'NSF 26-517 ... Proposals are accepted anytime.'",
+    "Grants.gov search2 oppNum 26-518: closeDate 10/05/2076, oppStatus posted, id 363616. Other NSF rolling calls also carry 2076 closeDates (26-522 10/07/2076, 26-520 10/08/2076, 26-517 10/05/2076, 26-523 10/06/2076, 26-515 11/04/2076).",
+    "Grants.gov closeDate for 26-522 is 10/07/2076, while the TRDF hub says its next target date is 2026-11-16. The 2076 value is a sentinel, not a deadline.",
+    "Prototype output for 26-518 (plain HTTP, sentinel-aware) matches across two runs."
+  ],
+  "check": {
+    "ok": true,
+    "count": 1,
+    "sample": [
+      {"external_id": "26-518", "title": "Engineering (ENG): Chemical, Bioengineering, Energy, and Transport Systems (CBET)", "deadline": null, "status": "open", "url": "https://www.grants.gov/search-results-detail/363616"}
+    ],
+    "error": null,
+    "http": 200,
+    "prototype_output": "{\"http\":200,\"errorcode\":0,\"hitCount\":1,\"count\":1,\"sample\":[{\"external_id\":\"26-518\",\"title\":\"Engineering (ENG): Chemical, Bioengineering, Energy, and Transport Systems (CBET)\",\"deadline\":null,\"status\":\"open\",\"url\":\"https://www.grants.gov/search-results-detail/363616\"}]}",
+    "adapter_check_unpatched_run1": "{\"ok\":true,\"mode\":\"calls\",\"kind\":\"ok\",\"http\":200,\"count\":1,\"open\":1,\"text_len\":110,\"sample\":[{\"title\":\"Engineering (ENG): Chemical, Bioengineering, Energy, and Transport Systems (CBET)\",\"deadline\":\"2076-10-05\",\"status\":\"open\",\"url\":\"https://www.grants.gov/search-results-detail/363616\",\"award_max_usd\":null}],\"error\":null,\"expect_min\":1,\"fetchability\":null}",
+    "adapter_check_unpatched_run2": "{\"ok\":true,\"mode\":\"calls\",\"kind\":\"ok\",\"http\":200,\"count\":1,\"open\":1,\"text_len\":110,\"sample\":[{\"title\":\"Engineering (ENG): Chemical, Bioengineering, Energy, and Transport Systems (CBET)\",\"deadline\":\"2076-10-05\",\"status\":\"open\",\"url\":\"https://www.grants.gov/search-results-detail/363616\",\"award_max_usd\":null}],\"error\":null,\"expect_min\":1,\"fetchability\":null}"
+  },
+  "issues": [
+    "Deadline sentinel: closeDate 2076 passes through as a real deadline in the current engine. Needs the parse rule in engine_requirements before the row is shown to users.",
+    "Coverage: one row covers one solicitation. The hub lists about 10 NSF calls; each needs its own row, or an engine loop over oppNums.",
+    "Renumbering or closure: if NSF renumbers or closes a solicitation, the row silently returns zero hits. Log zero-hit rows as a warning.",
+    "BSF's own page is behind Cloudflare and cannot be read by the edge function.",
+    "The NSF public API for opportunities returns 404 from the gateway; do not propose it."
+  ],
+  "prototype": "C:/Users/georg/AppData/Local/Temp/claude/f76d9bc5f4d34b7f/9671fccb-adf9-4753-918f-ba882814c960/scratchpad/r2/proto518.mjs",
+  "prototype_summary": "Node, plain fetch to api.grants.gov search2 with oppNum; sentinel year >= 2070 gives deadline null; status open; url from id."
+}

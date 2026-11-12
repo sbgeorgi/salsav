@@ -1,0 +1,128 @@
+[
+  {
+    "org": "AES Corporation",
+    "program_hint": "Agrivoltaics research partnerships (University of Arizona Casa Grande site, solar grazing)",
+    "url_hint": "https://www.aes.com/agrivoltaics",
+    "bucket": "private_sector",
+    "lens": "research_collab",
+    "priority": 1,
+    "why": "AES hosts the University of Arizona agrivoltaics plots at its Casa Grande, Arizona solar plant and says it contributes to agrivoltaics research with universities; no published fund, so the ask is sponsored research or site access."
+  },
+  {
+    "org": "Silicon Ranch",
+    "program_hint": "Regenerative Energy and Agrivoltaics (CattleTracker study with academia)",
+    "url_hint": "https://siliconranch.com/regenerative-energy-agrivoltaics/",
+    "bucket": "private_sector",
+    "lens": "research_collab",
+    "priority": 1,
+    "why": "Solar developer that runs agrivoltaics on more than 20 sites and a cross-industry cattle-and-solar study with academic experts; a field-site and co-research partner, amounts unpublished."
+  },
+  {
+    "org": "Lightsource bp",
+    "program_hint": "Agrivoltaics research with agricultural and academic partners",
+    "url_hint": "https://lightsourcebp.com/agrivoltaics/",
+    "bucket": "private_sector",
+    "lens": "research_collab",
+    "priority": 1,
+    "why": "Global solar developer whose agrivoltaics programme says it works with local and academic partners across the Americas; no published grant, so SALSAV would pitch a joint trial."
+  },
+  {
+    "org": "Pivot Energy",
+    "program_hint": "Agrivoltaics and land stewardship research gifts",
+    "url_hint": "https://pivotenergy.net/",
+    "bucket": "private_sector",
+    "lens": "research_collab",
+    "priority": 1,
+    "why": "Self-described top US agrivoltaics developer that gave Colorado State a USD 60,000 dryland research gift; a partner for field sites, but single gifts so far look well under USD 200,000."
+  },
+  {
+    "org": "Salt River Project (SRP)",
+    "program_hint": "University research program with ASU, NAU and the University of Arizona",
+    "url_hint": "https://media.srpnet.com/srp-invests-29-million-in-research-at-asu-nau-and-u-of-a-for-2025-2026-school-year/",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 2,
+    "why": "Arizona utility that funds about USD 3 million a year across 34 to 37 university projects on power, water and sustainability; no public call found and awards look small, so SALSAV should ask SRP about a water-energy project."
+  },
+  {
+    "org": "Intel Corporation",
+    "program_hint": "Water restoration projects in Arizona (Colorado River basin)",
+    "url_hint": "https://www.intel.com/content/www/us/en/environment/water-restoration-arizona.html",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 2,
+    "why": "Intel has funded 20 Arizona water projects, mostly irrigation efficiency and crop conversion run by conservation nonprofits and farmers; a university would partner through those groups to add measurement."
+  },
+  {
+    "org": "Freeport-McMoRan Foundation",
+    "program_hint": "Freeport in My Community funding opportunities (Arizona)",
+    "url_hint": "https://www.freeportinmycommunity.com/",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 2,
+    "why": "Arizona mining company that funds education, workforce, water, land and food security work and has given the University of Arizona multi-million awards; mostly mining education, so SALSAV would pitch workforce or community resilience."
+  },
+  {
+    "org": "The Mosaic Company Foundation for Sustainable Food Systems",
+    "program_hint": "Soil health, water quality and community development grants",
+    "url_hint": "https://mosaicco.com/foundation",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 3,
+    "why": "Funds sustainable agriculture, soil and water work in the US, Brazil and India through an annual application with published guidelines; check whether universities can apply."
+  },
+  {
+    "org": "Walmart Foundation",
+    "program_hint": "Environmental sustainability, Land and Water (regenerative agriculture, water stewardship)",
+    "url_hint": "https://walmart.org/what-we-do/advancing-sustainability/nature",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 3,
+    "why": "Funds sustainable farming and water use by invitation only, with occasional open requests for proposals; a relationship-building target, not an open call."
+  },
+  {
+    "org": "PepsiCo Foundation",
+    "program_hint": "Backing farmers and safe water access",
+    "url_hint": "https://www.pepsico.com/our-impact/philanthropy/pepsico-foundation",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 3,
+    "why": "Funds smallholder farming, water access and workforce programmes with local partners worldwide; no public application path found, so this is a cultivate lead."
+  },
+  {
+    "org": "BHP Foundation",
+    "program_hint": "Environmental Resilience programme (Chile, Peru and global)",
+    "url_hint": "https://www.bhp-foundation.org/en/programs-projects/environmental-resilience/",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 3,
+    "why": "Mining foundation that funds land, biodiversity and water resilience in Chile and Peru and has funded universities, but its programmes look invitation-only and conservation-focused."
+  },
+  {
+    "org": "The Coca-Cola Foundation",
+    "program_hint": "Water stewardship and community water grants",
+    "url_hint": "https://www.coca-colacompany.com/media-center/four-ways-the-coca-cola-foundation-and-partners-are-helping-protect-water",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 3,
+    "why": "Funds watershed protection and water access worldwide and has made a few USD 500,000 university awards; the application route and agriculture fit still need checking."
+  },
+  {
+    "org": "Google Research",
+    "program_hint": "Carbon Removal and Superpollutant Abatement R&D Awards (agriculture and biomass)",
+    "url_hint": "https://research.google/programs-and-events/2026-google-carbon-removal-and-superpollutant-abatement-rd-awards/",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 3,
+    "why": "Unrestricted gifts of up to USD 500,000 to universities for climate R&D including agricultural residues; the 2026 round closed 25 September 2026, so watch for a 2027 round."
+  },
+  {
+    "org": "Google.org",
+    "program_hint": "Impact Challenge: AI for Science (climate resilience track)",
+    "url_hint": "https://www.google.org/impact-challenges/ai-science/",
+    "bucket": "private_sector",
+    "lens": "corporate",
+    "priority": 3,
+    "why": "USD 36 million open call for researchers, including a climate resilience and environmental science track with grants of roughly USD 500,000 to 3 million; the 2026 round is closed, so watch for a repeat and an AI-for-agrivoltaics angle."
+  }
+]

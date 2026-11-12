@@ -1,0 +1,335 @@
+[
+ {
+  "id": "cc55dd46-dfed-47e0-bcc6-01f2664f6a01",
+  "verdict": "demote",
+  "reason": "Funds California runoff-reduction projects for public agencies and nonprofits; agrivoltaics is not a fit and the score is about 33, under the 40 floor.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Funds projects that cut agricultural pollution runoff; agrivoltaics would be a stretch.",
+    "quote": "The NPS Grant Program seeks proposals for projects that reduce runoff of pollution to waters of the state, such as agricultural projects that reduce pesticide and nutrient runoff"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Mostly on-the-ground runoff control (roads, streambanks, ranch infrastructure); a lab would be a minor partner.",
+    "quote": "improvement or decommissioning of dirt roads to reduce erosion and sediment runoff, streambank stabilization to reduce erosion and infrastructure improvements for ranching and livestock operations"
+   },
+   "geography": {
+    "level": "outside",
+    "why": "California waters only; SALSAV has no California site.",
+    "quote": "reduce runoff of pollution to waters of the state"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No precedent for agrivoltaics or University of Arizona work found in the page or in search.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_min_usd": 100000,
+   "award_max_usd": 1000000,
+   "amount_confidence": "estimated",
+   "award_note": "Portal labels $100k to $1M as 'Estimated Low/High' per award; estimated total funding $3.5M.",
+   "cycle": "fixed_deadline",
+   "next_deadline": "2026-12-18",
+   "deadline_note": "Portal lists the application deadline as 12/18/26 17:00.",
+   "open_now": true,
+   "eligibility_note": "Portal lists Nonprofit, Other Legal Entity, Public Agency and Tribal Government. Whether an out-of-state public university counts as a Public Agency is not stated.",
+   "requirements": {
+    "cost_share": "25% match",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "themes": [
+    "water",
+    "agriculture",
+    "land & conservation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.8
+  },
+  "evidence": {
+   "award": {
+    "quote": "$100,000.00 – $1,000,000.00",
+    "url": "https://www.grants.ca.gov/grant_categories/agriculture"
+   },
+   "deadline": {
+    "quote": "12/18/26 17:00",
+    "url": "https://www.grants.ca.gov/grant_categories/agriculture"
+   },
+   "eligibility": {
+    "quote": "Nonprofit\nOther Legal Entity\nPublic Agency\nTribal Government",
+    "url": "https://www.grants.ca.gov/grant_categories/agriculture"
+   }
+  },
+  "vet_note": "California-only runoff-control grant for public agencies and nonprofits; it does not fund solar or dryland farming research, so it is not a SALSAV fit.",
+  "source": "last_text",
+  "checked": {
+   "quotes_ok": 6,
+   "quotes_removed": 0,
+   "fit": 33,
+   "changes": [
+    "all 6 quotes found in stored page; deadline 12/18/26 belongs to the 2027 NPS card (checked card order)",
+    "amount_confidence published -> estimated: portal labels the range 'Estimated Low/High'",
+    "dropped requirements.loi=false: page is silent on letters of intent",
+    "fit 8+5+3+7+10+0=33, demote stands"
+   ]
+  }
+ },
+ {
+  "id": "f3de2256-00ff-4273-9cf0-e495f3e655b7",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Funds specialty crop research; solar is not named, so agrivoltaics would need a specialty-crop yield angle.",
+    "quote": "Efforts to improve production efficiency, handling and processing, productivity and profitability over the long term (including specialty crop policy and marketing)."
+   },
+   "activity": {
+    "level": "research_demo",
+    "why": "Funds scientific research and extension projects that universities lead.",
+    "quote": "Projects must address only scientific research and extension activities."
+   },
+   "geography": {
+    "level": "region",
+    "why": "US-wide program with no Southwest or international focus.",
+    "quote": "national, regional, and multi-state importance"
+   },
+   "precedent": {
+    "level": "similar",
+    "why": "NIFA funded the UA-partnered SCAPES agrivoltaics project through a different program; no SCRI award to UA found.",
+    "quote": "",
+    "url": "https://news.arizona.edu/news/uarizona-partners-10m-usda-grant-expand-research-growing-crops-under-solar-panels"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible",
+   "amount_confidence": "unknown",
+   "award_note": "Award size not stated on the program page; it is in the NOFO.",
+   "eligibility_note": "Pre-applications may come from colleges and universities, among other entities. Two-stage review: stakeholder relevance statement first, then invited full application.",
+   "themes": [
+    "agriculture",
+    "research",
+    "technology & innovation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "eligibility": {
+    "quote": "colleges and universities",
+    "url": "https://www.nifa.usda.gov/grants/programs/specialty-crop-research-initiative-scri"
+   }
+  },
+  "vet_note": "USDA research grant that universities can lead, but only for specialty crops, so SALSAV would have to frame its work around vegetable or fruit yields under panels.",
+  "source": "live_page",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 62,
+   "changes": [
+    "no stored copy (last_text null); all 4 quotes found on live page fetched with fetch_text.py",
+    "levels and eligibility re-read against rules, supported; award unknown (page silent)",
+    "fit 8+15+12+20+4+3=62, keep stands"
+   ]
+  }
+ },
+ {
+  "id": "1ee6f3bf-2cff-4d7c-896f-83cb02b1201d",
+  "verdict": "demote",
+  "reason": "A prize for existing solutions from SMEs and non-profits, not a research grant; score is about 38, under the 40 floor.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Recognises sustainability solutions across health, food, energy and water; agrivoltaics would be a stretch.",
+    "quote": "recognising their innovative sustainability solutions and amplifying their transformative impact"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Prize for organisations already deploying solutions; a lab could only be a minor partner.",
+    "quote": "Nonprofit organisations (NPOs) and small and medium enterprises (SMEs) are encouraged to apply."
+   },
+   "geography": {
+    "level": "global",
+    "why": "Entries from 177 countries; no site priority.",
+    "quote": "Record 10,233 submissions from 177 countries"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No Zayed prize to University of Arizona or agrivoltaics found.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_min_usd": 100000,
+   "award_max_usd": 1000000,
+   "amount_confidence": "published",
+   "award_note": "Per category: winners US $1,000,000, finalists US $100,000. A prize, not a grant.",
+   "cycle": "annual_recurring",
+   "next_deadline": null,
+   "deadline_note": "2026 window ran January to June 2026; the next window is not announced.",
+   "open_now": false,
+   "eligibility_note": "Categories are open to SMEs and non-profit organisations; universities are not named, so UA eligibility is unconfirmed.",
+   "themes": [
+    "food security",
+    "water",
+    "solar & clean energy",
+    "climate adaptation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "Winners in this category receive US $1,000,000.",
+    "url": "https://www.zayedsustainabilityprize.com/en/faq"
+   },
+   "eligibility": {
+    "quote": "To be eligible for this category, organisations must be a small or medium-sized enterprise (SME) or a non-profit organisation (NPO).",
+    "url": "https://www.zayedsustainabilityprize.com/en/faq"
+   }
+  },
+  "vet_note": "Large annual prize for proven sustainability solutions from SMEs and non-profits; a university lab is not the intended entrant, so it does not fit a research proposal.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 5,
+   "quotes_removed": 0,
+   "fit": 38,
+   "changes": [
+    "all 5 quotes exist on official pages; mission and geography quotes in stored homepage copy, activity quote on /en/how-to-apply, award and eligibility quotes on /en/faq (not in stored copy, so DB evidence_ok may show false)",
+    "$1M is a per-category winner prize stated by the funder in USD, kept; award is a prize not a grant (already noted)",
+    "universities not excluded on page, ua_eligibility stays unknown",
+    "fit 8+5+8+7+10+0=38, demote stands"
+   ]
+  }
+ },
+ {
+  "id": "40cf6ba7-069c-4d12-b4b3-a2853f0e2526",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Prize for faster climate-adaptive crop breeding; agrivoltaics is not part of it.",
+    "quote": "Greater resilience to drought, heat, flooding, salinity, and degraded soils"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Prize for crop-breeding platforms; a lab could compete but agrivoltaics field research is not the work.",
+    "quote": "We are particularly interested in teams working at the intersection of plant science, biotechnology, AI, automation, and agricultural systems"
+   },
+   "geography": {
+    "level": "global",
+    "why": "Open to innovators worldwide with no site priority.",
+    "quote": "We welcome innovators from around the world to compete."
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No XPRIZE award to University of Arizona or agrivoltaics found.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible",
+   "amount_confidence": "unknown",
+   "award_note": "No purse published; the page is currently seeking sponsors.",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "No entry window or deadline stated; the page is in a sponsor-funding phase.",
+   "open_now": false,
+   "eligibility_note": "University research teams are named among possible competitors; no country or institution type is excluded.",
+   "themes": [
+    "agriculture",
+    "climate adaptation",
+    "drought & heat",
+    "technology & innovation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "eligibility": {
+    "quote": "University research teams advancing plant genomics, phenotyping, and crop improvement systems",
+    "url": "https://www.xprize.org/prizes/adaptive-plants"
+   }
+  },
+  "vet_note": "Future prize for fast climate-adaptive crop development that universities can enter, but it is about plant breeding and has no purse or entry date yet, so watch only.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 45,
+   "changes": [
+    "all 4 quotes found in stored page",
+    "eligibility 'eligible' kept: page names university research teams as expected competitors, though no entry rules are published (weakly supported)",
+    "fit 8+5+8+20+4+0=45, keep stands; no purse or window yet so lane is watch"
+   ]
+  }
+ },
+ {
+  "id": "56e67b2b-685d-45b4-bb72-e6313c37947f",
+  "verdict": "demote",
+  "reason": "Funds grassland protection and ranching conservation in the Great Plains; no mission match and the score is about 14.",
+  "fit": {
+   "mission": {
+    "level": "none",
+    "why": "Funds grassland protection and rancher conservation; not solar, crops or water-energy-food research.",
+    "quote": "Protect intact grasslands at potential high risk of conversion to cropland or development"
+   },
+   "activity": {
+    "level": "mismatch",
+    "why": "Pays for easements and rancher assistance that a university lab cannot lead.",
+    "quote": "The Great Plains Grassland Fund will pair voluntary land protection strategies with technical and financial assistance for ranchers."
+   },
+   "geography": {
+    "level": "outside",
+    "why": "Great Plains only; SALSAV has no site there.",
+    "quote": "protect and sustainably manage intact grasslands across the U.S. Great Plains"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No NFWF award to University of Arizona or agrivoltaics found.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "amount_confidence": "unknown",
+   "award_note": "Up to $10 million expected in total for the first request for proposals; single award size not stated.",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "Request for proposals not yet issued; awards expected in 2027.",
+   "open_now": false,
+   "eligibility_note": "Applicant types are not stated in the announcement; details are linked but not shown.",
+   "themes": [
+    "land & conservation",
+    "agriculture",
+    "rural livelihoods",
+    "water"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   }
+  },
+  "vet_note": "Rancher-focused grassland conservation fund for the Great Plains; it does not fund agrivoltaics or dryland crop research.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 3,
+   "quotes_removed": 1,
+   "fit": 14,
+   "changes": [
+    "removed evidence.award quote: 'Up to $10 million' is the program total, not a single award; stays only in award_note",
+    "3 remaining quotes found in stored page; no applicant types or deadline on page, ua_eligibility unknown ok",
+    "fit 0+0+3+7+4+0=14, demote stands"
+   ]
+  }
+ }
+]

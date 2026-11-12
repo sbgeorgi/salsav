@@ -1,0 +1,31 @@
+{
+  "key": "17a16c90",
+  "funder": "Shell Foundation",
+  "verdict": "monitor_html_only",
+  "method": "html_listing",
+  "adapter": "html",
+  "feed_url": null,
+  "confidence": "high",
+  "summary": "No machine-readable source of open Shell Foundation funding calls exists. The only feed (RSS, 10 items) and all WordPress post types carry news, reports and events. Only 3 call-style items exist across 148 posts and press releases (2020, 2025, 2025), all closed. Shell Foundation states it does not accept unsolicited proposals. Monitor partner-with-us with the html adapter.",
+  "attempted": [
+    "HTML of homepage, partner-with-us, FAQ, strategic-partnerships, events: no call, deadline or application portal",
+    "Theme bundles app.4bfdef.js and bloomScripts.313f13.js: generic Alpine/Livewire code, no data endpoint or API base URL",
+    "WP REST root /wp-json/: full route list. Custom post types (press-release, media-coverage, thought-leadership, case-study, insight-report, learning-report, strategic-partners, team-member, tabbed-content, portfolio, market-intelligence, event): none is a call type (event 6 items, tabbed-content 17, strategic-partners 0)",
+    "Full enumeration of posts and press releases (148 items, title filter for call/open/apply/RFP/cohort/grant): 3 call items, all closed (2020-03-10 urban mobility call, 2025-01-30 ClimaFii call, 2025-12-11 ClimaFii cohort 2)",
+    "/feed/ followed through redirects: 200 RSS 2.0, 10 items, newest 2026-10-23, all news or insight posts, zero calls",
+    "Wayback CDX (5000 URLs, status 200): only old per-post feeds; no historical call feed or opportunity database",
+    "Headless Chrome on partner-with-us: resource list shows only Cookiebot, GTM, GA, Gravity Forms, reCAPTCHA; no data XHR",
+    "WebSearch x3: no Shell Foundation grant API, RSS, open-data portal or current RFP. ClimaFii cohort 2 (BFA Global/Accion) closed 2026-01-16. Other Shell entities (Shell Oil Company Foundation, Shell UK community grants, Shell procurement) are not this funder",
+    "Contact page: states unsolicited proposals are not accepted",
+    "adapter_check html on partner-with-us: ok=true, text_len=4621, count=0 (html mode, monitoring only)"
+  ],
+  "evidence": [
+    "https://shellfoundation.org/feed/ returns 200 application/rss+xml with 10 items, lastBuildDate Fri, 23 Oct 2026",
+    "https://shellfoundation.org/contact-us/ states: we do not accept unsolicited proposals for funding projects or charitable initiatives",
+    "https://bfaglobal.com/climafii/ states applications open Dec 10, 2025 and close Jan 16, 2026"
+  ],
+  "check": {"ok": true, "mode": "page", "kind": "ok", "http": 200, "count": 0, "open": 0, "text_len": 4621, "sample": [], "error": null, "expect_min": 1, "fetchability": "easy"},
+  "row_fix": null,
+  "engine_requirements": null,
+  "prototype": null
+}

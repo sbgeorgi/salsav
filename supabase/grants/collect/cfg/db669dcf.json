@@ -1,0 +1,70 @@
+{
+  "id": "db669dcf-e662-4beb-8852-20567f6928de",
+  "name": "U.S. Department of Energy eXCHANGE funding portal",
+  "program": "DOE eXCHANGE (funding opportunity platform)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://exchange.energy.gov/",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "DOE-GFO|DOE-NETL|DOE-ID|DOE-ARPAE",
+    "oppStatuses": "forecasted|posted",
+    "rows": 100,
+    "max_items": 40,
+    "auto_vet": false,
+    "filter": {
+      "any": [
+        "solar",
+        "photovolt",
+        "agrivolt",
+        "agricultur",
+        "rural",
+        "renewable",
+        "water",
+        "tribal",
+        "energy storage",
+        "irrigat",
+        "dryland",
+        "re:\\barid\\b",
+        "re:\\bfood",
+        "re:\\bcrops?\\b",
+        "bioenergy",
+        "biomass",
+        "greenhouse",
+        "controlled environment",
+        "energy-water",
+        "water-energy",
+        "climate-resilien",
+        "feedstock",
+        "re:\\bscaleup\\b"
+      ],
+      "none": [
+        "notice of intent",
+        "re:^noi\\b",
+        "request for information",
+        "re:^rfi\\b"
+      ],
+      "fields": "title"
+    }
+  },
+  "collect_note": "Department of Energy funding calls on Grants.gov are checked twice a day and kept when the title names solar, agriculture, water, rural, tribal or similar. Notices of intent and information requests are skipped. Items wait for review. Office of Science is tracked separately.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "SEEDING CRITICAL ADVANCES FOR LEADING ENERGY TECHNOLOGIES WITH UNTAPPED POTENTIAL (SCALEUP) READY",
+        "deadline": "2029-09-29",
+        "url": "https://www.grants.gov/search-results-detail/356623"
+      }
+    ]
+  },
+  "evidence": "2026-11-12 harness (grants_gov, agencies DOE-GFO|DOE-NETL|DOE-ID|DOE-ARPAE, forecasted|posted, title filter with any and none terms): count 1, open 1 (ARPA-E SCALEUP READY, 356623; 2029-09-29 is the Grants.gov listing date of a rolling call, 'open continuously until otherwise amended'). Unfiltered the same agencies return 12 live postings. Dropped by the scope filter (10): UNLOCK and UNLOCK SBIR/STTR (subsurface resources), Advanced Nuclear Energy Licensing Cost-Share, ASPECT (chemical technologies), Silicon Carbide Cladding Lead Test Rod (nuclear fuel), SCALED (grid supply chain), University Nuclear Leadership Program (nuclear scholarships): off topic for agrivoltaics. Dropped by the none terms: NOI PROSPECT (363510) and Notice of Intent DE-FOA-0003649 (364070), advance notices that request no applications (synopsis: 'for informational purposes only; we are not requesting comments or applications'), and two RFIs (280970, 280932), which are not funding calls. No live funding call is lost by the none terms (^noi, ^rfi and the full phrases match only these four titles). Office of Science (PAMS-SC) removed: collected by row 71f406cd. Earlier filter regexes held a JSON backspace instead of a word boundary; no term now holds a control character. No ARPA-E OPEN solicitation is live on Grants.gov.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

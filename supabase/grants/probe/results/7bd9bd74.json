@@ -1,0 +1,24 @@
+{
+  "key": "7bd9bd74",
+  "lens": "replay-and-stability",
+  "accept": false,
+  "reasons": "Replay is deterministic and plain-HTTP (no cookies, 200, real JSON, title/deadline/status mapped correctly), but the config pins one year-specific opportunity number. It returns 0 hits once USDA-NIFA-AFRI-011134 closes (closeDate 12/31/2026), so the 'forever' feed goes silent. An agency-wide config returns the same record plus other live NIFA calls and passes the adapter check.",
+  "issues": [
+    "Stability: adapter_config.oppNum is a single RFA identifier. Once it closes (closeDate 12/31/2026) or a successor RFA is posted, the query returns 0 hits and the edge function reports 'parsed 0 opportunities'. Not forever-proof.",
+    "Control: a bogus oppNum (USDA-NIFA-ZZZZ-000000) returns hitCount 0, so the filter is exact-match and not a silent fallback to all records.",
+    "Replay x2: adapter_check run twice 20 s apart returned identical output (ok=true, count=1, http=200, bytes=1641).",
+    "Plain HTTP: curl POST to https://api.grants.gov/v1/api/search2 with only a plain User-Agent and an empty cookie jar returned HTTP 200, errorcode 0, hitCount 1. The 'token' field is a per-response value that the adapter does not send back, so it is not a request dependency.",
+    "Error pages: no bot challenge or HTML error page observed; errorcode 0 'Webservice Succeeds' on both runs.",
+    "Field mapping: external_id=USDA-NIFA-AFRI-011134 (number, unique and stable), title non-empty, deadline 2026-12-31 from closeDate, status open from oppStatus posted, url grants.gov/search-results-detail/360205 returned HTTP 200 (34856 bytes).",
+    "Deadline sanity: closeDate 12/31/2026 is in the future relative to 2026-11-11, so the row is live today.",
+    "Recommended fix (not applied, verify before adopting): adapter_config {\"agencies\":\"USDA-NIFA\",\"rows\":25,\"oppStatuses\":\"forecasted|posted\"}. adapter_check returned ok=true, count=5, http=200, including USDA-NIFA-AFRI-011134 (deadline 2026-12-31). This keeps the program alive when the specific RFA changes. A keyword 'AFRI' filter would be narrower but is loose and not a filter per the engine notes.",
+    "Scope note: the funder row's current adapter is html (the simpler.grants.gov opportunity page). Switching to grants_gov changes monitoring to structured rows, which is the intent here, but the candidate should be re-checked after the agency-wide change."
+  ],
+  "check": {
+    "candidate_run_1": "{\"ok\":true,\"count\":1,\"sample\":[{\"external_id\":\"USDA-NIFA-AFRI-011134\",\"title\":\"Agriculture and Food Research Initiative Competitive Grants Program Foundational and Applied Science Program\",\"deadline\":\"2026-12-31\",\"status\":\"open\",\"url\":\"https://www.grants.gov/search-results-detail/360205\"}],\"error\":null,\"http\":200,\"bytes\":1641}",
+    "candidate_run_2": "identical to run 1 (20 s later)",
+    "curl_no_cookies": "HTTP/1.1 200 OK, errorcode 0, hitCount 1, oppNum USDA-NIFA-AFRI-011134, oppStatus posted, closeDate 12/31/2026",
+    "control_bogus_oppNum": "hitCount 0",
+    "alt_agencies_config": "{\"ok\":true,\"count\":5,\"http\":200,\"bytes\":3112} with AFRI-011596, TCRGP-011697, HSI-011903, AFRI-011134, SBIR-012221"
+  }
+}

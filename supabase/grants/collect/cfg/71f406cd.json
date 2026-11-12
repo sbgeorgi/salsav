@@ -1,0 +1,73 @@
+{
+  "id": "71f406cd-bb0a-44c5-911e-1a45991c163c",
+  "name": "U.S. Department of Energy, Office of Science (Biological and Environmental Research)",
+  "program": "Office of Science funding opportunities (annual Open Call DE-FOA-0003665 and other Office of Science NOFOs)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://science.osti.gov/ber/Funding-Opportunities",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "PAMS-SC",
+    "oppStatuses": "forecasted|posted",
+    "rows": 100,
+    "detail": 3,
+    "also_page": true,
+    "auto_vet": false,
+    "filter": {
+      "fields": "title+description",
+      "any": [
+        "biolog",
+        "environmental research",
+        "agricult",
+        "agrivolt",
+        "bioenerg",
+        "ecosystem",
+        "climate",
+        "water",
+        "irrigat",
+        "solar",
+        "food",
+        "dryland",
+        "arid",
+        "soil",
+        "plant",
+        "carbon",
+        "terrestrial",
+        "microb",
+        "genom",
+        "workforce",
+        "education"
+      ]
+    }
+  },
+  "collect_note": "Office of Science calls open or announced are read from Grants.gov twice a day: the annual Open Call plus AI-for-science calls, which are not all biology or environment. Each row needs a human check. Dates come from the posting; the Genesis Mission 17 Dec date is for Phase II applicants only.",
+  "expect": {
+    "min_items": 3,
+    "sample": [
+      {
+        "title": "The Genesis Mission: Transforming Science and Energy with AI",
+        "deadline": "2026-12-17",
+        "url": "https://www.grants.gov/search-results-detail/361526"
+      },
+      {
+        "title": "Genesis Mission Graduate Fellowship Pilot",
+        "deadline": "2027-01-12",
+        "url": "https://www.grants.gov/search-results-detail/364033"
+      },
+      {
+        "title": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+        "deadline": "2027-09-30",
+        "url": "https://www.grants.gov/search-results-detail/363993"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP POST https://api.grants.gov/v1/api/search2 body {rows:100, oppStatuses:forecasted|posted, agencies:PAMS-SC}: HTTP 200, 3 hits (DE-FOA-0003612, DE-FOA-0003673, DE-FOA-0003665), checked 2026-11-12. Adapter replay: node --experimental-strip-types adapter_check.mjs returned ok true, count 3, http 200. Also GET https://science.osti.gov/ber/Funding-Opportunities checked 2026-11-12 (static HTML, lists DE-FOA-0003665 PDF links). Closed-inclusive probe shows 5 closed PAMS-SC NOFOs (nuclear, quantum), so the feed is the Office of Science set, not BER only. Agency code PAMS-SC (not DOE-SC, which returns 0). Keyword probes for Biological and Environmental Research return NSF and NIH noise.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "harness": {
+    "ok": true,
+    "count": 3,
+    "open": 3,
+    "checked": "2026-11-12"
+  }
+}

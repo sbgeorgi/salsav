@@ -1,0 +1,71 @@
+{
+  "key": "00c5697a",
+  "verdict": "structured_needs_new_adapter",
+  "method": "grants_gov",
+  "adapter": "grants_gov (title-filtered) + round table from usbr page",
+  "confidence": "medium",
+  "summary": "Grants.gov is the machine-readable record source for both CWMP NOFOs (R26AS00349, sibling R26AS00017). Existing grants_gov adapter cannot pick the next round date or catch renumbered cycles (exact oppNum only). A small adapter extension fixes both using plain HTTP.",
+  "attempted": [
+    "grants_gov search2 agencies DOI-BOR keyword WaterSMART: 5 posted hits, incl R26AS00349 and R26AS00017",
+    "usbr.gov CWMP page via curl (HTTP 200, 23 KB) and headless text: Round 1-4 closing dates in plain server-rendered prose, no JSON/feed/CSV/iCal links, no XHR",
+    "usbr.gov page links: only grants.gov detail 362755 (no sibling link)",
+    "Python urllib on usbr.gov: connection reset once; curl --http1.1 worked (sandbox flakiness, not a blocker)",
+    "prototype proto_cwmp.py: real output below"
+  ],
+  "engine_requirements": "Add adapter option to grants_gov: (1) titleIncludes: string[] applied client-side to oppHits[].title (case-insensitive); (2) oppNum may be an array; (3) optional round_source: {url, pattern: \"Round (\\d): ([A-Za-z]+ \\d{1,2}, \\d{4})\"} fetched over plain HTTP; deadline = earliest round date >= today, else last round; emit one row per open NOFO with that deadline, and keep grants.gov closeDate as close_date. Config: {agencies:\"DOI-BOR\", keyword:\"WaterSMART\", titleIncludes:[\"Cooperative Watershed Management\",\"Enhancing Water Resources\"], oppStatuses:\"forecasted|posted\", round_source:{url:\"https://www.usbr.gov/watersmart/cwmp/\", pattern:\"...\"}}. Zero rows should log a warning, not pass silently.",
+  "prototype": "C:/Users/georg/AppData/Local/Temp/claude/f76d9bc5f4d34b7f/9671fccb-adf9-4753-918f-ba882814c960/scratchpad/c5697a/proto_cwmp.py",
+  "check": {
+    "sample_run_date": "2026-11-11",
+    "page_rounds": [
+      {
+        "round": 1,
+        "deadline": "2026-10-07"
+      },
+      {
+        "round": 2,
+        "deadline": "2027-02-24"
+      },
+      {
+        "round": 3,
+        "deadline": "2027-09-01"
+      },
+      {
+        "round": 4,
+        "deadline": "2028-02-15"
+      }
+    ],
+    "next_round": {
+      "round": 2,
+      "deadline": "2027-02-24"
+    },
+    "grants_hits": [
+      {
+        "external_id": "R26AS00349",
+        "title": "WaterSMART Cooperative Watershed Management Program",
+        "deadline": "02/15/2028",
+        "url": "https://www.grants.gov/search-results-detail/362755",
+        "status": "posted"
+      },
+      {
+        "external_id": "R26AS00017",
+        "title": "WaterSMART Enhancing Water Resources Projects",
+        "deadline": "09/08/2027",
+        "url": "https://www.grants.gov/search-results-detail/362394",
+        "status": "posted"
+      }
+    ]
+  },
+  "evidence": [
+    "usbr.gov/watersmart/cwmp/ static HTML: Round 1: October 7, 2026 ... Round 4: February 15, 2028",
+    "Grants.gov search2 DOI-BOR WaterSMART hits: R26AS00349 closes 02/15/2028, R26AS00017 closes 09/08/2027",
+    "Title filter removes R26AS00034 (desal), R26AS00079 (Title XVI), R26AS00021 (Native American)"
+  ],
+  "risks": [
+    "Round table is hand-edited prose; a reword breaks the regex (zero-row warning needed)",
+    "Grants.gov closeDate for R26AS00349 is the final round, so the row deadline must come from round_source",
+    "Single-day sample; stability over time not measured"
+  ],
+  "not_done": [
+    "Not written to DB, not deployed, no edge-function code edits (out of scope for probe)"
+  ]
+}

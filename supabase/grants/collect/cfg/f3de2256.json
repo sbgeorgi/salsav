@@ -1,0 +1,37 @@
+{
+  "id": "f3de2256-00ff-4273-9cf0-e495f3e655b7",
+  "name": "USDA NIFA",
+  "program": "Specialty Crop Research Initiative (SCRI)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.nifa.usda.gov/grants/funding-opportunities/specialty-crop-research-initiative",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-NIFA",
+    "keyword": "Specialty Crop Research Initiative",
+    "oppStatuses": "forecasted|posted",
+    "rows": 50,
+    "auto_vet": true,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "specialty crop research"
+      ]
+    }
+  },
+  "collect_note": "Open and forecast USDA NIFA opportunities are read from Grants.gov twice a day, keeping only titles with 'Specialty Crop Research Initiative'. None is open now (last call closed 2026-06-15), so the list is empty until the next one posts. Deadlines come from each posting.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12: NIFA page https://www.nifa.usda.gov/grants/funding-opportunities/specialty-crop-research-initiative fetched OK (NOFO USDA-NIFA-SCRI-011676, closed 2026-06-15, ALN 10.309). Grants.gov search2 (HTTP 200) agencies=USDA-NIFA keyword='Specialty Crop' all statuses: 427 hits; SCRI titles are 'Specialty Crop Research Initiative' (011676, 010974, 008661), '... Pre-Applications' (010311, 009502), '(SCRI) Pre-Applications' (007952), '... Request for Pre-applications' (006064), all containing 'specialty crop research', so the title filter matches the last SCRI RFA. Posted|forecasted query: no SCRI.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "zero_reason": "Grants.gov search2 {agencies:USDA-NIFA, keyword:'Specialty Crop Research Initiative', oppStatuses:'forecasted|posted'} on 2026-11-12 returns 5 hits (AFRI x2, SBIR Phase II, HSI, TCRGP), none SCRI. NIFA SCRI page shows 'Posted Date Monday, April 13, 2026 ... Closing Date Monday, June 15, 2026 ... Funding Opportunity Number USDA-NIFA-SCRI-011676' (https://www.nifa.usda.gov/grants/funding-opportunities/specialty-crop-research-initiative); Grants.gov lists USDA-NIFA-SCRI-011676 as archived, titled 'Specialty Crop Research Initiative'.",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

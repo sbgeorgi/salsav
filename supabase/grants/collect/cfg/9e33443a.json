@@ -1,0 +1,30 @@
+{
+  "id": "9e33443a-c2a8-4b13-9716-5e189525069a",
+  "name": "BIRD Foundation (US-Israel Binational Industrial Research and Development)",
+  "program": "U.S.-Israel Energy Center (consortium call: energy storage, energy-water nexus, fossil energy, energy cyber)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.birdf.com/bird_programs/energy-center/",
+  "feed_url": null,
+  "adapter_config": {
+    "self": {
+      "title": "BIRD U.S.-Israel Energy Center Call for Proposals",
+      "deadline_regex": "(?:Executive Summaries\\s{0,5}\\(using BIRD.s template\\)|Full Proposals\\s{0,5}\\(following BIRD.s detailed instructions\\))\\s{0,5}([A-Z][a-z]+\\.?\\s{1,3}\\d{1,2},\\s{1,3}\\d{4})\\s{0,5}Read More"
+    }
+  },
+  "collect_note": "Watches the BIRD Energy Center page for the deadline of its next round. The 2026 round (summaries June 30, full proposals Sept 15) has closed and no new round is posted, so nothing is listed now. If a new round words its dates differently on the page, it could be missed.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://www.birdf.com/bird_programs/energy-center/ HTTP 200 (719 KB, plain HTTP, desktop UA): 'Executive Summary Deadline - June 30, 2026', 'New Call for Proposals | U.S.-Israel Energy Center' linking to https://birdfoundation.activetrail.biz/EnergyCenter_CFP-2026 (HTTP 200, same round: exec summary June 30, 2026, full proposal Sept 15, 2026, notification Dec 2026). Feed https://www.birdf.com/feed/ = news only. WP REST /wp-json/wp/v2/updates = 4 items, General Program call only. Checked 2026-11-12. Self rule uses the Executive Summary deadline (the round's own timeline), not the UPCOMING block, which is a second unlabelled timeline on the same page. Reviewed 2026-11-12: UPCOMING January 21, 2027 / March 2027 block also appears on the BIRD General Program page (which lists ES Nov 23, 2026, FP Jan 21, 2027) and on BIRD Energy, not on Cyber/HLS, so it is the General Program timeline. https://us-isr-energycenter.org/ shows 'Full Proposals Submission Deadline - September 15, 2026'; the activetrail CFP shows ES June 30, 2026, FP September 15, 2026. Regex gives 2026-06-30, past, so no item (count 0).",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "zero_reason": "The Energy Center page states its own round only: 'Executive Summary Deadline – June 30, 2026- 5pm EST' and in its stage list 'Full Proposals ... September 15, 2026', 'Executive Summaries ... June 30, 2026', 'Decisions December 2026' (https://www.birdf.com/bird_programs/energy-center/). Both dates are past (today 2026-11-12) and no next Energy Center round is announced. The 'UPCOMING January 21, 2027' block on that page is the BIRD General Program timeline (the General Program page https://www.birdf.com/bird_programs/bird-general-program/ lists 'Executive Summaries ... | November 23, 2026  Full Proposals ... | January 21, 2027'), and the page's July 9 / July 22, 2026 blocks belong to the BIRD General/Energy programs, so none of them is collected.",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

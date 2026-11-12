@@ -1,0 +1,29 @@
+{
+  "key": "de1314cc",
+  "funder": "Netherlands Ministry of Foreign Affairs, implemented by RVO",
+  "program": "Climate, Water and Food facility (CWF)",
+  "verdict": "monitor_html_only",
+  "method": "html_listing",
+  "adapter": "html",
+  "adapter_config": {},
+  "url": "https://english.rvo.nl/subsidies-financing/cwf",
+  "feed_url": null,
+  "confidence": "high",
+  "summary": "CWF is a government-to-government facility. The page says 'Open for application' but publishes no list of calls, deadlines or opportunities. Applications go through Dutch diplomatic missions or cwf@rvo.nl. No structured source for per-call opportunities exists on the page, its site, or the RVO sitemap. The only usable signal is page-level change detection on the program page.",
+  "attempted": [
+    "endpoint_recon.py on the CWF page: html_ok, Drupal CMS, no __NEXT_DATA__, no ld+json, no embedded JSON; replayed /jsonapi/node/article 404, sitemap.xml 500 on recon (200 on direct fetch), /api/v1/messages 200 (site maintenance banner only)",
+    "Fetched CWF page text: program description, partner countries, 'Open for application' flag, no call list, no deadlines, no document links",
+    "sitemap.xml (851 URLs, 200, XML with lastmod): searched for cwf/cerf/call entries; only /en/subsidies-financing/cwf and /cerf (CERF closed, successor is CWF) match; other calls are per-program (Techbridge, SBIR, DDP, Interreg, experts calls) and not CWF opportunities",
+    "/feed, /rss: 404; /api/v1/subsidies, /api/v1/search: 404; /subsidy-guide: static guide page, no data; /search?q=CWF: no results list",
+    "cms.rvo.nl/en/jsonapi (index and node/subsidy): 403 to plain HTTP; english.rvo.nl/?format=json and .json on CWF page: 301 with no body",
+    "robots.txt 200 (text/plain, 59 bytes), no Sitemap-based feed for calls",
+    "adapter_check.mjs html run: ok=true, text_len 4590, count 0 (expected: html adapter stores no rows)"
+  ],
+  "check": {"ok": true, "count": 0, "sample": [], "error": null, "http": 200, "text_len": 4590, "links": 0},
+  "evidence": [
+    "https://english.rvo.nl/subsidies-financing/cwf returns 200 text/html, 137989 bytes, 'Open for application' status, contact cwf@rvo.nl",
+    "https://english.rvo.nl/sitemap.xml returns 200 application/xml, 851 url entries with lastmod"
+  ],
+  "row_fix": null,
+  "notes": "No plain-HTTP opportunity list exists for CWF. Any per-call data would come from calls that are published under other RVO programs (not CWF). Monitor the CWF page for changes in the 'Open for application' status and for new calls linked from it. Consider lastmod on the sitemap entry /en/subsidies-financing/cwf as a cheap change signal."
+}

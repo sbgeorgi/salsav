@@ -1,0 +1,25 @@
+{
+ "errorcode": 0,
+ "msg": "Webservice Succeeds",
+ "data": {
+  "id": 361169,
+  "opportunityNumber": "USDA-NIFA-AFRI-011596",
+  "opportunityTitle": "Agriculture and Food Research Initiative Competitive Grants Program Education and Workforce Development",
+  "opportunityCategory": {
+   "category": "D",
+   "description": "Discretionary"
+  },
+  "owningAgencyCode": "USDA-NIFA",
+  "synopsis": {
+   "synopsisDesc": "<p>The Agriculture and Food Research Initiative - Education and Workforce Development (EWD) focuses on developing the next generation of research, education, and extension professionals in the food and agricultural sciences. The National Institute of Food and Agriculture (NIFA) requests applications for the AFRI’s Education and Workforce Development program areas to support:</p><p>1. professional development opportunities for K-14 educational professionals;</p><p>2. non-formal education that cultivates food and agricultural interest in youth;</p><p>3. workforce training at community, junior, and technical colleges;</p><p>4. training of undergraduate students in research and extension;&nbsp;</p><p>5. fellowships for predoctoral candidates;</p><p>6. fellowships for postdoctoral scholars; and</p><p>7. education and workforce development workshop grants.</p><p><br></p>",
+   "awardCeiling": "650000",
+   "awardCeilingFormatted": "650,000",
+   "awardFloor": "10000",
+   "awardFloorFormatted": "10,000",
+   "estimatedFunding": "39700000",
+   "numberOfAwards": "245",
+   "postingDate": "Jan 20, 2026 12:00:00 AM EST",
+   "responseDate": "Dec 31, 2026 12:00:00 AM EST"
+  }
+ }
+}

@@ -9,13 +9,17 @@
 <link rel="icon" href="static/salsa-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="dash/viz.css">
 </head>
 <body class="dash">
-<a class="skip" href="#main">Skip to results</a>
+<a class="skip" href="#main">Skip to content</a>
 <header class="topbar"><div class="wrap">
-  <a class="brand" href="dashboard.html" aria-label="SALSAV Funding radar"><img src="static/salsa-logo.png" alt="" width="30" height="30"><b>SALSAV</b><span>Funding radar</span></a>
+  <a class="brand" href="dashboard.html" aria-label="SALSAV Funding radar"><img src="static/salsa-logo.png" alt="" width="28" height="28"><b>SALSAV</b><span>Funding radar</span></a>
+  <nav class="nav" id="nav" aria-label="Views">
+    <button type="button" data-nav="radar">Radar</button><button type="button" data-nav="board">Pipeline</button><button type="button" data-nav="insights">Insights</button><button type="button" data-nav="method">Method</button>
+  </nav>
   <span class="spacer"></span>
   <span class="pill" id="refreshed" tabindex="0" role="status"><i></i><span>Loading</span></span>
   <button class="btn" id="unlockBtn" type="button"></button>
@@ -24,53 +28,62 @@
 </div></header>
 
 <main id="main" class="wrap">
-  <section class="intro">
-    <h1>Which funder next?</h1>
-    <p id="vetnote">All sources are pre-vetted: UA-eligible, at least $200k or unpublished, scoped to SALSAV themes.</p>
-    <span class="info tip"><button type="button" id="ruleBtn" aria-expanded="false" aria-controls="rulePop">Why is a funder disqualified?</button>
+  <section class="pagehead">
+    <div class="t"><h1 id="pgTitle">Which funder next?</h1><p id="pgLede"></p></div>
+    <span class="info tip" id="ruleWrap"><button type="button" id="ruleBtn" aria-expanded="false" aria-controls="rulePop">Why is a funder disqualified?</button>
       <div class="pop" id="rulePop" role="note" hidden><b>The 14-day rule.</b> A proposal needs time. Anything closing in fewer than 14 days, or already closed, is disqualified and hidden until you show it. Exactly 14 days left still qualifies. Dates count in Arizona time.</div></span>
   </section>
-  <div class="scopebar"><span id="scopeLabel">Numbers below count qualified, active funders in</span>
-    <div class="seg" role="group" aria-label="Numbers scope"><button type="button" data-scope="all" aria-pressed="true">All sources</button><button type="button" data-scope="filtered" aria-pressed="false">Current filters</button></div><span class="spacer"></span><button class="btn btn--sm charts-toggle" id="chartsBtn" type="button" aria-expanded="false" aria-controls="charts">Show charts</button></div>
-  <section class="kpis" id="kpis" aria-label="Key numbers"><div class="skel k"></div><div class="skel k"></div><div class="skel k"></div><div class="skel k"></div><div class="skel k"></div><div class="skel k"></div></section>
-  <div class="bucketrow" id="buckets" role="group" aria-label="Filter by funder type"></div>
-  <section class="charts closed" id="charts" aria-label="Charts">
-    <div class="cc cc--wide"><h2>Deadline horizon <span id="hzNote"></span></h2><div id="chHorizon"><div class="skel c"></div></div></div>
-    <div class="cc"><h2>Funder mix <span>click to filter</span></h2><div id="chMix"></div></div>
-    <div class="cc"><h2>Award size <span>largest award</span></h2><div id="chBand"></div></div>
-    <div class="cc"><h2>Team pipeline <span>click to filter</span></h2><div id="chPipe"></div></div>
-  </section>
 
-  <section class="fbar" aria-label="Filters">
-    <div class="frow">
-      <label class="field field--grow"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr">Search funders</span><input id="q" type="search" placeholder="Search name, program, theme, notes" autocomplete="off"><kbd>/</kbd></label>
-      <label class="field"><span class="sub">Closes</span><select id="fWindow" aria-label="Deadline window"><option value="">Any time</option><option value="30">Next 30 days</option><option value="60">Next 60 days</option><option value="90">Next 90 days</option><option value="180">Next 180 days</option><option value="rolling">Rolling</option><option value="none">No date</option></select></label>
-      <label class="field"><span class="sub">Fit</span><select id="fFit" aria-label="Minimum fit"><option value="0">Any</option><option value="50">50+</option><option value="70">70+</option><option value="85">85+</option></select></label>
-      <label class="field"><span class="sub">Sort</span><select id="fSort" aria-label="Sort by"></select></label>
-      <button class="btn" id="moreBtn" type="button" aria-expanded="false" aria-controls="moref"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>More filters <span class="chip chip--new" id="moreN" hidden></span></button>
-      <div class="menu"><button class="btn" id="presetBtn" type="button" aria-expanded="false" aria-haspopup="true"><svg class="ico" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Saved</button><div class="list" id="presetList" hidden></div></div>
-      <button class="btn btn--ghost" id="resetBtn" type="button">Reset</button>
-    </div>
-    <div class="moref" id="moref">
-      <fieldset><legend>UA eligibility</legend><div class="chips" data-g="ua"></div></fieldset>
-      <fieldset><legend>Geography</legend><div class="chips" data-g="geo"></div></fieldset>
-      <fieldset><legend>Award size</legend><div class="chips" data-g="band"></div></fieldset>
-      <fieldset><legend>Partner needed</legend><div class="chips" data-g="partner"></div></fieldset>
-      <fieldset><legend>Team status</legend><div class="chips" data-g="team"></div></fieldset>
-      <fieldset class="checks"><legend>Requirements</legend><label><input type="checkbox" data-c="loi"> Needs a letter of intent</label><label><input type="checkbox" data-c="cost"> Needs cost-share</label><label><input type="checkbox" data-c="changed"> Changed since my last visit</label></fieldset>
-      <fieldset style="flex-basis:100%"><legend>Themes (must match all)</legend><div class="chips" data-g="themes"></div></fieldset>
-    </div>
-  </section>
+  <div id="radar">
+    <div class="scopebar"><span id="scopeLabel">Numbers below count qualified, active funders in</span>
+      <div class="seg" role="group" aria-label="Numbers scope"><button type="button" data-scope="all" aria-pressed="true">All sources</button><button type="button" data-scope="filtered" aria-pressed="false">Current filters</button></div></div>
+    <section class="kpis" id="kpis" aria-label="Key numbers"><div class="skel k"></div><div class="skel k"></div><div class="skel k"></div><div class="skel k"></div><div class="skel k"></div><div class="skel k"></div><div class="skel k"></div></section>
+    <section class="picks" id="picks" aria-label="Next best moves" aria-busy="true"><div class="phead"><h2>Next best moves</h2></div><div class="plist"><div class="skel pk"></div><div class="skel pk"></div><div class="skel pk"></div><div class="skel pk"></div><div class="skel pk"></div></div></section>
+    <div class="laneseg" id="lanes" role="group" aria-label="Filter by lane"></div>
+    <p class="lanenote" id="laneNote" aria-live="polite"></p>
+    <div class="bucketrow" id="buckets" role="group" aria-label="Filter by funder type"></div>
 
-  <div class="meta">
-    <div class="views" role="tablist" aria-label="View"><button role="tab" data-view="table" id="tab-table" aria-controls="list"></button><button role="tab" data-view="cards" id="tab-cards" aria-controls="list"></button><button role="tab" data-view="timeline" id="tab-timeline" aria-controls="list"></button></div>
-    <span class="count num" id="count" aria-live="polite"></span>
-    <label class="checks"><input type="checkbox" id="showDq"> <span id="dqLabel">Show disqualified</span></label>
-    <label class="checks"><input type="checkbox" id="showSkip"> <span id="skipLabel">Show skipped</span></label>
-    <span class="spacer"></span>
-    <button class="btn btn--sm" id="csvBtn" type="button"><svg class="ico" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Export CSV</button>
+    <section class="horizon" id="horizon" aria-labelledby="hzTitle" hidden>
+      <div class="hz-head"><h2 id="hzTitle">Deadline horizon</h2><span class="sub" id="hzNote"></span></div>
+      <div id="hzBody"></div>
+    </section>
+
+    <section class="fbar" aria-label="Filters">
+      <div class="frow">
+        <label class="field field--grow"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr">Search funders</span><input id="q" type="search" placeholder="Search name, program, theme, notes" autocomplete="off"><kbd>/</kbd></label>
+        <label class="field"><span class="sub">Closes</span><select id="fWindow" aria-label="Deadline window"><option value="">Any time</option><option value="30">Next 30 days</option><option value="60">Next 60 days</option><option value="90">Next 90 days</option><option value="180">Next 180 days</option><option value="rolling">Rolling</option><option value="none">No date</option></select></label>
+        <label class="field"><span class="sub">Fit</span><select id="fFit" aria-label="Minimum fit"><option value="0">Any</option><option value="45">45+ Possible</option><option value="60">60+ Strong</option><option value="75">75+ Prime</option></select></label>
+        <label class="field"><span class="sub">Sort</span><select id="fSort" aria-label="Sort by"></select></label>
+        <button class="btn" id="moreBtn" type="button" aria-expanded="false" aria-controls="moref"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>More filters <span class="chip chip--new" id="moreN" hidden></span></button>
+        <div class="menu"><button class="btn" id="presetBtn" type="button" aria-expanded="false" aria-haspopup="true"><svg class="ico" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Saved</button><div class="list" id="presetList" hidden></div></div>
+        <button class="btn btn--ghost" id="resetBtn" type="button">Reset</button>
+      </div>
+      <div class="moref" id="moref">
+        <fieldset><legend>UA eligibility</legend><div class="chips" data-g="ua"></div></fieldset>
+        <fieldset><legend>Fit tier</legend><div class="chips" data-g="tier"></div></fieldset>
+        <fieldset><legend>Evidence</legend><div class="chips"><button class="fchip" type="button" id="evidChip" aria-pressed="false" title="At least three of the four key facts (mission, eligibility, award, deadline) are quoted from the funder's own page">Evidence-backed: 3 of 4 facts quoted</button></div></fieldset>
+        <fieldset><legend>Geography</legend><div class="chips" data-g="geo"></div></fieldset>
+        <fieldset><legend>Award size</legend><div class="chips" data-g="band"></div></fieldset>
+        <fieldset><legend>Partner needed</legend><div class="chips" data-g="partner"></div></fieldset>
+        <fieldset><legend>Team status</legend><div class="chips" data-g="team"></div></fieldset>
+        <fieldset class="checks"><legend>Requirements</legend><label><input type="checkbox" data-c="loi"> Needs a letter of intent</label><label><input type="checkbox" data-c="cost"> Needs cost-share</label><label><input type="checkbox" data-c="changed"> Changed since my last visit</label></fieldset>
+        <fieldset class="checks"><legend>Collection</legend><label><input type="checkbox" data-c="calls"> Has open calls</label></fieldset>
+        <fieldset class="themes"><legend>Themes (must match all)</legend><div class="chips" data-g="themes"></div></fieldset>
+      </div>
+    </section>
+
+    <div class="meta">
+      <div class="views" role="tablist" aria-label="Radar view"><button role="tab" data-view="table" id="tab-table" aria-controls="list"></button><button role="tab" data-view="cards" id="tab-cards" aria-controls="list"></button><button role="tab" data-view="timeline" id="tab-timeline" aria-controls="list"></button></div>
+      <span class="count num" id="count" aria-live="polite"></span>
+      <label class="checks"><input type="checkbox" id="showDq"> <span id="dqLabel">Show disqualified</span></label>
+      <label class="checks"><input type="checkbox" id="showSkip"> <span id="skipLabel">Show skipped</span></label>
+      <span class="spacer"></span>
+      <button class="btn btn--sm" id="csvBtn" type="button"><svg class="ico" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Export CSV</button>
+    </div>
+    <div id="list" role="tabpanel" tabindex="-1"><div class="skel t"></div><div class="skel t"></div><div class="skel t"></div><div class="skel t"></div><div class="skel t"></div></div>
   </div>
-  <div id="list" role="tabpanel" tabindex="-1"><div class="skel t"></div><div class="skel t"></div><div class="skel t"></div><div class="skel t"></div><div class="skel t"></div></div>
+
+  <div id="viewroot" tabindex="-1" hidden></div>
   <footer class="foot">Source: SALSAV funding feed. Amounts are the largest award a call lists; verify on the funder's page before committing. Team status is shared with everyone who has the passcode.</footer>
 </main>
 
@@ -86,13 +99,15 @@
   </form>
 </dialog>
 <dialog class="modal" id="helpDlg" aria-labelledby="hTitle"><h2 id="hTitle">Keyboard shortcuts</h2>
-  <div class="sc"><kbd>/</kbd><span>Search</span><kbd>j</kbd><span>Next funder</span><kbd>k</kbd><span>Previous funder</span><kbd>Enter</kbd><span>Open details</span><kbd>e</kbd><span>Unlock, or edit notes</span><kbd>1 2 3</kbd><span>Table, cards, timeline</span><kbd>t</kbd><span>Toggle theme</span><kbd>?</kbd><span>This list</span><kbd>Esc</kbd><span>Close</span></div>
+  <div class="sc"><kbd>/</kbd><span>Search</span><kbd>j</kbd><span>Next funder, in the list or the details panel</span><kbd>k</kbd><span>Previous funder, same places</span><kbd>Enter</kbd><span>Open details</span><kbd>e</kbd><span>Unlock, or edit notes</span><kbd>1 2 3</kbd><span>Radar as table, cards or timeline</span><kbd>g r</kbd><span>Go to Radar</span><kbd>g p</kbd><span>Go to Pipeline</span><kbd>g i</kbd><span>Go to Insights</span><kbd>g m</kbd><span>Go to Method</span><kbd>t</kbd><span>Toggle theme</span><kbd>?</kbd><span>This list</span><kbd>Esc</kbd><span>Close</span></div>
   <div class="acts" style="display:flex;justify-content:flex-end;margin-top:1rem"><button class="btn" id="hClose" type="button">Close</button></div></dialog>
 <div class="tooltip" id="tip" hidden></div>
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <script type="module">
 import * as D from './dashboard.js';
+import { fitBar, spark } from './dash/viz.js';
+import { horizon } from './dash/horizon.js';
 
 const API = 'https://iuzgfldgvueuehybgntm.supabase.co/rest/v1/rpc/';
 const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1emdmbGRndnVldWVoeWJnbnRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4Mjc0MjUsImV4cCI6MjA3MjQwMzQyNX0.do919Hvw2AK-Ql-2V5guoRRH2yx4Rmset4eeVXi__o8'; // public anon key by design
@@ -123,16 +138,20 @@ const ICONS = {
 const ico = (n) => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'ico'); s.setAttribute('aria-hidden', 'true'); s.innerHTML = ICONS[n]; return s; };
 const link = (url, label, cls = 'btn btn--sm') => { const u = D.safeUrl(url); return u ? el('a', { class: cls, href: u, target: '_blank', rel: 'noopener noreferrer' }, label, ico('ext')) : null; };
 const SHORT = { us_federal: 'US federal', intl_dev: 'Intl. development', state_regional: 'State & regional', private_sector: 'Private sector', foundation_ngo: 'Foundations & NGOs', tracker: 'Trackers' };
+const STATE_LABEL = { new: 'New', reviewing: 'Reviewing', applying: 'Applying', submitted: 'Submitted', awarded: 'Awarded', declined: 'Declined', skip: 'Skipped' };
 const bcolor = (b) => `var(--b-${b in D.BUCKETS ? b : 'tracker'})`;
 const num = (n) => new Intl.NumberFormat('en-US').format(n);
+const svgEl = (s) => { const t = document.createElement('template'); t.innerHTML = s; return t.content.firstElementChild; }; // only viz.js output goes here; it escapes every string
 
 /* ---------------- state ---------------- */
 const qs = new URLSearchParams(location.search);
-const S = { feed: null, rows: [], F: D.defaultFilters(), view: 'table', sort: 'deadline', scope: 'all', sel: null, open: new Set(),
-  team: {}, pass: store.sget('pass'), me: store.get('me') || '', now: new Date(), chartsOpen: true, list: [], base: [] };
+const RADAR = ['table', 'cards', 'timeline'], MODS = ['board', 'insights', 'method'];
 const since = Number(store.get('lastVisit')) || 0; // read once: later writes must not clear this visit's badges
+const S = { feed: null, rows: [], F: D.defaultFilters(), view: 'table', radarView: 'table', sort: 'recommended', scope: 'all', sel: null, open: new Set(),
+  team: {}, pass: store.sget('pass'), me: store.get('me') || '', now: new Date(), list: [], base: [], since, stateLabel: STATE_LABEL, bucketLabel: SHORT };
 const ctx = () => ({ since });
 const unlocked = () => !!S.pass && S.unlocked;
+const isRadar = () => RADAR.includes(S.view);
 
 /* ---------------- data ---------------- */
 async function rpc(fn, body) {
@@ -153,52 +172,94 @@ async function init() {
   try { S.feed = await loadFeed(); } catch (e) { return fail(e); }
   if (!Array.isArray(S.feed?.funders)) return fail(new Error('Unexpected feed shape'));
   rebuild();
-  $('#vetnote').textContent = `All sources are pre-vetted: UA-eligible, at least ${D.money(S.feed.min_award ?? 200000)} or unpublished, scoped to SALSAV themes.`;
   buildFilterUI();
   if (S.pass) { try { await loadTeam(); } catch (e) { if (e.code === '28000') { S.pass = null; store.sset('pass', null); } } }
   applyHash(); render();
 }
 function fail(e) {
-  $('#kpis').replaceChildren(); $('#charts').hidden = true;
-  $('#list').replaceChildren(el('div', { class: 'state' }, el('h2', { text: 'The funding feed is not reachable' }), el('p', { text: `${e.message}. Your connection or the feed service may be down; nothing on this page is lost.` }), el('button', { class: 'btn btn--primary', onclick: () => { $('#charts').hidden = false; init(); } }, 'Try again')));
+  S.view = 'table'; chrome(); $('#kpis').replaceChildren(); $('#picks').hidden = true; $('#horizon').hidden = true; $('#laneNote').textContent = ''; $('#lanes').replaceChildren(); $('#buckets').replaceChildren();
+  $('#list').replaceChildren(el('div', { class: 'state' }, el('h2', { text: 'The funding feed is not reachable' }), el('p', { text: `${e.message}. Your connection or the feed service may be down; nothing on this page is lost.` }), el('button', { class: 'btn btn--primary', onclick: init }, 'Try again')));
   setRefreshed();
 }
 async function loadTeam() {
   const res = await rpc('grants_team_notes', { p_pass: S.pass });
-  S.team = Object.fromEntries((res.team || []).map((t) => [t.funder_id, { state: t.state, owner: t.owner || '', notes: t.notes || '', updated_at: t.updated_at }]));
+  S.team = Object.fromEntries((res.team || []).map((t) => [t.funder_id, { state: t.state, owner: t.owner || '', notes: t.notes || '', updated_at: t.updated_at, ...('ask_usd' in t ? { ask_usd: t.ask_usd } : {}) }]));
   S.unlocked = true; rebuild(); syncUnlock();
 }
-function lock(msg) { S.pass = null; S.unlocked = false; store.sset('pass', null); S.team = {}; rebuild(); syncUnlock(); if (msg) toast(msg, true); }
+function lock(msg) { S.pass = null; S.unlocked = false; store.sset('pass', null); S.team = {}; rebuild(); syncUnlock(); if (msg) toast(msg, 'bad'); }
 
 /* ---------------- team writes (optimistic) ---------------- */
-async function setTeam(r, patch, mark) {
-  if (!unlocked()) return;
+function requireUnlock() { if (unlocked()) return true; openUnlock(); return false; }
+async function saveTeam(id, patch) {
+  const r = S.rows.find((x) => x.id === id);
+  if (!r || !requireUnlock()) return false;
   const prev = { ...r.team }; Object.assign(r.team, patch); r._skip = r.team.state === 'skip';
-  if (!('notes' in patch)) renderList();
+  if (!('notes' in patch)) render();
   try {
     const res = await rpc('grants_set_state', { p_pass: S.pass, p_funder: r.id, p_patch: { ...patch, actor: S.me || r.team.owner || undefined } });
-    S.team[r.id] = { ...(S.team[r.id] || {}), state: res.state, owner: res.owner || '', notes: res.notes ?? r.team.notes };
-    mark?.(); if (!('notes' in patch)) { renderKpis(); renderCharts(); }
+    S.team[r.id] = { ...(S.team[r.id] || {}), state: res.state, owner: res.owner || '', notes: res.notes ?? r.team.notes, ...('ask_usd' in res ? { ask_usd: res.ask_usd } : 'ask_usd' in patch ? { ask_usd: patch.ask_usd } : {}) };
+    if (!('notes' in patch) && isRadar()) { compute(); renderKpis(); renderPicks(); }
+    return true;
   } catch (e) {
     Object.assign(r.team, prev); r._skip = r.team.state === 'skip'; render();
-    if (e.code === '28000') lock('Passcode no longer valid. Unlock again to keep editing.'); else toast('Could not save: ' + e.message, true);
+    if (e.code === '28000') lock('Passcode no longer valid. Unlock again to keep editing.'); else toast('Could not save: ' + e.message, 'bad');
     if ($('#drawer').open) openDrawer(r.id, true);
+    return false;
   }
 }
 const flash = (n) => { n.classList.add('on'); setTimeout(() => n.classList.remove('on'), 1800); };
 
-/* ---------------- shared bits ---------------- */
-const stateLabel = { new: 'New', reviewing: 'Reviewing', applying: 'Applying', submitted: 'Submitted', skip: 'Skipped' };
+/* ---------------- shared bits for the Radar lists ---------------- */
 const bucketChip = (r) => el('span', { class: 'chip chip--line', style: `--c:${bcolor(r.bucket)}` }, el('i', { class: 'dot' }), SHORT[r.bucket] || r.bucket);
 const uaChip = (r) => el('span', { class: 'chip ' + ({ eligible: 'chip--ok', eligible_with_partner: 'chip--warn', invitation_only: 'chip--bad' }[r.ua_eligibility] || 'chip--line') }, D.UA[r.ua_eligibility] || 'Unknown');
-const fitEl = (r, lg) => el('span', { class: 'fit num' + (lg ? ' fit--lg' : ''), style: `--v:${r.fit_score ?? 0}`, role: 'img', 'aria-label': `Fit score ${r.fit_score ?? 'unknown'} out of 100` }, el('span', { text: r.fit_score ?? '-' }));
+const rubricLabel = (k) => S.feed?.rubric?.dims?.find((d) => d.key === k)?.label || k;
+const dimsOf = (r) => (r.fit_breakdown?.dims || []).map((x) => ({ ...x, label: rubricLabel(x.key) }));
+function fitCell(r, w = 112) {
+  const dims = dimsOf(r), sc = r.fit_score;
+  const body = [el('span', { class: 'score' }, sc ?? '\u2013', el('small', { text: dims.length ? r._tier?.label || '' : 'Not itemized yet' })), svgEl(fitBar(dims, { w, h: 6, total: sc }))];
+  if (!dims.length) return el('div', { class: 'fitcell fitcell--empty' }, ...body);
+  const wrap = el('div', { class: 'fitcell', onclick: (e) => e.stopPropagation() });
+  const btn = el('button', { class: 'fitbtn', type: 'button', 'aria-haspopup': 'dialog', 'aria-expanded': 'false', 'aria-label': `Fit ${sc}${r._tier ? ', ' + r._tier.label : ''}. Show the six parts of the score.` }, ...body);
+  wrap.append(btn); fitPop(wrap, btn, r); return wrap;
+}
+/* one shared popover at a time: hover or focus previews it, a click or tap pins it */
+let openPop = null;
+const HOVER = matchMedia('(hover: hover)').matches;
+function closePop(restore) { if (!openPop) return; const { pop, btn, st } = openPop; pop.hidden = true; st.pinned = false; btn.setAttribute('aria-expanded', 'false'); openPop = null; if (restore) btn.focus(); }
+function fitPop(wrap, btn, r) {
+  let pop, timer; const st = { pinned: false };
+  const build = () => {
+    const ex = D.explainFit(r, S.feed.rubric), dims = ex ? ex.dims : dimsOf(r).map((d) => ({ ...d, levelLabel: d.level }));
+    pop = el('div', { class: 'fitpop', role: 'dialog', 'aria-label': `Fit score for ${r.name}`, hidden: true },
+      el('div', { class: 'fp-h' }, el('b', { class: 'big num', text: r.fit_score }), el('span', { text: r._tier ? `${r._tier.label} fit` : 'Fit' }), el('small', { text: 'out of 100' })),
+      el('ul', { class: 'fp-list' }, dims.map((d) => el('li', {}, el('span', { class: 'fp-k', text: d.label }), el('span', { class: 'fp-lv', text: d.levelLabel || '' }), el('span', { class: 'fp-pt num' }, el('b', { text: d.points }), ` / ${d.max}`)))),
+      el('button', { class: 'btn btn--sm', type: 'button', onclick: () => { closePop(); openDrawer(r.id, false, 'fit'); } }, 'See the evidence'));
+    pop.addEventListener('click', (e) => e.stopPropagation()); wrap.append(pop);
+  };
+  const place = () => {
+    const a = btn.getBoundingClientRect(); pop.style.left = '0px'; pop.style.top = '0px';
+    const w = pop.offsetWidth, h = pop.offsetHeight; let y = a.bottom + 6; if (y + h > innerHeight - 8 && a.top - h - 6 > 8) y = a.top - h - 6;
+    pop.style.left = Math.min(Math.max(8, a.left), Math.max(8, innerWidth - w - 8)) + 'px'; pop.style.top = y + 'px';
+  };
+  const show = () => { if (openPop && openPop.pop !== pop) closePop(); if (!pop) build(); pop.hidden = false; btn.setAttribute('aria-expanded', 'true'); openPop = { pop, btn, st, place }; place(); };
+  btn.addEventListener('click', (e) => { e.stopPropagation(); if (openPop?.pop === pop && st.pinned) closePop(); else { show(); st.pinned = true; } });
+  btn.addEventListener('focus', show);
+  if (HOVER) {
+    wrap.addEventListener('mouseenter', () => { clearTimeout(timer); timer = setTimeout(show, 120); });
+    wrap.addEventListener('mouseleave', () => { clearTimeout(timer); timer = setTimeout(() => { if (!st.pinned) closePop(); }, 160); });
+  }
+  wrap.addEventListener('focusout', (e) => { if (!wrap.contains(e.relatedTarget)) closePop(); });
+}
+document.addEventListener('pointerdown', (e) => { if (openPop && !openPop.pop.parentNode.contains(e.target)) closePop(); });
+addEventListener('scroll', () => openPop?.place(), { passive: true });
 const reason = (r) => r._state === 'expired' ? 'Closed: disqualified' : r._state === 'too_soon' ? `Under ${S.feed.min_days ?? 14} days: disqualified` : null;
+const callsChip = (r) => { const n = D.collectionOf(r).open_calls; return n > 0 && el('span', { class: 'chip chip--ok', title: 'Open calls the crawler found for this funder', text: `${n} open ${n === 1 ? 'call' : 'calls'}` }); };
 function deadlineEl(r) {
   if (r.deadline) {
     const soon = r._state === 'ok' && r._days < 30;
-    return el('div', { class: 'dlcell num' + (soon ? ' soon' : '') }, D.fmtDate(r.deadline), el('small', { text: D.countdown(r._days) }));
+    return el('div', { class: 'dlcell num' + (soon ? ' soon' : '') }, D.fmtDate(r.deadline), el('small', { text: D.countdown(r._days) }), callsChip(r));
   }
-  return el('div', { class: 'dlcell' }, { rolling: 'Rolling', invite: 'Invitation only', unknown: 'No date yet' }[r._state], el('small', { text: D.CYCLES[r.cycle] || '' }));
+  return el('div', { class: 'dlcell' }, { rolling: 'Rolling', invite: 'Invitation only', unknown: 'No date yet' }[r._state], el('small', { text: D.CYCLES[r.cycle] || '' }), callsChip(r));
 }
 const amountEl = (r) => el('div', { class: 'amt' }, r.award_max_usd != null ? D.money(r.award_max_usd) : 'Unverified', el('small', { text: r.award_max_usd != null ? D.amountRange(r) : 'Amount not published' }));
 const badges = (r, tbl) => [r._new && S.kpi && S.kpi.newWeek < S.kpi.total && el('span', { class: 'chip chip--new', text: 'New' }), !!since && r._changedAt > since && el('span', { class: 'chip chip--warn', text: 'Changed' }),
@@ -206,40 +267,130 @@ const badges = (r, tbl) => [r._new && S.kpi && S.kpi.newWeek < S.kpi.total && el
   r._manual && el('span', { class: 'chip chip--line', title: 'This page cannot be checked automatically; verify it by hand.', text: 'Check by hand' })];
 function teamEl(r) {
   const t = r.team;
-  if (!unlocked()) return el('span', { class: 'state-ro' }, el('span', { class: 'chip ' + (t.state === 'applying' ? 'chip--ok' : t.state === 'submitted' ? 'chip--ok' : 'chip--line'), text: stateLabel[t.state] || t.state }), t.owner && el('span', { class: 'sub', text: t.owner }));
-  const sel = el('select', { class: 'state-sel', 'aria-label': `Status for ${r.name}`, onclick: (e) => e.stopPropagation() }, D.STATES.map((s) => el('option', { value: s, selected: s === t.state, text: stateLabel[s] })));
+  if (!unlocked()) return el('span', { class: 'state-ro' }, el('span', { class: 'chip ' + (['applying', 'submitted', 'awarded'].includes(t.state) ? 'chip--ok' : 'chip--line'), text: STATE_LABEL[t.state] || t.state }), t.owner && el('span', { class: 'sub', text: t.owner }));
+  const sel = el('select', { class: 'state-sel', 'aria-label': `Status for ${r.name}`, onclick: (e) => e.stopPropagation() }, D.STATES.map((s) => el('option', { value: s, selected: s === t.state, text: STATE_LABEL[s] })));
   const ok = el('span', { class: 'saved', text: 'Saved' });
-  sel.addEventListener('change', () => setTeam(r, { state: sel.value }, () => flash(ok)));
+  sel.addEventListener('change', () => saveTeam(r.id, { state: sel.value }).then((done) => done && flash(ok)));
   return el('span', { onclick: (e) => e.stopPropagation() }, sel, ok, t.owner && el('div', { class: 'sub', text: t.owner }),
-    t.state !== 'applying' && t.state !== 'submitted' && el('button', { class: 'btn btn--sm', type: 'button', onclick: () => applyingNow(r, ok) }, "I'm applying"));
+    t.state !== 'applying' && t.state !== 'submitted' && t.state !== 'awarded' && el('button', { class: 'btn btn--sm', type: 'button', onclick: () => applyingNow(r, ok) }, "I'm applying"));
 }
 function applyingNow(r, ok) {
   const patch = { state: 'applying' }; if (S.me) patch.owner = S.me;
-  setTeam(r, patch, () => ok && flash(ok));
+  saveTeam(r.id, patch).then((done) => done && ok && flash(ok));
 }
+
+/* ---------------- navigation and lazy view modules ---------------- */
+const HEAD = {
+  radar: ['Which funder next?', () => el('span', {}, 'Every source here passed the same published checks. ', el('button', { class: 'linkbtn', type: 'button', onclick: () => go('method') }, 'See how a funder is scored'), '.')],
+  board: ['Where each bid stands', () => 'Every qualified funder by team status. Unlock editing to move one along.'],
+  insights: ['How the radar is doing', () => 'Deadlines, funder mix and the team pipeline across the vetted list.'],
+  method: ['How a funder is scored', () => 'Each part of the fit score follows the rule for its level. These tables come straight from the database, so they always match how funders are scored.'],
+};
+const top = () => (isRadar() ? 'radar' : S.view);
+function chrome() {
+  const t = top(), [title, lede] = HEAD[t];
+  $('#pgTitle').textContent = title; $('#pgLede').replaceChildren(lede());
+  $('#ruleWrap').hidden = t !== 'radar'; $('#radar').hidden = t !== 'radar'; $('#viewroot').hidden = t === 'radar';
+  $$('[data-nav]').forEach((b) => { if (b.dataset.nav === t) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  document.title = `${title.replace(/\?$/, '')} | Funding radar | SALSAV`;
+}
+function go(v) {
+  if (v === 'radar') v = S.radarView; else if (v === 'pipeline') v = 'board';
+  if (!RADAR.includes(v) && !MODS.includes(v)) return;
+  const was = top(); S.view = v; if (RADAR.includes(v)) S.radarView = v;
+  if (S.feed) render(); else { chrome(); }
+  if (top() !== was) scrollTo(0, 0);
+}
+const mods = {};
+const loadCss = (href) => new Promise((res) => { const l = el('link', { rel: 'stylesheet', href, onload: res, onerror: res }); document.head.append(l); setTimeout(res, 3000); });
+const load = (name) => (mods[name] ||= Promise.all([import(`./dash/${name}.js`), loadCss(`dash/${name}.css`)]).then(([m]) => m).catch((e) => { delete mods[name]; throw e; }));
+let viewTok = 0, afterView = null; // afterView: one-shot callback run once the next module view has rendered
+async function renderModule() {
+  const name = S.view, tok = ++viewTok, root = $('#viewroot');
+  if (root.dataset.v !== name) root.replaceChildren(el('div', { class: 'skel t' }), el('div', { class: 'skel c' }));
+  try {
+    const m = await load(name); if (tok !== viewTok) return;
+    await m.render(root, app); root.dataset.v = name; const f = afterView; afterView = null; f?.();
+  } catch (e) {
+    if (tok !== viewTok) return; delete mods[name]; delete root.dataset.v;
+    root.replaceChildren(el('div', { class: 'state' }, el('h2', { text: 'This view could not load' }), el('p', { text: `${e.message || 'Something went wrong'}. The Radar still works. Check your connection and try again.` }),
+      el('div', { class: 'row', style: 'justify-content:center' }, el('button', { class: 'btn btn--primary', type: 'button', onclick: renderModule }, 'Try again'), el('button', { class: 'btn', type: 'button', onclick: () => go('radar') }, 'Back to Radar'))));
+  }
+}
+async function openDrawer(id, keep, section) {
+  const r = S.rows.find((x) => x.id === id); if (!r) return;
+  S.sel = id; markSel();
+  const d = $('#drawer');
+  try { (await load('drawer')).renderDrawer(d, r, app); } catch (e) { return toast('Could not open details: ' + (e.message || 'module failed to load'), 'bad'); }
+  if (!d.open) d.showModal(); if (!keep) $('.dhead button', d)?.focus();
+  if (section) d.querySelector('#' + section)?.scrollIntoView({ block: 'start' }); // section = id of a drawer section, e.g. 'fit'
+}
+function setFilters(patch) { S.F = { ...S.F, ...patch }; render(); }
+function toast(msg, kind) { const bad = kind === true || kind === 'bad' || kind === 'error'; const t = el('div', { class: 'toast' + (bad ? ' bad' : '') }, el('span', { text: msg })); $('#toasts').append(t); setTimeout(() => t.remove(), bad ? 6000 : 3000); }
+const app = { S, D, el, ico, link, num, rubric: () => S.feed?.rubric || null, openDrawer, setFilters, go, unlocked, requireUnlock, saveTeam, toast };
 
 /* ---------------- render pipeline ---------------- */
 function compute() {
   const F = S.F;
   S.list = D.sortRows(D.applyFilters(S.rows, F, ctx()), S.sort);
-  const scoped = S.scope === 'filtered' ? S.list : S.rows;
-  S.base = scoped.filter((r) => !r._skip || true);
+  S.base = S.scope === 'filtered' ? S.list : S.rows;
   S.dqN = D.applyFilters(S.rows, { ...F, dq: true }, ctx()).filter((r) => r._dq).length;
   S.skipN = D.applyFilters(S.rows, { ...F, skip: true }, ctx()).filter((r) => r._skip && !r._dq).length;
 }
-function render() { compute(); renderKpis(); renderBuckets(); renderCharts(); renderMeta(); renderList(); syncUI(); writeHash(); }
-
+function render() {
+  compute(); chrome(); if (isRadar()) viewTok++; // a module render still in flight must not paint over Radar
+  if (isRadar()) { renderKpis(); renderPicks(); renderLanes(); renderBuckets(); renderHorizon(); renderMeta(); renderList(); } else renderModule();
+  syncUI(); writeHash();
+}
+/* trend from the daily snapshots; only worth drawing with two or more points */
+const series = (fn) => { const v = (S.feed?.metrics || []).map((x) => fn(x.m || {})).filter(Number.isFinite); return v.length > 1 ? v : null; };
+const sumBy = (o, f) => Object.values(o || {}).reduce((s, x) => s + (Number(f(x)) || 0), 0);
 function renderKpis() {
-  const k = D.kpis(S.base, ctx());
-  const tile = (n, l, sub, hot) => el('div', { class: 'kpi' + (hot ? ' hot' : '') }, el('div', { class: 'n', text: n }), el('div', { class: 'l', text: l }), sub && el('small', { text: sub }));
-  $('#kpis').replaceChildren(
-    tile(num(k.total), 'Qualified funders', S.scope === 'filtered' ? 'matching your filters' : 'in the vetted list'),
-    tile(num(k.open), 'Open now'),
-    tile(num(k.closing30), 'Closing in under 30 days', null, k.closing30 > 0),
-    tile(D.money(k.addressable), 'Addressable, largest awards', k.unverified ? `+${k.unverified} unverified` : 'all amounts known'),
-    tile(num(k.newWeek), 'New this week'),
-    tile(k.sinceVisit == null ? 'First visit' : num(k.sinceVisit), 'Updated since your last visit', k.sinceVisit == null ? 'Changes show from next time' : null));
+  const k = D.kpis(S.base, ctx()), p = k.pipeline, F = S.F, q = S.base.filter((r) => !r._dq && !r._skip);
+  const near = q.filter((r) => r._state === 'ok' && r._days < 30).sort((a, b) => a._days - b._days)[0];
+  const quoted = q.filter((r) => r._evid && r._evid.n >= 3).length;
+  const T = [
+    { l: 'Apply now', n: num(k.applyNow), sub: k.applyNow ? `${D.money(k.applyNowUsd)} in published awards` : 'No open call with time to write', on: F.lane === 'apply_now', patch: { lane: 'apply_now' }, clear: { lane: '' }, sp: series((m) => m.by_lane?.apply_now) },
+    { l: 'Closing in 30 days', n: num(k.closing30), sub: near ? `${near.name}, ${D.countdown(near._days)}` : 'Nothing urgent', hot: k.closing30 > 0, on: F.window === '30', patch: { window: '30' }, clear: { window: '' } },
+    { l: 'Prime and strong fit', n: num(k.primeStrong), sub: k.avgFit != null ? `Average fit ${k.avgFit}` : 'No scores yet', on: F.tier.length === 2 && F.tier.includes('prime') && F.tier.includes('strong'), patch: { tier: ['prime', 'strong'] }, clear: { tier: [] }, sp: series((m) => (m.by_tier?.prime ?? NaN) + (m.by_tier?.strong ?? NaN)) },
+    { l: 'In play', n: D.money(p.usd), sub: p.n ? `${p.n} ${p.n === 1 ? 'funder' : 'funders'}, ${p.byState.applying.n} applying` : 'Nobody is writing yet', act: () => go('board'), sp: series((m) => (m.pipeline ? sumBy(m.pipeline, (x) => x.usd) : NaN)) },
+    { l: 'New this week', n: num(k.newWeek), sub: k.sinceVisit == null ? 'Changes show from your next visit' : `${num(k.sinceVisit)} changed since your last visit`, on: since ? F.changed : S.sort === 'changed',
+      act: () => { if (since) setFilters({ changed: !F.changed }); else { S.sort = 'changed'; render(); } } },
+    { l: 'Collected automatically', n: `${k.collect.auto} of ${k.collect.total}`, sub: `${k.collect.openCalls} open ${k.collect.openCalls === 1 ? 'call' : 'calls'} found${k.collect.attention ? `, ${k.collect.attention} ${k.collect.attention === 1 ? 'needs' : 'need'} attention` : ''}`,
+      act: () => { afterView = () => $('#m-collection')?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); go('method'); },
+      sp: series((m) => (m.collection?.listed ? m.collection.auto / m.collection.listed * 100 : NaN)) },
+    { l: 'Evidence-backed', n: k.evidencePct + '%', sub: `${quoted} of ${k.total} have 3 or more of 4 key facts quoted`, on: F.evid, patch: { evid: true }, clear: { evid: false }, sp: series((m) => (m.vetted ? (m.quality?.evidence3 ?? NaN) / m.vetted * 100 : NaN)) },
+  ];
+  $('#kpis').replaceChildren(...T.map((t) => el('button', { class: 'kpi' + (t.hot ? ' hot' : ''), type: 'button', 'aria-pressed': t.on === undefined ? null : String(!!t.on), onclick: t.act || (() => setFilters(t.on ? t.clear : t.patch)) },
+    el('span', { class: 'l', text: t.l }), el('span', { class: 'n num', text: t.n }), el('small', { text: t.sub }),
+    el('span', { class: 'sp' }, t.sp && S.scope === 'all' && svgEl(spark(t.sp, { w: 120, h: 28, label: `${t.l}, last ${t.sp.length} days` }))))));
   S.kpi = k;
+}
+function renderHorizon() {
+  const box = $('#horizon'), md = S.feed.min_days ?? 14;
+  box.hidden = false; $('#hzNote').textContent = `Shaded band: closes before the ${md}-day cutoff, too soon to prepare. Select a dot for details.`;
+  $('#hzBody').replaceChildren(horizon(S.list, { w: Math.max(280, Math.floor($('#hzBody').clientWidth || box.clientWidth || 600)), now: S.now, minDays: md, onOpen: openDrawer }));
+}
+function renderPicks() {
+  const host = $('#picks'), picks = S.feed ? D.recommend(S.rows, S.now, 5) : [];
+  host.hidden = false; host.removeAttribute('aria-busy');
+  const head = el('div', { class: 'phead' }, el('h2', { text: 'Next best moves' }), el('button', { class: 'linkbtn', type: 'button', onclick: () => go('method') }, 'How this is ranked'));
+  if (!picks.length) return host.replaceChildren(head, el('p', { class: 'pempty', text: 'Nothing to suggest right now. Open or recurring funders that nobody owns yet will show up here.' }));
+  host.replaceChildren(head, el('ol', { class: 'plist' }, picks.map((p, i) => { const r = p.row;
+    return el('li', {}, el('button', { class: 'pick', type: 'button', onclick: () => openDrawer(r.id) },
+      el('span', { class: 'pn' }, el('i', { class: 'num', text: i + 1 }), el('b', { text: r.name })),
+      el('span', { class: 'pf' }, el('span', { class: 'big num', text: r.fit_score ?? '\u2013' }), el('small', { text: r.fit_breakdown ? r._tier?.label || '' : 'Not itemized yet' })),
+      el('span', { class: 'pb' }, svgEl(fitBar(dimsOf(r), { w: 200, h: 6, total: r.fit_score }))),
+      el('ul', { class: 'why' }, p.reasons.filter((x) => !/^Fit \d/.test(x)).slice(0, 3).map((x) => el('li', { text: x }))))); })));
+}
+function renderLanes() {
+  const k = S.kpi, on = S.F.lane, note = $('#laneNote'), md = S.feed.min_days ?? 14;
+  const NOTE = { '': 'Every qualified funder in view, whatever its lane.', apply_now: `A dated call with ${md} or more days left, so there is time to write.`, rolling: 'No fixed deadline: apply any time.',
+    prepare: 'Recurs every year and is not open yet. Start the proposal early.', cultivate: 'By invitation only. Build the relationship first.', watch: 'Nothing open and no known cycle. Check back for news.' };
+  const b = (key, label, n) => el('button', { type: 'button', 'aria-pressed': on === key, 'aria-describedby': 'laneNote', onclick: () => setFilters({ lane: on === key ? '' : key }),
+    onmouseenter: () => { note.textContent = NOTE[key]; }, onfocus: () => { note.textContent = NOTE[key]; }, onmouseleave: () => { note.textContent = NOTE[on]; }, onblur: () => { note.textContent = NOTE[on]; } }, label, el('b', { class: 'num', text: n }));
+  $('#lanes').replaceChildren(b('', 'All', k.total), ...Object.entries(D.LANES).map(([key, label]) => b(key, label, k.byLane[key] || 0)));
+  $('#lanes').firstChild.setAttribute('aria-pressed', !on); note.textContent = NOTE[on] ?? '';
 }
 function renderBuckets() {
   const k = S.kpi || D.kpis(S.base, ctx());
@@ -261,9 +412,9 @@ function setRefreshed() {
   if (r) p.setAttribute('aria-label', p.lastChild.textContent + '. ' + p.title);
 }
 
-/* ---------------- list views ---------------- */
+/* ---------------- Radar list views ---------------- */
 function renderList() {
-  const host = $('#list'); host.setAttribute('aria-labelledby', 'tab-' + S.view);
+  closePop(); const host = $('#list'); host.setAttribute('aria-labelledby', 'tab-' + S.view);
   if (!S.rows.length) return host.replaceChildren(emptyFeed());
   if (!S.list.length) return host.replaceChildren(el('div', { class: 'state' }, el('h2', { text: 'No funders match these filters' }), el('p', { text: S.dqN ? `${S.dqN} more are hidden as disqualified (under 14 days or closed).` : 'Loosen a filter or reset to see the full vetted list.' }), el('button', { class: 'btn btn--primary', onclick: resetFilters }, 'Reset filters')));
   host.replaceChildren(S.view === 'cards' ? cardsView() : S.view === 'timeline' ? timelineView() : tableView());
@@ -283,10 +434,10 @@ function tableView() {
     const open = S.open.has(r.id);
     body.append(el('tr', { class: 'r' + (r._dq ? ' row-dq' : ''), 'data-id': r.id, onclick: () => openDrawer(r.id) },
       el('td', { class: 'c-tw' }, el('button', { class: 'twist', type: 'button', 'aria-expanded': open, 'aria-label': `Quick look at ${r.name}`, onclick: (e) => { e.stopPropagation(); open ? S.open.delete(r.id) : S.open.add(r.id); renderList(); } }, ico('chev'))),
-      el('td', { class: 'c-name' }, el('div', { class: 'nm' }, el('button', { class: 'rl', type: 'button', style: 'all:unset;cursor:pointer;font-weight:650;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden', onclick: (e) => { e.stopPropagation(); openDrawer(r.id); } }, r.name), r.program && el('small', { text: r.program }),
-        el('div', { class: 'row', style: 'display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.25rem' }, badges(r, true)))),
-      el('td', { class: 'c-bucket' }, bucketChip(r)), el('td', { class: 'c-dl' }, deadlineEl(r)), el('td', { class: 'c-amt' }, amountEl(r)), el('td', { class: 'c-ua' }, uaChip(r)),
-      el('td', { class: 'c-fit' }, fitEl(r)), el('td', { class: 'c-team' }, teamEl(r)),
+      el('td', { class: 'c-name' }, el('div', { class: 'nm' }, el('button', { class: 'rl', type: 'button', onclick: (e) => { e.stopPropagation(); openDrawer(r.id); } }, r.name), r.program && el('small', { text: r.program }),
+        el('div', { class: 'chiprow' }, badges(r, true)))),
+      el('td', { class: 'c-bucket' }, bucketChip(r), el('span', { class: 'lane lane--' + r._lane, text: D.LANES[r._lane] })), el('td', { class: 'c-dl' }, deadlineEl(r)), el('td', { class: 'c-amt' }, amountEl(r)), el('td', { class: 'c-ua' }, uaChip(r)),
+      el('td', { class: 'c-fit' }, fitCell(r)), el('td', { class: 'c-team' }, teamEl(r)),
       el('td', { class: 'c-chg sub', 'data-l': 'Updated' }, r._changedAt ? D.relTime(new Date(r._changedAt).toISOString(), S.now) : '')));
     if (open) body.append(el('tr', { class: 'x' }, el('td', { colspan: 9 }, quick(r))));
   }
@@ -294,17 +445,23 @@ function tableView() {
 }
 function cardsView() {
   return el('div', { class: 'cards' }, S.list.map((r) => el('article', { class: 'card' + (r._dq ? ' row-dq' : ''), 'data-id': r.id, onclick: () => openDrawer(r.id) },
-    el('div', { class: 'top' }, el('div', { class: 'nm' }, el('b', { text: r.name }), r.program && el('small', { text: r.program })), fitEl(r)),
-    el('div', { class: 'row' }, bucketChip(r), uaChip(r), badges(r)),
+    el('div', { class: 'top' }, el('div', { class: 'nm' }, el('b', { text: r.name }), r.program && el('small', { text: r.program })), fitCell(r, 96)),
+    el('div', { class: 'row' }, bucketChip(r), uaChip(r), el('span', { class: 'chip chip--line', text: D.LANES[r._lane] }), badges(r)),
     el('div', { class: 'foot' }, deadlineEl(r), amountEl(r)), el('div', { onclick: (e) => e.stopPropagation() }, teamEl(r)))));
+}
+function reqList(r) {
+  const q = r.requirements || {}, kv = [];
+  const add = (k, v) => v && kv.push(el('li', {}, el('b', { text: k + ': ' }), v === true ? 'Required' : String(v)));
+  add('Letter of intent', q.loi); add('Cost-share', q.cost_share); add('Indirect cap', q.indirect_cap); add('Page limit', q.page_limit);
+  return kv.length ? el('ul', { style: 'margin:0;padding-left:1.1rem' }, kv) : el('p', { class: 'sub', text: 'No requirements listed yet.' });
 }
 function quick(r) {
   return el('div', { style: 'display:grid;gap:.7rem' },
     r.fit_reasons?.length && el('ul', { style: 'margin:0;padding-left:1.1rem' }, r.fit_reasons.map((x) => el('li', { text: x }))),
-    reqBlock(r), el('div', { class: 'row', style: 'display:flex;gap:.4rem;flex-wrap:wrap' }, link(r.url, 'Call page'), link(r.apply_url, 'Apply'), el('button', { class: 'btn btn--sm', type: 'button', onclick: () => openDrawer(r.id) }, 'Full details')));
+    reqList(r), el('div', { class: 'row' }, link(r.url, 'Call page'), link(r.apply_url, 'Apply'), el('button', { class: 'btn btn--sm', type: 'button', onclick: () => openDrawer(r.id) }, 'Full details')));
 }
 
-/* ---------------- swarm layout for dots ---------------- */
+/* ---------------- timeline view ---------------- */
 function swarm(items, xOf, step) {
   const cols = new Map();
   return [...items].sort((a, b) => xOf(a) - xOf(b)).map((r) => { const c = Math.round(xOf(r) / step), n = cols.get(c) || 0; cols.set(c, n + 1); return { r, x: c * step, n }; });
@@ -314,7 +471,7 @@ const sv = (t, a = {}, ...k) => { const e = document.createElementNS(NS, t); for
 const tipEl = $('#tip');
 function tipOn(e, text) { tipEl.textContent = text; tipEl.hidden = false; tipEl.style.left = Math.min(innerWidth - 290, e.clientX + 12) + 'px'; tipEl.style.top = e.clientY + 14 + 'px'; }
 const tipOff = () => { tipEl.hidden = true; };
-const dotTip = (r) => `${r.name}\n${r.deadline ? D.fmtDate(r.deadline) + ' · ' + D.countdown(r._days) : 'No fixed date'}${r.award_max_usd != null ? ' · ' + D.money(r.award_max_usd) : ''}`;
+const dotTip = (r) => `${r.name}\n${r.deadline ? D.fmtDate(r.deadline) + ' · ' + D.countdown(r._days) : 'No fixed date'}${r.award_max_usd != null ? ' · ' + D.money(r.award_max_usd) : ''}${r.fit_score != null ? ' · Fit ' + r.fit_score : ''}`;
 function dot(p, y, R) {
   const r = p.r, c = sv('circle', { cx: p.x, cy: y, r: R, fill: r._dq ? 'var(--surface)' : bcolor(r.bucket), stroke: bcolor(r.bucket), 'stroke-width': r._dq ? 1.6 : 0.8, 'data-id': r.id });
   c.style.cursor = 'pointer'; c.style.stroke = r._dq ? bcolor(r.bucket) : 'var(--surface)';
@@ -322,50 +479,9 @@ function dot(p, y, R) {
   return c;
 }
 const monthStarts = (d0, d1) => { const out = [], t0 = D.dayNum(D.todayISO(S.now)); const d = new Date(t0 * 864e5); let y = d.getUTCFullYear(), m = d.getUTCMonth(); for (let i = 0; i < 14; i++, m++) { const n = Date.UTC(y, m, 1) / 864e5 - t0; if (n >= d0 && n <= d1) out.push([n, new Date(Date.UTC(y, m, 1))]); } return out; };
-const mlabel = (dt, W) => dt.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short' }) + (dt.getUTCMonth() === 0 ? ` '${String(dt.getUTCFullYear()).slice(2)}` : '');
-
-function renderCharts() {
-  const base = S.base.filter((r) => !r._skip || r === null);
-  horizon(base); const k = Object.keys(D.BUCKETS);
-  const cnt = (f) => base.filter((r) => !r._dq && f(r)).length;
-  hbars($('#chMix'), k.map((b) => ({ k: b, label: SHORT[b], n: cnt((r) => r.bucket === b), color: bcolor(b) })), 'bucket');
-  hbars($('#chBand'), D.BANDS.map(([b, l]) => ({ k: b, label: l, n: cnt((r) => r._band === b), color: 'var(--primary)' })), 'band');
-  const pipe = base.filter((r) => !r._dq);
-  hbars($('#chPipe'), D.STATES.map((s) => ({ k: s, label: stateLabel[s], n: pipe.filter((r) => r.team.state === s).length, color: s === 'skip' ? 'var(--muted)' : 'var(--primary)', dashed: s === 'skip' })), 'team', true);
-}
-function hbars(host, items, group, funnel) {
-  const W = Math.max(240, host.clientWidth || 300), LW = Math.min(138, W * .46), RH = 30, max = Math.max(1, ...items.map((i) => i.n));
-  const svg = sv('svg', { viewBox: `0 0 ${W} ${items.length * RH}`, role: 'group', 'aria-label': host.previousElementSibling?.firstChild?.textContent || group });
-  const act = S.F[group] || [];
-  items.forEach((it, i) => {
-    const y = i * RH, w = Math.max(it.n ? 3 : 0, (it.n / max) * (W - LW - 34)), on = act.includes(it.k);
-    const g = sv('g', { 'data-k': it.k, tabindex: 0, role: 'button', 'aria-pressed': on, 'aria-label': `${it.label}: ${it.n}. Click to filter.`, class: act.length && !on ? 'dim' : '' },
-      sv('rect', { x: 0, y, width: W, height: RH, fill: 'transparent' }), sv('text', { x: 0, y: y + 19, class: 'lab' }, it.label),
-      sv('rect', { x: LW, y: y + 6, width: w, height: RH - 12, rx: 4, fill: it.dashed ? 'none' : it.color, stroke: it.color, 'stroke-width': it.dashed ? 1.5 : 0, 'stroke-dasharray': it.dashed ? '4 3' : null }),
-      sv('text', { x: LW + w + 6, y: y + 19, class: 'lab', 'font-weight': 650 }, String(it.n)));
-    g.addEventListener('click', () => toggle(group, it.k));
-    g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(group, it.k); } });
-    svg.append(g);
-  });
-  host.replaceChildren(svg);
-}
-function horizon(base) {
-  const host = $('#chHorizon'), W = Math.max(300, host.clientWidth || 900), P = 12, d0 = -21, d1 = 365, md = S.feed?.min_days ?? 14;
-  const xs = (d) => P + ((d - d0) / (d1 - d0)) * (W - 2 * P);
-  const items = base.filter((r) => r._days != null && r._days >= d0 && r._days <= d1), out = base.filter((r) => r._days != null && r._days > d1).length;
-  const pts = swarm(items, (r) => xs(r._days), 11), mx = Math.max(2, ...pts.map((p) => p.n + 1)), H = 44 + mx * 11 + 26, ay = H - 26;
-  $('#hzNote').textContent = `${items.length} dated${out ? `, ${out} beyond 12 months` : ''}; hollow = disqualified`;
-  const svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Deadlines over the next 12 months, ${items.length} funders. The table below lists the same funders.` });
-  svg.append(sv('rect', { class: 'band-cut', x: xs(0), y: 14, width: xs(md) - xs(0), height: ay - 14 }), sv('line', { class: 'axis', x1: P, x2: W - P, y1: ay, y2: ay }));
-  const step = W < 600 ? 3 : 1; monthStarts(d0, d1).forEach(([d, dt], i) => { svg.append(sv('line', { class: 'axis', x1: xs(d), x2: xs(d), y1: ay, y2: ay + 5 }), i % step === 0 ? sv('text', { x: xs(d) + 2, y: ay + 18 }, mlabel(dt)) : null); });
-  svg.append(sv('line', { class: 'today-line', x1: xs(0), x2: xs(0), y1: 14, y2: ay }), sv('text', { x: xs(0) - 4, y: 10, 'text-anchor': 'end', class: 'lab' }, 'Today'), sv('text', { x: xs(0) + 4, y: 10 }, `${md}-day cutoff`));
-  for (const p of pts) svg.append(dot(p, ay - 8 - p.n * 11, 4.6));
-  host.replaceChildren(svg);
-}
-
-/* ---------------- timeline view ---------------- */
+const mlabel = (dt) => dt.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short' }) + (dt.getUTCMonth() === 0 ? ` '${String(dt.getUTCFullYear()).slice(2)}` : '');
 function timelineView() {
-  const W = Math.max(320, ($('#list').clientWidth || 900) - 32), LW = W < 600 ? 84 : 140, PL = LW + 8, d1 = 366;
+  const W = Math.max(320, ($('#list').clientWidth || 900) - 8), LW = W < 600 ? 84 : 140, PL = LW + 8, d1 = 366;
   const t0 = D.dayNum(D.todayISO(S.now)), dm = new Date(t0 * 864e5), d0 = -(dm.getUTCDate() - 1);
   const xs = (d) => PL + ((d - d0) / (d1 - d0)) * (W - PL - 8);
   const dated = S.list.filter((r) => r._days != null && r._days >= d0 && r._days <= d1);
@@ -384,69 +500,16 @@ function timelineView() {
   const ag = el('div', { class: 'agenda' });
   for (const k of [...groups.keys()].sort()) {
     ag.append(el('h3', { text: k === 'zz' ? 'Rolling or no fixed date' : k === '0past' ? 'Past' : new Date(k + '-01T00:00:00Z').toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', year: 'numeric' }) }));
-    for (const r of groups.get(k)) ag.append(el('button', { class: 'it' + (r._dq ? ' row-dq' : ''), type: 'button', 'data-id': r.id, onclick: () => openDrawer(r.id) },
-      el('span', { class: 'num', text: r.deadline ? D.fmtDate(r.deadline).replace(/, \d{4}$/, '') : '-' }), el('span', { class: 'nm' }, el('b', { text: r.name }), el('small', { text: `${D.countdown(r._days) || D.CYCLES[r.cycle] || ''}` })), el('span', { class: 'row' }, bucketChip(r))));
+    for (const r of groups.get(k)) ag.append(el('div', { class: 'it' + (r._dq ? ' row-dq' : ''), 'data-id': r.id },
+      el('button', { class: 'itmain', type: 'button', onclick: () => openDrawer(r.id) }, el('span', { class: 'num', text: r.deadline ? D.fmtDate(r.deadline).replace(/, \d{4}$/, '') : '-' }), el('span', { class: 'nm' }, el('b', { text: r.name }), el('small', { text: `${D.countdown(r._days) || D.CYCLES[r.cycle] || ''}` })), el('span', { class: 'row' }, bucketChip(r))),
+      el('span', { class: 'itfit' }, fitCell(r, 84))));
   }
   return el('div', { class: 'tl' }, svg, ag);
 }
 
-/* ---------------- drawer ---------------- */
-function reqBlock(r) {
-  const q = r.requirements || {}, kv = [];
-  const add = (k, v) => v && kv.push(el('dt', { text: k }), el('dd', { text: v }));
-  add('Letter of intent', q.loi === true ? 'Required' : q.loi); add('Cost-share', q.cost_share === true ? 'Required' : q.cost_share); add('Indirect cap', q.indirect_cap); add('Page limit', q.page_limit);
-  if (q.registrations?.length) kv.push(el('dt', { text: 'Registrations' }), el('dd', {}, el('div', { class: 'row' }, q.registrations.map((x) => el('span', { class: 'chip', text: x })))));
-  add('Notes', q.notes);
-  return el('div', { class: 'sec' }, el('h3', { text: 'What you need to apply' }), kv.length ? el('dl', { class: 'kv' }, kv) : el('p', { class: 'sub', text: 'No requirements listed yet.' }), r.requirements_text && el('p', { class: 'prose', style: 'margin-top:.5rem', text: r.requirements_text }));
-}
-const sec = (title, ...k) => k.flat().some(Boolean) ? el('div', { class: 'sec' }, el('h3', { text: title }), ...k) : null;
-function openDrawer(id, keep) {
-  const r = S.rows.find((x) => x.id === id); if (!r) return;
-  S.sel = id; markSel();
-  const d = $('#drawer'), md = S.feed.min_days ?? 14;
-  const fresh = r._manual || r.fetchability === 'bot_protected' || r.fetchability === 'blocked';
-  const dtype = (t) => ({ pdf: 'PDF', rfp: 'RFP', nofo: 'NOFO' }[String(t).toLowerCase()] || 'Web');
-  d.replaceChildren(
-    el('div', { class: 'dhead' }, fitEl(r, true), el('div', { class: 'grow' }, el('h2', { id: 'dTitle', text: r.name }), r.program && el('p', { class: 'sub', text: r.program }),
-      el('div', { class: 'row', style: 'display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.4rem' }, bucketChip(r), uaChip(r), badges(r))),
-      el('button', { class: 'btn btn--ghost', type: 'button', 'aria-label': 'Close details', onclick: () => d.close() }, ico('x'))),
-    el('div', { class: 'dbody' },
-      r._dq && el('div', { class: 'alert alert--bad', text: r._state === 'expired' ? 'This call has closed, so it is disqualified.' : `Closes in ${r._days} day${r._days === 1 ? '' : 's'}. SALSAV needs at least ${md} days, so this is disqualified.` }),
-      sec('Deadline', el('dl', { class: 'kv' }, el('dt', { text: 'Date' }), el('dd', { class: 'num' }, r.deadline ? `${D.fmtDate(r.deadline)} · ${D.countdown(r._days)}` : { rolling: 'No fixed date: apply any time', invite: 'By invitation only', unknown: 'No date published yet' }[r._state]),
-        el('dt', { text: 'Cycle' }), el('dd', { text: D.CYCLES[r.cycle] || r.cycle || '' }), r.deadline_note && el('dt', { text: 'Note' }), r.deadline_note && el('dd', { text: r.deadline_note }))),
-      sec('Money', el('div', { class: 'row' }, el('b', { class: 'num', text: D.amountRange(r) }), el('span', { class: 'chip ' + (r.amount_confidence === 'published' ? 'chip--ok' : 'chip--warn'), text: { published: 'Published', estimated: 'Estimated', unknown: 'Unknown' }[r.amount_confidence] || 'Unknown' }), r._unverified && el('span', { class: 'chip chip--warn', text: 'Amount unverified' })), r.award_note && el('p', { class: 'sub', text: r.award_note })),
-      sec('Can UA apply?', el('div', { class: 'row' }, uaChip(r), (r.partner_needed || []).map((p) => el('span', { class: 'chip chip--warn', text: 'Partner needed: ' + p }))), r.eligibility_note && el('p', { style: 'margin-top:.4rem', text: r.eligibility_note })),
-      reqBlock(r),
-      r.fit_reasons?.length && sec('Why it fits', el('ul', { style: 'margin:0;padding-left:1.1rem' }, r.fit_reasons.map((x) => el('li', { text: x })))),
-      sec('Geography and themes', el('div', { class: 'row' }, (r.geography || []).map((g) => el('span', { class: 'chip chip--line', text: g })), (r.themes || []).map((t) => el('span', { class: 'chip', text: t })))),
-      sec('Notes', r.notes && el('p', { class: 'prose', text: r.notes }), r.vet_note && el('p', { class: 'sub prose', text: 'Vetting: ' + r.vet_note })),
-      el('div', { class: 'sec' }, el('h3', { text: 'Links' }), el('div', { class: 'row' }, link(r.url, 'Call page'), link(r.apply_url, 'Apply page'), link(r.feed_url, 'Feed')),
-        r.doc_links?.length ? el('ul', { class: 'docs', style: 'margin-top:.6rem' }, r.doc_links.filter((x) => D.safeUrl(x.url)).map((x) => el('li', {}, el('a', { href: D.safeUrl(x.url), target: '_blank', rel: 'noopener noreferrer' }, ico('doc'), el('span', { style: 'flex:1;min-width:0;overflow-wrap:anywhere', text: x.label || x.url }), el('span', { class: 'chip chip--line', text: dtype(x.type) }))))) : el('p', { class: 'sub', style: 'margin-top:.4rem', text: 'No documents found yet.' })),
-      r._changes.length ? sec('Recent changes', el('ul', { class: 'ev' }, r._changes.slice(0, 8).map((c) => el('li', {}, el('div', { class: 'sub', text: `${D.relTime(c.at, S.now)} · ${c.kind}` }), el('div', { text: c.summary || 'Page changed' }))))) : null,
-      sec('Freshness', fresh && el('div', { class: 'alert', text: 'This page cannot be checked automatically. Verify the deadline and documents by hand.' }),
-        el('p', { class: 'sub', text: `Checked ${D.relTime(r.last_checked_at, S.now)}${r.consecutive_failures ? ` · ${r.consecutive_failures} failed checks in a row` : ''}${r.confidence ? ` · ${r.confidence} confidence` : ''}` })),
-      teamBlock(r))
-  );
-  if (!d.open) d.showModal(); if (!keep) $('.dhead button', d)?.focus();
-}
-function teamBlock(r) {
-  if (!unlocked()) return el('div', { class: 'team' }, el('b', { text: 'Team status' }), el('div', { class: 'row' }, teamEl(r), r.team.owner && null), el('button', { class: 'btn', type: 'button', onclick: () => openUnlock() }, ico('lock'), 'Unlock editing to change status or add notes'));
-  const ok = el('span', { class: 'saved', text: 'Saved' });
-  const st = el('select', { id: 'tState' }, D.STATES.map((s) => el('option', { value: s, selected: s === r.team.state, text: stateLabel[s] })));
-  const ow = el('input', { id: 'tOwner', type: 'text', maxlength: 80, value: r.team.owner || '', placeholder: 'Who is writing this?' });
-  const nt = el('textarea', { id: 'tNotes', maxlength: 4000, placeholder: 'Contacts, angle, what you learned' }); nt.value = r.team.notes || '';
-  let timer; const saveNotes = () => { clearTimeout(timer); if (nt.value !== (r.team.notes || '')) setTeam(r, { notes: nt.value }, () => flash(ok)); };
-  st.addEventListener('change', () => setTeam(r, { state: st.value }, () => flash(ok)));
-  ow.addEventListener('change', () => setTeam(r, { owner: ow.value.trim() }, () => flash(ok)));
-  nt.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(saveNotes, 900); }); nt.addEventListener('blur', saveNotes);
-  return el('div', { class: 'team' }, el('div', { style: 'display:flex;justify-content:space-between;align-items:center' }, el('b', { text: 'Team status' }), ok),
-    el('label', {}, 'Status', st), el('label', {}, 'Owner', ow), el('label', {}, 'Notes', nt),
-    el('button', { class: 'btn btn--primary', type: 'button', onclick: () => { applyingNow(r, ok); st.value = 'applying'; if (S.me) ow.value = S.me; } }, "I'm applying"));
-}
+/* ---------------- drawer + unlock ---------------- */
 $('#drawer').addEventListener('click', (e) => { if (e.target === e.currentTarget) e.currentTarget.close(); });
-$('#drawer').addEventListener('close', () => { renderList(); });
-
-/* ---------------- unlock ---------------- */
+$('#drawer').addEventListener('close', () => { if (S.feed) { if (isRadar()) renderList(); else renderModule(); } });
 function syncUnlock() {
   const b = $('#unlockBtn'); b.replaceChildren(ico(unlocked() ? 'unlock' : 'lock'), el('span', { class: 'hide-m', text: unlocked() ? 'Editing on' : 'Unlock editing' }));
   b.setAttribute('aria-label', unlocked() ? 'Editing is on. Activate to lock.' : 'Unlock team editing'); b.classList.toggle('btn--primary', unlocked());
@@ -470,18 +533,19 @@ function toggle(k, v) { const a = S.F[k]; S.F[k] = a.includes(v) ? a.filter((x) 
 function resetFilters() { S.F = D.defaultFilters(); $('#q').value = ''; render(); }
 function buildFilterUI() {
   const chips = (g, opts) => $(`[data-g="${g}"]`).replaceChildren(...opts.map(([k, l]) => el('button', { class: 'fchip', type: 'button', 'data-v': k, 'aria-pressed': 'false', onclick: () => toggle(g, k) }, l)));
-  chips('ua', Object.entries(D.UA)); chips('geo', Object.entries(D.GEOS)); chips('band', D.BANDS); chips('partner', ['UA', 'YPV', 'AVS'].map((x) => [x, x])); chips('team', D.STATES.map((s) => [s, stateLabel[s]]));
-  const freq = {}; S.rows.forEach((r) => (r.themes || []).forEach((t) => (freq[t] = (freq[t] || 0) + 1)));
-  chips('themes', Object.entries(freq).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 30).map(([t, n]) => [t, `${t} ${n}`]));
+  chips('ua', Object.entries(D.UA)); chips('geo', Object.entries(D.GEOS)); chips('band', D.BANDS); chips('partner', ['UA', 'YPV', 'AVS'].map((x) => [x, x])); chips('team', D.STATES.map((s) => [s, STATE_LABEL[s]]));
+  chips('tier', (S.feed.rubric?.tiers?.length ? S.feed.rubric.tiers : [{ key: 'prime', label: 'Prime' }, { key: 'strong', label: 'Strong' }, { key: 'possible', label: 'Possible' }, { key: 'long_shot', label: 'Long shot' }]).map((t) => [t.key, t.label]));
+  const freq = {}, vocab = S.feed.vocab?.themes || []; S.rows.forEach((r) => (r.themes || []).forEach((t) => (freq[t] = (freq[t] || 0) + 1)));
+  chips('themes', Object.entries(freq).filter(([t]) => !vocab.length || vocab.includes(t)).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([t, n]) => [t, `${t} ${n}`]));
   $('#fSort').replaceChildren(...Object.entries(D.SORTS).map(([k, l]) => el('option', { value: k, text: l })));
 }
 function syncUI() {
   const F = S.F;
-  $$('.fchip').forEach((b) => b.setAttribute('aria-pressed', F[b.parentElement.dataset.g].includes(b.dataset.v)));
+  $$('.fchip[data-v]').forEach((b) => b.setAttribute('aria-pressed', F[b.parentElement.dataset.g].includes(b.dataset.v))); $('#evidChip').setAttribute('aria-pressed', F.evid);
   $('#q').value !== F.q && ($('#q').value = F.q); $('#fWindow').value = F.window; $('#fFit').value = String(F.fit); $('#fSort').value = S.sort;
   $$('[data-c]').forEach((c) => (c.checked = F[c.dataset.c])); $('#showDq').checked = F.dq; $('#showSkip').checked = F.skip;
   $$('[data-scope]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.scope === S.scope));
-  const n = ['ua', 'geo', 'band', 'partner', 'team', 'themes'].reduce((s, k) => s + F[k].length, 0) + F.loi + F.cost + F.changed;
+  const n = ['ua', 'geo', 'band', 'partner', 'team', 'themes', 'tier'].reduce((s, k) => s + F[k].length, 0) + F.loi + F.cost + F.changed + F.evid + F.calls;
   $('#moreN').hidden = !n; $('#moreN').textContent = n;
 }
 let qt; $('#q').addEventListener('input', (e) => { clearTimeout(qt); qt = setTimeout(() => { S.F.q = e.target.value.trim(); render(); }, 180); });
@@ -492,22 +556,20 @@ $$('[data-c]').forEach((c) => (c.onchange = () => { S.F[c.dataset.c] = c.checked
 $('#showDq').onchange = (e) => { S.F.dq = e.target.checked; render(); };
 $('#showSkip').onchange = (e) => { S.F.skip = e.target.checked; render(); };
 $$('[data-scope]').forEach((b) => (b.onclick = () => { S.scope = b.dataset.scope; render(); }));
-$$('.views button').forEach((b) => (b.onclick = () => setView(b.dataset.view)));
-const setView = (v) => { S.view = v; render(); };
+$$('.views button').forEach((b) => (b.onclick = () => go(b.dataset.view)));
+$$('[data-nav]').forEach((b) => (b.onclick = () => go(b.dataset.nav)));
 $('#resetBtn').onclick = resetFilters;
+$('#evidChip').onclick = () => { S.F.evid = !S.F.evid; render(); };
 $('#moreBtn').onclick = () => { const o = $('#moref').classList.toggle('open'); $('#moreBtn').setAttribute('aria-expanded', o); };
-const setCharts = (open) => { $('#charts').classList.toggle('closed', !open); $('#chartsBtn').setAttribute('aria-expanded', open); $('#chartsBtn').textContent = open ? 'Hide extra charts' : 'Show extra charts'; store.set('charts', open ? '1' : '0'); if (open && S.feed) renderCharts(); };
-$('#chartsBtn').onclick = () => setCharts($('#charts').classList.contains('closed'));
-setCharts(store.get('charts') ? store.get('charts') === '1' : !matchMedia('(max-width: 760px)').matches);
 $('#ruleBtn').onclick = () => { const h = $('#rulePop').hidden; $('#rulePop').hidden = !h; $('#ruleBtn').setAttribute('aria-expanded', h); };
 
 /* presets (saved in this browser; never include the passcode) */
 const userPresets = () => { try { return JSON.parse(store.get('presets') || '{}'); } catch { return {}; } };
 function renderPresets() {
   const list = $('#presetList'), mine = userPresets();
-  const item = (name, p, del) => el('button', { type: 'button', onclick: () => { S.F = { ...D.defaultFilters(), ...p.F || p }; if (p.view) S.view = p.view; if (p.sort) S.sort = p.sort; closePresets(); render(); } }, el('span', { text: name }), del && el('span', { role: 'button', 'aria-label': `Delete ${name}`, onclick: (e) => { e.stopPropagation(); const m = userPresets(); delete m[name]; store.set('presets', JSON.stringify(m)); renderPresets(); } }, ico('x')));
+  const item = (name, p, del) => el('button', { type: 'button', onclick: () => { S.F = { ...D.defaultFilters(), ...p.F || p }; if (p.view && RADAR.includes(p.view)) { S.view = p.view; S.radarView = p.view; } else go('radar'); if (p.sort) S.sort = p.sort; closePresets(); render(); } }, el('span', { text: name }), del && el('span', { role: 'button', 'aria-label': `Delete ${name}`, onclick: (e) => { e.stopPropagation(); const m = userPresets(); delete m[name]; store.set('presets', JSON.stringify(m)); renderPresets(); } }, ico('x')));
   const inp = el('input', { type: 'text', placeholder: 'Name this view', maxlength: 40, 'aria-label': 'Name for saved filters', style: 'width:100%;min-height:36px;border:1px solid var(--line);border-radius:6px;padding:0 .5rem;background:var(--bg)' });
-  const save = () => { const n = inp.value.trim(); if (!n) return; const m = userPresets(); m[n] = { F: S.F, view: S.view, sort: S.sort }; store.set('presets', JSON.stringify(m)); toast(`Saved "${n}"`); renderPresets(); };
+  const save = () => { const n = inp.value.trim(); if (!n) return; const m = userPresets(); m[n] = { F: S.F, view: S.radarView, sort: S.sort }; store.set('presets', JSON.stringify(m)); toast(`Saved "${n}"`); renderPresets(); };
   inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } });
   list.replaceChildren(...Object.entries(D.PRESETS).map(([n, p]) => item(n, p)), Object.keys(mine).length ? el('hr') : null, ...Object.entries(mine).map(([n, p]) => item(n, p, true)), el('hr'), el('div', { style: 'display:flex;gap:.3rem;padding:.2rem' }, inp, el('button', { class: 'btn btn--sm', type: 'button', onclick: save }, 'Save')));
 }
@@ -517,18 +579,19 @@ document.addEventListener('click', (e) => { if (!e.target.closest('.menu')) clos
 
 /* hash <-> state */
 let lastHash = '';
-function writeHash() { const h = D.encodeHash(S.F, S.view, S.sort); if (h !== lastHash) { lastHash = h; try { history.replaceState(null, '', h ? '#' + h : location.pathname + location.search); } catch {} } }
-function applyHash() { const o = D.decodeHash(location.hash); S.F = o.F; S.view = o.view; S.sort = o.sort; lastHash = D.encodeHash(S.F, S.view, S.sort); }
-addEventListener('hashchange', () => { if (location.hash.slice(1) !== lastHash) { applyHash(); render(); } });
+const DEF = D.decodeHash('').sort; // the codec's implicit sort; the page's own default is Recommended
+function hashOf() { const rec = S.sort === 'recommended'; let h = D.encodeHash(S.F, S.view, rec ? DEF : S.sort); if (!rec && S.sort === DEF) h += (h ? '&' : '') + 'sort=' + S.sort; return h; }
+function writeHash() { const h = hashOf(); if (h !== lastHash) { lastHash = h; try { history.replaceState(null, '', h ? '#' + h : location.pathname + location.search); } catch {} } }
+function applyHash() { const o = D.decodeHash(location.hash); S.F = o.F; S.view = o.view; if (RADAR.includes(o.view)) S.radarView = o.view; S.sort = o.sort === DEF && !/(^|[#&])sort=/.test(location.hash) ? 'recommended' : o.sort; lastHash = hashOf(); }
+addEventListener('hashchange', () => { if (S.feed && location.hash.slice(1) !== lastHash) { applyHash(); render(); } });
 
-/* ---------------- csv / theme / toast ---------------- */
+/* ---------------- csv / theme ---------------- */
 $('#csvBtn').onclick = () => {
   const a = el('a', { href: URL.createObjectURL(new Blob([D.toCsv(S.list)], { type: 'text/csv;charset=utf-8' })), download: `salsav-funding-${D.todayISO(S.now)}.csv` });
   document.body.append(a); a.click(); a.remove(); toast(`Exported ${S.list.length} funders`);
 };
-function setTheme(t) { document.documentElement.dataset.theme = t; store.set('theme', t); const b = $('#themeBtn'); b.replaceChildren(ico(t === 'dark' ? 'sun' : 'moon')); if (S.feed) renderCharts(); }
+function setTheme(t) { document.documentElement.dataset.theme = t; store.set('theme', t); $('#themeBtn').replaceChildren(ico(t === 'dark' ? 'sun' : 'moon')); }
 $('#themeBtn').onclick = () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
-function toast(msg, bad) { const t = el('div', { class: 'toast' + (bad ? ' bad' : '') }, el('span', { text: msg })); $('#toasts').append(t); setTimeout(() => t.remove(), bad ? 6000 : 3000); }
 $('#helpBtn').onclick = () => $('#helpDlg').showModal(); $('#hClose').onclick = () => $('#helpDlg').close();
 $$('dialog.modal').forEach((d) => d.addEventListener('click', (e) => { if (e.target === d) d.close(); }));
 
@@ -540,17 +603,20 @@ function move(dir) {
   if (!S.list.length) return; const i = S.list.findIndex((r) => r.id === S.sel), j = Math.max(0, Math.min(S.list.length - 1, i < 0 ? (dir > 0 ? 0 : S.list.length - 1) : i + dir));
   S.sel = S.list[j].id; markSel(); $(`[data-id="${S.sel}"]`)?.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
+let gWait = 0;
 addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const t = e.target, typing = t.matches?.('input,textarea,select,[contenteditable]');
-  if (e.key === 'Escape') { if (typing && t.id === 'q') t.blur(); closePresets(); $('#rulePop').hidden = true; return; }
+  if (e.key === 'Escape') { if (typing && t.id === 'q') t.blur(); closePop(openPop?.pop.parentNode.contains(document.activeElement)); closePresets(); $('#rulePop').hidden = true; return; }
   if (typing || document.querySelector('dialog[open]')) return;
   const k = e.key;
-  if (k === '/') { e.preventDefault(); $('#q').focus(); }
-  else if (k === 'j') move(1); else if (k === 'k') move(-1);
+  if (gWait) { gWait = 0; const v = { r: 'radar', p: 'board', i: 'insights', m: 'method' }[k]; if (v) { e.preventDefault(); go(v); return; } }
+  if (k === 'g') { gWait = 1; setTimeout(() => { gWait = 0; }, 1200); return; }
+  if (k === '/') { if (!isRadar()) go('radar'); e.preventDefault(); $('#q').focus(); }
+  else if (k === 'j' && isRadar()) move(1); else if (k === 'k' && isRadar()) move(-1);
   else if (k === 'Enter' && S.sel && t === document.body) openDrawer(S.sel);
-  else if (k === 'e') { if (!unlocked()) openUnlock(); else if (S.sel) { openDrawer(S.sel); $('#tNotes')?.focus(); } }
-  else if (k === '1' || k === '2' || k === '3') setView(['table', 'cards', 'timeline'][+k - 1]);
+  else if (k === 'e') { if (!unlocked()) openUnlock(); else if (S.sel) openDrawer(S.sel).then(() => $('#tNotes')?.focus()); }
+  else if (k === '1' || k === '2' || k === '3') go(RADAR[+k - 1]);
   else if (k === 't') $('#themeBtn').click(); else if (k === '?') $('#helpDlg').showModal();
 });
 
@@ -558,8 +624,11 @@ addEventListener('keydown', (e) => {
 const stamp = () => store.set('lastVisit', Date.now());
 setTimeout(stamp, 20000); addEventListener('pagehide', stamp);
 setInterval(() => { if (S.feed && D.todayISO(new Date()) !== D.todayISO(S.now)) { rebuild(); render(); } setRefreshed(); }, 60000);
-let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (S.feed) { renderCharts(); if (S.view === 'timeline') renderList(); } }, 150); });
-setTheme(document.documentElement.dataset.theme); syncUnlock(); setRefreshed();
+let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (S.feed) { if (isRadar()) renderHorizon(); if (S.view === 'timeline') renderList(); else if (!isRadar()) renderModule(); } }, 150); });
+// sticky offsets for the table header follow the real bar heights
+const sizeVars = () => { document.documentElement.style.setProperty('--topbar-h', $('.topbar').offsetHeight + 'px'); document.documentElement.style.setProperty('--fbar-h', ($('.fbar').offsetParent ? $('.fbar').offsetHeight : 0) + 'px'); };
+if ('ResizeObserver' in window) { const ro = new ResizeObserver(sizeVars); ro.observe($('.topbar')); ro.observe($('.fbar')); }
+setTheme(document.documentElement.dataset.theme); syncUnlock(); setRefreshed(); chrome();
 init().then(setRefreshed);
 </script>
 </body>

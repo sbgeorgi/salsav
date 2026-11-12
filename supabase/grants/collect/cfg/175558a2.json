@@ -1,0 +1,62 @@
+{
+  "id": "175558a2-b659-47e3-bc81-f869961ec31f",
+  "name": "BARD, the US-Israel Binational Agricultural Research and Development Fund",
+  "program": "Research Grants (cooperative US-Israel agricultural R&D)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.bard-isus.org/opportunities/research-grants/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "list": {
+      "item": "div.jet-listing-grid__item",
+      "title": "h2, h3, h4",
+      "link": "a[href]",
+      "date_label": true,
+      "closed": "\\bclosed\\b",
+      "url": "https://www.bard-isus.org/funding-opportunities/"
+    },
+    "filter": {
+      "any": [
+        "Pioneer",
+        "Aquaculture",
+        "NIFA-BARD",
+        "Research Grants"
+      ],
+      "none": [
+        "Accelerator"
+      ],
+      "fields": "title"
+    }
+  },
+  "collect_note": "Reads BARD's funding opportunities page twice a day and keeps its research grant cards: Research Grants, Pioneer, Aquaculture and the two NIFA-BARD tracks. All five show Closed today. A new round appears when a card shows a next submission date. Fellowships and workshops are not included.",
+  "expect": {
+    "min_items": 5,
+    "sample": [
+      {
+        "title": "BARD Aquaculture and Desert Farming Program",
+        "deadline": null,
+        "url": "https://www.bard-isus.org/opportunities/bard-aquaculture-and-desert-farming-program/"
+      },
+      {
+        "title": "Pioneer Funding Track",
+        "deadline": null,
+        "url": "https://www.bard-isus.org/opportunities/pioneer-funding-track/"
+      },
+      {
+        "title": "Research Grants",
+        "deadline": null,
+        "url": "https://www.bard-isus.org/opportunities/research-grants/"
+      }
+    ]
+  },
+  "evidence": "GET https://www.bard-isus.org/funding-opportunities/ HTTP 200 2026-11-12: 11 jet-listing-grid__item cards. Own-page check: https://www.bard-isus.org/opportunities/pioneer-funding-track/ shows 'Submission closed at: September 16, 2026' and the card shows 'Closed', consistent. The same page's sidebar shows 'Next submission date: January 15, 2027' only for the three fellowships (excluded). Harness run on this config, see expect.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 5,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

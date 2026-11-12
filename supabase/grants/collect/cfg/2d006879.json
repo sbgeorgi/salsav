@@ -1,0 +1,39 @@
+{
+  "id": "2d006879-cd1e-4ce4-a35d-93c49585211e",
+  "name": "U.S. National Science Foundation, Engineering Directorate",
+  "program": "Gen-4 Engineering Research Centers (NSF 24-576 award competition; next ERC solicitation expected in 2026)",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://www.nsf.gov/funding/opportunities/erc-gen-4-engineering-research-centers/505599/updates/120181",
+  "feed_url": "https://www.nsf.gov/rss/rss_www_funding.xml",
+  "adapter_config": {
+    "filter": {
+      "any": [
+        "engineering research cent"
+      ],
+      "fields": "title"
+    },
+    "auto_vet": true,
+    "max_items": 20
+  },
+  "collect_note": "Watches the NSF funding announcements feed twice a day for a new Engineering Research Centers call. None is posted today (NSF expects one in 2026). The feed gives no deadline, so check the call page for dates.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Owner test 2026-11-12: Grants.gov search2 (NSF) carries other NSF solicitations (25-540, 26-511) but oppNum 22-580 and 24-576 return 0 hits in any status; ERC titles there are only 09-545, 11-537, 13-560 (closed/archived), so the last two ERC solicitations never appeared on Grants.gov. NSF funding RSS (HTTP 200, 20 items back to 2026-08-13) lists NSF program pages by title; items carry title, link, pubDate and a description, no deadline field (0 deadline/due words in the feed), so a caught ERC call has no deadline. NSF update page (HTTP 200, 2025-09-17) quoted in zero_reason.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "zero_reason": {
+    "quote": "The award competition under solicitation NSF 24-576: Gen-4 Engineering Research Centers is continuing. NSF anticipates issuing the next Engineering Research Centers solicitation in 2026.",
+    "url": "https://www.nsf.gov/funding/opportunities/erc-gen-4-engineering-research-centers/505599/updates/120181",
+    "date": "2025-09-17",
+    "note": "Gen-4 solicitation NSF 24-576 is archived (full proposals were due 2025-07-09, by invitation only); the NSF funding RSS feed (20 items) has no ERC title on 2026-11-12."
+  },
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

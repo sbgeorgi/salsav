@@ -1,0 +1,29 @@
+[
+  {
+    "org": "Arizona Board of Regents",
+    "program_hint": "Regents' Grants (Technology and Research Initiative Fund)",
+    "url_hint": "https://azregents.edu/regents-grants",
+    "bucket": "state_regional",
+    "lens": "state",
+    "priority": 1,
+    "why": "Funds multi-university Arizona research on state problems with state agencies as partners (over $36 million to 23 projects, including a $3 million Arizona agriculture and water hub approved in December 2025), so SALSAV should ask how to join or pitch the next call."
+  },
+  {
+    "org": "New York State Energy Research and Development Authority (NYSERDA)",
+    "program_hint": "Sun and Soil Program (agrivoltaics projects and applied research, first round proposals due 2026-12-10)",
+    "url_hint": "https://www.nyserda.ny.gov/About/Newsroom/2026-Announcements/2026-09-15-NYSERDA-Announces-Launch-Of-10-Million-Sun-And-Soil-Program",
+    "bucket": "state_regional",
+    "lens": "state",
+    "priority": 1,
+    "why": "A new USD 10 million multi-year state program that explicitly funds agrivoltaics demonstrations, applied research, training and market solutions; projects must be in New York, so SALSAV would need a New York partner."
+  },
+  {
+    "org": "Colorado Department of Agriculture",
+    "program_hint": "Agrivoltaics Research and Demonstration Grant (FY2026-27 window closed 2026-06-15; reported as the final round)",
+    "url_hint": "https://ag.colorado.gov/conservation/agrivoltaics-grants",
+    "bucket": "state_regional",
+    "lens": "state",
+    "priority": 1,
+    "why": "The only state grant that names agrivoltaics research, demonstration and outreach and lists universities as eligible, though awards look small and Colorado-sited, so vet whether another round exists and what the largest award is."
+  }
+]

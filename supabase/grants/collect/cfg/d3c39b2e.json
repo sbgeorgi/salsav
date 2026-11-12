@@ -1,0 +1,36 @@
+{
+  "id": "d3c39b2e-cf73-494d-b043-3dbb433d0c7b",
+  "name": "National Science Foundation (NSF), Industry-University Cooperative Research Centers (IUCRC) Program",
+  "program": "IUCRC Program (next solicitation expected later in 2026)",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://iucrc.nsf.gov/about/",
+  "feed_url": "https://www.nsf.gov/rss/rss_www_funding.xml",
+  "adapter_config": {
+    "filter": {
+      "any": [
+        "industry-university cooperative",
+        "iucrc",
+        "cooperative research center"
+      ],
+      "fields": "title"
+    },
+    "auto_vet": true,
+    "max_items": 20
+  },
+  "collect_note": "The NSF funding feed is read twice a day for any new Industry-University Cooperative Research Centers (IUCRC) call. None is open now: NSF says it is not accepting proposals and expects a new solicitation later in 2026. The feed lists no deadlines, so a new call may need its date added by hand.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": "NSF IUCRC page: \"it is not accepting proposals at this time. NSF expects to release an updated solicitation later in 2026, subject to availability of funds.\" https://iucrc.nsf.gov/about/ (quote verified 2026-11-12)",
+  "evidence": "GET https://www.nsf.gov/rss/rss_www_funding.xml HTTP 200, 20 items (pubDates Aug to Nov 2026), none IUCRC; GET https://iucrc.nsf.gov/about/ HTTP 200 (4372 chars text); GET https://iucrc.nsf.gov/universities/solicitation/ HTTP 200 states the program is not accepting proposals and an updated solicitation is expected later in 2026; Grants.gov search2 with oppNum 20-570 and keyword IUCRC returned 0 hits; checked 2026-11-12",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

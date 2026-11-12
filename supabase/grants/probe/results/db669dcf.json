@@ -1,0 +1,64 @@
+{
+ "key": "db669dcf",
+ "verdict": "structured_supported",
+ "method": "grants_gov",
+ "adapter": "grants_gov",
+ "adapter_config": {
+  "agencies": "DOE-GFO|DOE-ARPAE|DOE-ID|DOE-NETL|PAMS-SC",
+  "oppStatuses": "forecasted|posted",
+  "rows": 100
+ },
+ "feed_url": null,
+ "confidence": "medium",
+ "attempted": [
+  "endpoint_recon.py on exchange.energy.gov: html_ok, no opportunity endpoint found, sitemap has 0 URLs",
+  "curl root, Default.aspx, robots.txt, /api/: Default.aspx is ASP.NET WebForms, 200 without cookies, 24.6 MB, ~35 s per fetch",
+  "html adapter via adapter_check: timed out (page too large for the adapter timeout)",
+  "Found embedded JSON: inline script const dbFOAList (15,732 entries, 1,692 unique FOAs after  resolution), const dbfoaListDetails (3,539 rows with deadlines), dbOrganizations, dbProgramOfficeList. Parsed live with plain HTTP: works, no cookies needed",
+  "Embedded data: 98 open FOAs (after ApprovedForPublic and not Archived), 75 with deadline in future or none; of these 4 NOFO + 1 Lab Call with future deadlines; 23 Open rows have deadlines already passed (2025), so status alone is stale",
+  "grants.gov search2 agencies=DOE: 0 hits (parent code does not match); DOE-EERE: 0; DOE-GFO 3, DOE-ARPAE 3, DOE-ID 5, DOE-NETL 1, PAMS-SC 3; pipe-joined list: 15 hits",
+  "grants.gov keyword DE-FOA: 13 hits (keyword is loose, not used)",
+  "adapter_check grants_gov with pipe-joined DOE sub-agencies: ok=true, count=15",
+  "Not tried: SAM/EU/UKRI (not relevant to DOE); XLSX/CSV exports (none seen in page)"
+ ],
+ "check": {
+  "ok": true,
+  "count": 15,
+  "sample": [
+   {
+    "external_id": "DE-FOA-0002265",
+    "title": "University Nuclear Leadership Program&ndash; Scholarship and Fellowship Support",
+    "deadline": "2030-10-14",
+    "status": "open",
+    "url": "https://www.grants.gov/search-results-detail/329436"
+   },
+   {
+    "external_id": "DE-FOA-0003467",
+    "title": "SEEDING CRITICAL ADVANCES FOR LEADING ENERGY TECHNOLOGIES WITH UNTAPPED POTENTIAL (SCALEUP) READY",
+    "deadline": "2029-09-29",
+    "status": "open",
+    "url": "https://www.grants.gov/search-results-detail/356623"
+   },
+   {
+    "external_id": "DE-FOA-0003662",
+    "title": "NOI: PROSPECT Program: Providing Opportunities for Specialized Education in Critical Technologies",
+    "deadline": "2027-01-15",
+    "status": "open",
+    "url": "https://www.grants.gov/search-results-detail/363510"
+   }
+  ],
+  "error": null,
+  "http": 200,
+  "bytes": 8283
+ },
+ "summary": "DOE eXCHANGE is an ASP.NET page that embeds its full opportunity list as inline JSON (dbFOAList plus dbfoaListDetails with deadlines). The html adapter cannot read it (24 MB, timeout). The existing grants_gov adapter, given the DOE sub-agency codes joined with a pipe, returns 15 live DOE calls with deadlines and passes adapter_check today. Recommended now: grants_gov config above. Better long term: a new embedded_json adapter for eXCHANGE (covers NOI, RFI, Lab Call, teaming lists that Grants.gov does not carry); its prototype reads the page live with plain HTTP.",
+ "engine_requirements": "Option A (use now, no engine change): adapter grants_gov, adapter_config {agencies: DOE-GFO|DOE-ARPAE|DOE-ID|DOE-NETL|PAMS-SC, oppStatuses: forecasted|posted, rows: 100}. Gaps: DOE parent code returns 0, so every sub-agency must be listed; CMEI/OE/OTC/CESER eXCHANGE-only items (NOI, RFI, LC, teaming lists) are not on Grants.gov. Option B (new adapter, embedded_json): GET https://exchange.energy.gov/Default.aspx (plain, no cookies, browser UA); locate the literal text const dbFOAList = [ and const dbfoaListDetails = [; bracket-match to the closing ] (string-aware) and JSON.parse each; index every object with ; replace {:N} with the indexed object; dedupe by FoaId; keep AnnouncementStatus==Open AND ApprovedForPublic==true AND Archived==false AND IsDeleted==false (do NOT require Published, it is False for 99 of 100 open rows); external_id=FoaNumber; title=FoaTitle; type=FOATypeName; deadline = min of FullAppSubmissionDeadline, ConceptPaperUpldDeadline, SubmissionRegistrationDeadline from dbfoaListDetails rows with the same FoaId (ISO datetime, take first 10 chars); status=open only if deadline is null or >= today, else closed; url=https://exchange.energy.gov/FAQ.aspx?FoaId=<FoaId>. Engine risk: 24.6 MB response and ~21 MB JSON, roughly 35 s per fetch from this machine; the edge function needs a streaming or slice-first parse (bracket-match before JSON.parse) and a 150 s wall-clock budget. Lower-risk alternative: only parse dbFOAList slice.",
+ "prototype": "C:/Users/georg/AppData/Local/Temp/claude/f76d9bc5f4d34b7f/9671fccb-adf9-4753-918f-ba882814c960/scratchpad/db669/doe_exchange_proto.py",
+ "prototype_output_sample": "[{\"external_id\":\"DE-FOA-0003641\",\"title\":\"Grid Supply Chain Alternatives to Lead Energy Dominance (SCALED)\",\"type\":\"Notice Of Funding Opportunity (NOFO)\",\"org\":\"OE\",\"status\":\"open\",\"deadline\":\"2027-02-08\"},{\"external_id\":\"DE-LC-000L130\",\"title\":\"FY26 & FY27 Technology Commercialization Fund Base Annual Appropriations Core Laboratory Infrastructure for Market Readiness: Technology Specific Topics Lab Call\",\"type\":\"Lab Call (LC)\",\"org\":\"OTC\",\"status\":\"open\",\"deadline\":\"2027-03-01\"}]",
+ "evidence": [
+  "exchange.energy.gov/Default.aspx embeds const dbFOAList and const dbfoaListDetails in an inline script (plain HTTP 200 without cookies)",
+  "grants.gov search2 agencies=DOE-GFO|DOE-ARPAE|DOE-ID|DOE-NETL|PAMS-SC returned 15 hits"
+ ],
+ "fetchability": "plain_http_ok_but_24MB_slow",
+ "row_fix": null
+}

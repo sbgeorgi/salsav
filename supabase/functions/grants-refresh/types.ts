@@ -52,6 +52,8 @@ export interface Opportunity {
   open_date?: string | null;
   deadline?: string | null;
   deadline_text?: string | null;
+  award_min_usd?: number | null;
+  award_max_usd?: number | null;
   status?: "forecasted" | "open" | "closed" | "archived";
   doc_links?: Link[];
 }

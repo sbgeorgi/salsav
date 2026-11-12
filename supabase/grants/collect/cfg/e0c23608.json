@@ -1,0 +1,43 @@
+{
+  "id": "e0c23608-f4ff-4dcc-a94e-08fd0c411451",
+  "name": "U.S. National Science Foundation, Directorate for Engineering (CBET)",
+  "program": "NSF 26-518 CBET: Engineering (ENG) Chemical, Bioengineering, Energy, and Transport Systems umbrella solicitation (includes the Energy, Water, and Resource Engineering (EWRE) program)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.nsf.gov/funding/opportunities/engineering-eng-chemical-bioengineering-energy-transport/nsf26-518/solicitation",
+  "feed_url": null,
+  "adapter_config": {
+    "keyword": "Chemical Bioengineering Energy Transport Systems",
+    "agencies": "NSF",
+    "oppStatuses": "forecasted|posted",
+    "rows": 50,
+    "filter": {
+      "all": [
+        "Chemical, Bioengineering, Energy, and Transport Systems"
+      ],
+      "fields": "title"
+    },
+    "max_items": 40,
+    "auto_vet": true
+  },
+  "collect_note": "The NSF Engineering CBET umbrella solicitation (NSF 26-518) is read from Grants.gov twice a day. It accepts proposals anytime, so no deadline is shown. Related NSF-DFG and NSF-BSF calls are separate and not included.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Engineering (ENG): Chemical, Bioengineering, Energy, and Transport Systems (CBET)",
+        "deadline": null,
+        "url": "https://www.grants.gov/search-results-detail/363616"
+      }
+    ]
+  },
+  "evidence": "POST https://api.grants.gov/v1/api/search2 (HTTP 200, 43 hits for agencies NSF + keyword; title filter keeps 1: NOFO 26-518, posted); solicitation page https://www.nsf.gov/funding/opportunities/engineering-eng-chemical-bioengineering-energy-transport/nsf26-518/solicitation says 'Full Proposal Deadline(s): Proposals Accepted Anytime'; Grants.gov id 359499 (25-537 NSF-DFG, 2076 placeholder) is a different solicitation and is filtered out; checked 2026-11-12",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

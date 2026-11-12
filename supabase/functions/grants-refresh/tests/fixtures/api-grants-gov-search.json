@@ -1,0 +1,146 @@
+{
+ "errorcode": 0,
+ "msg": "Webservice Succeeds",
+ "token": "redacted",
+ "data": {
+  "searchParams": {
+   "resultType": "json",
+   "searchOnly": false,
+   "oppNum": "",
+   "cfda": "",
+   "sortBy": "",
+   "oppStatuses": "forecasted|posted",
+   "startRecordNum": 0,
+   "eligibilities": "",
+   "fundingInstruments": "",
+   "fundingCategories": "",
+   "agencies": "USDA-NIFA",
+   "rows": 5,
+   "keyword": "",
+   "keywordEncoded": false
+  },
+  "hitCount": 5,
+  "startRecord": 0,
+  "oppHits": [
+   {
+    "id": "361169",
+    "number": "USDA-NIFA-AFRI-011596",
+    "title": "Agriculture and Food Research Initiative Competitive Grants Program Education and Workforce Development",
+    "agencyCode": "USDA-NIFA",
+    "agency": "National Institute of Food and Agriculture",
+    "openDate": "01/20/2026",
+    "closeDate": "12/31/2026",
+    "oppStatus": "posted",
+    "docType": "synopsis",
+    "cfdaList": [
+     "10.310"
+    ]
+   },
+   {
+    "id": "362029",
+    "number": "USDA-NIFA-TCRGP-011697",
+    "title": "Tribal Colleges Research Grants Program",
+    "agencyCode": "USDA-NIFA",
+    "agency": "National Institute of Food and Agriculture",
+    "openDate": "04/22/2026",
+    "closeDate": "12/31/2026",
+    "oppStatus": "posted",
+    "docType": "synopsis",
+    "cfdaList": [
+     "10.227"
+    ]
+   },
+   {
+    "id": "363846",
+    "number": "USDA-NIFA-HSI-011903",
+    "title": "Hispanic-Serving Institutions Education Grants Program",
+    "agencyCode": "USDA-NIFA",
+    "agency": "National Institute of Food and Agriculture",
+    "openDate": "09/10/2026",
+    "closeDate": "12/03/2026",
+    "oppStatus": "posted",
+    "docType": "synopsis",
+    "cfdaList": [
+     "10.223"
+    ]
+   }
+  ],
+  "oppStatusOptions": [
+   {
+    "label": "posted",
+    "value": "posted",
+    "count": 5
+   },
+   {
+    "label": "closed",
+    "value": "closed",
+    "count": 6
+   },
+   {
+    "label": "archived",
+    "value": "archived",
+    "count": 841
+   },
+   {
+    "label": "forecasted",
+    "value": "forecasted",
+    "count": 0
+   }
+  ],
+  "dateRangeOptions": [
+   {
+    "label": "Posted Date - Last 6 Weeks",
+    "value": "42",
+    "count": 1
+   },
+   {
+    "label": "Posted Date - Last 7 Weeks",
+    "value": "49",
+    "count": 1
+   },
+   {
+    "label": "Posted Date - Last 8 Weeks",
+    "value": "56",
+    "count": 1
+   }
+  ],
+  "suggestion": "",
+  "eligibilities": [
+   {
+    "label": "Others (see text field entitled \"Additional Information on Eligibility\" for clarification)",
+    "value": "25",
+    "count": 5
+   }
+  ],
+  "fundingCategories": [
+   {
+    "label": "Agriculture",
+    "value": "AG",
+    "count": 5
+   }
+  ],
+  "fundingInstruments": [
+   {
+    "label": "Grant",
+    "value": "G",
+    "count": 5
+   }
+  ],
+  "agencies": [
+   {
+    "subAgencyOptions": [
+     {
+      "label": "National Institute of Food and Agriculture",
+      "value": "USDA-NIFA",
+      "count": 5
+     }
+    ],
+    "label": "Department of Agriculture",
+    "value": "USDA",
+    "count": 5
+   }
+  ],
+  "accessKey": "",
+  "errorMsgs": []
+ }
+}

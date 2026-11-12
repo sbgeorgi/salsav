@@ -1,0 +1,72 @@
+{
+  "key": "71f406cd",
+  "funder": "U.S. Department of Energy, Office of Science (Biological and Environmental Research)",
+  "verdict": "structured_needs_new_adapter",
+  "method": "html_listing",
+  "confidence": "high",
+  "feed_url": null,
+  "adapter": "html_listing (proposed new adapter)",
+  "adapter_config": {
+    "url": "https://science.osti.gov/ber/Funding-Opportunities",
+    "container": "div.funding_tertiary_column",
+    "title": "h5 a (text)",
+    "url_attr": "href (prefix https://science.osti.gov when relative)",
+    "fields": {
+      "announcement_number": "div.details_announcement with label 'Announcement Number:'",
+      "post_date": "div.details_announcement with label 'Post Date:'",
+      "close_date": "div.details_announcement with label 'Close Date:'"
+    }
+  },
+  "row_fix": {
+    "url": "https://science.osti.gov/ber/Funding-Opportunities",
+    "program": "Biological and Environmental Research: Funding Opportunities hub (Open Call DE-FOA-0003665 plus BER NOFOs)",
+    "reason": "Single-program row points at the Open Call hub; the hub lists all BER calls in one server-rendered page"
+  },
+  "attempted": [
+    "endpoint_recon.py: plain fetch 200 text/html, 7799 chars; Chrome render 5708 chars, 142 links; verdict html_ok, no opportunity endpoint found",
+    "Plain curl of the page: the opportunity rows (titles, announcement numbers, post and close dates) are present in the server-rendered HTML, no JS needed",
+    "adapter_check.mjs on current html adapter: ok=true, count=0, text_len 4106, links 16 (monitor only, stores no rows)",
+    "Parsed server-rendered blocks with a regex prototype: 3 of 3 listed calls extracted with title, url, announcement number, post and close date",
+    "Sitemap /sitemap.xml 200, 5895 URLs, no funding-specific feed or per-call sitemap entries",
+    "Coveo: /coveo/rest/token returns 200 (580 bytes) and the page is Sitecore with Coveo search, so a Coveo search endpoint exists. Rejected for round 1: the search token is minted per session and expires, which fails the stability rule. Kept as a fallback only",
+    "No RSS/Atom feed: /feed 404, /atom.xml 404, /index.xml 404; /rss returns 200 text/html (an HTML page, not a feed). No rel=alternate feed link on the BER page. No iCal/CSV/JSON found in recon",
+    "Chrome XHR capture: 5 XHR seen, none returned opportunity rows beyond the Coveo token and static assets"
+  ],
+  "engine_requirements": "Add adapter html_listing to the edge function. Request: GET https://science.osti.gov/ber/Funding-Opportunities with a plain User-Agent, no cookies, no JS. Parse: for each element matching div.funding_tertiary_column, take the first a inside h5 for title (text) and href (resolve against https://science.osti.gov). For each div.details_announcement, read the div.announcement_detail_left label (strip trailing colon) and the sibling div.annoucement_detail_right value (note the misspelling 'annoucement' is in the live markup; match it exactly). Map labels: 'Announcement Number' -> external_id (strip any trailing parenthetical such as ' (updated April 20, 2026)'), 'Post Date' -> posted, 'Close Date' -> deadline (parse 'Wednesday, September 30, 2026' style dates to ISO). Emit one opportunity per container with external_id, title, url, deadline, status 'open' when deadline is in the future. Zero containers while HTML length is above 1500 chars is a parse failure and must raise, not return empty. Keep the html change-detection fallback so a page-layout change alerts instead of silently dropping rows.",
+  "prototype": "C:/Users/georg/AppData/Local/Temp/claude/f76d9bc5f4d34b7f/9671fccb-adf9-4753-918f-ba882814c960/scratchpad/doe/proto.py (regex over div.funding_tertiary_column blocks; run: python proto.py page.html)",
+  "check": {
+    "adapter_check_html_current": {"ok": true, "count": 0, "sample": [], "error": null, "http": 200, "text_len": 4106, "links": 16},
+    "prototype_output_sample": {
+      "count": 3,
+      "sample": [
+        {
+          "title": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+          "url": "https://science.osti.gov/-/media/grants/pdf/foas/2027/DE-FOA-0003665-000001-Part-1.pdf",
+          "announcement_number": "DE-FOA-0003665",
+          "post_date": "Wednesday, September 30, 2026",
+          "close_date": "Thursday, September 30, 2027"
+        },
+        {
+          "title": "Genesis Mission Graduate Fellowship Pilot",
+          "url": "https://science.osti.gov/-/media/grants/pdf/foas/2027/DEFOA0003673000001.pdf",
+          "announcement_number": "DE-FOA-0003673",
+          "post_date": "Thursday, October 8, 2026",
+          "close_date": "Tuesday, January 12, 2027"
+        },
+        {
+          "title": "The Genesis Mission: Transforming Science and Energy with AI",
+          "url": "https://science.osti.gov/-/media/grants/pdf/foas/2026/DE-FOA-0003612-000003.pdf",
+          "announcement_number": "DE-FOA-0003612 (updated April 20, 2026)",
+          "post_date": "Monday, March 16, 2026",
+          "close_date": "Thursday, December 17, 2026"
+        }
+      ]
+    }
+  },
+  "evidence": [
+    "Live page markup (curl, 2026-11-11): each call is <div class=\"funding_tertiary_column\"> with <h5><a href=...> title, then div.details_announcement blocks for Announcement Number, Post Date, Close Date",
+    "Recon verdict html_ok with proposal adapter html (monitor only). Adapter_check html returns count 0 rows, so the current config yields no opportunities"
+  ],
+  "summary": "The BER Funding Opportunities page is server-rendered and lists 3 live calls (DE-FOA-0003665 Open Call to 2027-09-30, DE-FOA-0003673 Genesis Mission Graduate Fellowship to 2027-01-12, DE-FOA-0003612 Genesis Mission to 2026-12-17) with post and close dates in plain HTML. The existing html adapter only monitors text and stores no rows, so a small html_listing adapter with the selectors above reads them reliably over plain HTTP. Coveo is a possible fallback but its token expires, so it is not stable enough.",
+  "round": 1
+}

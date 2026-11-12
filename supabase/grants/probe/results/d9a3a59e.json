@@ -1,0 +1,55 @@
+{
+ "key": "d9a3a59e",
+ "verdict": "structured_needs_new_adapter",
+ "method": "html_listing",
+ "adapter": "html_cards (proposed new)",
+ "feed_url": null,
+ "adapter_config": {
+  "url": "https://western.sare.org/grants/",
+  "match_title": "Research and Education Pre-Proposal",
+  "selector": "li.listing (h3 title, p description, h4.grant-deadline, a.learn href)"
+ },
+ "row_fix": null,
+ "confidence": "high",
+ "summary": "Western SARE R&E is closed: the 2027 pre-proposal call deadline was Jun 15, 2026 and the page says Closed - Opens 2027. No live opportunity exists today. The hub https://western.sare.org/grants/ is server-rendered and has one card per program with a machine-readable status (li.listing.open|closed) and deadline (h4.grant-deadline). A small html_cards adapter reads it over plain HTTP. The existing html adapter only change-detects and yields 0 rows, so it cannot track the reopening as structured rows.",
+ "attempted": [
+  "endpoint_recon.py on the R&E page: verdict html_ok, no XHR or JSON, sitemap hits none, Yoast ld+json only",
+  "WordPress REST /wp-json/wp/v2/types and /pages: 401 (auth required)",
+  "/feed/ and projects.sare.org/feed/: 500",
+  "sitemap_index.xml, page-sitemap.xml, post-sitemap.xml: no grant-call entries beyond the R&E page itself",
+  "robots.txt: 200, no API hints",
+  "projects.sare.org (GMS portal) root, /grants/, sitemap: static, no JSON API, /api/ 404",
+  "Visible page text: Closed - Opens 2027, no machine deadline",
+  "Linked CFP PDF projects.sare.org/media/pdf/W/S/A/WSARE-2027-RE-Pre-Proposal-CFP-Final.pdf: 9 pages, Submission Deadline May 1 2026, UPDATED to Jun 15 2026, full-proposal deadline TBD",
+  "Western SARE hub https://western.sare.org/grants/: server-rendered cards with status and deadline (found the structured source)",
+  "adapter_check html on R&E page: ok, but count 0 (monitor only)",
+  "adapter_check html on hub: ok, but count 0 (monitor only)",
+  "Prototype html_cards parser (stdlib, plain HTTP): 7 cards parsed from live hub, including R&E",
+  "Not tried: headless Chrome XHR replay (not needed; the hub is static HTML, and the recon found no XHR)"
+ ],
+ "check": {
+  "adapter_check_r_e_page": "{\"ok\":true,\"count\":0,\"sample\":[],\"error\":null,\"http\":200,\"text_len\":2020,\"links\":4}",
+  "adapter_check_hub": "{\"ok\":true,\"count\":0,\"sample\":[],\"error\":null,\"http\":200,\"text_len\":3013,\"links\":4}",
+  "prototype_cards": 7,
+  "prototype_sample_row": {
+   "external_id": "research-and-education-pre-proposal",
+   "title": "Research and Education Pre-Proposal",
+   "url": "https://western.sare.org/grants/research-and-education",
+   "status": "closed",
+   "deadline_text": "Closed: Jun 15, 2026 5:00 PM (Mountain Time)",
+   "deadline": {
+    "label": "Closed",
+    "date": "Jun 15, 2026",
+    "time": "5:00 PM"
+   }
+  },
+  "prototype_file": "C:/Users/georg/AppData/Local/Temp/claude/f76d9bc5f4d34b7f/9671fccb-adf9-4753-918f-ba882814c960/scratchpad/d9a3/proto_cards.py"
+ },
+ "evidence": [
+  "hub h4 markup: <li class=\"listing closed\"> ... <h3>Research and Education Pre-Proposal</h3> ... <h4 class=\"grant-deadline\">Closed: Jun 15, 2026 5:00 PM (Mountain Time)</h4>",
+  "R&E page: \"Closed - Opens 2027\"; CFP PDF 2027 deadline updated to Jun 15, 2026 (past); full proposal deadline TBD",
+  "Program is annual_recurring per funders.json; expect a new open date when the 2028 call (or 2027 call reopening) is posted"
+ ],
+ "engine_requirements": "New adapter html_cards: GET adapter_config.url (plain HTTP, UA as usual, no cookies). Parse every element matching li whose class contains listing; status = open|closed from class. For each card: title = text of first h3; description = text of first p; deadline_text = text of h4.grant-deadline; url = href of a.learn. Deadline regex: (Closed|Opens|Open|Deadline|Due)[^:]*:\\s*(Mon D, YYYY)( H:MM AM/PM)?. Map to opportunity rows: external_id = slug(title), title, url, status, deadline. If match_title is set, emit only the matching card. Treat zero cards as a parse failure, not an empty result. Store the closed card as a row with status closed so the Open transition is detected on the next run.",
+ "prototype": "import json, re, sys, urllib.request\nfrom html.parser import HTMLParser\n\nHUB = \"https://western.sare.org/grants/\"\n\nclass Cards(HTMLParser):\n    \"\"\"Collects <li class=\"listing ...\"> cards: status from class, h3 title, p description, h4.grant-deadline, a.learn href.\"\"\"\n    def __init__(self):\n        super().__init__(convert_charrefs=True)\n        self.cards, self.cur, self.depth, self.tag_stack = [], None, 0, []\n        self.capture = None\n    def handle_starttag(self, tag, attrs):\n        a = dict(attrs); cls = a.get(\"class\", \"\") or \"\"\n        if tag == \"li\" and re.search(r\"\\blisting\\b\", cls):\n            self.cur = {\"status\": \"open\" if re.search(r\"\\bopen\\b\", cls) else (\"closed\" if re.search(r\"\\bclosed\\b\", cls) else \"unknown\"),\n                        \"title\": \"\", \"description\": \"\", \"deadline_text\": \"\", \"url\": \"\"}\n            self.depth = 1\n            return\n        if self.cur is None: return\n        if tag == \"li\": self.depth += 1\n        if tag in (\"h3\", \"p\") and not self.cur.get({\"h3\":\"title\",\"p\":\"description\"}[tag]):\n            self.capture = {\"h3\":\"title\",\"p\":\"description\"}[tag]\n        if tag == \"h4\" and \"grant-deadline\" in cls: self.capture = \"deadline_text\"\n        if tag == \"a\" and \"learn\" in cls.split() and not self.cur[\"url\"]: self.cur[\"url\"] = a.get(\"href\", \"\")\n    def handle_endtag(self, tag):\n        if self.cur is None: return\n        if tag == \"li\":\n            self.depth -= 1\n            if self.depth == 0:\n                self.cards.append(self.cur); self.cur = None\n        if tag in (\"h3\", \"p\", \"h4\"): self.capture = None\n    def handle_data(self, data):\n        if self.cur is not None and self.capture:\n            self.cur[self.capture] = (self.cur[self.capture] + \" \" + data).strip()\n\ndef fetch(url):\n    req = urllib.request.Request(url, headers={\"User-Agent\": \"Mozilla/5.0 SALSAV-GrantWatch/1.0\"})\n    with urllib.request.urlopen(req, timeout=30) as r:\n        return r.read().decode(\"utf-8\", \"replace\")\n\ndef parse_deadline(text):\n    m = re.search(r\"(Closed|Opens|Open|Deadline|Due)[^:]*:\\s*([A-Z][a-z]{2,8} \\d{1,2}, \\d{4})(?: (\\d{1,2}:\\d{2} [AP]M))?\", text or \"\")\n    return {\"label\": m.group(1), \"date\": m.group(2), \"time\": m.group(3)} if m else None\n\nif __name__ == \"__main__\":\n    p = Cards(); p.feed(fetch(sys.argv[1] if len(sys.argv) > 1 else HUB))\n    rows = []\n    for c in p.cards:\n        rows.append({\"external_id\": c[\"title\"].lower().replace(\" \", \"-\"), \"title\": c[\"title\"], \"url\": c[\"url\"],\n                     \"status\": c[\"status\"], \"deadline_text\": c[\"deadline_text\"], \"deadline\": parse_deadline(c[\"deadline_text\"]),\n                     \"description\": c[\"description\"][:160]})\n    print(json.dumps({\"cards\": len(rows), \"rows\": rows}, indent=1))\n"
+}

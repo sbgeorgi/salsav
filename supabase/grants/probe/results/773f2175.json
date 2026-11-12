@@ -1,0 +1,41 @@
+{
+  "key": "773f2175",
+  "verdict": "misclassified",
+  "method": "json_api",
+  "adapter": "grants_gov",
+  "adapter_config": {
+    "agencies": "USDA-NIFA",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25
+  },
+  "row_fix": {
+    "url": "https://api.grants.gov/v1/api/search2",
+    "program": "Grants.gov search2 (USDA-NIFA agency feed)",
+    "reason": "The row is a whole-database daily zip, not a funder. Its feed_url is date-stamped (GrantsDBExtract20261111v2.zip), so it goes stale every day. The landing page lists the 7 newest zips. The current html adapter reads 929 chars and returns ok=false. Use the grants_gov adapter per agency instead."
+  },
+  "confidence": "high",
+  "attempted": [
+    "HEAD on S3 zip: 200, 78 MB, Last-Modified 2026-11-11 09:41 UTC, ETag present",
+    "Landing page https://www.grants.gov/xml-extract (plain HTTP): lists GrantsDBExtract20261105v2..20261111v2.zip (7 daily files, date-stamped)",
+    "adapter_check on current html row: ok=false, 929 chars of text, links=7",
+    "search2 hitCount per USDA sub-agency code (exact codes only): NIFA 5, RBCS 3, FS 3, RUS 3, AMS 2, APHIS 2, NRCS 1, FNS1 1",
+    "adapter_check grants_gov USDA-NIFA: ok=true count=5 (deadlines 2026-11-17 to 2026-12-31)",
+    "adapter_check grants_gov USDA-RBCS: ok=true count=3 (one row RDBCP-REAP-RES-EEI-2019 has null deadline)",
+    "Prior-round XML scan (82,748 synopsis records, 862 live, 20 USDA-prefix live) reused as context, not re-run",
+    "robots.txt on www.grants.gov: Allow: / (no disallow)",
+    "Not run: Chrome/XHR recon (not needed, the endpoints are plain JSON/zip)"
+  ],
+  "summary": "This row is the whole Grants.gov catalog, not a funder. Do not monitor it as one row. Replace it with grants_gov rows, one per USDA sub-agency code (adapter_check ok=true for NIFA and RBCS). The XML extract is a broad, daily-changing zip that needs a new adapter and a topic filter, so it is not recommended now.",
+  "check": {
+    "current_row": "{ok:false,count:0,error:'only 929 chars of text',http:200}",
+    "usda_nifa": "{ok:true,count:5,sample deadlines 2026-11-17..2026-12-31}",
+    "usda_rbcs": "{ok:true,count:3}"
+  },
+  "feed_url": "https://prod-grants-gov-chatbot.s3.amazonaws.com/extracts/GrantsDBExtract20261111v2.zip",
+  "evidence": [
+    "Feed filename embeds the date, so the stored URL expires daily. The landing page is the only stable discovery point.",
+    "search2 accepts single exact sub-agency codes only: comma lists and 'USDA' return 0 hits (prior round)."
+  ],
+  "engine_requirements": "Optional whole-catalog path (not recommended now): fetch https://www.grants.gov/xml-extract, take the newest GrantsDBExtractYYYYMMDDv2.zip link, cache by ETag/Last-Modified, stream-inflate the single XML with DecompressionStream deflate-raw, filter by agency prefix and live CloseDate/ArchiveDate, and require a topic keyword (for example agrivoltaic, solar, agricultur, energy, rural, farm). Untested on the edge runtime. Stale-record rule needed: treat empty-CloseDate old-number rows as stale.",
+  "summary_note": "Per-agency rows to add: USDA-NIFA, USDA-RBCS, USDA-FS, USDA-RUS, USDA-AMS, USDA-APHIS, USDA-NRCS, USDA-FNS1. Only NIFA and RBCS were run through adapter_check."
+}

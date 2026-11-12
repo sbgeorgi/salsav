@@ -243,6 +243,31 @@ describe("robots, redirects, SSRF, size", () => {
     assert.equal(h.cookie, undefined);
   });
 
+  test("HTTP/2 stream error: retried once over the HTTP/1.1 fetch, SSRF guard still applies; other errors are not retried", async () => {
+    mock.route(5, "/h2", { body: "ok-h1" });
+    let h2Calls = 0;
+    const h2Fail: typeof fetch = () => { h2Calls++; return Promise.reject(new TypeError("error sending request", { cause: new Error("stream error received: unexpected internal error encountered") })); };
+    let h1Calls = 0;
+    const h1: typeof fetch = (i, init) => { h1Calls++; return fetch(i, init); };
+    const { d } = mk(mock, { jitterMs: 0, minIntervalMs: 10 }, { fetchImpl: h2Fail, fetchH1: h1 });
+    const r = await get(d, mock.url(5, "/h2"));
+    assert.ok(r.t === "response" && new TextDecoder().decode(r.bytes) === "ok-h1");
+    assert.deepEqual([h2Calls, h1Calls], [1, 1]);
+    // fallback fails too: reported as error after exactly one h1 attempt
+    const bad = mk(mock, { jitterMs: 0, minIntervalMs: 10 }, { fetchImpl: h2Fail, fetchH1: h2Fail }).d;
+    const e = await get(bad, mock.url(5, "/h2"));
+    assert.ok(e.t === "error" && /stream error/.test(e.message));
+    // unrelated errors skip the fallback
+    h1Calls = 0;
+    const dns = mk(mock, { jitterMs: 0, minIntervalMs: 10 }, { fetchImpl: () => Promise.reject(new TypeError("dns error")), fetchH1: h1 }).d;
+    const n = await get(dns, mock.url(5, "/h2"));
+    assert.ok(n.t === "error" && h1Calls === 0);
+    // blocked targets never reach either fetch
+    h2Calls = 0;
+    const g = await politeGet({ ...mk(mock, {}, { fetchImpl: h2Fail, fetchH1: h1, env: { allowLocal: false } }).d }, { url: "http://127.0.0.1/x", robots: false });
+    assert.ok(g.t === "error" && h2Calls === 0 && h1Calls === 0);
+  });
+
   test("one UA profile per host-session, rotating across hosts", async () => {
     const { d } = mk(mock, { jitterMs: 0, minIntervalMs: 10 });
     for (let i = 0; i < 3; i++) await get(d, mock.url(3, `/ua${i}`));

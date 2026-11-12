@@ -1,0 +1,75 @@
+{
+  "version": 2,
+  "min_fit": 40,
+  "tiers": [
+    { "key": "prime", "min": 75, "label": "Prime" },
+    { "key": "strong", "min": 60, "label": "Strong" },
+    { "key": "possible", "min": 45, "label": "Possible" },
+    { "key": "long_shot", "min": 0, "label": "Long shot" }
+  ],
+  "dims": [
+    {
+      "key": "mission", "label": "Mission match", "max": 35, "source": "judged",
+      "question": "How directly does this program fund what SALSAV does?",
+      "levels": [
+        { "key": "core", "points": 35, "label": "Agrivoltaics named", "rule": "The call or the program priorities name agrivoltaics, dual-use solar or solar combined with farming." },
+        { "key": "strong", "points": 27, "label": "Direct nexus", "rule": "Funds the water-energy-food nexus, solar or renewable energy for agriculture, or dryland and semi-arid farming resilience." },
+        { "key": "adjacent", "points": 18, "label": "Adjacent field", "rule": "Funds a wider field (climate adaptation, sustainable agriculture, clean energy access, food security) where an agrivoltaics project is a natural proposal." },
+        { "key": "weak", "points": 8, "label": "Tangential", "rule": "Only a general link (environment, development, education); agrivoltaics would be a stretch." },
+        { "key": "none", "points": 0, "label": "No match", "rule": "Does not fund this kind of work." }
+      ]
+    },
+    {
+      "key": "activity", "label": "Type of work funded", "max": 15, "source": "judged",
+      "question": "Does it pay for the kind of work a university lab does?",
+      "levels": [
+        { "key": "research_demo", "points": 15, "label": "Research and demonstration", "rule": "Funds applied research, field trials or demonstration sites led by research institutions." },
+        { "key": "capacity", "points": 10, "label": "Deployment and training", "rule": "Funds deployment, training, extension, education or capacity building where a university lab can lead a work package." },
+        { "key": "other", "points": 5, "label": "Other work", "rule": "Mostly policy, advocacy, finance or service delivery; SALSAV could only be a minor partner." },
+        { "key": "mismatch", "points": 0, "label": "Mismatch", "rule": "Funds work a university lab cannot take part in." }
+      ]
+    },
+    {
+      "key": "geography", "label": "Where the work can happen", "max": 15, "source": "judged",
+      "question": "Does the funded geography overlap SALSAV sites and partners?",
+      "levels": [
+        { "key": "home", "points": 15, "label": "SALSAV home ground", "rule": "Targets Arizona, the US Southwest, or a place where SALSAV already has a site or partner (Mexico, Kenya, Israel)." },
+        { "key": "region", "points": 12, "label": "Same region", "rule": "US-wide, or Latin America or Sub-Saharan Africa as a whole." },
+        { "key": "global", "points": 8, "label": "Global", "rule": "Global or multi-region; SALSAV geographies are allowed but not prioritized." },
+        { "key": "outside", "points": 3, "label": "Outside the footprint", "rule": "Focused on places where SALSAV has no site; would need a new local partner." },
+        { "key": "excluded", "points": 0, "label": "Excluded", "rule": "SALSAV geographies cannot be funded." }
+      ]
+    },
+    {
+      "key": "eligibility", "label": "Can the University of Arizona apply", "max": 20, "source": "field", "field": "ua_eligibility",
+      "question": "Can UA be the applicant or a funded partner?",
+      "levels": [
+        { "key": "eligible", "points": 20, "label": "UA applies directly", "rule": "A US public university can be the lead applicant." },
+        { "key": "eligible_with_partner", "points": 13, "label": "With a partner", "rule": "UA can take part, but a required partner or a different lead organization is needed." },
+        { "key": "unknown", "points": 7, "label": "Not confirmed", "rule": "The official page does not say whether universities can apply." },
+        { "key": "invitation_only", "points": 3, "label": "By invitation", "rule": "No open application; a relationship with the funder comes first." },
+        { "key": "unlikely", "points": 0, "label": "Not eligible", "rule": "Universities or US applicants are excluded." }
+      ]
+    },
+    {
+      "key": "award", "label": "Award size", "max": 10, "source": "field", "field": "award_max_usd",
+      "question": "How large is the largest single award?",
+      "levels": [
+        { "key": "1m", "points": 10, "label": "$1M or more", "rule": "Largest single award is at least $1,000,000." },
+        { "key": "500k", "points": 8, "label": "$500k to $1M", "rule": "Largest single award is between $500,000 and $1,000,000." },
+        { "key": "200k", "points": 6, "label": "$200k to $500k", "rule": "Largest single award is between $200,000 and $500,000." },
+        { "key": "unknown", "points": 4, "label": "Not published", "rule": "The funder does not publish award sizes." },
+        { "key": "low", "points": 0, "label": "Below $200k", "rule": "Largest single award is under $200,000." }
+      ]
+    },
+    {
+      "key": "precedent", "label": "Track record", "max": 5, "source": "judged",
+      "question": "Has this funder backed similar work before?",
+      "levels": [
+        { "key": "direct", "points": 5, "label": "Funded this before", "rule": "Has funded agrivoltaics, or the University of Arizona or a SALSAV partner on related work." },
+        { "key": "similar", "points": 3, "label": "Funded similar work", "rule": "Has funded comparable university-led dryland agriculture, solar or water projects." },
+        { "key": "none", "points": 0, "label": "None found", "rule": "No relevant precedent found." }
+      ]
+    }
+  ]
+}

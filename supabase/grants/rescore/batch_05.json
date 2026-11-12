@@ -1,0 +1,516 @@
+[
+  {
+    "id": "9dc2223d-158a-4d84-b631-d8e2f80b2beb",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "adjacent",
+        "why": "Land initiative backs climate-resilient working lands and water for New Mexico; no agrivoltaics or solar named.",
+        "quote": "Climate-resilient working lands and the producers who steward them."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Funds nonprofits closest to the problem on systems change; a university lab would be at most a minor partner.",
+        "quote": "We work in a small number of focused initiative areas, fund the organizations closest to the problem and stay long enough to see it change."
+      },
+      "geography": {
+        "level": "home",
+        "why": "New Mexico focus sits in the US Southwest; it funds New Mexico organizations, so an Arizona lead is a stretch.",
+        "quote": "A resilient water future for New Mexico's rivers, aquifers and communities."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or UA grant found; the only Arizona grant listed is K-12 education.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "invitation_only",
+      "award_min_usd": null,
+      "award_max_usd": null,
+      "amount_confidence": "unknown",
+      "award_note": "No award range published; the $250,000 on the home page is one example grant (Future Focused Education), not a stated maximum.",
+      "cycle": "invite_only",
+      "next_deadline": null,
+      "deadline_note": "No deadline; no unsolicited proposals.",
+      "open_now": false,
+      "eligibility_note": "The Foundation does not accept unsolicited proposals; aligned organizations contact info@thornburgfoundation.org first.",
+      "themes": [
+        "water",
+        "land & conservation",
+        "climate adaptation",
+        "rural livelihoods"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.75
+    },
+    "evidence": {
+      "award": {
+        "quote": "",
+        "url": "https://www.thornburgfoundation.org/"
+      },
+      "eligibility": {
+        "quote": "The Thornburg Foundation does not accept unsolicited proposals.",
+        "url": "https://www.thornburgfoundation.org/"
+      }
+    },
+    "vet_note": "New Mexico water and working-lands funder that takes no unsolicited proposals, so SALSAV would need to open a conversation first.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 4,
+      "quotes_removed": 1,
+      "fit": 45,
+      "changes": [
+        "eligibility quote is on the live home page, not in the crawler copy",
+        "award $150k-$250k removed: an example grant is not a stated maximum; award level unknown; award quote cleared (nulls clear stored 250000)"
+      ]
+    }
+  },
+  {
+    "id": "ac46aa57-0dc7-4922-ad25-5b1c0699ba19",
+    "verdict": "demote",
+    "reason": "Loan fund for commodity enterprises that excludes research; fit scores 33, below the 40 gate, with activity mismatch.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Backs smallholder value chains and climate-smart practices; no solar, water-energy or dryland focus, so agrivoltaics would be a stretch.",
+        "quote": "enabling farmers to access high-value markets, adopt climate-smart practices, add value locally, and protect biodiversity."
+      },
+      "activity": {
+        "level": "mismatch",
+        "why": "Lends to commodity enterprises with audited track records and says research is outside its mandate; a lab cannot take part.",
+        "quote": "Matters covered by other international organisations, such as research, humanitarian aid, educational, medical issues fall outside the CFC’s mandate."
+      },
+      "geography": {
+        "level": "global",
+        "why": "Open to projects in any of its member countries in commodity-dependent developing countries; no SALSAV site is prioritized.",
+        "quote": "The goal of the CFC is to advance development in commodity-dependent developing countries."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No CFC funding of agrivoltaics or UA work found.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "award_max_usd": 1500000,
+      "amount_confidence": "published",
+      "award_note": "Loans and other debt instruments, not grants; USD 1.5 million for regular projects, up to USD 300,000 under Fast-Track.",
+      "cycle": "annual_recurring",
+      "next_deadline": null,
+      "deadline_note": "29th call closed 1 October 2026; 30th call to be announced with no dates yet.",
+      "open_now": false,
+      "eligibility_note": "Page does not mention universities; it requires a 3-year operating record with audited financials and excludes research, so a lab is unlikely to qualify.",
+      "themes": [
+        "smallholder farmers",
+        "agriculture",
+        "rural livelihoods",
+        "climate adaptation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.8
+    },
+    "evidence": {
+      "award": {
+        "quote": "The maximum amount is USD 1.5 million for regular projects, and up to USD 300,000 under the Fast-Track procedure.",
+        "url": "https://www.common-fund.org/index.php/call-for-proposals"
+      },
+      "deadline": {
+        "quote": "However, the 30th Call for Proposals shall be announced soon.",
+        "url": "https://www.common-fund.org/index.php/call-for-proposals"
+      }
+    },
+    "vet_note": "Debt financing for commodity value-chain businesses that explicitly excludes research, so it is not a fit for a university lab.",
+    "source": "last_text",
+    "checked": {
+      "quotes_ok": 5,
+      "quotes_removed": 0,
+      "fit": 33,
+      "changes": [
+        "all quotes verified in crawler copy; $1.5M is a loan ceiling, not a grant, kept as the funder-stated maximum"
+      ]
+    }
+  },
+  {
+    "id": "ce6018cf-1a26-43f0-80d6-27a4448a10d6",
+    "verdict": "keep",
+    "reason": "",
+    "fit": {
+      "mission": {
+        "level": "adjacent",
+        "why": "Funds food-system innovations incl. regenerative practices; agrivoltaics is not named but fits as a sustainable food-production innovation.",
+        "quote": "Innovations leading to sustainable or regenerative practices that enable food systems to stay within planetary boundaries"
+      },
+      "activity": {
+        "level": "capacity",
+        "why": "Prize grants for proof-of-concept to scalable innovations; universities are eligible but the award is for an innovation, not a research program.",
+        "quote": "Academic or research institutions (including teams of students or researchers as part of their university or research Institution’s submission) from any country"
+      },
+      "geography": {
+        "level": "global",
+        "why": "Open to organizations from any country, except sanctioned ones; no SALSAV geography is prioritized.",
+        "quote": "Non-profit or non-governmental organizations from any country*"
+      },
+      "precedent": {
+        "level": "similar",
+        "why": "Past winners include universities with solar-drying and dryland food projects (Taita Taveta University, Kenya).",
+        "quote": "Taita Taveta University : Hybrid Solar Drying for Aflatoxin Control: Sustainable Pathway To Safer, Resilient Global Food Systems (SOLARSAFE) (Kenya).",
+        "url": "https://www.welthungerhilfe.org/global-food-system-challenge/previous-challenge-winners"
+      }
+    },
+    "facts": {
+      "ua_eligibility": "eligible",
+      "award_min_usd": 25000,
+      "award_max_usd": 250000,
+      "amount_confidence": "published",
+      "award_note": "Seed Grants $25,000 (up to 8), Growth Grants $100,000 (up to 3), Grand Prizes $250,000 (up to 2).",
+      "cycle": "fixed_deadline",
+      "next_deadline": "2027-02-15",
+      "deadline_note": "2027 round: applications open 2027-01-01 and close 2027-02-15; awards announced June to July 2027.",
+      "open_now": false,
+      "eligibility_note": "Academic or research institutions from any country may apply and may lead; individuals are not eligible; sanctioned countries excluded. Indirect costs capped at 6%.",
+      "requirements": {
+        "loi": false,
+        "cost_share": "",
+        "indirect_cap": "6% of total award funds",
+        "registrations": []
+      },
+      "themes": [
+        "agriculture",
+        "food security",
+        "technology & innovation",
+        "international partnerships",
+        "climate adaptation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.85
+    },
+    "evidence": {
+      "award": {
+        "quote": "Seeding The Future Grand Prizes ($250,000 each)",
+        "url": "https://www.welthungerhilfe.org/global-food-system-challenge"
+      },
+      "deadline": {
+        "quote": "Applications close: February 15th 2027",
+        "url": "https://www.welthungerhilfe.org/global-food-system-challenge/your-application"
+      },
+      "eligibility": {
+        "quote": "Academic or research institutions (including teams of students or researchers as part of their university or research Institution’s submission) from any country",
+        "url": "https://www.welthungerhilfe.org/global-food-system-challenge/your-application"
+      }
+    },
+    "vet_note": "Annual global food-system innovation prize (up to $250,000) that universities can lead; agrivoltaics would need to be framed as a food-production innovation with a field proof of concept.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 7,
+      "quotes_removed": 0,
+      "fit": 65,
+      "changes": [
+        "mission, precedent and award quotes are on the live pages (challenge page, previous-challenge-winners), not in the crawler copy; all verified"
+      ]
+    }
+  },
+  {
+    "id": "40b28eb8-44bf-4b58-9d0c-46b2941465cd",
+    "verdict": "demote",
+    "reason": "Environment programme targets fisheries, wildlife and rewilding in Southern Africa, Southeast Asia and Europe; fit scores 27, below the 40 gate.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Environment programme funds regenerative agriculture only alongside rewilding and wildlife; agrivoltaics would be a stretch.",
+        "quote": "regenerative agriculture (i.e., promoting a farming system that’s good for people and good for nature); and rewilding"
+      },
+      "activity": {
+        "level": "other",
+        "why": "Grants go to conservation and community organizations; a university lab could at most be a minor partner.",
+        "quote": ""
+      },
+      "geography": {
+        "level": "outside",
+        "why": "Land work is in Southern Africa, Southeast Asia and Europe; no SALSAV site, so a new local partner would be needed.",
+        "quote": "We support initiatives in Southern Africa, Southeast Asia, and Europe."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No Oak Foundation agrivoltaics or UA grant found.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "amount_confidence": "unknown",
+      "award_note": "Award sizes are not published on the pages read.",
+      "eligibility_note": "The pages read do not say whether US universities can apply or whether proposals are accepted.",
+      "themes": [
+        "land & conservation",
+        "agriculture",
+        "international partnerships"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.6
+    },
+    "evidence": {},
+    "vet_note": "Large European family foundation whose environment grants focus on wildlife, fisheries and regenerative farming in Southern Africa, not solar or dryland research.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 2,
+      "quotes_removed": 0,
+      "fit": 27,
+      "changes": [
+        "mission and geography quotes verified on https://www.oakfnd.org/programmes/environment/ (not the home page)"
+      ]
+    }
+  },
+  {
+    "id": "52149109-4012-44f9-9c91-9e82d5ead214",
+    "verdict": "demote",
+    "reason": "Southwest Rivers Headwaters Fund pays for riparian habitat and species restoration; no agrivoltaics or solar fit, so mission level is none.",
+    "fit": {
+      "mission": {
+        "level": "none",
+        "why": "Funds riparian habitat, fish and wildlife restoration in river headwaters; no solar or farming-energy work.",
+        "quote": "dedicated to restoring, protecting, and enhancing aquatic and riparian species and their habitats in the headwaters of the Rio Grande and Colorado River watersheds"
+      },
+      "activity": {
+        "level": "other",
+        "why": "Pays for habitat restoration and species work by watershed groups and agencies; a university could only be a minor partner.",
+        "quote": "Implementation partners include community watershed groups, nonprofit organizations, state wildlife agencies, tribes and federal agencies."
+      },
+      "geography": {
+        "level": "home",
+        "why": "Rio Grande and Colorado River headwaters in the Southwest; the photo is of Arizona's Apache-Sitgreaves forest.",
+        "quote": "headwaters of the Rio Grande and Colorado River watersheds"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No NFWF grant to UA or for agrivoltaics found.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "eligible",
+      "award_min_usd": 100000,
+      "award_max_usd": 600000,
+      "amount_confidence": "published",
+      "award_note": "Requests of $100,000 to $600,000; larger requests case by case; at least 1:1 non-federal match.",
+      "cycle": "annual_recurring",
+      "next_deadline": null,
+      "deadline_note": "2026 request for proposals closed (full proposals were due 2025-11-12); next round not announced.",
+      "open_now": false,
+      "eligibility_note": "Educational institutions are listed as eligible applicants; international organizations, businesses and individuals are not.",
+      "requirements": {
+        "loi": false,
+        "cost_share": "At least $1 non-federal match per $1 requested",
+        "indirect_cap": "",
+        "registrations": []
+      },
+      "themes": [
+        "water",
+        "land & conservation",
+        "drought & heat"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.75
+    },
+    "evidence": {
+      "award": {
+        "quote": "Grant requests should be between $100,000 and $600,000, with larger grant requests being considered on a case-by-case basis.",
+        "url": "https://www.nfwf.org/programs/southwest-rivers-headwaters-fund/southwest-rivers-headwaters-2026-request-proposals"
+      },
+      "deadline": {
+        "quote": "Southwest Rivers Headwaters 2026 Request for Proposals - CLOSED",
+        "url": "https://www.nfwf.org/programs/southwest-rivers-headwaters-fund"
+      },
+      "eligibility": {
+        "quote": "non-profit 501(c) organizations, educational institutions.",
+        "url": "https://www.nfwf.org/programs/southwest-rivers-headwaters-fund/southwest-rivers-headwaters-2026-request-proposals"
+      }
+    },
+    "vet_note": "Southwest river-habitat restoration fund that universities can apply to, but it pays for wildlife and riparian projects, not agrivoltaics research.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 6,
+      "quotes_removed": 0,
+      "fit": 48,
+      "changes": [
+        "award and eligibility quotes verified on the 2026 RFP page; deadline quote on the program page"
+      ]
+    }
+  },
+  {
+    "id": "75ed1902-47b1-48b1-bd08-e4b3129d304f",
+    "verdict": "demote",
+    "reason": "Fit scores 32, below the 40 gate: nature and AI focus, no open call and no stated way for outside universities to apply.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Nature, AI and big-ideas funder; its food work targets crops and food systems, so agrivoltaics would be a stretch.",
+        "quote": "The Bezos Earth Fund is investing $1 billion by 2030 to help transform food systems to feed a growing population and create the next generation of crops to be nutrient-rich and climate resilient."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Strategic big-idea investments and a round-based AI challenge; the only open-to-all round seen has closed.",
+        "quote": "inviting nonprofits and academic institutions to submit proposals focused on sustainable proteins, power grid optimization, biodiversity conservation, and visionary wildcard solutions"
+      },
+      "geography": {
+        "level": "global",
+        "why": "Works with partners worldwide; SALSAV geographies are allowed but not prioritized.",
+        "quote": "With partners around the globe, we are developing innovative solutions"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or UA grant found; AI challenge grantees include MIT and Columbia on unrelated topics.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "amount_confidence": "unknown",
+      "award_note": "No standing award range; the closed AI challenge gave $50,000 (Phase I) and up to $2 million (Phase II, Phase I grantees only).",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "deadline_note": "No open call found on the site.",
+      "open_now": false,
+      "eligibility_note": "No standing application process found; the past AI Grand Challenge invited nonprofits and academic institutions, but that round is over.",
+      "themes": [
+        "agriculture",
+        "climate adaptation",
+        "technology & innovation",
+        "land & conservation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.6
+    },
+    "evidence": {},
+    "vet_note": "Very large climate philanthropy with no open call for university research, so SALSAV would need an introduction and a project that fits its food-systems or AI themes.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 3,
+      "quotes_removed": 0,
+      "fit": 32,
+      "changes": [
+        "activity quote verified on https://www.bezosearthfund.org/initiatives/ai-for-climate-and-nature/grand-challenge-details"
+      ]
+    }
+  },
+  {
+    "id": "9b501252-2936-4bf6-b088-2707f616d2a2",
+    "verdict": "demote",
+    "reason": "Fit scores 39, below the 40 gate: its water work is access, sanitation and conservation, and no application route for universities is published.",
+    "fit": {
+      "mission": {
+        "level": "weak",
+        "why": "Water security means water access, sanitation and ecosystem conservation; no farming, solar or energy focus, so agrivoltaics would be a stretch.",
+        "quote": "Impulsamos iniciativas que integran acceso a agua y saneamiento, conservación de ecosistemas y fortalecimiento de capacidades locales, con una visión de largo plazo."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Invests in social programs run with multisector platforms; no research or lab-led funding stream is described.",
+        "quote": "Generamos una visión compartida de la solución convirtiéndonos en articuladores de plataformas de colaboración multisectorial."
+      },
+      "geography": {
+        "level": "home",
+        "why": "Works in Mexico first, then Colombia, Brazil and other Latin American countries; Mexico is a SALSAV partner site.",
+        "quote": "México, Colombia y Brasil, Chile, Costa Rica, Ecuador, Guatemala, Panamá, Perú"
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or UA grant found; its water funds partner with universities but on urban watershed work.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "amount_confidence": "unknown",
+      "award_note": "No award sizes or application process published on the pages read.",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "open_now": false,
+      "eligibility_note": "The foundation site and FAQ do not describe an application process or who may apply.",
+      "themes": [
+        "water",
+        "international partnerships",
+        "climate adaptation"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.6
+    },
+    "evidence": {},
+    "vet_note": "Mexico-based water, early childhood and circular-economy funder with no published way to apply, so it is a relationship play at best for a Sonora or Baja California water project.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 3,
+      "quotes_removed": 0,
+      "fit": 39,
+      "changes": [
+        "all quotes verified in crawler copy"
+      ]
+    }
+  },
+  {
+    "id": "c085dd3e-c20b-484a-9b36-c4e57a7c9b45",
+    "verdict": "demote",
+    "reason": "Global Climate initiative funds tropical forest protection in the Congo Basin, Indonesia and the Amazon; mission level is none and fit scores 19.",
+    "fit": {
+      "mission": {
+        "level": "none",
+        "why": "Climate grants protect tropical forests; no solar, farming-energy or dryland agriculture work is funded.",
+        "quote": "we focus on protecting tropical forests in three key regions: the Congo Basin, Indonesia, and the Brazilian Amazon."
+      },
+      "activity": {
+        "level": "other",
+        "why": "Channels money to local conservation organizations through a donor partnership; a university lab would be at most a minor partner.",
+        "quote": "FPC helps channel resources directly to local organizations to protect forests and strengthen local collaboration and leadership."
+      },
+      "geography": {
+        "level": "outside",
+        "why": "Targets Congo Basin, Indonesia and the Brazilian Amazon; no SALSAV site, so a new local partner would be needed.",
+        "quote": "we focus on protecting tropical forests in three key regions: the Congo Basin, Indonesia, and the Brazilian Amazon."
+      },
+      "precedent": {
+        "level": "none",
+        "why": "No agrivoltaics or UA grant found; the grantee list shows no UA or solar-farming work.",
+        "quote": ""
+      }
+    },
+    "facts": {
+      "ua_eligibility": "unknown",
+      "amount_confidence": "unknown",
+      "award_note": "No award range published.",
+      "cycle": "closed_unknown",
+      "next_deadline": null,
+      "deadline_note": "No open requests for proposals.",
+      "open_now": false,
+      "eligibility_note": "Grants are mainly to tax-exempt charitable organizations and very few come from unsolicited proposals; the page does not say whether universities can apply.",
+      "themes": [
+        "land & conservation",
+        "climate adaptation",
+        "international partnerships"
+      ],
+      "fetchability": "easy",
+      "confidence": 0.7
+    },
+    "evidence": {
+      "eligibility": {
+        "quote": "In a typical year, about 15 percent of our grants are awarded to first-time grantees and less than one percent come from unsolicited proposals.",
+        "url": "https://www.packard.org/grantees/funding-opportunties/"
+      },
+      "deadline": {
+        "quote": "There are currently no open RFPs at this time, please check back again soon.",
+        "url": "https://www.packard.org/grantees/funding-opportunties/"
+      }
+    },
+    "vet_note": "Large foundation whose climate money goes to tropical forest protection by local organizations, so it does not fit solar-and-farming research in the Southwest.",
+    "source": "both",
+    "checked": {
+      "quotes_ok": 5,
+      "quotes_removed": 0,
+      "fit": 19,
+      "changes": [
+        "quotes verified live: https://www.packard.org/initiative/global-climate-initiative/ and https://www.packard.org/grantees/funding-opportunties/"
+      ]
+    }
+  }
+]

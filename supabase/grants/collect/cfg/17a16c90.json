@@ -1,0 +1,25 @@
+{
+  "id": "17a16c90-cfd5-4007-97fc-c5e7e2a719a6",
+  "name": "Shell Foundation",
+  "program": "Partnerships (invite-only)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://shellfoundation.org/",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "No public call list exists: Shell Foundation works with partners by invitation and does not take unsolicited proposals. The homepage is watched and any change is flagged for review, so new announcements may show up with news posts.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12 with desktop UA: https://shellfoundation.org/ HTTP 200 (194 KB, reCAPTCHA only on a form); /partner-with-us/ HTTP 200 (no open-call or deadline wording found); /feed/ HTTP 200 (news items only, latest 2026-10-23); /wp-json/wp/v2/types HTTP 200 (post types: press-release, media-coverage, thought-leadership, case-study, insight-report, learning-report, strategic-partners, team-member, market-intelligence, event; no call type); /grants and /funding HTTP 404; /sitemap.xml HTTP 200 (post, page, press-release, media-coverage sitemaps only).",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "page_reason": "Shell Foundation does not run an open call list: its contact page says it does not accept unsolicited proposals for funding projects, and its partner pages carry no deadline. The few call-style announcements (e.g. ClimaFii cohorts, run with partners) appeared as news posts, so the homepage is watched for a new one.",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

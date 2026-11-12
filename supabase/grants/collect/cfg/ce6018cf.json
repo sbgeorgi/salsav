@@ -1,0 +1,35 @@
+{
+  "id": "ce6018cf-1a26-43f0-80d6-27a4448a10d6",
+  "name": "Welthungerhilfe (grants from the Seeding The Future Foundation)",
+  "program": "Global Food System Challenge, 2027 round (Seed Grant, Growth Grants, Grand Prize)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.welthungerhilfe.org/global-food-system-challenge/your-application",
+  "feed_url": null,
+  "adapter_config": {
+    "self": {
+      "title": "Global Food System Challenge 2027 (Seed Grant, Growth Grants, Grand Prize)"
+    },
+    "auto_vet": true
+  },
+  "collect_note": "The yearly Global Food System Challenge page is read twice a day. Its stated closing date (15 Feb 2027; applications open 1 Jan 2027) shows as one open call. No call list exists, so the next round's date appears only when the page is updated.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Global Food System Challenge 2027 (Seed Grant, Growth Grants, Grand Prize)",
+        "deadline": "2027-02-15",
+        "url": "https://www.welthungerhilfe.org/global-food-system-challenge/your-application"
+      }
+    ]
+  },
+  "evidence": "GET https://www.welthungerhilfe.org/global-food-system-challenge/your-application HTTP 200 (105,808 bytes, desktop UA, no JS): 'Applications open January 1st 2027 / Applications close: February 15th 2027'; GET .../global-food-system-challenge HTTP 200 shows the same timeline ('February 15th 2027 - Applications close'); GET https://www.welthungerhilfe.org/rss-whh.xml HTTP 200 is news only (rejected); GET /wp-json/wp/v2/types HTTP 404 (no WordPress types). Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

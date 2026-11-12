@@ -1,0 +1,44 @@
+{
+  "id": "b8ff1258-5845-480e-a40e-354038d10e13",
+  "name": "U.S. Department of Defense, SERDP and ESTCP",
+  "program": "SERDP / ESTCP annual BAA (FY2027 round; Energy & Water focus area)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://serdp-estcp.mil/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "max_items": 40,
+    "list": {
+      "url": "https://serdp-estcp.mil/workwithus/listingcardresults",
+      "match": "/workwithus/solicitation\\?id=",
+      "date_label": true,
+      "detail": true
+    }
+  },
+  "collect_note": "Open SERDP and ESTCP solicitations are read twice a day from the program's Work With Us page. Each deadline is taken from the solicitation's own page. Currently two are open (Core and SEED, FY 2028). New rounds appear automatically when posted.",
+  "expect": {
+    "min_items": 2,
+    "sample": [
+      {
+        "title": "11/5/2026 SERDP Core FY 2028 Solicitation",
+        "deadline": "2027-01-07",
+        "url": "https://serdp-estcp.mil/workwithus/solicitation?id=0ac3a009-ace9-457c-b92e-bd722e172f90"
+      },
+      {
+        "title": "11/5/2026 SERDP SEED FY 2028 Solicitation",
+        "deadline": "2027-03-11",
+        "url": "https://serdp-estcp.mil/workwithus/solicitation?id=b9ff8482-b37f-4151-94ce-aa115aed9104"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP GET (desktop UA, 2026-11-12): https://serdp-estcp.mil/ HTTP 200 (home banner 'New SERDP Funding Opportunities Released November 5, 2026!'); /workwithus HTTP 200 (loads /workwithus/listingcardresults via data-ajax-href); /workwithus/listingcardresults HTTP 200, 4.7 KB, 2 anchors matching /workwithus/solicitation?id=; /workwithus/solicitation?id=0ac3a009-... (Core FY2028) HTTP 200, 'Pre-proposals are due January 7, 2027'; ...?id=b9ff8482-... (SEED FY2028) HTTP 200, due 'March 11, 2027'; /workwithus/callforproposal?id=153361a2-... HTTP 200 (SON page with 'Due Date January 7, 2027'); /newsitems HTTP 200 (spotlight 'SERDP Releases FY 2028 Core Solicitation', 11/5/2026); /workwithus/PastCallForProposal HTTP 200 (past SONs FY2017-2027 via AJAX, fiscal-year window capped at 2027, not used). Grants.gov search2 keyword SERDP/ESTCP: only HQ003423NFOEASD07 (DoW-wide cooperative-agreement NOFO, not research). Re-verified 2026-11-12 on the solicitation pages via fetch_text.py (Core: 'Pre-proposals are due January 7, 2027 at 2:00 p.m. Eastern Time'; SEED: 'Proposals are due March 11, 2027 at 2:00 p.m. Eastern Time') and with the real harness after setting list.detail true: ok, count 2, open 2, deadlines 2027-01-07 and 2027-03-11.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "harness": {
+    "ok": true,
+    "count": 2,
+    "open": 2,
+    "checked": "2026-11-12"
+  }
+}

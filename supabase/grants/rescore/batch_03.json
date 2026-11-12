@@ -1,0 +1,657 @@
+[
+ {
+  "id": "9dc2223d-158a-4d84-b631-d8e2f80b2beb",
+  "verdict": "keep",
+  "reason": "Invitation-only New Mexico funder; scores 50, above the 40-point gate, kept as a relationship play.",
+  "fit": {
+   "mission": {
+    "level": "adjacent",
+    "why": "Land initiative backs climate-resilient working lands and Water backs New Mexico water; agrivoltaics is a natural but unnamed proposal.",
+    "quote": "Climate-resilient working lands and the producers who steward them."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Funds New Mexico nonprofits and policy work; a university lab would be a minor partner.",
+    "quote": "We work in a small number of focused initiative areas, fund the organizations closest to the problem and stay long enough to see it change."
+   },
+   "geography": {
+    "level": "home",
+    "why": "New Mexico is in the US Southwest; grants go to New Mexico organizations, so UA would need a local angle.",
+    "quote": "In grants awarded to New Mexico organizations to date."
+   },
+   "precedent": {
+    "level": "similar",
+    "why": "Co-funded an NMSU and NM WRRI water-for-agriculture research study (about $1.9M total); not agrivoltaics.",
+    "quote": "",
+    "url": "https://www.thepacker.com/news/sustainability/will-leaving-farmland-fallow-save-water-long-run-new-mexico-researchers-given-2m-find-out"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "invitation_only",
+   "award_min_usd": 150000,
+   "award_max_usd": 250000,
+   "amount_confidence": "estimated",
+   "award_note": "Largest featured single grant on the homepage is $250,000 (Future Focused Education); no published range.",
+   "cycle": "invite_only",
+   "next_deadline": null,
+   "deadline_note": "No application window; the foundation does not accept unsolicited proposals.",
+   "open_now": false,
+   "eligibility_note": "Does not accept unsolicited proposals; aligned groups email the foundation first. Grants are to New Mexico organizations.",
+   "requirements": {
+    "loi": false,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "themes": [
+    "water",
+    "land & conservation",
+    "agriculture",
+    "climate adaptation",
+    "rural livelihoods"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "K-12 Education · Statewide$250,000",
+    "url": "https://www.thornburgfoundation.org/"
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "The Thornburg Foundation does not accept unsolicited proposals. If your work aligns with a current initiative, contact info@thornburgfoundation.org.",
+    "url": "https://www.thornburgfoundation.org/"
+   }
+  },
+  "vet_note": "Thornburg backs New Mexico water and climate-resilient working lands but takes no unsolicited proposals, so contact the initiative officers first.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 5,
+   "quotes_removed": 0,
+   "fit": 50,
+   "changes": [
+    "Quotes: all 5 found (4 in stored copy; the unsolicited-proposals sentence is on the live homepage, not in the stored copy).",
+    "Award $250,000 kept: a stated single featured grant, but only a sample, so confidence stays estimated."
+   ]
+  }
+ },
+ {
+  "id": "9e33443a-c2a8-4b13-9716-5e189525069a",
+  "verdict": "keep",
+  "reason": "Score 60 passes the 40-point gate; UA needs an Israeli consortium partner, award size unpublished, current round deadline passed.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Energy-water nexus is one of four industrial energy topics; agrivoltaics and farming are not named, so it would be a stretch.",
+    "quote": "The purpose of the Energy Center is to accelerate development and deployment of critical and innovative technologies in the areas of (1) Fossil Fuels; (2) Energy Storage; (3) Cyber Security for Energy Infrastructure; (4) Energy-Water Nexus"
+   },
+   "activity": {
+    "level": "research_demo",
+    "why": "Consortia of companies and universities run joint R&D and demonstration; universities lead several current consortia.",
+    "quote": "a consortium of U.S. and Israeli companies, universities, and/or research institutions collaborates on research and development, fostering know-how and technology transfer from academia to industry"
+   },
+   "geography": {
+    "level": "home",
+    "why": "US-Israel binational program; Israel is a SALSAV partner site.",
+    "quote": "established the U.S.-Israel Center of Excellence in Energy, Engineering and Water Technology"
+   },
+   "precedent": {
+    "level": "direct",
+    "why": "BIRD Energy 2023 funded an agri-voltaic demonstration (Trigo Solar with Texas A&M AgriLife); same funder, different BIRD program.",
+    "quote": "to demonstrate a water-energy agri-voltaic mounting system able to collect, divert, and store rainwater and irrigate cultivated rows of rainfed row crops.",
+    "url": "https://www.energy.gov/node/4836048"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible_with_partner",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "Award size not published on the Energy Center pages read",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "Official Energy Center site lists full proposals due September 15, 2026 (passed); the January 21, 2027 date on the BIRD page is unlabeled and not confirmed",
+   "open_now": false,
+   "eligibility_note": "Consortia of US and Israeli companies, research institutes and universities; UA can join a consortium, so an Israeli partner is needed.",
+   "themes": [
+    "research",
+    "technology & innovation",
+    "water",
+    "solar & clean energy",
+    "international partnerships"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "Full Proposals Submission Deadline - September 15, 2026 5pm EST, 00:00 IS Time",
+    "url": "https://us-isr-energycenter.org/"
+   },
+   "eligibility": {
+    "quote": "while facilitating cooperation among consortia of U.S. and Israeli companies, research institutes, and universities",
+    "url": "https://www.birdf.com/bird_programs/energy-center/"
+   }
+  },
+  "vet_note": "US-Israel consortium R&D program with an energy-water topic that UA could join with an Israeli partner, but it is not about farming and the current round has closed.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 6,
+   "quotes_removed": 0,
+   "fit": 60,
+   "changes": [
+    "Precedent raised similar to direct: DOE page confirms BIRD funded agrivoltaics with a university partner; added the verbatim quote.",
+    "Deadline quote found live at us-isr-energycenter.org (not in stored copy); Sept 15, 2026 has passed and Jan 21, 2027 is unlabeled, so next_deadline stays null.",
+    "Reason score corrected 55 to 60."
+   ]
+  }
+ },
+ {
+  "id": "ebfadef7-85b8-4154-936f-26e3f387df03",
+  "verdict": "demote",
+  "reason": "No open call could be read and applicant eligibility is unconfirmed; score 27 is under the 40-point gate.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Has a Climate center that funds climate research; no listed call names agrivoltaics or farming.",
+    "quote": "Supporting climate research to bend the carbon curve and secure a sustainable future"
+   },
+   "activity": {
+    "level": "other",
+    "why": "The page does not say what kinds of work the calls fund, so only a minor role is assumed.",
+    "quote": ""
+   },
+   "geography": {
+    "level": "outside",
+    "why": "The page states no geography, so no SALSAV site overlap can be shown.",
+    "quote": ""
+   },
+   "precedent": {
+    "level": "none",
+    "why": "One search found no Schmidt Sciences agrivoltaics or University of Arizona grant.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "No award sizes on the page; the open-call list is rendered by JavaScript and did not load",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "No open calls or deadlines could be read",
+   "open_now": false,
+   "eligibility_note": "The page says it does not accept unsolicited proposals but also lists current open calls (list did not load), so who may apply is not confirmed.",
+   "themes": [
+    "research",
+    "technology & innovation"
+   ],
+   "fetchability": "js_required",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "We proactively seek out grant opportunities and do not accept unsolicited proposals.",
+    "url": "https://www.schmidtsciences.org/opportunities"
+   }
+  },
+  "vet_note": "Schmidt Sciences picks its own grantees and lists no open climate call we can read, so SALSAV has no application route today.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 2,
+   "quotes_removed": 0,
+   "fit": 27,
+   "changes": [
+    "ua_eligibility invitation_only to unknown: page lists open calls, so it is not invitation only; cycle invite_only to closed_unknown.",
+    "Added verbatim mission quote from the live homepage Climate center blurb.",
+    "Fit 23 to 27 from eligibility; still demoted."
+   ]
+  }
+ },
+ {
+  "id": "ed1ad4b0-da14-47c7-8139-51f8d4f943bb",
+  "verdict": "demote",
+  "reason": "Ford takes no unsolicited proposals and lists no public opportunities; score 28 is under the 40-point gate.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Funds work on inequality and justice; agrivoltaics would be a stretch.",
+    "quote": "address the underlying drivers of inequality"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Grants go to chosen institutions for justice and social change work, not lab research or field trials.",
+    "quote": ""
+   },
+   "geography": {
+    "level": "global",
+    "why": "Works in eleven regions including Mexico and Central America and East Africa; SALSAV sites are not prioritized.",
+    "quote": "Mexico and Central America"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "Ford funded UA only for border archives and social topics, nothing on solar, water or farming.",
+    "quote": "",
+    "url": "https://www.fordfoundation.org/work/our-grants/awarded-grants/grants-database/the-university-of-arizona-140933/"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "invitation_only",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "No award sizes stated on the grant opportunities page",
+   "cycle": "invite_only",
+   "next_deadline": null,
+   "deadline_note": "No public grant opportunities are open",
+   "open_now": false,
+   "eligibility_note": "Most grants are identified by the foundation; unsolicited proposals are not accepted.",
+   "themes": [
+    "equity & inclusion",
+    "land & conservation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.8
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "There are currently no public grant opportunities at the Ford Foundation.",
+    "url": "https://www.fordfoundation.org/work/our-grants/grant-opportunities/"
+   },
+   "eligibility": {
+    "quote": "we do not accept any unsolicited grant proposals by mail, email or phone.",
+    "url": "https://www.fordfoundation.org/work/our-grants/"
+   }
+  },
+  "vet_note": "Ford funds social-justice work by invitation and has no open call, so SALSAV cannot apply and agrivoltaics is off its themes.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 28,
+   "changes": [
+    "Geography region to global: a multi-region funder, not a Mexico or Africa focus.",
+    "Eligibility quote swapped for the sentence in the stored copy (original also on the live opportunities page).",
+    "Geography quote and deadline quote exist only on live pages (region menu, opportunities page).",
+    "Fit 32 to 28."
+   ]
+  }
+ },
+ {
+  "id": "ed1be1a8-d964-4155-a920-2071f793727f",
+  "verdict": "demote",
+  "reason": "Walton accepts no unsolicited proposals and funds water and communities, not solar farming; score about 32 is under the 40-point gate.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Environment work on Colorado River water and nature-based solutions; agrivoltaics is not named.",
+    "quote": "Protecting Our Water for Future Generations"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Systems-level change work with chosen partners; a university lab could only be a minor partner.",
+    "quote": ""
+   },
+   "geography": {
+    "level": "region",
+    "why": "Environment stories focus on the Colorado River Basin and Mississippi Delta; no SALSAV site outside Arizona.",
+    "quote": "In the Colorado River Basin, partnerships with Tribal nations show why lasting progress starts with listening"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "One search found Walton grants to Arizona State University, none to UA or on agrivoltaics.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "invitation_only",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "No award sizes published on the pages read",
+   "cycle": "invite_only",
+   "next_deadline": null,
+   "deadline_note": "No open call or deadline",
+   "open_now": false,
+   "eligibility_note": "The foundation does not accept unsolicited proposals; grants follow its own strategies.",
+   "themes": [
+    "water",
+    "land & conservation",
+    "climate adaptation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.8
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "The foundation does not accept unsolicited proposals",
+    "url": "https://www.waltonfamilyfoundation.org/grants"
+   }
+  },
+  "vet_note": "Walton funds Colorado River water work by invitation only, so SALSAV has no open door and agrivoltaics is outside its stated themes.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 3,
+   "quotes_removed": 0,
+   "fit": 32,
+   "changes": [
+    "Quotes: mission and eligibility quotes found live (environment and grants pages), geography quote in stored copy; none in stored copy for the other two."
+   ]
+  }
+ },
+ {
+  "id": "0e5187cf-1952-4e7f-b5d5-411fdefe6147",
+  "verdict": "demote",
+  "reason": "The current call funds food-processing plant upgrades in California, not agrivoltaics research; score 27 is under the 40-point gate.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Current call decarbonizes food-processing facilities; no farming or agrivoltaics link, though CEC has run agrivoltaics calls before.",
+    "quote": "This solicitation will fund the implementation and demonstration of advanced energy and decarbonization technologies in food processing and supporting facilities"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Demonstrates proven technology at food-processing sites; a university lab would be at most a minor partner.",
+    "quote": ""
+   },
+   "geography": {
+    "level": "outside",
+    "why": "California state program for California facilities; SALSAV has no site there.",
+    "quote": ""
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No verified precedent: the cited GFO-24-301 manual link is dead (404), so earlier agrivoltaics calls cannot be confirmed.",
+    "quote": "",
+    "url": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "Award size not on the solicitation page; it sits in the solicitation manual",
+   "cycle": "fixed_deadline",
+   "next_deadline": "2026-12-17",
+   "deadline_note": "GFO-26-302 Food Production Investment Program 2026 closes Dec 17, 2026; the earlier stored date of Nov 13 belongs to a different call (GFO-26-301)",
+   "open_now": true,
+   "eligibility_note": "The solicitation page does not state who may apply; the call targets food-processing facilities.",
+   "themes": [
+    "solar & clean energy",
+    "agriculture",
+    "technology & innovation"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "December 17, 2026, 11:59 pm",
+    "url": "https://www.energy.ca.gov/solicitations/2026-09/gfo-26-302-food-production-investment-program-2026"
+   },
+   "eligibility": {
+    "quote": "",
+    "url": ""
+   }
+  },
+  "vet_note": "California Energy Commission's open call upgrades food-processing plants in California, so it is not a route for SALSAV's field agrivoltaics research.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 2,
+   "quotes_removed": 0,
+   "fit": 27,
+   "changes": [
+    "Precedent similar to none: cited document returns 404, claim unverifiable.",
+    "Mission quote and Dec 17, 2026 deadline quote found live on the solicitation page (deadline is after 2026-11-11, kept).",
+    "Fit 30 to 27."
+   ]
+  }
+ },
+ {
+  "id": "06541010-bb16-487a-b3b5-5a9dfcd1ba1d",
+  "verdict": "keep",
+  "reason": "Score 51 passes the 40-point gate; UA would need an accredited entity as lead and award sizes are not stated.",
+  "fit": {
+   "mission": {
+    "level": "adjacent",
+    "why": "Funds climate adaptation including agriculture and food security in developing countries; solar farming is not named.",
+    "quote": "GCF in Burundi: Financing climate-smart agroforestry to help achieve food security"
+   },
+   "activity": {
+    "level": "other",
+    "why": "Money flows through accredited entities for large projects; a university could be a minor partner.",
+    "quote": "Accredited Entities (AEs) are organisations that partner with GCF and developing countries to develop and implement projects"
+   },
+   "geography": {
+    "level": "global",
+    "why": "Funds developing countries worldwide, which include SALSAV's Kenya and Mexico sites, but without priority.",
+    "quote": "GCF is the world’s climate fund for developing countries"
+   },
+   "precedent": {
+    "level": "similar",
+    "why": "GCF board approved a Fiji agrophotovoltaic project (SAP016) in 2020, but it never started implementation and was terminated in 2026; no UA grant found.",
+    "quote": "by supporting an innovative technology that combines photovoltaic power generation and agricultural production",
+    "url": "https://www.greenclimate.fund/project/sap016"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible_with_partner",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "No single award size stated on the pages read",
+   "next_deadline": null,
+   "deadline_note": "No application deadline stated on the pages read",
+   "eligibility_note": "Projects are submitted through GCF accredited entities with national government approval; UA would join an accredited entity's project as a partner.",
+   "themes": [
+    "climate adaptation",
+    "agriculture",
+    "food security",
+    "international partnerships"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.65
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "Organisations accredited by GCF to develop and implement climate projects",
+    "url": "https://www.greenclimate.fund/about/partners"
+   }
+  },
+  "vet_note": "Large climate fund for developing countries where UA could join an accredited entity's agriculture or energy project in Kenya or Mexico, but it cannot apply alone.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 5,
+   "quotes_removed": 0,
+   "fit": 51,
+   "changes": [
+    "Precedent direct to similar: SAP016 shows implementation not started and terminated 13 May 2026, so agrivoltaics was approved but not funded in practice; added verbatim quote.",
+    "Activity and eligibility quotes found live on the partners page (not in stored copy).",
+    "Fit 53 to 51."
+   ]
+  }
+ },
+ {
+  "id": "58ef1d47-6a95-423d-94bb-e9fe6daabd05",
+  "verdict": "keep",
+  "reason": "Score 59 passes the 40-point gate; any research institution may apply but award size and deadline are not stated.",
+  "fit": {
+   "mission": {
+    "level": "adjacent",
+    "why": "Backs climate resilience and agriculture innovations for underserved people; agrivoltaics is not named.",
+    "quote": "Building climate resilience: Supporting enterprises that help vulnerable populations adapt and build resilience to the effects of climate change."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Mostly invests in enterprises to scale solutions; a lab fits only as a minor or pilot partner.",
+    "quote": "We use our funding to support innovators to prove out the impact of their solution and achieve greater scale."
+   },
+   "geography": {
+    "level": "region",
+    "why": "Prioritizes Africa and Asia, which covers SALSAV's Kenya site.",
+    "quote": "We strategically prioritise investments in Africa and Asia"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "One search found a GIF solar irrigation deal in Southeast Asia, no agrivoltaics or UA grant.",
+    "quote": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "Award sizes not stated on the pages read; funding stages page not read",
+   "next_deadline": null,
+   "eligibility_note": "Any type of organisation in any country may apply, including research institutions; individuals must apply through an organisation.",
+   "themes": [
+    "technology & innovation",
+    "agriculture",
+    "food security",
+    "climate adaptation",
+    "international partnerships"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "Any type of organisation may apply. This includes social enterprises, for-profit companies, non-profit organisations, government agencies, and research institutions in any country.",
+    "url": "https://www.globalinnovation.fund/what-we-fund/"
+   }
+  },
+  "vet_note": "Open to research institutions anywhere and focused on climate-resilient agriculture in Africa and Asia, a fit for a Kenya pilot if SALSAV can show a scalable innovation.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 59,
+   "changes": [
+    "Eligibility and activity quotes verbatim on the live what-we-fund page (not in stored copy). \"What we do not fund\" and funding stages pages could not be fetched (404), so exclusions are unchecked."
+   ]
+  }
+ },
+ {
+  "id": "71f3a111-3bbb-4753-b739-00ac1cd55880",
+  "verdict": "keep",
+  "reason": "Score 47 passes the 40-point gate; no open application, so it is a cultivate-first funder and the only open call is off topic.",
+  "fit": {
+   "mission": {
+    "level": "adjacent",
+    "why": "Big bets on energy access in Africa and good food; agrivoltaics fits as a natural proposal but is not named.",
+    "quote": "With 730 million people still living without access to electricity, we are making a big bet with partners to electrify 1 billion people, including 300 million in Africa by 2030."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Programs run through chosen partners for scale; a lab could be a minor research partner.",
+    "quote": ""
+   },
+   "geography": {
+    "level": "region",
+    "why": "Energy goal centers on Africa, which covers SALSAV's Kenya site.",
+    "quote": "including 300 million in Africa by 2030"
+   },
+   "precedent": {
+    "level": "direct",
+    "why": "Funded UA about $499k for climate-resilient Hopi dryland agriculture, 2023 to 2026.",
+    "quote": "in support of a community-led project to advance understanding and practice of climate resilient Hopi indigenous agriculture.",
+    "url": "https://www.rockefellerfoundation.org/grants/arizona-board-of-regents-university-of-arizona-2023"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "invitation_only",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "No award size stated for energy or food programs; UA's 2023 grant was $499,485",
+   "cycle": "invite_only",
+   "next_deadline": null,
+   "deadline_note": "No open call in the energy or food programs; Cities Deliver is off topic",
+   "open_now": false,
+   "eligibility_note": "The foundation does not accept unsolicited grant proposals; the only open call (Cities Deliver) is about city public services.",
+   "themes": [
+    "energy access",
+    "food security",
+    "climate adaptation",
+    "international partnerships"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.8
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "The Rockefeller Foundation does not accept unsolicited grants proposals.",
+    "url": "https://www.rockefellerfoundation.org/grants/"
+   }
+  },
+  "vet_note": "Rockefeller has backed UA dryland farming and targets energy access in Africa, but only by invitation, so a relationship with its program staff comes first.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 47,
+   "changes": [
+    "Eligibility quote verbatim on the live grants page; Hopi precedent quote verbatim on the UA grant page ($499,485). Neither is in the stored copy."
+   ]
+  }
+ }
+]

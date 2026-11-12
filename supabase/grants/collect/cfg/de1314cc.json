@@ -1,0 +1,25 @@
+{
+  "id": "de1314cc-eee3-45dc-9cbc-f7542b0a2992",
+  "name": "Netherlands Ministry of Foreign Affairs, implemented by RVO",
+  "program": "Climate, Water and Food facility (CWF)",
+  "mode": "page",
+  "page_reason": "CWF is a government-to-government facility for Dutch embassies and consulates, so RVO publishes no call for proposals, deadline, feed or API for it; the page only says 'Open for application' and tells other organisations to email cwf@rvo.nl. A new call would first appear as a change on this program page.",
+  "adapter": "html",
+  "url": "https://english.rvo.nl/subsidies-financing/cwf",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "No public call list exists: this facility works through Dutch embassies and tells other organisations to email the agency. No calls or deadlines are collected. The program page is watched and any change is flagged for review.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12, desktop UA: https://english.rvo.nl/subsidies-financing/cwf HTTP 200 (138 KB; page says 'Open for application' and 'CWF will run from 2026 to 2029', no labelled deadline; only contact is mailto cwf@rvo.nl); https://english.rvo.nl/subsidy-guide HTTP 200 (form-driven finder, no call links); https://english.rvo.nl/subsidies-financing HTTP 404; https://english.rvo.nl/rss.xml HTTP 400; https://english.rvo.nl/feed HTTP 404.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

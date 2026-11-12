@@ -1,0 +1,4840 @@
+{
+ "generated_at": "2026-11-11T07:00:00Z",
+ "min_days": 14,
+ "min_award": 200000,
+ "rubric": {
+  "version": 2,
+  "min_fit": 40,
+  "tiers": [
+   {
+    "key": "prime",
+    "min": 75,
+    "label": "Prime"
+   },
+   {
+    "key": "strong",
+    "min": 60,
+    "label": "Strong"
+   },
+   {
+    "key": "possible",
+    "min": 45,
+    "label": "Possible"
+   },
+   {
+    "key": "long_shot",
+    "min": 0,
+    "label": "Long shot"
+   }
+  ],
+  "dims": [
+   {
+    "key": "mission",
+    "label": "Mission match",
+    "max": 35,
+    "source": "judged",
+    "question": "How directly does this program fund what SALSAV does?",
+    "levels": [
+     {
+      "key": "core",
+      "points": 35,
+      "label": "Agrivoltaics named",
+      "rule": "The call or the program priorities name agrivoltaics, dual-use solar or solar combined with farming."
+     },
+     {
+      "key": "strong",
+      "points": 27,
+      "label": "Direct nexus",
+      "rule": "Funds the water-energy-food nexus, solar or renewable energy for agriculture, or dryland and semi-arid farming resilience."
+     },
+     {
+      "key": "adjacent",
+      "points": 18,
+      "label": "Adjacent field",
+      "rule": "Funds a wider field (climate adaptation, sustainable agriculture, clean energy access, food security) where an agrivoltaics project is a natural proposal."
+     },
+     {
+      "key": "weak",
+      "points": 8,
+      "label": "Tangential",
+      "rule": "Only a general link (environment, development, education); agrivoltaics would be a stretch."
+     },
+     {
+      "key": "none",
+      "points": 0,
+      "label": "No match",
+      "rule": "Does not fund this kind of work."
+     }
+    ]
+   },
+   {
+    "key": "activity",
+    "label": "Type of work funded",
+    "max": 15,
+    "source": "judged",
+    "question": "Does it pay for the kind of work a university lab does?",
+    "levels": [
+     {
+      "key": "research_demo",
+      "points": 15,
+      "label": "Research and demonstration",
+      "rule": "Funds applied research, field trials or demonstration sites led by research institutions."
+     },
+     {
+      "key": "capacity",
+      "points": 10,
+      "label": "Deployment and training",
+      "rule": "Funds deployment, training, extension, education or capacity building where a university lab can lead a work package."
+     },
+     {
+      "key": "other",
+      "points": 5,
+      "label": "Other work",
+      "rule": "Mostly policy, advocacy, finance or service delivery; SALSAV could only be a minor partner."
+     },
+     {
+      "key": "mismatch",
+      "points": 0,
+      "label": "Mismatch",
+      "rule": "Funds work a university lab cannot take part in."
+     }
+    ]
+   },
+   {
+    "key": "geography",
+    "label": "Where the work can happen",
+    "max": 15,
+    "source": "judged",
+    "question": "Does the funded geography overlap SALSAV sites and partners?",
+    "levels": [
+     {
+      "key": "home",
+      "points": 15,
+      "label": "SALSAV home ground",
+      "rule": "Targets Arizona, the US Southwest, or a place where SALSAV already has a site or partner (Mexico, Kenya, Israel)."
+     },
+     {
+      "key": "region",
+      "points": 12,
+      "label": "Same region",
+      "rule": "US-wide, or Latin America or Sub-Saharan Africa as a whole."
+     },
+     {
+      "key": "global",
+      "points": 8,
+      "label": "Global",
+      "rule": "Global or multi-region; SALSAV geographies are allowed but not prioritized."
+     },
+     {
+      "key": "outside",
+      "points": 3,
+      "label": "Outside the footprint",
+      "rule": "Focused on places where SALSAV has no site; would need a new local partner."
+     },
+     {
+      "key": "excluded",
+      "points": 0,
+      "label": "Excluded",
+      "rule": "SALSAV geographies cannot be funded."
+     }
+    ]
+   },
+   {
+    "key": "eligibility",
+    "label": "Can the University of Arizona apply",
+    "max": 20,
+    "source": "field",
+    "field": "ua_eligibility",
+    "question": "Can UA be the applicant or a funded partner?",
+    "levels": [
+     {
+      "key": "eligible",
+      "points": 20,
+      "label": "UA applies directly",
+      "rule": "A US public university can be the lead applicant."
+     },
+     {
+      "key": "eligible_with_partner",
+      "points": 13,
+      "label": "With a partner",
+      "rule": "UA can take part, but a required partner or a different lead organization is needed."
+     },
+     {
+      "key": "unknown",
+      "points": 7,
+      "label": "Not confirmed",
+      "rule": "The official page does not say whether universities can apply."
+     },
+     {
+      "key": "invitation_only",
+      "points": 3,
+      "label": "By invitation",
+      "rule": "No open application; a relationship with the funder comes first."
+     },
+     {
+      "key": "unlikely",
+      "points": 0,
+      "label": "Not eligible",
+      "rule": "Universities or US applicants are excluded."
+     }
+    ]
+   },
+   {
+    "key": "award",
+    "label": "Award size",
+    "max": 10,
+    "source": "field",
+    "field": "award_max_usd",
+    "question": "How large is the largest single award?",
+    "levels": [
+     {
+      "key": "1m",
+      "points": 10,
+      "label": "$1M or more",
+      "rule": "Largest single award is at least $1,000,000."
+     },
+     {
+      "key": "500k",
+      "points": 8,
+      "label": "$500k to $1M",
+      "rule": "Largest single award is between $500,000 and $1,000,000."
+     },
+     {
+      "key": "200k",
+      "points": 6,
+      "label": "$200k to $500k",
+      "rule": "Largest single award is between $200,000 and $500,000."
+     },
+     {
+      "key": "unknown",
+      "points": 4,
+      "label": "Not published",
+      "rule": "The funder does not publish award sizes."
+     },
+     {
+      "key": "low",
+      "points": 0,
+      "label": "Below $200k",
+      "rule": "Largest single award is under $200,000."
+     }
+    ]
+   },
+   {
+    "key": "precedent",
+    "label": "Track record",
+    "max": 5,
+    "source": "judged",
+    "question": "Has this funder backed similar work before?",
+    "levels": [
+     {
+      "key": "direct",
+      "points": 5,
+      "label": "Funded this before",
+      "rule": "Has funded agrivoltaics, or the University of Arizona or a SALSAV partner on related work."
+     },
+     {
+      "key": "similar",
+      "points": 3,
+      "label": "Funded similar work",
+      "rule": "Has funded comparable university-led dryland agriculture, solar or water projects."
+     },
+     {
+      "key": "none",
+      "points": 0,
+      "label": "None found",
+      "rule": "No relevant precedent found."
+     }
+    ]
+   }
+  ]
+ },
+ "vocab": {
+  "themes": [
+   "agrivoltaics",
+   "solar & clean energy",
+   "water",
+   "agriculture",
+   "food security",
+   "climate adaptation",
+   "drought & heat",
+   "energy access",
+   "rural livelihoods",
+   "smallholder farmers",
+   "research",
+   "education & workforce",
+   "technology & innovation",
+   "land & conservation",
+   "international partnerships",
+   "equity & inclusion"
+  ]
+ },
+ "coverage_min": {
+  "us_federal": 12,
+  "intl_dev": 12,
+  "state_regional": 8,
+  "private_sector": 8,
+  "foundation_ngo": 12
+ },
+ "funders": [
+  {
+   "id": "3a39973d-0000-4000-8000-bdcf6ee87521",
+   "name": "Southwest Agricultural Energy Program",
+   "program": "Dual-Use Solar Research Call",
+   "category": "funder",
+   "bucket": "us_federal",
+   "url": "https://funder-swaep.example.org/call",
+   "apply_url": "https://funder-swaep.example.org/apply",
+   "feed_url": null,
+   "geography": [
+    "US",
+    "AZ",
+    "NM"
+   ],
+   "themes": [
+    "agrivoltaics",
+    "solar & clean energy",
+    "research"
+   ],
+   "award_min_usd": 500000,
+   "award_max_usd": 1500000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "eligible",
+   "cycle": "fixed_deadline",
+   "deadline": "2026-12-22",
+   "deadline_note": "",
+   "open_now": true,
+   "days_left": 41,
+   "deadline_state": "ok",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": "Required",
+    "cost_share": "20% cost-share",
+    "indirect_cap": "10% indirect cap",
+    "registrations": [
+     "SAM.gov"
+    ]
+   },
+   "requirements_text": "",
+   "eligibility_note": "Public universities may apply.",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-22T12:00:00Z",
+   "vet_note": "Southwest Agricultural Energy Program funds agrivoltaics work that matches SALSAV's research focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-11-09T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "new",
+    "owner": "",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 98,
+   "fit_reasons": [
+    "Names agrivoltaics in its priorities.",
+    "Covers Arizona and sites where SALSAV works."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 98,
+    "tier": "prime",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "core",
+      "points": 35,
+      "max": 35,
+      "why": "Names agrivoltaics in its priorities.",
+      "quote": "We prioritize projects that combine solar generation with crop production on the same land."
+     },
+     {
+      "key": "activity",
+      "level": "research_demo",
+      "points": 15,
+      "max": 15,
+      "why": "Pays for field trials led by universities.",
+      "quote": "Eligible activities include field trials and demonstration sites."
+     },
+     {
+      "key": "geography",
+      "level": "home",
+      "points": 15,
+      "max": 15,
+      "why": "Covers Arizona and sites where SALSAV works.",
+      "quote": "Priority regions: the US Southwest, Mexico and East Africa."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible",
+      "points": 20,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "1m",
+      "points": 10,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "similar",
+      "points": 3,
+      "max": 5,
+      "why": "Has funded comparable dryland work.",
+      "quote": "Past awards include dryland irrigation and solar pilots.",
+      "url": "https://funder-swaep.example.org/past-awards"
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $1,500,000 per project.",
+     "url": "https://funder-swaep.example.org/call"
+    },
+    "deadline": {
+     "quote": "Proposals are due 2026-12-22.",
+     "url": "https://funder-swaep.example.org/call"
+    },
+    "eligibility": {
+     "quote": "Public and private universities may apply as lead applicant.",
+     "url": "https://funder-swaep.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "mission": true,
+    "activity": true,
+    "geography": true,
+    "precedent": true,
+    "award": true,
+    "deadline": true,
+    "eligibility": true
+   },
+   "facts_verified": 4,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "apply_now",
+   "collection": {
+    "mode": "calls",
+    "health": "ok",
+    "source": "Grants.gov API",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 1,
+    "total_calls": 1,
+    "last_call_at": "2026-10-12T12:00:00Z",
+    "note": "Grants.gov search for this program number; every item is a call of this program.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "3238b0f5-0000-4000-8000-4c4580c965e6",
+   "name": "Dryland Food Systems Fund",
+   "program": "Resilient Drylands Grants",
+   "category": "funder",
+   "bucket": "foundation_ngo",
+   "url": "https://funder-dfsf.example.org/call",
+   "apply_url": "https://funder-dfsf.example.org/apply",
+   "feed_url": null,
+   "geography": [
+    "US",
+    "Mexico"
+   ],
+   "themes": [
+    "drought & heat",
+    "food security",
+    "agriculture"
+   ],
+   "award_min_usd": 250000,
+   "award_max_usd": 750000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "eligible",
+   "cycle": "fixed_deadline",
+   "deadline": "2027-01-24",
+   "deadline_note": "",
+   "open_now": true,
+   "days_left": 74,
+   "deadline_state": "ok",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": "Required",
+    "cost_share": "",
+    "indirect_cap": "15% indirect cap",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "Public universities may apply.",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-21T12:00:00Z",
+   "vet_note": "Dryland Food Systems Fund funds drought & heat work that matches SALSAV's agriculture focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-11-08T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "reviewing",
+    "owner": "Maya R.",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 85,
+   "fit_reasons": [
+    "Funds the water-energy-food nexus in drylands.",
+    "US-wide or whole-region scope."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 85,
+    "tier": "prime",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "strong",
+      "points": 27,
+      "max": 35,
+      "why": "Funds the water-energy-food nexus in drylands.",
+      "quote": "Applicants should address water, energy and food together in dryland regions."
+     },
+     {
+      "key": "activity",
+      "level": "research_demo",
+      "points": 15,
+      "max": 15,
+      "why": "Pays for field trials led by universities.",
+      "quote": "Eligible activities include field trials and demonstration sites."
+     },
+     {
+      "key": "geography",
+      "level": "region",
+      "points": 12,
+      "max": 15,
+      "why": "US-wide or whole-region scope.",
+      "quote": "Open to applicants working anywhere in the United States."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible",
+      "points": 20,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "500k",
+      "points": 8,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "similar",
+      "points": 3,
+      "max": 5,
+      "why": "Has funded comparable dryland work.",
+      "quote": "Past awards include dryland irrigation and solar pilots.",
+      "url": "https://funder-dfsf.example.org/past-awards"
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $750,000 per project.",
+     "url": "https://funder-dfsf.example.org/call"
+    },
+    "eligibility": {
+     "quote": "Public and private universities may apply as lead applicant.",
+     "url": "https://funder-dfsf.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "mission": true,
+    "activity": true,
+    "geography": true,
+    "precedent": true,
+    "award": true,
+    "eligibility": true
+   },
+   "facts_verified": 3,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "apply_now",
+   "collection": {
+    "mode": "calls",
+    "health": "ok",
+    "source": "Calls list",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 1,
+    "total_calls": 1,
+    "last_call_at": "2026-11-01T12:00:00Z",
+    "note": "Open calls list on the funder site, filtered to food systems and energy.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "8ee93148-0000-4000-8000-c72d5b23abf1",
+   "name": "Pan-American Water-Energy Nexus Grant",
+   "program": "Nexus Partnerships Window",
+   "category": "funder",
+   "bucket": "intl_dev",
+   "url": "https://funder-panw.example.org/call",
+   "apply_url": null,
+   "feed_url": null,
+   "geography": [
+    "Latin America",
+    "Mexico"
+   ],
+   "themes": [
+    "water",
+    "energy access",
+    "international partnerships"
+   ],
+   "award_min_usd": 800000,
+   "award_max_usd": 2400000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "eligible_with_partner",
+   "cycle": "annual_recurring",
+   "deadline": null,
+   "deadline_note": "",
+   "open_now": false,
+   "days_left": null,
+   "deadline_state": "unknown",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": null,
+    "cost_share": "25% cost-share",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "",
+   "notes": "",
+   "partner_needed": [
+    "UA",
+    "AVS"
+   ],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-20T12:00:00Z",
+   "vet_note": "Pan-American Water-Energy Nexus Grant funds water work that matches SALSAV's international partnerships focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-11-07T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "applying",
+    "owner": "Jordan K.",
+    "ask_usd": 1800000,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 75,
+   "fit_reasons": [
+    "Funds the water-energy-food nexus in drylands.",
+    "US-wide or whole-region scope."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 75,
+    "tier": "prime",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "strong",
+      "points": 27,
+      "max": 35,
+      "why": "Funds the water-energy-food nexus in drylands.",
+      "quote": "Applicants should address water, energy and food together in dryland regions."
+     },
+     {
+      "key": "activity",
+      "level": "capacity",
+      "points": 10,
+      "max": 15,
+      "why": "Pays for training and deployment work packages.",
+      "quote": "Funds may cover training, extension and capacity building."
+     },
+     {
+      "key": "geography",
+      "level": "region",
+      "points": 12,
+      "max": 15,
+      "why": "US-wide or whole-region scope.",
+      "quote": "Open to applicants working anywhere in the United States."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible_with_partner",
+      "points": 13,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "1m",
+      "points": 10,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "similar",
+      "points": 3,
+      "max": 5,
+      "why": "Has funded comparable dryland work.",
+      "quote": "Past awards include dryland irrigation and solar pilots.",
+      "url": "https://funder-panw.example.org/past-awards"
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $2,400,000 per project.",
+     "url": "https://funder-panw.example.org/call"
+    },
+    "eligibility": {
+     "quote": "Public and private universities may apply as lead applicant.",
+     "url": "https://funder-panw.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "mission": true,
+    "activity": true,
+    "geography": true,
+    "precedent": true,
+    "award": false,
+    "eligibility": true
+   },
+   "facts_verified": 2,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "prepare",
+   "collection": {
+    "mode": "cycle",
+    "health": "ok",
+    "source": "Program page",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": "One annual cycle; the deadline is read from the program page.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "a3ab5f92-0000-4000-8000-843f5500f2b1",
+   "name": "Arizona Clean Farms Commission",
+   "program": "Rolling Farm Energy Awards",
+   "category": "funder",
+   "bucket": "state_regional",
+   "url": "https://funder-azcf.example.org/call",
+   "apply_url": "https://funder-azcf.example.org/apply",
+   "feed_url": null,
+   "geography": [
+    "AZ"
+   ],
+   "themes": [
+    "agriculture",
+    "solar & clean energy"
+   ],
+   "award_min_usd": 50000,
+   "award_max_usd": 350000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "eligible",
+   "cycle": "rolling",
+   "deadline": null,
+   "deadline_note": "",
+   "open_now": true,
+   "days_left": null,
+   "deadline_state": "rolling",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": "No",
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "Public universities may apply.",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-19T12:00:00Z",
+   "vet_note": "Arizona Clean Farms Commission funds agriculture work that matches SALSAV's solar & clean energy focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-11-06T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "submitted",
+    "owner": "Maya R.",
+    "ask_usd": 300000,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 72,
+   "fit_reasons": [
+    "Funds climate-smart farming where solar is a natural fit.",
+    "Covers Arizona and sites where SALSAV works."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 72,
+    "tier": "strong",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "adjacent",
+      "points": 18,
+      "max": 35,
+      "why": "Funds climate-smart farming where solar is a natural fit.",
+      "quote": "We support climate-smart agriculture and clean energy for farming communities."
+     },
+     {
+      "key": "activity",
+      "level": "capacity",
+      "points": 10,
+      "max": 15,
+      "why": "Pays for training and deployment work packages.",
+      "quote": "Funds may cover training, extension and capacity building."
+     },
+     {
+      "key": "geography",
+      "level": "home",
+      "points": 15,
+      "max": 15,
+      "why": "Covers Arizona and sites where SALSAV works.",
+      "quote": "Priority regions: the US Southwest, Mexico and East Africa."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible",
+      "points": 20,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "200k",
+      "points": 6,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "similar",
+      "points": 3,
+      "max": 5,
+      "why": "Has funded comparable dryland work.",
+      "quote": "Past awards include dryland irrigation and solar pilots.",
+      "url": "https://funder-azcf.example.org/past-awards"
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $350,000 per project.",
+     "url": "https://funder-azcf.example.org/call"
+    },
+    "eligibility": {
+     "quote": "Public and private universities may apply as lead applicant.",
+     "url": "https://funder-azcf.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "mission": true,
+    "activity": true,
+    "geography": true,
+    "precedent": true,
+    "award": true,
+    "eligibility": true
+   },
+   "facts_verified": 3,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "rolling",
+   "collection": {
+    "mode": "page",
+    "health": "ok",
+    "source": "Page watch",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": "Rolling program with no call list; the page is watched for changes.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "d7364561-0000-4000-8000-3229a51bdbde",
+   "name": "Kenya Smallholder Resilience Facility",
+   "program": "Climate-Smart Smallholder Call",
+   "category": "funder",
+   "bucket": "intl_dev",
+   "url": "https://funder-kshr.example.org/call",
+   "apply_url": "https://funder-kshr.example.org/apply",
+   "feed_url": null,
+   "geography": [
+    "Sub-Saharan Africa",
+    "Kenya"
+   ],
+   "themes": [
+    "smallholder farmers",
+    "climate adaptation",
+    "rural livelihoods"
+   ],
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "",
+   "ua_eligibility": "eligible_with_partner",
+   "cycle": "fixed_deadline",
+   "deadline": "2027-02-15",
+   "deadline_note": "",
+   "open_now": true,
+   "days_left": 96,
+   "deadline_state": "ok",
+   "amount_flag": "unverified",
+   "requirements": {
+    "loi": "Required",
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "",
+   "notes": "",
+   "partner_needed": [
+    "YPV"
+   ],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-18T12:00:00Z",
+   "vet_note": "Kenya Smallholder Resilience Facility funds smallholder farmers work that matches SALSAV's rural livelihoods focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-11-05T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "new",
+    "owner": "",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 69,
+   "fit_reasons": [
+    "Funds the water-energy-food nexus in drylands.",
+    "Covers Arizona and sites where SALSAV works."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 69,
+    "tier": "strong",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "strong",
+      "points": 27,
+      "max": 35,
+      "why": "Funds the water-energy-food nexus in drylands.",
+      "quote": ""
+     },
+     {
+      "key": "activity",
+      "level": "capacity",
+      "points": 10,
+      "max": 15,
+      "why": "Pays for training and deployment work packages.",
+      "quote": "Funds may cover training, extension and capacity building."
+     },
+     {
+      "key": "geography",
+      "level": "home",
+      "points": 15,
+      "max": 15,
+      "why": "Covers Arizona and sites where SALSAV works.",
+      "quote": "Priority regions: the US Southwest, Mexico and East Africa."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible_with_partner",
+      "points": 13,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "unknown",
+      "points": 4,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "none",
+      "points": 0,
+      "max": 5,
+      "why": "No relevant precedent found.",
+      "quote": ""
+     }
+    ]
+   },
+   "evidence": {
+    "eligibility": {
+     "quote": "Public and private universities may apply as lead applicant.",
+     "url": "https://funder-kshr.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "activity": true,
+    "geography": true,
+    "eligibility": true
+   },
+   "facts_verified": 1,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "apply_now",
+   "collection": {
+    "mode": "calls",
+    "health": "failing",
+    "source": "Site JSON endpoint",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-05T13:02:00Z",
+    "open_calls": 1,
+    "total_calls": 1,
+    "last_call_at": "2026-10-30T12:00:00Z",
+    "note": "The site JSON endpoint lists calls; it has refused the crawler twice.",
+    "verified_at": null
+   }
+  },
+  {
+   "id": "56be064d-0000-4000-8000-158bc255d44d",
+   "name": "Sonoran Community Energy Trust",
+   "program": "Community Solar Learning Grants",
+   "category": "funder",
+   "bucket": "private_sector",
+   "url": "https://funder-scet.example.org/call",
+   "apply_url": null,
+   "feed_url": null,
+   "geography": [
+    "AZ",
+    "Sonoran"
+   ],
+   "themes": [
+    "solar & clean energy",
+    "education & workforce"
+   ],
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "",
+   "ua_eligibility": "unknown",
+   "cycle": "annual_recurring",
+   "deadline": null,
+   "deadline_note": "",
+   "open_now": false,
+   "days_left": null,
+   "deadline_state": "unknown",
+   "amount_flag": "unverified",
+   "requirements": {
+    "loi": null,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-17T12:00:00Z",
+   "vet_note": "Sonoran Community Energy Trust funds solar & clean energy work that matches SALSAV's education & workforce focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-11-04T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "new",
+    "owner": "",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 46,
+   "fit_reasons": [
+    "Funds climate-smart farming where solar is a natural fit.",
+    "US-wide or whole-region scope."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 46,
+    "tier": "possible",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "adjacent",
+      "points": 18,
+      "max": 35,
+      "why": "Funds climate-smart farming where solar is a natural fit.",
+      "quote": ""
+     },
+     {
+      "key": "activity",
+      "level": "other",
+      "points": 5,
+      "max": 15,
+      "why": "Mostly policy and service delivery.",
+      "quote": ""
+     },
+     {
+      "key": "geography",
+      "level": "region",
+      "points": 12,
+      "max": 15,
+      "why": "US-wide or whole-region scope.",
+      "quote": "Open to applicants working anywhere in the United States."
+     },
+     {
+      "key": "eligibility",
+      "level": "unknown",
+      "points": 7,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "unknown",
+      "points": 4,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "none",
+      "points": 0,
+      "max": 5,
+      "why": "No relevant precedent found.",
+      "quote": ""
+     }
+    ]
+   },
+   "evidence": {},
+   "evidence_ok": {
+    "geography": true
+   },
+   "facts_verified": 0,
+   "verified_at": null,
+   "verified_by": null,
+   "lane": "prepare",
+   "collection": {
+    "mode": "cycle",
+    "health": "thin",
+    "source": "Program page",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": null,
+    "verified_at": null
+   }
+  },
+  {
+   "id": "f1462679-0000-4000-8000-16a81ec4aaab",
+   "name": "Mediterranean Drylands Collaborative",
+   "program": "Partner Network Invitations",
+   "category": "funder",
+   "bucket": "foundation_ngo",
+   "url": "https://funder-mdc.example.org/call",
+   "apply_url": null,
+   "feed_url": null,
+   "geography": [
+    "Global",
+    "Israel"
+   ],
+   "themes": [
+    "water",
+    "drought & heat",
+    "research"
+   ],
+   "award_min_usd": 200000,
+   "award_max_usd": 900000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "invitation_only",
+   "cycle": "invite_only",
+   "deadline": null,
+   "deadline_note": "",
+   "open_now": false,
+   "days_left": null,
+   "deadline_state": "invite",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": null,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-16T12:00:00Z",
+   "vet_note": "Mediterranean Drylands Collaborative funds water work that matches SALSAV's research focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-11-03T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "new",
+    "owner": "",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 73,
+   "fit_reasons": [
+    "Funds the water-energy-food nexus in drylands.",
+    "Covers Arizona and sites where SALSAV works."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 73,
+    "tier": "strong",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "strong",
+      "points": 27,
+      "max": 35,
+      "why": "Funds the water-energy-food nexus in drylands.",
+      "quote": "Applicants should address water, energy and food together in dryland regions."
+     },
+     {
+      "key": "activity",
+      "level": "research_demo",
+      "points": 15,
+      "max": 15,
+      "why": "Pays for field trials led by universities.",
+      "quote": "Eligible activities include field trials and demonstration sites."
+     },
+     {
+      "key": "geography",
+      "level": "home",
+      "points": 15,
+      "max": 15,
+      "why": "Covers Arizona and sites where SALSAV works.",
+      "quote": "Priority regions: the US Southwest, Mexico and East Africa."
+     },
+     {
+      "key": "eligibility",
+      "level": "invitation_only",
+      "points": 3,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "500k",
+      "points": 8,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "direct",
+      "points": 5,
+      "max": 5,
+      "why": "Has funded UA or agrivoltaics before.",
+      "quote": "Past grantees include the University of Arizona.",
+      "url": "https://funder-mdc.example.org/past-awards"
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $900,000 per project.",
+     "url": "https://funder-mdc.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "mission": true,
+    "activity": true,
+    "geography": true,
+    "precedent": true,
+    "award": true
+   },
+   "facts_verified": 2,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "cultivate",
+   "collection": {
+    "mode": "page",
+    "health": "ok",
+    "source": "Page watch",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": "Invitation only: there are no public calls to collect.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "9c7eda8a-0000-4000-8000-de22b4cd5845",
+   "name": "National Rural Energy Innovation Prize",
+   "program": "Open Innovation Prize",
+   "category": "funder",
+   "bucket": "us_federal",
+   "url": "https://funder-nrei.example.org/call",
+   "apply_url": null,
+   "feed_url": null,
+   "geography": [
+    "US"
+   ],
+   "themes": [
+    "technology & innovation",
+    "rural livelihoods"
+   ],
+   "award_min_usd": 100000,
+   "award_max_usd": 250000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "eligible",
+   "cycle": "open_ended",
+   "deadline": null,
+   "deadline_note": "",
+   "open_now": true,
+   "days_left": null,
+   "deadline_state": "rolling",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": "No",
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": [
+     "SAM.gov"
+    ]
+   },
+   "requirements_text": "",
+   "eligibility_note": "Public universities may apply.",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-15T12:00:00Z",
+   "vet_note": "National Rural Energy Innovation Prize funds technology & innovation work that matches SALSAV's rural livelihoods focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-11-02T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "declined",
+    "owner": "Jordan K.",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 51,
+   "fit_reasons": [
+    "General environment funding; agrivoltaics is a stretch.",
+    "US-wide or whole-region scope."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 51,
+    "tier": "possible",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "weak",
+      "points": 8,
+      "max": 35,
+      "why": "General environment funding; agrivoltaics is a stretch.",
+      "quote": ""
+     },
+     {
+      "key": "activity",
+      "level": "other",
+      "points": 5,
+      "max": 15,
+      "why": "Mostly policy and service delivery.",
+      "quote": ""
+     },
+     {
+      "key": "geography",
+      "level": "region",
+      "points": 12,
+      "max": 15,
+      "why": "US-wide or whole-region scope.",
+      "quote": "Open to applicants working anywhere in the United States."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible",
+      "points": 20,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "200k",
+      "points": 6,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "none",
+      "points": 0,
+      "max": 5,
+      "why": "No relevant precedent found.",
+      "quote": ""
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $250,000 per project.",
+     "url": "https://funder-nrei.example.org/call"
+    },
+    "eligibility": {
+     "quote": "Public and private universities may apply as lead applicant.",
+     "url": "https://funder-nrei.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "geography": true,
+    "award": true,
+    "eligibility": true
+   },
+   "facts_verified": 2,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "rolling",
+   "collection": {
+    "mode": "page",
+    "health": "stale",
+    "source": "Page watch",
+    "checked_at": "2026-11-05T13:02:00Z",
+    "ok_at": "2026-11-05T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": null,
+    "verified_at": null
+   }
+  },
+  {
+   "id": "6b2d1882-0000-4000-8000-d9be993877e2",
+   "name": "Horizon Water Security Challenge",
+   "program": "Global Water Challenge",
+   "category": "funder",
+   "bucket": "intl_dev",
+   "url": "https://funder-hwsc.example.org/call",
+   "apply_url": "https://funder-hwsc.example.org/apply",
+   "feed_url": null,
+   "geography": [
+    "Global"
+   ],
+   "themes": [
+    "water",
+    "international partnerships"
+   ],
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "",
+   "ua_eligibility": "eligible_with_partner",
+   "cycle": "fixed_deadline",
+   "deadline": "2027-03-11",
+   "deadline_note": "",
+   "open_now": true,
+   "days_left": 120,
+   "deadline_state": "ok",
+   "amount_flag": "unverified",
+   "requirements": {
+    "loi": null,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "bot_protected",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-14T12:00:00Z",
+   "vet_note": "Horizon Water Security Challenge funds water work that matches SALSAV's international partnerships focus.",
+   "last_checked_at": "2026-11-08T12:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-11-01T12:00:00Z",
+   "consecutive_failures": 2,
+   "doc_links": [],
+   "team": {
+    "state": "new",
+    "owner": "",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 43,
+   "fit_reasons": [
+    "General environment funding; agrivoltaics is a stretch.",
+    "Global, no regional priority."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 43,
+    "tier": "long_shot",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "weak",
+      "points": 8,
+      "max": 35,
+      "why": "General environment funding; agrivoltaics is a stretch.",
+      "quote": ""
+     },
+     {
+      "key": "activity",
+      "level": "capacity",
+      "points": 10,
+      "max": 15,
+      "why": "Pays for training and deployment work packages.",
+      "quote": "Funds may cover training, extension and capacity building."
+     },
+     {
+      "key": "geography",
+      "level": "global",
+      "points": 8,
+      "max": 15,
+      "why": "Global, no regional priority.",
+      "quote": "Projects may be located in any country."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible_with_partner",
+      "points": 13,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "unknown",
+      "points": 4,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "none",
+      "points": 0,
+      "max": 5,
+      "why": "No relevant precedent found.",
+      "quote": ""
+     }
+    ]
+   },
+   "evidence": {},
+   "evidence_ok": {
+    "activity": true,
+    "geography": true
+   },
+   "facts_verified": 0,
+   "verified_at": null,
+   "verified_by": null,
+   "lane": "apply_now",
+   "collection": {
+    "mode": "calls",
+    "health": "ok",
+    "source": "EU Funding and Tenders API",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": "Topic search on the EU portal API.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "21c2215f-0000-4000-8000-9bb0e1b1b6d8",
+   "name": "Federal Dual-Use Solar Pilot",
+   "program": "Pilot Demonstration Awards",
+   "category": "funder",
+   "bucket": "us_federal",
+   "url": "https://funder-fdsp.example.org/call",
+   "apply_url": "https://funder-fdsp.example.org/apply",
+   "feed_url": null,
+   "geography": [
+    "US",
+    "AZ"
+   ],
+   "themes": [
+    "agrivoltaics",
+    "solar & clean energy"
+   ],
+   "award_min_usd": 300000,
+   "award_max_usd": 800000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "eligible",
+   "cycle": "fixed_deadline",
+   "deadline": "2026-11-20",
+   "deadline_note": "",
+   "open_now": true,
+   "days_left": 9,
+   "deadline_state": "too_soon",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": "No",
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": [
+     "SAM.gov"
+    ]
+   },
+   "requirements_text": "",
+   "eligibility_note": "Public universities may apply.",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-13T12:00:00Z",
+   "vet_note": "Federal Dual-Use Solar Pilot funds agrivoltaics work that matches SALSAV's solar & clean energy focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-10-31T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "new",
+    "owner": "",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 90,
+   "fit_reasons": [
+    "Funds the water-energy-food nexus in drylands.",
+    "Covers Arizona and sites where SALSAV works."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 90,
+    "tier": "prime",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "strong",
+      "points": 27,
+      "max": 35,
+      "why": "Funds the water-energy-food nexus in drylands.",
+      "quote": "Applicants should address water, energy and food together in dryland regions."
+     },
+     {
+      "key": "activity",
+      "level": "research_demo",
+      "points": 15,
+      "max": 15,
+      "why": "Pays for field trials led by universities.",
+      "quote": "Eligible activities include field trials and demonstration sites."
+     },
+     {
+      "key": "geography",
+      "level": "home",
+      "points": 15,
+      "max": 15,
+      "why": "Covers Arizona and sites where SALSAV works.",
+      "quote": "Priority regions: the US Southwest, Mexico and East Africa."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible",
+      "points": 20,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "500k",
+      "points": 8,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "direct",
+      "points": 5,
+      "max": 5,
+      "why": "Has funded UA or agrivoltaics before.",
+      "quote": "Past grantees include the University of Arizona.",
+      "url": "https://funder-fdsp.example.org/past-awards"
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $800,000 per project.",
+     "url": "https://funder-fdsp.example.org/call"
+    },
+    "deadline": {
+     "quote": "Proposals are due 2026-11-20.",
+     "url": "https://funder-fdsp.example.org/call"
+    },
+    "eligibility": {
+     "quote": "Public and private universities may apply as lead applicant.",
+     "url": "https://funder-fdsp.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "mission": true,
+    "activity": true,
+    "geography": true,
+    "precedent": true,
+    "award": true,
+    "deadline": true,
+    "eligibility": true
+   },
+   "facts_verified": 4,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "watch",
+   "collection": {
+    "mode": "calls",
+    "health": "ok",
+    "source": "Funding feed",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 1,
+    "total_calls": 1,
+    "last_call_at": "2026-10-02T12:00:00Z",
+    "note": "Funding opportunities feed, filtered by keyword.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "0dec78b4-0000-4000-8000-4874f63e9e9d",
+   "name": "Rio Grande Land Stewardship Fund",
+   "program": "Working Lands Grants",
+   "category": "funder",
+   "bucket": "foundation_ngo",
+   "url": "https://funder-rgls.example.org/call",
+   "apply_url": null,
+   "feed_url": null,
+   "geography": [
+    "NM",
+    "Colorado"
+   ],
+   "themes": [
+    "land & conservation",
+    "agriculture"
+   ],
+   "award_min_usd": null,
+   "award_max_usd": 400000,
+   "amount_confidence": "estimated",
+   "award_note": "",
+   "ua_eligibility": "eligible",
+   "cycle": "annual_recurring",
+   "deadline": null,
+   "deadline_note": "",
+   "open_now": false,
+   "days_left": null,
+   "deadline_state": "unknown",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": null,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "Public universities may apply.",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-12T12:00:00Z",
+   "vet_note": "Working lands funder with a UA precedent.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-10-30T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "new",
+    "owner": "",
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 52,
+   "fit_reasons": [
+    "Dryland agriculture",
+    "UA eligible"
+   ],
+   "collection": {
+    "mode": "none",
+    "health": "off",
+    "source": "Not monitored",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-05T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": null,
+    "verified_at": null
+   }
+  },
+  {
+   "id": "679ea9b7-0000-4000-8000-9a235d81ae82",
+   "name": "Border Region Food Security Program",
+   "program": "Binational Food Systems",
+   "category": "funder",
+   "bucket": "us_federal",
+   "url": "https://funder-bcfs.example.org/call",
+   "apply_url": "https://funder-bcfs.example.org/apply",
+   "feed_url": null,
+   "geography": [
+    "US",
+    "Mexico",
+    "AZ"
+   ],
+   "themes": [
+    "food security",
+    "international partnerships"
+   ],
+   "award_min_usd": 150000,
+   "award_max_usd": 600000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "eligible",
+   "cycle": "fixed_deadline",
+   "deadline": "2026-11-06",
+   "deadline_note": "",
+   "open_now": false,
+   "days_left": -5,
+   "deadline_state": "expired",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": null,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": [
+     "SAM.gov"
+    ]
+   },
+   "requirements_text": "",
+   "eligibility_note": "Public universities may apply.",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-11T12:00:00Z",
+   "vet_note": "Border Region Food Security Program funds food security work that matches SALSAV's international partnerships focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-10-29T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "new",
+    "owner": "",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 79,
+   "fit_reasons": [
+    "Funds climate-smart farming where solar is a natural fit.",
+    "Covers Arizona and sites where SALSAV works."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 79,
+    "tier": "prime",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "adjacent",
+      "points": 18,
+      "max": 35,
+      "why": "Funds climate-smart farming where solar is a natural fit.",
+      "quote": ""
+     },
+     {
+      "key": "activity",
+      "level": "research_demo",
+      "points": 15,
+      "max": 15,
+      "why": "Pays for field trials led by universities.",
+      "quote": "Eligible activities include field trials and demonstration sites."
+     },
+     {
+      "key": "geography",
+      "level": "home",
+      "points": 15,
+      "max": 15,
+      "why": "Covers Arizona and sites where SALSAV works.",
+      "quote": "Priority regions: the US Southwest, Mexico and East Africa."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible",
+      "points": 20,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "500k",
+      "points": 8,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "similar",
+      "points": 3,
+      "max": 5,
+      "why": "Has funded comparable dryland work.",
+      "quote": "Past awards include dryland irrigation and solar pilots.",
+      "url": "https://funder-bcfs.example.org/past-awards"
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $600,000 per project.",
+     "url": "https://funder-bcfs.example.org/call"
+    },
+    "deadline": {
+     "quote": "Proposals are due 2026-11-06.",
+     "url": "https://funder-bcfs.example.org/call"
+    },
+    "eligibility": {
+     "quote": "Public and private universities may apply as lead applicant.",
+     "url": "https://funder-bcfs.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "activity": true,
+    "geography": true,
+    "precedent": true,
+    "award": true,
+    "deadline": true,
+    "eligibility": true
+   },
+   "facts_verified": 3,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "watch",
+   "collection": {
+    "mode": "calls",
+    "health": "ok",
+    "source": "Grants.gov API",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": "Grants.gov search for this program number; every item is a call of this program.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "90ff56b5-0000-4000-8000-60110f1a81bb",
+   "name": "Cooperative Energy Foundation",
+   "program": "Farm Solar Partnerships",
+   "category": "funder",
+   "bucket": "private_sector",
+   "url": "https://funder-cefn.example.org/call",
+   "apply_url": "https://funder-cefn.example.org/apply",
+   "feed_url": null,
+   "geography": [
+    "AZ",
+    "California"
+   ],
+   "themes": [
+    "agrivoltaics",
+    "agriculture",
+    "solar & clean energy"
+   ],
+   "award_min_usd": 100000,
+   "award_max_usd": 450000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "eligible",
+   "cycle": "fixed_deadline",
+   "deadline": "2027-01-10",
+   "deadline_note": "",
+   "open_now": true,
+   "days_left": 60,
+   "deadline_state": "ok",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": "Required",
+    "cost_share": "",
+    "indirect_cap": "5% indirect cap",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "Public universities may apply.",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-10T12:00:00Z",
+   "vet_note": "Cooperative Energy Foundation funds agrivoltaics work that matches SALSAV's solar & clean energy focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-10-28T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "awarded",
+    "owner": "Maya R.",
+    "ask_usd": 450000,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 91,
+   "fit_reasons": [
+    "Names agrivoltaics in its priorities.",
+    "Covers Arizona and sites where SALSAV works."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 91,
+    "tier": "prime",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "core",
+      "points": 35,
+      "max": 35,
+      "why": "Names agrivoltaics in its priorities.",
+      "quote": "We prioritize projects that combine solar generation with crop production on the same land."
+     },
+     {
+      "key": "activity",
+      "level": "capacity",
+      "points": 10,
+      "max": 15,
+      "why": "Pays for training and deployment work packages.",
+      "quote": "Funds may cover training, extension and capacity building."
+     },
+     {
+      "key": "geography",
+      "level": "home",
+      "points": 15,
+      "max": 15,
+      "why": "Covers Arizona and sites where SALSAV works.",
+      "quote": "Priority regions: the US Southwest, Mexico and East Africa."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible",
+      "points": 20,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "200k",
+      "points": 6,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "direct",
+      "points": 5,
+      "max": 5,
+      "why": "Has funded UA or agrivoltaics before.",
+      "quote": "Past grantees include the University of Arizona.",
+      "url": "https://funder-cefn.example.org/past-awards"
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $450,000 per project.",
+     "url": "https://funder-cefn.example.org/call"
+    },
+    "deadline": {
+     "quote": "Proposals are due 2027-01-10.",
+     "url": "https://funder-cefn.example.org/call"
+    },
+    "eligibility": {
+     "quote": "Public and private universities may apply as lead applicant.",
+     "url": "https://funder-cefn.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "mission": true,
+    "activity": true,
+    "geography": true,
+    "precedent": true,
+    "award": true,
+    "deadline": true,
+    "eligibility": true
+   },
+   "facts_verified": 4,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "apply_now",
+   "collection": {
+    "mode": "calls",
+    "health": "ok",
+    "source": "Calls list",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": "Open calls list on the funder site, filtered to food systems and energy.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "670758c8-0000-4000-8000-0f17733b87fb",
+   "name": "Global Climate Adaptation Fund",
+   "program": "Adaptation Innovation Window",
+   "category": "funder",
+   "bucket": "intl_dev",
+   "url": "https://funder-gcaf.example.org/call",
+   "apply_url": "https://funder-gcaf.example.org/apply",
+   "feed_url": null,
+   "geography": [
+    "Sub-Saharan Africa",
+    "Latin America"
+   ],
+   "themes": [
+    "climate adaptation",
+    "equity & inclusion"
+   ],
+   "award_min_usd": 400000,
+   "award_max_usd": 1200000,
+   "amount_confidence": "published",
+   "award_note": "",
+   "ua_eligibility": "eligible_with_partner",
+   "cycle": "fixed_deadline",
+   "deadline": "2026-12-03",
+   "deadline_note": "",
+   "open_now": true,
+   "days_left": 22,
+   "deadline_state": "ok",
+   "amount_flag": "ok",
+   "requirements": {
+    "loi": "Required",
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "",
+   "notes": "",
+   "partner_needed": [
+    "UA"
+   ],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-09T12:00:00Z",
+   "vet_note": "Global Climate Adaptation Fund funds climate adaptation work that matches SALSAV's equity & inclusion focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-10-27T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "new",
+    "owner": "",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 66,
+   "fit_reasons": [
+    "Funds climate-smart farming where solar is a natural fit.",
+    "US-wide or whole-region scope."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 66,
+    "tier": "strong",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "adjacent",
+      "points": 18,
+      "max": 35,
+      "why": "Funds climate-smart farming where solar is a natural fit.",
+      "quote": "We support climate-smart agriculture and clean energy for farming communities."
+     },
+     {
+      "key": "activity",
+      "level": "capacity",
+      "points": 10,
+      "max": 15,
+      "why": "Pays for training and deployment work packages.",
+      "quote": "Funds may cover training, extension and capacity building."
+     },
+     {
+      "key": "geography",
+      "level": "region",
+      "points": 12,
+      "max": 15,
+      "why": "US-wide or whole-region scope.",
+      "quote": "Open to applicants working anywhere in the United States."
+     },
+     {
+      "key": "eligibility",
+      "level": "eligible_with_partner",
+      "points": 13,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "1m",
+      "points": 10,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "similar",
+      "points": 3,
+      "max": 5,
+      "why": "Has funded comparable dryland work.",
+      "quote": "Past awards include dryland irrigation and solar pilots.",
+      "url": "https://funder-gcaf.example.org/past-awards"
+     }
+    ]
+   },
+   "evidence": {
+    "award": {
+     "quote": "Awards range up to $1,200,000 per project.",
+     "url": "https://funder-gcaf.example.org/call"
+    },
+    "deadline": {
+     "quote": "Proposals are due 2026-12-03.",
+     "url": "https://funder-gcaf.example.org/call"
+    }
+   },
+   "evidence_ok": {
+    "mission": true,
+    "activity": true,
+    "geography": true,
+    "precedent": true,
+    "award": true,
+    "deadline": true
+   },
+   "facts_verified": 3,
+   "verified_at": "2026-11-07T12:00:00Z",
+   "verified_by": "rescore-2026-11",
+   "lane": "apply_now",
+   "collection": {
+    "mode": "cycle",
+    "health": "ok",
+    "source": "Program page",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 1,
+    "total_calls": 1,
+    "last_call_at": "2026-10-22T12:00:00Z",
+    "note": "One annual cycle; the deadline is read from the program page.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  },
+  {
+   "id": "ed93ddb5-0000-4000-8000-daa0dd5362a2",
+   "name": "Midwest Biofuel Foundation",
+   "program": "Rural Fuels Grants",
+   "category": "funder",
+   "bucket": "private_sector",
+   "url": "https://funder-mbf.example.org/call",
+   "apply_url": null,
+   "feed_url": null,
+   "geography": [
+    "US"
+   ],
+   "themes": [
+    "technology & innovation"
+   ],
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "amount_confidence": "unknown",
+   "award_note": "",
+   "ua_eligibility": "unknown",
+   "cycle": "annual_recurring",
+   "deadline": null,
+   "deadline_note": "",
+   "open_now": false,
+   "days_left": null,
+   "deadline_state": "unknown",
+   "amount_flag": "unverified",
+   "requirements": {
+    "loi": null,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": []
+   },
+   "requirements_text": "",
+   "eligibility_note": "",
+   "notes": "",
+   "partner_needed": [],
+   "page_type": "program",
+   "fetchability": "easy",
+   "confidence": 0.8,
+   "vetted_at": "2026-10-08T12:00:00Z",
+   "vet_note": "Midwest Biofuel Foundation funds technology & innovation work that matches SALSAV's technology & innovation focus.",
+   "last_checked_at": "2026-11-11T00:00:00Z",
+   "last_ok_at": "2026-11-11T00:00:00Z",
+   "last_changed_at": "2026-10-26T12:00:00Z",
+   "consecutive_failures": 0,
+   "doc_links": [],
+   "team": {
+    "state": "skip",
+    "owner": "",
+    "ask_usd": null,
+    "updated_at": "2026-11-08T12:00:00Z"
+   },
+   "fit_score": 47,
+   "fit_reasons": [
+    "Funds climate-smart farming where solar is a natural fit.",
+    "Global, no regional priority."
+   ],
+   "fit_breakdown": {
+    "v": 2,
+    "total": 47,
+    "tier": "possible",
+    "dims": [
+     {
+      "key": "mission",
+      "level": "adjacent",
+      "points": 18,
+      "max": 35,
+      "why": "Funds climate-smart farming where solar is a natural fit.",
+      "quote": ""
+     },
+     {
+      "key": "activity",
+      "level": "capacity",
+      "points": 10,
+      "max": 15,
+      "why": "Pays for training and deployment work packages.",
+      "quote": "Funds may cover training, extension and capacity building."
+     },
+     {
+      "key": "geography",
+      "level": "global",
+      "points": 8,
+      "max": 15,
+      "why": "Global, no regional priority.",
+      "quote": "Projects may be located in any country."
+     },
+     {
+      "key": "eligibility",
+      "level": "unknown",
+      "points": 7,
+      "max": 20
+     },
+     {
+      "key": "award",
+      "level": "unknown",
+      "points": 4,
+      "max": 10
+     },
+     {
+      "key": "precedent",
+      "level": "none",
+      "points": 0,
+      "max": 5,
+      "why": "No relevant precedent found.",
+      "quote": ""
+     }
+    ]
+   },
+   "evidence": {},
+   "evidence_ok": {
+    "activity": true,
+    "geography": true
+   },
+   "facts_verified": 0,
+   "verified_at": null,
+   "verified_by": null,
+   "lane": "prepare",
+   "collection": {
+    "mode": "page",
+    "health": "ok",
+    "source": "Page watch",
+    "checked_at": "2026-11-11T13:02:00Z",
+    "ok_at": "2026-11-11T13:02:00Z",
+    "open_calls": 0,
+    "total_calls": 0,
+    "last_call_at": null,
+    "note": "Rolling program with no call list; the page is watched for changes.",
+    "verified_at": "2026-11-11T18:00:00Z"
+   }
+  }
+ ],
+ "opportunities": [
+  {
+   "id": "f1584b99-0000-4000-8000-268eb6c76637",
+   "funder_id": "3a39973d-0000-4000-8000-bdcf6ee87521",
+   "title": "Dual-Use Solar Research Call FY27",
+   "url": "https://funder-swaep.example.org/call",
+   "apply_url": "https://funder-swaep.example.org/apply",
+   "description": "Field trials of crops grown beneath solar arrays.",
+   "open_date": "2026-10-12",
+   "deadline": "2026-12-22",
+   "deadline_text": "Due 2026-12-22",
+   "award_min_usd": 500000,
+   "award_max_usd": 1500000,
+   "status": "open",
+   "doc_links": [],
+   "first_seen_at": "2026-10-12T12:00:00Z",
+   "last_seen_at": "2026-11-10T12:00:00Z",
+   "source_adapter": null
+  },
+  {
+   "id": "2d387ab9-0000-4000-8000-c3a61b7e6217",
+   "funder_id": "3238b0f5-0000-4000-8000-4c4580c965e6",
+   "title": "Resilient Drylands 2027 round",
+   "url": "https://funder-dfsf.example.org/call",
+   "apply_url": null,
+   "description": "Dryland resilience research with farmer partners.",
+   "open_date": "2026-11-01",
+   "deadline": "2027-01-24",
+   "deadline_text": "Due 2027-01-24",
+   "award_min_usd": 250000,
+   "award_max_usd": 750000,
+   "status": "open",
+   "doc_links": [],
+   "first_seen_at": "2026-11-01T12:00:00Z",
+   "last_seen_at": "2026-11-10T12:00:00Z",
+   "source_adapter": "grants_gov"
+  },
+  {
+   "id": "417c4fa3-0000-4000-8000-6c22a95ed708",
+   "funder_id": "d7364561-0000-4000-8000-3229a51bdbde",
+   "title": "Climate-Smart Smallholder Call 3",
+   "url": "https://funder-kshr.example.org/call",
+   "apply_url": null,
+   "description": "",
+   "open_date": null,
+   "deadline": "2027-02-15",
+   "deadline_text": "",
+   "award_min_usd": null,
+   "award_max_usd": null,
+   "status": "forecasted",
+   "doc_links": [],
+   "first_seen_at": "2026-10-30T12:00:00Z",
+   "last_seen_at": "2026-11-10T12:00:00Z",
+   "source_adapter": "html"
+  },
+  {
+   "id": "500dbb50-0000-4000-8000-725451823b33",
+   "funder_id": "670758c8-0000-4000-8000-0f17733b87fb",
+   "title": "Adaptation Innovation Window 2026",
+   "url": "https://funder-gcaf.example.org/call",
+   "apply_url": null,
+   "description": "Innovation pilots for dryland adaptation.",
+   "open_date": "2026-10-22",
+   "deadline": "2026-12-03",
+   "deadline_text": "Due 2026-12-03",
+   "award_min_usd": 400000,
+   "award_max_usd": 1200000,
+   "status": "open",
+   "doc_links": [],
+   "first_seen_at": "2026-10-22T12:00:00Z",
+   "last_seen_at": "2026-11-10T12:00:00Z",
+   "source_adapter": "json_api"
+  },
+  {
+   "id": "46fa5a23-0000-4000-8000-b47444622ce5",
+   "funder_id": "21c2215f-0000-4000-8000-9bb0e1b1b6d8",
+   "title": "Pilot Demonstration Awards round 2",
+   "url": "https://funder-fdsp.example.org/call",
+   "apply_url": null,
+   "description": "Closes soon.",
+   "open_date": "2026-10-02",
+   "deadline": "2026-11-20",
+   "deadline_text": "Due 2026-11-20",
+   "award_min_usd": 300000,
+   "award_max_usd": 800000,
+   "status": "open",
+   "doc_links": [],
+   "first_seen_at": "2026-10-02T12:00:00Z",
+   "last_seen_at": "2026-11-10T12:00:00Z",
+   "source_adapter": "rss"
+  }
+ ],
+ "changes": [
+  {
+   "funder_id": "3a39973d-0000-4000-8000-bdcf6ee87521",
+   "at": "2026-11-10T12:00:00Z",
+   "kind": "deadline",
+   "summary": "Deadline moved to 2026-12-22",
+   "docs_added": null,
+   "deadline": [
+    "2026-12-15",
+    "2026-12-22"
+   ]
+  },
+  {
+   "funder_id": "3238b0f5-0000-4000-8000-4c4580c965e6",
+   "at": "2026-11-08T12:00:00Z",
+   "kind": "content",
+   "summary": "Eligibility paragraph reworded",
+   "docs_added": null,
+   "deadline": null
+  },
+  {
+   "funder_id": "a3ab5f92-0000-4000-8000-843f5500f2b1",
+   "at": "2026-11-06T12:00:00Z",
+   "kind": "amount",
+   "summary": "Maximum award raised to $350,000",
+   "docs_added": null,
+   "deadline": null
+  },
+  {
+   "funder_id": "d7364561-0000-4000-8000-3229a51bdbde",
+   "at": "2026-11-05T12:00:00Z",
+   "kind": "docs",
+   "summary": "New guidance PDF added",
+   "docs_added": [
+    "https://funder-kshr.example.org/guidance.pdf"
+   ],
+   "deadline": null
+  },
+  {
+   "funder_id": "670758c8-0000-4000-8000-0f17733b87fb",
+   "at": "2026-11-02T12:00:00Z",
+   "kind": "initial",
+   "summary": "First snapshot",
+   "docs_added": null,
+   "deadline": null
+  },
+  {
+   "funder_id": "f1462679-0000-4000-8000-16a81ec4aaab",
+   "at": "2026-10-28T12:00:00Z",
+   "kind": "status",
+   "summary": "Network now invitation only",
+   "docs_added": null,
+   "deadline": null
+  },
+  {
+   "funder_id": "90ff56b5-0000-4000-8000-60110f1a81bb",
+   "at": "2026-10-22T12:00:00Z",
+   "kind": "content",
+   "summary": "Award announcement posted",
+   "docs_added": null,
+   "deadline": null
+  }
+ ],
+ "vetting": [
+  {
+   "funder_id": "3a39973d-0000-4000-8000-bdcf6ee87521",
+   "at": "2026-11-07T12:00:00Z",
+   "kind": "rescored",
+   "note": "Itemized against rubric v2; all four facts quoted.",
+   "changes": {
+    "fit_score": [
+     61,
+     100
+    ]
+   },
+   "run_label": "rescore-2026-11"
+  },
+  {
+   "funder_id": "8ee93148-0000-4000-8000-c72d5b23abf1",
+   "at": "2026-11-07T12:00:00Z",
+   "kind": "verified",
+   "note": "Award quote not found on the current page.",
+   "changes": {
+    "amount_confidence": [
+     "published",
+     "estimated"
+    ]
+   },
+   "run_label": "rescore-2026-11"
+  },
+  {
+   "funder_id": "670758c8-0000-4000-8000-0f17733b87fb",
+   "at": "2026-11-02T12:00:00Z",
+   "kind": "registered",
+   "note": "Found through the adaptation lens.",
+   "changes": {},
+   "run_label": "discovery-2026-11-02"
+  },
+  {
+   "funder_id": "a3ab5f92-0000-4000-8000-843f5500f2b1",
+   "at": "2026-11-06T12:00:00Z",
+   "kind": "updated",
+   "note": "Maximum award raised.",
+   "changes": {
+    "award_max_usd": [
+     300000,
+     350000
+    ]
+   },
+   "run_label": "daily-2026-11-06"
+  },
+  {
+   "funder_id": "6b2d1882-0000-4000-8000-d9be993877e2",
+   "at": "2026-11-07T12:00:00Z",
+   "kind": "demoted",
+   "note": "Award not published and no UA role yet.",
+   "changes": {
+    "status": [
+     "vetted",
+     "rejected"
+    ]
+   },
+   "run_label": "rescore-2026-11"
+  },
+  {
+   "funder_id": "f1462679-0000-4000-8000-16a81ec4aaab",
+   "at": "2026-11-07T12:00:00Z",
+   "kind": "promoted",
+   "note": "Direct precedent found with UA.",
+   "changes": {
+    "fit_score": [
+     48,
+     73
+    ]
+   },
+   "run_label": "rescore-2026-11"
+  }
+ ],
+ "metrics": [
+  {
+   "day": "2026-10-13",
+   "m": {
+    "vetted": 8,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 2,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 2,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 1,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 48.0,
+    "itemized": 0,
+    "addressable_usd": 3200000,
+    "actionable_usd": 2000000,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 2,
+     "deadline_known": 3,
+     "eligibility_confirmed": 3,
+     "evidence3": 0
+    },
+    "health": {
+     "checked_24h": 12,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 40
+   }
+  },
+  {
+   "day": "2026-10-14",
+   "m": {
+    "vetted": 8,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 2,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 2,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 1,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 48.7,
+    "itemized": 0,
+    "addressable_usd": 3372414,
+    "actionable_usd": 2103448,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 2,
+     "deadline_known": 3,
+     "eligibility_confirmed": 3,
+     "evidence3": 0
+    },
+    "health": {
+     "checked_24h": 12,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 40
+   }
+  },
+  {
+   "day": "2026-10-15",
+   "m": {
+    "vetted": 8,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 2,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 2,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 1,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 49.4,
+    "itemized": 1,
+    "addressable_usd": 3544828,
+    "actionable_usd": 2206897,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 2,
+     "deadline_known": 3,
+     "eligibility_confirmed": 3,
+     "evidence3": 1
+    },
+    "health": {
+     "checked_24h": 12,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 41
+   }
+  },
+  {
+   "day": "2026-10-16",
+   "m": {
+    "vetted": 9,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 2,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 2,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 1,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 50.1,
+    "itemized": 1,
+    "addressable_usd": 3717241,
+    "actionable_usd": 2310345,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 3,
+     "deadline_known": 4,
+     "eligibility_confirmed": 4,
+     "evidence3": 1
+    },
+    "health": {
+     "checked_24h": 12,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 41
+   }
+  },
+  {
+   "day": "2026-10-17",
+   "m": {
+    "vetted": 9,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 2,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 2,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 1,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 50.8,
+    "itemized": 2,
+    "addressable_usd": 3889655,
+    "actionable_usd": 2413793,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 3,
+     "deadline_known": 4,
+     "eligibility_confirmed": 4,
+     "evidence3": 1
+    },
+    "health": {
+     "checked_24h": 12,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 41
+   }
+  },
+  {
+   "day": "2026-10-18",
+   "m": {
+    "vetted": 9,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 2,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 2,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 1,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 51.4,
+    "itemized": 2,
+    "addressable_usd": 4062069,
+    "actionable_usd": 2517241,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 3,
+     "deadline_known": 4,
+     "eligibility_confirmed": 4,
+     "evidence3": 1
+    },
+    "health": {
+     "checked_24h": 12,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 41
+   }
+  },
+  {
+   "day": "2026-10-19",
+   "m": {
+    "vetted": 9,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 2,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 2,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 1,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 52.1,
+    "itemized": 3,
+    "addressable_usd": 4234483,
+    "actionable_usd": 2620690,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 3,
+     "deadline_known": 4,
+     "eligibility_confirmed": 4,
+     "evidence3": 2
+    },
+    "health": {
+     "checked_24h": 12,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 42
+   }
+  },
+  {
+   "day": "2026-10-20",
+   "m": {
+    "vetted": 9,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 2,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 2,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 1,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 52.8,
+    "itemized": 3,
+    "addressable_usd": 4406897,
+    "actionable_usd": 2724138,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 3,
+     "deadline_known": 4,
+     "eligibility_confirmed": 5,
+     "evidence3": 2
+    },
+    "health": {
+     "checked_24h": 12,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 42
+   }
+  },
+  {
+   "day": "2026-10-21",
+   "m": {
+    "vetted": 10,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 53.5,
+    "itemized": 4,
+    "addressable_usd": 4579310,
+    "actionable_usd": 2827586,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 4,
+     "deadline_known": 4,
+     "eligibility_confirmed": 5,
+     "evidence3": 2
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 42
+   }
+  },
+  {
+   "day": "2026-10-22",
+   "m": {
+    "vetted": 10,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 54.2,
+    "itemized": 4,
+    "addressable_usd": 4751724,
+    "actionable_usd": 2931034,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 4,
+     "deadline_known": 5,
+     "eligibility_confirmed": 5,
+     "evidence3": 2
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 42
+   }
+  },
+  {
+   "day": "2026-10-23",
+   "m": {
+    "vetted": 10,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 54.9,
+    "itemized": 5,
+    "addressable_usd": 4924138,
+    "actionable_usd": 3034483,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 4,
+     "deadline_known": 5,
+     "eligibility_confirmed": 5,
+     "evidence3": 3
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 43
+   }
+  },
+  {
+   "day": "2026-10-24",
+   "m": {
+    "vetted": 10,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 55.6,
+    "itemized": 5,
+    "addressable_usd": 5096552,
+    "actionable_usd": 3137931,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 0,
+      "usd": 0
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 4,
+     "deadline_known": 5,
+     "eligibility_confirmed": 6,
+     "evidence3": 3
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 43
+   }
+  },
+  {
+   "day": "2026-10-25",
+   "m": {
+    "vetted": 10,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 56.3,
+    "itemized": 6,
+    "addressable_usd": 5268966,
+    "actionable_usd": 3241379,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 4,
+     "deadline_known": 5,
+     "eligibility_confirmed": 6,
+     "evidence3": 3
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 43
+   }
+  },
+  {
+   "day": "2026-10-26",
+   "m": {
+    "vetted": 11,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 57.0,
+    "itemized": 6,
+    "addressable_usd": 5441379,
+    "actionable_usd": 3344828,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 5,
+     "deadline_known": 5,
+     "eligibility_confirmed": 6,
+     "evidence3": 4
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 44
+   }
+  },
+  {
+   "day": "2026-10-27",
+   "m": {
+    "vetted": 11,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 1,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 1,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 1
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 2,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 57.7,
+    "itemized": 7,
+    "addressable_usd": 5613793,
+    "actionable_usd": 3448276,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 5,
+     "deadline_known": 5,
+     "eligibility_confirmed": 6,
+     "evidence3": 4
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 44
+   }
+  },
+  {
+   "day": "2026-10-28",
+   "m": {
+    "vetted": 11,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 58.3,
+    "itemized": 7,
+    "addressable_usd": 5786207,
+    "actionable_usd": 3551724,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 5,
+     "deadline_known": 6,
+     "eligibility_confirmed": 7,
+     "evidence3": 4
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 44
+   }
+  },
+  {
+   "day": "2026-10-29",
+   "m": {
+    "vetted": 11,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 59.0,
+    "itemized": 8,
+    "addressable_usd": 5958621,
+    "actionable_usd": 3655172,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 5,
+     "deadline_known": 6,
+     "eligibility_confirmed": 7,
+     "evidence3": 4
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 44
+   }
+  },
+  {
+   "day": "2026-10-30",
+   "m": {
+    "vetted": 12,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 59.7,
+    "itemized": 8,
+    "addressable_usd": 6131034,
+    "actionable_usd": 3758621,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 6,
+     "deadline_known": 6,
+     "eligibility_confirmed": 7,
+     "evidence3": 5
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 45
+   }
+  },
+  {
+   "day": "2026-10-31",
+   "m": {
+    "vetted": 12,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 60.4,
+    "itemized": 9,
+    "addressable_usd": 6303448,
+    "actionable_usd": 3862069,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 6,
+     "deadline_known": 6,
+     "eligibility_confirmed": 7,
+     "evidence3": 5
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 45,
+    "collection": {
+     "listed": 15,
+     "calls": 0,
+     "cycle": 3,
+     "page": 12,
+     "none": 1,
+     "auto": 2,
+     "auto_healthy": 2,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 0,
+     "open_calls": 0,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-01",
+   "m": {
+    "vetted": 12,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 61.1,
+    "itemized": 9,
+    "addressable_usd": 6475862,
+    "actionable_usd": 3965517,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 6,
+     "deadline_known": 6,
+     "eligibility_confirmed": 8,
+     "evidence3": 5
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 45,
+    "collection": {
+     "listed": 15,
+     "calls": 0,
+     "cycle": 3,
+     "page": 11,
+     "none": 1,
+     "auto": 3,
+     "auto_healthy": 3,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 0,
+     "open_calls": 0,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-02",
+   "m": {
+    "vetted": 12,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 61.8,
+    "itemized": 10,
+    "addressable_usd": 6648276,
+    "actionable_usd": 4068966,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 0,
+      "usd": 0
+     }
+    },
+    "quality": {
+     "award_published": 6,
+     "deadline_known": 6,
+     "eligibility_confirmed": 8,
+     "evidence3": 6
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 46,
+    "collection": {
+     "listed": 15,
+     "calls": 1,
+     "cycle": 3,
+     "page": 10,
+     "none": 1,
+     "auto": 4,
+     "auto_healthy": 4,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 0,
+     "open_calls": 1,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-03",
+   "m": {
+    "vetted": 12,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 3,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 3,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 2,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 62.5,
+    "itemized": 10,
+    "addressable_usd": 6820690,
+    "actionable_usd": 4172414,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 1,
+      "usd": 450000
+     }
+    },
+    "quality": {
+     "award_published": 6,
+     "deadline_known": 7,
+     "eligibility_confirmed": 8,
+     "evidence3": 6
+    },
+    "health": {
+     "checked_24h": 13,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 46,
+    "collection": {
+     "listed": 15,
+     "calls": 2,
+     "cycle": 3,
+     "page": 9,
+     "none": 1,
+     "auto": 5,
+     "auto_healthy": 5,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 1,
+     "open_calls": 1,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-04",
+   "m": {
+    "vetted": 13,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 4,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 4,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 3,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 63.2,
+    "itemized": 11,
+    "addressable_usd": 6993103,
+    "actionable_usd": 4275862,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 1,
+      "usd": 450000
+     }
+    },
+    "quality": {
+     "award_published": 7,
+     "deadline_known": 7,
+     "eligibility_confirmed": 8,
+     "evidence3": 6
+    },
+    "health": {
+     "checked_24h": 14,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 46,
+    "collection": {
+     "listed": 15,
+     "calls": 3,
+     "cycle": 3,
+     "page": 8,
+     "none": 1,
+     "auto": 6,
+     "auto_healthy": 6,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 1,
+     "open_calls": 2,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-05",
+   "m": {
+    "vetted": 13,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 4,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 4,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 3,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 63.9,
+    "itemized": 11,
+    "addressable_usd": 7165517,
+    "actionable_usd": 4379310,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 1,
+      "usd": 450000
+     }
+    },
+    "quality": {
+     "award_published": 7,
+     "deadline_known": 7,
+     "eligibility_confirmed": 9,
+     "evidence3": 6
+    },
+    "health": {
+     "checked_24h": 14,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 46,
+    "collection": {
+     "listed": 15,
+     "calls": 4,
+     "cycle": 3,
+     "page": 7,
+     "none": 1,
+     "auto": 7,
+     "auto_healthy": 7,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 1,
+     "open_calls": 2,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-06",
+   "m": {
+    "vetted": 13,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 4,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 4,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 3,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 64.6,
+    "itemized": 12,
+    "addressable_usd": 7337931,
+    "actionable_usd": 4482759,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 1,
+      "usd": 450000
+     }
+    },
+    "quality": {
+     "award_published": 7,
+     "deadline_known": 7,
+     "eligibility_confirmed": 9,
+     "evidence3": 7
+    },
+    "health": {
+     "checked_24h": 14,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 47,
+    "collection": {
+     "listed": 15,
+     "calls": 5,
+     "cycle": 3,
+     "page": 6,
+     "none": 1,
+     "auto": 8,
+     "auto_healthy": 8,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 2,
+     "open_calls": 3,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-07",
+   "m": {
+    "vetted": 13,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 4,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 4,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 3,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 65.2,
+    "itemized": 12,
+    "addressable_usd": 7510345,
+    "actionable_usd": 4586207,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 1,
+      "usd": 450000
+     }
+    },
+    "quality": {
+     "award_published": 7,
+     "deadline_known": 7,
+     "eligibility_confirmed": 9,
+     "evidence3": 7
+    },
+    "health": {
+     "checked_24h": 14,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 47,
+    "collection": {
+     "listed": 15,
+     "calls": 6,
+     "cycle": 3,
+     "page": 5,
+     "none": 1,
+     "auto": 9,
+     "auto_healthy": 8,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 2,
+     "open_calls": 3,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-08",
+   "m": {
+    "vetted": 13,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 4,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 4,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 3,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 65.9,
+    "itemized": 13,
+    "addressable_usd": 7682759,
+    "actionable_usd": 4689655,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 1,
+      "usd": 450000
+     }
+    },
+    "quality": {
+     "award_published": 7,
+     "deadline_known": 7,
+     "eligibility_confirmed": 9,
+     "evidence3": 7
+    },
+    "health": {
+     "checked_24h": 14,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 47,
+    "collection": {
+     "listed": 15,
+     "calls": 7,
+     "cycle": 3,
+     "page": 4,
+     "none": 1,
+     "auto": 10,
+     "auto_healthy": 8,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 2,
+     "open_calls": 4,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-09",
+   "m": {
+    "vetted": 14,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 4,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 4,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 3,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 66.6,
+    "itemized": 13,
+    "addressable_usd": 7855172,
+    "actionable_usd": 4793103,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 1,
+      "usd": 450000
+     }
+    },
+    "quality": {
+     "award_published": 8,
+     "deadline_known": 8,
+     "eligibility_confirmed": 10,
+     "evidence3": 7
+    },
+    "health": {
+     "checked_24h": 14,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 47,
+    "collection": {
+     "listed": 15,
+     "calls": 7,
+     "cycle": 3,
+     "page": 4,
+     "none": 1,
+     "auto": 10,
+     "auto_healthy": 8,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 3,
+     "open_calls": 4,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-10",
+   "m": {
+    "vetted": 14,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 4,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 4,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 3,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 67.3,
+    "itemized": 14,
+    "addressable_usd": 8027586,
+    "actionable_usd": 4896552,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 1,
+      "usd": 450000
+     }
+    },
+    "quality": {
+     "award_published": 8,
+     "deadline_known": 8,
+     "eligibility_confirmed": 10,
+     "evidence3": 8
+    },
+    "health": {
+     "checked_24h": 14,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 48,
+    "collection": {
+     "listed": 15,
+     "calls": 7,
+     "cycle": 3,
+     "page": 4,
+     "none": 1,
+     "auto": 10,
+     "auto_healthy": 8,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 3,
+     "open_calls": 5,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  },
+  {
+   "day": "2026-11-11",
+   "m": {
+    "vetted": 14,
+    "by_bucket": {
+     "us_federal": 4,
+     "intl_dev": 4,
+     "state_regional": 1,
+     "private_sector": 2,
+     "foundation_ngo": 2
+    },
+    "by_lane": {
+     "apply_now": 4,
+     "rolling": 2,
+     "prepare": 2,
+     "cultivate": 1,
+     "watch": 2
+    },
+    "by_tier": {
+     "prime": 3,
+     "strong": 3,
+     "possible": 3,
+     "long_shot": 1
+    },
+    "avg_fit": 68.0,
+    "itemized": 14,
+    "addressable_usd": 8200000,
+    "actionable_usd": 5000000,
+    "pipeline": {
+     "reviewing": {
+      "n": 1,
+      "usd": 750000
+     },
+     "applying": {
+      "n": 1,
+      "usd": 1800000
+     },
+     "submitted": {
+      "n": 1,
+      "usd": 300000
+     },
+     "awarded": {
+      "n": 1,
+      "usd": 450000
+     }
+    },
+    "quality": {
+     "award_published": 8,
+     "deadline_known": 8,
+     "eligibility_confirmed": 10,
+     "evidence3": 8
+    },
+    "health": {
+     "checked_24h": 14,
+     "failing": 1
+    },
+    "targets_pending": 15,
+    "screened": 48,
+    "collection": {
+     "listed": 15,
+     "calls": 7,
+     "cycle": 3,
+     "page": 4,
+     "none": 1,
+     "auto": 10,
+     "auto_healthy": 8,
+     "healthy": 11,
+     "verified": 11,
+     "with_open_calls": 5,
+     "open_calls": 5,
+     "new_calls_30d": 3,
+     "calls_closing_60d": 2
+    }
+   }
+  }
+ ],
+ "discovery": {
+  "runs": [
+   {
+    "run_label": "discovery-2026-11-09",
+    "started_at": "2026-11-09T09:00:00Z",
+    "finished_at": "2026-11-09T10:00:00Z",
+    "summary": "Adaptation and water lenses; two new candidates.",
+    "stats": {
+     "queries": 24
+    },
+    "examined": 31,
+    "vetted": 2,
+    "rejected": 24,
+    "duplicate": 5
+   },
+   {
+    "run_label": "discovery-2026-11-05",
+    "started_at": "2026-11-05T09:00:00Z",
+    "finished_at": "2026-11-05T10:00:00Z",
+    "summary": "Private sector lens; mostly program pages without UA roles.",
+    "stats": {
+     "queries": 18
+    },
+    "examined": 22,
+    "vetted": 1,
+    "rejected": 18,
+    "duplicate": 3
+   },
+   {
+    "run_label": "discovery-2026-11-02",
+    "started_at": "2026-11-02T09:00:00Z",
+    "finished_at": "2026-11-02T11:00:00Z",
+    "summary": "State and regional lens.",
+    "stats": {
+     "queries": 20
+    },
+    "examined": 27,
+    "vetted": 3,
+    "rejected": 20,
+    "duplicate": 4
+   }
+  ],
+  "by_lens": [
+   {
+    "lens": "agrivoltaics",
+    "examined": 18,
+    "vetted": 3,
+    "rejected": 13
+   },
+   {
+    "lens": "water-energy-food",
+    "examined": 21,
+    "vetted": 2,
+    "rejected": 17
+   },
+   {
+    "lens": "smallholder adaptation",
+    "examined": 19,
+    "vetted": 1,
+    "rejected": 15
+   },
+   {
+    "lens": "state energy offices",
+    "examined": 22,
+    "vetted": 0,
+    "rejected": 20
+   }
+  ],
+  "totals": {
+   "examined": 80,
+   "vetted": 6,
+   "rejected": 62,
+   "candidate": 3
+  }
+ },
+ "targets": {
+  "by_bucket": [
+   {
+    "bucket": "us_federal",
+    "pending": 4,
+    "covered": 6,
+    "rejected": 2,
+    "deferred": 1
+   },
+   {
+    "bucket": "intl_dev",
+    "pending": 3,
+    "covered": 4,
+    "rejected": 3,
+    "deferred": 0
+   },
+   {
+    "bucket": "state_regional",
+    "pending": 3,
+    "covered": 1,
+    "rejected": 1,
+    "deferred": 2
+   },
+   {
+    "bucket": "private_sector",
+    "pending": 3,
+    "covered": 2,
+    "rejected": 4,
+    "deferred": 0
+   },
+   {
+    "bucket": "foundation_ngo",
+    "pending": 2,
+    "covered": 3,
+    "rejected": 2,
+    "deferred": 1
+   }
+  ],
+  "next": [
+   {
+    "org": "Sunbelt Research Council",
+    "program_hint": "Solar and Crops Grants",
+    "bucket": "us_federal",
+    "priority": 1,
+    "why": "Names dual-use solar and funds Arizona universities."
+   },
+   {
+    "org": "Pacific Agriculture Trust",
+    "program_hint": "Dryland Farming Awards",
+    "bucket": "foundation_ngo",
+    "priority": 1,
+    "why": "Multi-year awards for semi-arid farming research."
+   },
+   {
+    "org": "Andean Development Window",
+    "program_hint": "Rural Energy Partnerships",
+    "bucket": "intl_dev",
+    "priority": 2,
+    "why": "Latin America energy access with university partners."
+   },
+   {
+    "org": "Four Corners Energy Office",
+    "program_hint": "State Clean Energy Fund",
+    "bucket": "state_regional",
+    "priority": 2,
+    "why": "State fund open to public universities."
+   },
+   {
+    "org": "Desert Utilities Foundation",
+    "program_hint": "Community Solar Grants",
+    "bucket": "private_sector",
+    "priority": 3,
+    "why": "Utility foundation with an agriculture track."
+   }
+  ]
+ },
+ "screened": [
+  {
+   "name": "Greenfield Solar Developers",
+   "program": "Project Finance",
+   "bucket": "private_sector",
+   "reason": "For-profit financing, no grants for universities",
+   "at": "2026-11-11T12:00:00Z"
+  },
+  {
+   "name": "Heartland Rural Alliance",
+   "program": "Main Street Grants",
+   "bucket": "foundation_ngo",
+   "reason": "Excludes universities",
+   "at": "2026-11-10T12:00:00Z"
+  },
+  {
+   "name": "Coastal Ocean Institute",
+   "program": "Blue Economy Awards",
+   "bucket": "foundation_ngo",
+   "reason": "Marine focus, no agriculture link",
+   "at": "2026-11-09T12:00:00Z"
+  },
+  {
+   "name": "Pacific Rim Trade Fund",
+   "program": "Export Credits",
+   "bucket": "intl_dev",
+   "reason": "Loans, not grants",
+   "at": "2026-11-08T12:00:00Z"
+  },
+  {
+   "name": "Northern Plains Energy Office",
+   "program": "Wind Rebates",
+   "bucket": "state_regional",
+   "reason": "Residential rebates only",
+   "at": "2026-11-07T12:00:00Z"
+  },
+  {
+   "name": "Metro Transit Foundation",
+   "program": "Clean Bus Fund",
+   "bucket": "private_sector",
+   "reason": "Transport only",
+   "at": "2026-11-06T12:00:00Z"
+  },
+  {
+   "name": "National Arts Endowment Fund",
+   "program": "Rural Arts",
+   "bucket": "foundation_ngo",
+   "reason": "No mission match",
+   "at": "2026-11-05T12:00:00Z"
+  },
+  {
+   "name": "Federal Highway Pilot",
+   "program": "Solar Roadways",
+   "bucket": "us_federal",
+   "reason": "Infrastructure only, no UA role",
+   "at": "2026-11-04T12:00:00Z"
+  }
+ ],
+ "last_run": {
+  "started_at": "2026-11-11T05:00:00Z",
+  "finished_at": "2026-11-11T06:00:00Z",
+  "status": "ok",
+  "planned": 14,
+  "fetched": 12,
+  "not_modified": 9,
+  "changed": 2,
+  "errors": 1,
+  "elapsed_ms": 48210
+ },
+ "runs_24h": {
+  "runs": 2,
+  "fetched": 26,
+  "changed": 3,
+  "errors": 1
+ },
+ "collection": {
+  "listed": 15,
+  "calls": 7,
+  "cycle": 3,
+  "page": 4,
+  "none": 1,
+  "auto": 10,
+  "auto_healthy": 8,
+  "healthy": 11,
+  "verified": 11,
+  "with_open_calls": 5,
+  "open_calls": 5,
+  "new_calls_30d": 3,
+  "calls_closing_60d": 2
+ }
+}

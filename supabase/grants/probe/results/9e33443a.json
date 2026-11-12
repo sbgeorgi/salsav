@@ -1,0 +1,29 @@
+{
+  "key": "9e33443a",
+  "funder": "BIRD Foundation Energy Center",
+  "verdict": "monitor_html_only",
+  "method": "html_listing",
+  "adapter": "html",
+  "feed_url": null,
+  "adapter_config": {},
+  "confidence": "medium",
+  "summary": "The Energy Center is one consortium call per page, not a list of opportunities. No structured source exposes the call. The RSS feed passes adapter_check but its items are award news, so it must not be used. Use the html adapter on the program page, which carries the labeled future stage dates (next full proposals January 21, 2027).",
+  "rejected": [
+    "rss https://www.birdf.com/feed/ (ok:true, 4 items, but all are BIRD award press releases, not calls)",
+    "wp-json bird_programs/12741 (acf empty, content is Elementor CSS blob, no usable fields)",
+    "us-isr-energycenter.org (302 to abuse.spd.co.il, dead)",
+    "activetrail CFP-2026 page (email campaign landing, no structured data)"
+  ],
+  "evidence": [
+    "page https://www.birdf.com/bird_programs/energy-center/ 200, WordPress, 719 KB, text ~9.7k chars",
+    "text: 'Deadline - June 30, 2026' (past as of 2026-11-11), 'New Call for Proposals U.S.-Israel Energy Center'",
+    "stages block: Full Proposals July 9, 2026; Decisions September 2026; Full Proposals January 21, 2027 (UPCOMING); Executive Summaries July 22, 2026",
+    "topics: Fossil Energy, Energy Storage, Energy-Water Nexus (Jan 2026 call), plus Cyber Security for Energy Infrastructure",
+    "JSON-LD is WebPage only; no Event/Grant schema"
+  ],
+  "check": {
+    "html": {"ok": true, "count": 0, "sample": [], "error": null, "http": 200, "text_len": 5690, "links": 7},
+    "rss_rejected": {"ok": true, "count": 4, "note": "award news items, not funding calls"}
+  },
+  "notes": "Stale link risk: the page's current-call deadline text (June 30, 2026) is already past; the html adapter's future-date labels should pick up January 21, 2027. Re-check on the next stage change."
+}

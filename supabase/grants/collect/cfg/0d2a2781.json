@@ -1,0 +1,48 @@
+{
+  "id": "0d2a2781-b76f-4729-81c0-0849e026d955",
+  "name": "USDA NIFA",
+  "program": "Agriculture and Food Research Initiative (AFRI), Foundational and Applied Science Program",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.nifa.usda.gov/grants/programs/agriculture-food-research-initiative-afri",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-NIFA",
+    "keyword": "Agriculture and Food Research Initiative",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "filter": {
+      "any": [
+        "Agriculture and Food Research Initiative"
+      ],
+      "fields": "title"
+    },
+    "auto_vet": false,
+    "max_items": 40
+  },
+  "collect_note": "Open AFRI notices from NIFA are read from Grants.gov twice a day and wait for review before showing. The date is only the Grants.gov closing date; each AFRI program area has its own deadline on the NIFA page, which cannot be read automatically, so check it there.",
+  "expect": {
+    "min_items": 2,
+    "sample": [
+      {
+        "title": "Agriculture and Food Research Initiative Competitive Grants Program Foundational and Applied Science Program",
+        "deadline": "2026-12-31",
+        "url": "https://www.grants.gov/search-results-detail/360205"
+      },
+      {
+        "title": "Agriculture and Food Research Initiative Competitive Grants Program Education and Workforce Development",
+        "deadline": "2026-12-31",
+        "url": "https://www.grants.gov/search-results-detail/361169"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP POST 2026-11-12 with desktop UA to https://api.grants.gov/v1/api/search2: {aln:10.310} returned HTTP 200 but unrelated NIH/HHS/DoD hits (aln not honored); {oppNum:USDA-NIFA-AFRI} returned 0 hits; {agencies:USDA-NIFA, keyword:'Agriculture and Food Research Initiative', oppStatuses:'forecasted|posted', rows:25} returned HTTP 200, 5 hits, 2 AFRI NOFOs (USDA-NIFA-AFRI-011134 posted, close 12/31/2026; USDA-NIFA-AFRI-011596 posted, close 12/31/2026) plus 3 other NIFA programs removed by the filter. Source url https://www.nifa.usda.gov/grants/programs/agriculture-food-research-initiative-afri kept (not re-probed for HTML here). Harness adapter_check.mjs not yet ready (no fetchSource), so acceptance is by this replay, pending the harness run.",
+  "edge_risk": "bot_protection",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 2,
+    "open": 2,
+    "checked": "2026-11-12"
+  }
+}

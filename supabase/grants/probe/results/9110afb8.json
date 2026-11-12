@@ -1,0 +1,33 @@
+{
+  "key": "9110afb8",
+  "funder": "NOAA (Inflation Reduction Act climate data and services)",
+  "verdict": "monitor_html_only",
+  "method": "html_listing",
+  "confidence": "high",
+  "adapter": "html",
+  "feed_url": null,
+  "adapter_config": {},
+  "row_fix": null,
+  "engine_requirements": "",
+  "prototype": "",
+  "attempted": [
+    "Browser render of program page: 'Announcements: More information about funding opportunities coming soon.' Last updated May 1, 2026. No opportunity list or deadlines.",
+    "Browser render of IRA Funding opportunities hub: only 2023-2024 announcements, all closed.",
+    "Grants.gov search2 with agencies=DOC-NOAA and climate keywords (drought, heat, NIDIS, NIHHIS, Climate Smart, regional climate): hitCount 0. Cause: the agency filter string does not match NOAA's agency name on Grants.gov.",
+    "Grants.gov search2 with no agency filter, keyword climate/regional climate/climate information/climate services/integrated sciences/NIDIS/NIHHIS/climate smart, keeping agency names containing NOAA: returned only unrelated NOAA NOFOs (see summary).",
+    "heat.gov/pages/funding (browser): lists only the FY27 Super Intelligence/ML webinar and NIHHIS heat awards news, no open IRA NOFO.",
+    "drought.gov/funding: 404. research.noaa.gov/climate-smart-communities: 404.",
+    "Announcements and resources hub: news releases only, no NOFO list.",
+    "adapter_check.mjs on the program-page html row: ok=true in page mode, count=0, text_len=1428."
+  ],
+  "check": {
+    "adapter_check_html_row": {"ok": true, "mode": "page", "kind": "ok", "http": 200, "count": 0, "text_len": 1428, "error": null}
+  },
+  "evidence": [
+    "Program page: 'More information about funding opportunities coming soon.' Last updated May 1, 2026.",
+    "Grants.gov no-agency-filter NOAA hits for climate terms: NOAA-OAR-CPO-2027-33392 (Super Intelligence/ML Innovation, closes 02/09/2027), NOAA-OAR-BAA-2027-33939, NOAA-NESDIS-NESDISPO-2027-33921, NOAA-NMFS-PRPO-2026-31863. None is an IRA regional climate data or information NOFO.",
+    "heat.gov: FY27 SI/ML Funding Opportunity Webinar Nov 3, 2026 (CPO), not an IRA NOFO."
+  ],
+  "summary": "No live, structured NOAA IRA Regional Climate Data and Information opportunity exists anywhere the edge can read. Grants.gov has no posted NOFO for NIHHIS, CSCI, RISA, or NIDIS under this program. Earlier DOC-NOAA zero-hit results were a filter-string artifact, and the unfiltered search confirms the absence. Best option remains html monitoring of the program page, which will flag a NOFO when it appears. The html adapter reports ok=true in page mode for this URL (1428 chars, count 0), so the earlier 1500-char rejection seems not to apply in page mode.",
+  "unverified": ["Whether NOAA posts this pool's NOFOs under non-climate titles that the keyword set missed."]
+}

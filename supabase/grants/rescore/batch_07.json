@@ -1,0 +1,617 @@
+[
+ {
+  "id": "ad3bfbe8-defd-45f0-8393-0d24006267e8",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "strong",
+    "why": "Topic funds the water-nutrient-energy nexus in African smallholder farming; it does not name solar or agrivoltaics.",
+    "quote": "integrated water, nutrient and energy management systems are available to smallholder farms in Africa."
+   },
+   "activity": {
+    "level": "research_demo",
+    "why": "Research and Innovation Action testing practices and tools on farms in at least two African agro-ecosystems.",
+    "quote": "HORIZON-RIA HORIZON Research and Innovation Actions"
+   },
+   "geography": {
+    "level": "region",
+    "why": "Africa-wide call; Kenya is a SALSAV site but it is not named, and AU-based consortium partners are required.",
+    "quote": "consortia must include at least three independent legal entities established in an African Union member state"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No Horizon Europe Cluster 6 award to UA or to agrivoltaics found in one search.",
+    "quote": "",
+    "url": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "amount_confidence": "unknown",
+   "award_note": "EUR 6,000,000 per project (2 grants, EUR 12M budget); euros are not converted to USD, so no USD amount is stored.",
+   "cycle": "fixed_deadline",
+   "next_deadline": "2027-04-08",
+   "deadline_note": "Two-stage call: opens 4 Feb 2027, stage 1 on 8 Apr 2027, stage 2 on 14 Sep 2027 (dates are epoch values in the topic data)",
+   "open_now": false,
+   "eligibility_note": "The topic requires 3+ African Union entities and the page says non-EU, non-Associated countries are not automatically eligible for EU funding; it does not say whether a US university can take part or be funded.",
+   "requirements": {
+    "loi": false,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": [
+     "EU Funding & Tenders Portal (PIC)"
+    ]
+   },
+   "themes": [
+    "water",
+    "agriculture",
+    "climate adaptation",
+    "smallholder farmers",
+    "international partnerships"
+   ],
+   "fetchability": "js_required",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "award": {
+    "quote": "\"expectedGrants\" : 2, \"minContribution\" : 6000000, \"maxContribution\" : 6000000",
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/data/topicDetails/horizon-cl6-2027-02-farm2fork-02-two-stage.json"
+   },
+   "deadline": {
+    "quote": "\"deadlineModel\" : \"two-stage\", \"deadlineDates\" : [ \"1807142400000\", \"1820880000000\" ]",
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/data/topicDetails/horizon-cl6-2027-02-farm2fork-02-two-stage.json"
+   },
+   "eligibility": {
+    "quote": "A number of non-EU/non-Associated Countries that are not automatically eligible for funding have made specific provisions for making funding available for their participants in Horizon Europe projects.",
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/data/topicDetails/horizon-cl6-2027-02-farm2fork-02-two-stage.json"
+   }
+  },
+  "vet_note": "EU call (opens Feb 2027) for water-nutrient-energy systems on African smallholder farms; the page does not say whether a US university can join or be funded, and an AU-based consortium is required.",
+  "source": "live_page",
+  "checked": {
+   "quotes_ok": 6,
+   "quotes_removed": 0,
+   "fit": 65,
+   "changes": [
+    "ua_eligibility eligible_with_partner -> unknown (page silent on US entities; only says non-EU countries are not automatically funded)",
+    "amount_confidence published -> unknown; euro amount stays in award_note only",
+    "eligibility quote replaced with the sentence on non-EU funding, vet_note and eligibility_note reworded"
+   ]
+  }
+ },
+ {
+  "id": "f0b48ea9-67b4-4abc-b279-ab8993cf9ca1",
+  "verdict": "demote",
+  "reason": "Rubric score 38 is under the 40 gate: government-driven funding through GEF Agencies, no agrivoltaics link, no published award size.",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Food security and adaptation focal areas exist, but funding is country-driven and agrivoltaics would be a stretch.",
+    "quote": "In most cases, the GEF provides funding to support government projects and programs."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Governments pick the executing agency; a research institution can be one, but the lab would be a minor partner in a government project.",
+    "quote": "Governments decide on the executing agency (governmental institutions, civil society organizations, private sector companies, research institutions)."
+   },
+   "geography": {
+    "level": "global",
+    "why": "Eligible recipient countries worldwide (Kenya, Mexico qualify); the US itself is not a recipient and no SALSAV region is prioritized.",
+    "quote": "if the country is eligible to receive World Bank (IBRD and/or IDA) financing or if it is an eligible recipient of UNDP technical assistance"
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No GEF-funded agrivoltaics or UA project found in one search.",
+    "quote": "",
+    "url": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible_with_partner",
+   "amount_confidence": "unknown",
+   "award_note": "Medium-sized projects up to USD 5M, full-sized above USD 5M; no single maximum stated",
+   "cycle": "rolling",
+   "next_deadline": null,
+   "open_now": false,
+   "eligibility_note": "No direct application: a recipient government must endorse the project and a GEF Agency delivers it; research institutions can be executing partners.",
+   "themes": [
+    "food security",
+    "climate adaptation",
+    "water",
+    "land & conservation",
+    "international partnerships"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "Medium-sized Project (MSP) : GEF project financing up to five million US dollars.",
+    "url": "https://www.thegef.org/projects-operations/how-projects-work"
+   },
+   "deadline": {
+    "quote": "",
+    "url": ""
+   },
+   "eligibility": {
+    "quote": "Governments decide on the executing agency (governmental institutions, civil society organizations, private sector companies, research institutions).",
+    "url": "https://www.thegef.org/projects-operations/how-projects-work"
+   }
+  },
+  "vet_note": "GEF funds government-led environment projects through agencies like UNDP or FAO, so UA could only join as an executing partner of a Kenyan or Mexican project, not apply itself.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 5,
+   "quotes_removed": 0,
+   "fit": 38,
+   "changes": []
+  }
+ },
+ {
+  "id": "2d006879-cd1e-4ce4-a35d-93c49585211e",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Broad engineering centers; net-zero technologies are listed but agrivoltaics or farming are not named, so it would be a stretch.",
+    "quote": "a broad spectrum of engineering topics, including but not limited to advanced manufacturing, advanced wireless, artificial intelligence, biotechnology, microelectronics and semiconductors, net-zero technologies,"
+   },
+   "activity": {
+    "level": "research_demo",
+    "why": "Funds large university-led research centers with workforce and innovation components.",
+    "quote": "The program continues to focus on advancing an engineered system through inclusive cross-disciplinary and cross-sector partnerships"
+   },
+   "geography": {
+    "level": "region",
+    "why": "US universities lead; no regional focus, so US-wide.",
+    "quote": "Only U.S. Institutions of Higher Education (IHEs), also referred to in this solicitation as universities and academic institutions, accredited in, and having a campus located in the US"
+   },
+   "precedent": {
+    "level": "similar",
+    "why": "NSF funded UA agrivoltaics research at Biosphere 2 through its Earth Sciences division, not through the ERC program.",
+    "quote": "",
+    "url": "https://www.nsf.gov/news/agrivoltaics-proves-beneficial-across-food-water"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible",
+   "award_min_usd": null,
+   "award_max_usd": 26000000,
+   "amount_confidence": "published",
+   "award_note": "Five-year maximum for one center: annual caps $3.5M, $4.5M, $6M, $6M, $6M (NSF 24-576). Next ERC solicitation not yet seen; full proposals are by invitation after a preliminary proposal.",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "NSF 24-576 closed in 2025; the next ERC solicitation is anticipated in 2026 with no date posted.",
+   "open_now": false,
+   "eligibility_note": "A US university that grants engineering degrees can be the lead. Cost sharing is required and full proposals are by invitation after a preliminary proposal.",
+   "requirements": {
+    "loi": true,
+    "cost_share": "required",
+    "indirect_cap": "",
+    "registrations": [
+     "Research.gov or Grants.gov"
+    ]
+   },
+   "themes": [
+    "technology & innovation",
+    "research",
+    "education & workforce",
+    "solar & clean energy"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "award": {
+    "quote": "The budget for year one may be no more than $3,500,000, no more than $4,500,000 for year two, no more than $6,000,000 for year three, no more than $6,000,000 for year four,",
+    "url": "https://www.nsf.gov/funding/opportunities/erc-gen-4-engineering-research-centers/505599/nsf24-576/solicitation"
+   },
+   "deadline": {
+    "quote": "NSF anticipates issuing the next Engineering Research Centers solicitation in 2026.",
+    "url": "https://www.nsf.gov/funding/opportunities/erc-gen-4-engineering-research-centers/505599/updates/120181"
+   },
+   "eligibility": {
+    "quote": "Only U.S. Institutions of Higher Education (IHEs), also referred to in this solicitation as universities and academic institutions, accredited in, and having a campus located in the US",
+    "url": "https://www.nsf.gov/funding/opportunities/erc-gen-4-engineering-research-centers/505599/nsf24-576/solicitation"
+   }
+  },
+  "vet_note": "UA can lead an NSF Engineering Research Center (up to $26M over five years), but the topic is general engineering, so agrivoltaics would need a convergent center concept.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 6,
+   "quotes_removed": 0,
+   "fit": 68,
+   "changes": [
+    "award quote swapped from the $26M-$104M program range to the per-year caps that sum to the $26M single-center maximum"
+   ]
+  }
+ },
+ {
+  "id": "71f406cd-bb0a-44c5-911e-1a45991c163c",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "BER funds plant, microbial and Earth system science; FY2027 panel topics are not solar or farming, so agrivoltaics would be a stretch.",
+    "quote": "BER supports fundamental synthetic and systems biology research in plants and microbes, as well as energy-relevant atmospheric, terrestrial, cryospheric, and human system processes."
+   },
+   "activity": {
+    "level": "research_demo",
+    "why": "Research grants of three to five years where university labs are the usual applicants; not demonstration-only.",
+    "quote": "We anticipate making awards with a project period of six months to five years, with a most common project period of three years."
+   },
+   "geography": {
+    "level": "region",
+    "why": "No geographic focus; US-based science, so US-wide. Kenya, Mexico or Israel work is not a stated priority.",
+    "quote": ""
+   },
+   "precedent": {
+    "level": "none",
+    "why": "No BER-funded UA agrivoltaics found. DOE's agrivoltaics awards to UA came from the Solar Energy Technologies Office, a different office.",
+    "quote": "",
+    "url": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible",
+   "amount_confidence": "unknown",
+   "award_note": "Award size not published; it depends on the number of meritorious applications and funds.",
+   "cycle": "open_ended",
+   "next_deadline": "2027-09-30",
+   "deadline_note": "The NOFO closes 2027-09-30 and accepts applications any time; BER pre-applications for FY2027 panels are due 2026-12-22 (microbial, bioimaging, low dose topics only).",
+   "open_now": true,
+   "eligibility_note": "All types of applicants are eligible, so a public university can lead. Pre-application is required only for certain review panels.",
+   "requirements": {
+    "loi": false,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": [
+     "PAMS",
+     "Grants.gov"
+    ]
+   },
+   "themes": [
+    "research",
+    "technology & innovation",
+    "agriculture",
+    "solar & clean energy"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.65
+  },
+  "evidence": {
+   "award": {
+    "quote": "The award size will depend on the number of meritorious applications and the availability of appropriated funds.",
+    "url": "https://science.osti.gov/-/media/grants/pdf/foas/2027/DE-FOA-0003665-000001-Part-1.pdf"
+   },
+   "deadline": {
+    "quote": "Note: This NOFO will remain open until September 30, 2027, or until replaced by a successor NOFO.",
+    "url": "https://science.osti.gov/ber/Funding-Opportunities"
+   },
+   "eligibility": {
+    "quote": "All types of applicants are eligible to apply, except nonprofit organizations described in section 501(c)(4) of the Internal Revenue Code of 1986 that engaged in lobbying activities after December 31, 1995.",
+    "url": "https://science.osti.gov/-/media/grants/pdf/foas/2027/DE-FOA-0003665-000001-Part-1.pdf"
+   }
+  },
+  "vet_note": "DOE Office of Science takes basic-research proposals from any applicant all year, so UA could submit a BER-themed plant or ecosystem study, but agrivoltaics is not a listed priority and no amount is published.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 5,
+   "quotes_removed": 0,
+   "fit": 59,
+   "changes": []
+  }
+ },
+ {
+  "id": "9110afb8-9476-40c3-be2e-f6c929675a23",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Funds climate information delivery on drought and heat, not field research or solar; agrivoltaics would be a stretch.",
+    "quote": "expand dissemination of actionable, place-based climate information for hazards such as drought and heat, including for underserved communities."
+   },
+   "activity": {
+    "level": "other",
+    "why": "Pays for climate information services run by NOAA partner networks; a lab could only be a minor partner.",
+    "quote": "Regional Integrated Sciences and Assessments (RISA), the National Drought Information System (NIDIS), and more."
+   },
+   "geography": {
+    "level": "region",
+    "why": "US regional programs with no stated SALSAV site focus; Arizona is covered by a regional team but no region is prioritized.",
+    "quote": ""
+   },
+   "precedent": {
+    "level": "direct",
+    "why": "NOAA RISA and NIDIS fund UA's CLIMAS drought and climate adaptation team in the Southwest.",
+    "quote": "",
+    "url": "https://cpo.noaa.gov/cpo-awards-climas-375m-to-bolster-resilience-to-extreme-climate"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "unknown",
+   "amount_confidence": "unknown",
+   "award_note": "The page gives only a roughly $50M program pool, not a single award size.",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "No open call; page says more funding opportunities are coming.",
+   "open_now": false,
+   "eligibility_note": "The page does not say who may apply; it names communities and local, state and tribal governments as partners.",
+   "themes": [
+    "drought & heat",
+    "climate adaptation",
+    "water",
+    "research"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "More information about funding opportunities coming soon.",
+    "url": "https://www.noaa.gov/inflation-reduction-act/inflation-reduction-act-climate-data-and-services/regional-climate-data-and-information"
+   },
+   "eligibility": {
+    "quote": "",
+    "url": ""
+   }
+  },
+  "vet_note": "NOAA is adding about $50M for drought and heat climate services, a fit for UA's CLIMAS-style work but not for agrivoltaics field research, and no call is open yet.",
+  "source": "last_text",
+  "checked": {
+   "quotes_ok": 3,
+   "quotes_removed": 0,
+   "fit": 41,
+   "changes": [
+    "precedent url fixed: the uanews link returned 404; replaced with the NOAA CPO announcement of the $3.75M CLIMAS award"
+   ]
+  }
+ },
+ {
+  "id": "a75adc6c-51d2-4d90-9c68-c1b37c2a0852",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "adjacent",
+    "why": "Funds global environment work including climate and agriculture; agrivoltaics is a natural proposal but priorities do not name it.",
+    "quote": "There are intersections between these two mandates in areas such as climate, agriculture, and waste management"
+   },
+   "activity": {
+    "level": "capacity",
+    "why": "Co-finances development projects; applied research is allowed only when tied to development, so a lab would lead a work package.",
+    "quote": "Applied research activities leading to, or linked with, development activities may be funded by the FFEM."
+   },
+   "geography": {
+    "level": "region",
+    "why": "Developing countries only, with about two thirds of funds for Africa; Kenya and Mexico qualify, the US and Israel do not.",
+    "quote": "Priority is given to the African continent, with a target of committing around two-thirds of FFEM resources."
+   },
+   "precedent": {
+    "level": "direct",
+    "why": "FFEM co-funded an agrivoltaics project in Morocco to cut water stress and produce electricity.",
+    "quote": "",
+    "url": "https://www.ffem.fr/en/projects/agrivoltaic-solutions-generate-electricity-and-reduce-water-stress"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible_with_partner",
+   "amount_confidence": "unknown",
+   "award_note": "Grant contribution EUR 500,000 to EUR 2,000,000 per project (submit-a-project page); it co-finances only, 50% maximum for research institutions. Not converted to USD.",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "No new proposals accepted until the end of 2026; resumption after the 2027-2030 programming is unconfirmed.",
+   "open_now": false,
+   "eligibility_note": "Any legal entity may submit, but it needs formal support from one of six French member institutions and a Project Opportunity Note; work must be in an ODA-eligible country.",
+   "requirements": {
+    "loi": true,
+    "cost_share": "FFEM covers at most 50% for research institutions",
+    "indirect_cap": "",
+    "registrations": [
+     "Project Opportunity Note",
+     "formal support of a member institution"
+    ]
+   },
+   "themes": [
+    "climate adaptation",
+    "land & conservation",
+    "agriculture",
+    "international partnerships",
+    "solar & clean energy"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "The FFEM's grant contribution ranges from €500,000 to €2,000,000 per project",
+    "url": "https://www.ffem.fr/en/submit-project"
+   },
+   "deadline": {
+    "quote": "the FFEM is not able to receive new project proposals for funding until the end of 2026.",
+    "url": "https://ffem.fr/en/frequently-asked-questions"
+   },
+   "eligibility": {
+    "quote": "Any legal entity may submit a project, provided that it falls within the mandate and guidelines of the FFEM",
+    "url": "https://ffem.fr/en/frequently-asked-questions"
+   }
+  },
+  "vet_note": "FFEM co-finances EUR 500k to 2M environment projects in developing countries and has backed agrivoltaics in Morocco, but it is closed to new proposals until end 2026 and UA would need a French member institution's sponsorship.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 6,
+   "quotes_removed": 0,
+   "fit": 62,
+   "changes": [
+    "amount_confidence published -> unknown (euro amounts only, no USD figure stored)",
+    "award quote replaced with the per-project range sentence from the submit-project page (found there)"
+   ]
+  }
+ },
+ {
+  "id": "b8ff1258-5845-480e-a40e-354038d10e13",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "weak",
+    "why": "Pays for military installation energy, water and resilience technology; solar is possible but farming and agrivoltaics are not named.",
+    "quote": "develop and demonstrate innovative, scalable technologies that enhance military readiness, improve warfighter capabilities, and strengthen defense infrastructure."
+   },
+   "activity": {
+    "level": "research_demo",
+    "why": "Funds research, development, testing and field demonstration, with academia named as an eligible performer.",
+    "quote": "Projects are led by researchers from industry, academia, and government labs."
+   },
+   "geography": {
+    "level": "region",
+    "why": "Work happens on US military installations; no focus on Arizona, Mexico, Kenya or Israel, so counted as US-wide.",
+    "quote": ""
+   },
+   "precedent": {
+    "level": "none",
+    "why": "ESTCP microgrid project EW19-5277 only used an Arizona State University energy model; no university-led solar, water or farming project and no UA award found.",
+    "quote": "",
+    "url": ""
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible",
+   "amount_confidence": "unknown",
+   "award_note": "Core awards have no prescribed size; only Limited Scope proposals (up to $350,000, about one year) and SEED (up to $250,000) are capped. No overall maximum published.",
+   "cycle": "annual_recurring",
+   "next_deadline": null,
+   "deadline_note": "FY2027 funding opportunities were released 2026-11-05; pre-proposals are due in early January per the process page, exact date is in the BAA (not read).",
+   "open_now": true,
+   "eligibility_note": "Researchers from industry, universities and other private-sector organizations respond to the BAA; no DoD partner is required. Pre-proposal first, full proposal by invitation only.",
+   "requirements": {
+    "loi": false,
+    "cost_share": "",
+    "indirect_cap": "",
+    "registrations": [
+     "SAM.gov",
+     "SEMS"
+    ]
+   },
+   "themes": [
+    "solar & clean energy",
+    "water",
+    "technology & innovation",
+    "research"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.6
+  },
+  "evidence": {
+   "award": {
+    "quote": "",
+    "url": ""
+   },
+   "deadline": {
+    "quote": "both begin with the submission of a pre-proposal due in early January.",
+    "url": "https://serdp-estcp.mil/workwithus/fundingprocess"
+   },
+   "eligibility": {
+    "quote": "Researchers from industry, universities, and other private sector organizations will respond to BAAs issued by SERDP and ESTCP.",
+    "url": "https://serdp-estcp.mil/workwithus"
+   }
+  },
+  "vet_note": "SERDP and ESTCP fund university-led energy and water technology for military bases through an annual BAA that opened 2026-11-05, so UA would need an installation resilience angle rather than farming.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 4,
+   "quotes_removed": 0,
+   "fit": 59,
+   "changes": [
+    "precedent similar -> none: the cited ESTCP page does not show ASU or any university leading a solar plus storage project"
+   ]
+  }
+ },
+ {
+  "id": "cad6a9e4-6e2a-4e3a-872c-4d1c1d9a66f8",
+  "verdict": "keep",
+  "reason": "",
+  "fit": {
+   "mission": {
+    "level": "adjacent",
+    "why": "Funds climate-resilient farming technology under harsh conditions; agrivoltaics is a natural proposal but solar is not named.",
+    "quote": "Climate Resilience – Developing and adopting new crop varieties, vertical farming, and greenhouse technologies to ensure production under harsh environmental conditions"
+   },
+   "activity": {
+    "level": "capacity",
+    "why": "Industry-led commercialization consortium with a required implementation phase; a university lab would lead the research work package.",
+    "quote": "BARD is seeking collaborative research and development projects that aim to generate innovative solutions to critical challenges in global food security."
+   },
+   "geography": {
+    "level": "home",
+    "why": "Requires a US and Israel consortium; Israel is a SALSAV partner geography.",
+    "quote": "Proposals must be submitted by a consortium that include Industry partners (companies/firms) and Academia or research institute from BOTH the U.S. and Israel."
+   },
+   "precedent": {
+    "level": "direct",
+    "why": "BARD awarded the University of Houston $570,000 for co-located agrivoltaics tested in the US and Israel.",
+    "quote": "",
+    "url": "https://www.egr.uh.edu/news/202607/food-water-energy-nexus-et%E2%80%99s-mohan-receives-570k-new-co-located-photovoltaic"
+   }
+  },
+  "facts": {
+   "ua_eligibility": "eligible_with_partner",
+   "award_max_usd": 1000000,
+   "amount_confidence": "published",
+   "award_note": "Conditional grant, repaid at 3% or 5% only if the technology is commercialized, for up to 10 years.",
+   "cycle": "closed_unknown",
+   "next_deadline": null,
+   "deadline_note": "2026 round closed: pre-proposal 2026-05-01, full proposal 2026-07-27. This is a pilot; no 2027 round announced.",
+   "open_now": false,
+   "eligibility_note": "Consortium needs two research institutions (one US, one Israeli) and two industry partners (one each); industry co-funds 10% to 30% by technology readiness level.",
+   "requirements": {
+    "loi": true,
+    "cost_share": "industry partners 10% to 30% of the grant",
+    "indirect_cap": "",
+    "registrations": [
+     "pre-proposal and LOI",
+     "MOU between partners"
+    ]
+   },
+   "themes": [
+    "technology & innovation",
+    "food security",
+    "climate adaptation",
+    "international partnerships",
+    "agriculture"
+   ],
+   "fetchability": "easy",
+   "confidence": 0.7
+  },
+  "evidence": {
+   "award": {
+    "quote": "Conditional Grant Amount: Up to $1,000,000 per project.",
+    "url": "https://www.bard-isus.org/news/call-for-proposals/"
+   },
+   "deadline": {
+    "quote": "The pre-proposal submission deadline is May 1, 2026",
+    "url": "https://www.bard-isus.org/bard-food-security-technology-accelerator/"
+   },
+   "eligibility": {
+    "quote": "Proposals must be submitted by a consortium that include Industry partners (companies/firms) and Academia or research institute from BOTH the U.S. and Israel.",
+    "url": "https://www.bard-isus.org/news/call-for-proposals/"
+   }
+  },
+  "vet_note": "BARD pays up to $1M per US-Israel consortium (UA plus an Israeli institute and two companies) for farm technology and has funded agrivoltaics before, but the 2026 round closed in July and no new round is announced.",
+  "source": "both",
+  "checked": {
+   "quotes_ok": 6,
+   "quotes_removed": 0,
+   "fit": 71,
+   "changes": []
+  }
+ }
+]

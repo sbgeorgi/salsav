@@ -1,0 +1,35 @@
+{
+  "key": "2d006879",
+  "verdict": "structured_needs_new_adapter",
+  "method": "rss",
+  "adapter": "rss",
+  "confidence": "low",
+  "feed_url": "https://www.nsf.gov/rss/rss_www_funding.xml",
+  "adapter_config": {"title_regex": "Engineering Research Cent|\bERC\b|Gen-4"},
+  "row_fix": null,
+  "summary": "NSF ERC Gen-4 (NSF 24-576) has NO open opportunity right now. Solicitation deadlines all passed (LOI 2024-09-03, preliminary 2024-09-30, full 2025-07-09). The updates page says 'NSF ERC competition continues, new solicitation anticipated in 2026' (updated 2025-09-17). Grants.gov has no NSF 24-576 record and no open ERC call. Best machine-readable future signal: NSF site-wide funding RSS (20 items, title/link/pubDate). Needs an rss title_regex filter so only ERC items are ingested. Unverified: whether ERC items stay in the 20-item window once posted.",
+  "attempted": [
+    "endpoint_recon.py on updates/120181: html_ok, Drupal, 3779 chars plain, no XHR/JSON opportunity endpoint, 0 ld+json",
+    "WebFetch of updates page and solicitation page: deadlines are 2024-2025, all past",
+    "NSF solicitation page nsf24-576 scanned: LOI 2024-09-03, preliminary 2024-09-30, full 2025-07-09, posted 2024-05-20",
+    "updates page text: 'NSF ERC competition continues, new solicitation anticipated in 2026' (2025-09-17)",
+    "api.nsf.gov/services/v1/opportunities (+keyword): 404",
+    "NSF rss_www_funding.xml: 200, 20 items, no ERC title; rss_www_funding_pgm_annc.xml: 404",
+    "api.grants.gov search2 POST oppNum 'NSF 24-576' and '24-576': 0 hits",
+    "api.grants.gov search2 POST keyword 'Gen-4 Engineering Research Centers' (all statuses): 70799 hits, mostly archived/closed ERC calls 09-545, 11-537, 13-560",
+    "api.grants.gov search2 POST keyword 'Engineering Research Centers' agencies NSF forecasted|posted: 116 hits, none ERC; grants_gov adapter would ingest unrelated NSF calls, so not usable as-is",
+    "adapter_check html on updates/120181: ok=false, only 723 chars (threshold 1500)",
+    "adapter_check html on nsf24-576/solicitation: ok=true but 132587 chars of static, expired solicitation text; not a signal for a new call",
+    "adapter_check html on /eng/eec/: passes 3736 chars but ERC text absent in body; rejected as false positive"
+  ],
+  "check": {
+    "rss_site_feed": "{\"ok\":true,\"count\":20,\"http\":200} (all 20 items are other NSF programs, so the row cannot use plain rss)",
+    "grants_gov_keyword": "{\"ok\":true,\"count\":25,\"sample\":[{\"external_id\":\"24-587\",\"title\":\"Research on the Science and Technology Enterprise...\"}]} (unrelated NSF calls, REJECTED)",
+    "prototype_erc_filter": "{\"items_in_feed\": 20, \"matched\": 0, \"sample\": []}",
+    "prototype_mechanics_check": "{\"items_in_feed\": 20, \"matched\": 1, \"sample\": [{\"external_id\": \"https://www.nsf.gov/funding/opportunities/engineering-eng-chemical-bioengineering-energy-transport\", \"title\": \"Engineering (ENG): Chemical, Bioengineering, Energy, and Transport Systems (CBET)\"}]}"
+  },
+  "engine_requirements": "Extend the rss adapter with optional adapter_config.title_regex (case-insensitive JS RegExp). Keep an item only when its <title> matches. Items with no match are skipped. Use feed_url https://www.nsf.gov/rss/rss_www_funding.xml. Plain HTTP GET, UA as usual. Fields: external_id=guid||link, title=title, url=link, deadline=null unless the text states one, status=open. Prototype: scratchpad proto_nsf_erc_rss.py.",
+  "prototype": "scratchpad proto_nsf_erc_rss.py: fetch rss_www_funding.xml, regex-filter <title>, emit {items_in_feed, matched, sample}. Runs with python -I; plain urllib, no cookies.",
+  "next_deadline": null,
+  "evidence_date": "2026-11-11"
+}

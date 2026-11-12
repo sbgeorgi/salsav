@@ -1,0 +1,32 @@
+{
+  "id": "d9a3a59e-43e9-437f-93b5-56dd625d25ca",
+  "name": "Western SARE (USDA-funded regional program)",
+  "program": "Western SARE Research & Education grants (pre-proposal required)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://western.sare.org/grants/research-and-education/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://western.sare.org/grants/",
+      "item": "li.listing",
+      "title": "h3",
+      "link": "a.learn",
+      "date": "h4.grant-deadline",
+      "closed": "Closed"
+    },
+    "auto_vet": true,
+    "max_items": 20
+  },
+  "collect_note": "Reads the Western SARE 'Grants' index, one card per current Western SARE call (Research & Education pre-proposal, Graduate Student, Professional + Producer, Farmer/Rancher, Professional Development, Local Education & Demonstration, Visiting Research & Education) with its listed deadline; Grants.gov search2 has no Western SARE calls (ALN 10.215 and keyword probes returned none), the /feed endpoint returns HTTP 500, and no JSON or RSS source exists, so the program index is the best public source; when a new cycle is posted the card's date and title change and the next call appears on the same page.",
+  "expect": {
+    "min_items": 7,
+    "sample": [
+      { "title": "Graduate Student", "deadline": "2026-10-28", "url": "https://western.sare.org/grants/graduate-student-research-and-education/" },
+      { "title": "Research and Education Pre-Proposal", "deadline": "2026-06-15", "url": "https://western.sare.org/grants/research-and-education" }
+    ]
+  },
+  "evidence": "Plain HTTP GET (desktop UA) https://western.sare.org/grants/ HTTP 200 (60 KB) with 7 li.listing cards parsed by cheerio; https://western.sare.org/grants/research-and-education/ HTTP 200 (funder url, page says 'Closed - Opens 2027'); /feed HTTP 500; /wp-json/wp/v2/types HTTP 401; api.grants.gov search2 aln 10.215 and keyword 'Western SARE' returned no SARE calls; checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

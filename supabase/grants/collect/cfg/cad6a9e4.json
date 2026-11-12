@@ -1,0 +1,48 @@
+{
+  "id": "cad6a9e4-6e2a-4e3a-872c-4d1c1d9a66f8",
+  "name": "US-Israel Binational Agricultural Research and Development Fund (BARD)",
+  "program": "BARD Food Security Technology Accelerator (pilot)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.bard-isus.org/news/call-for-proposals/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "list": {
+      "url": "https://www.bard-isus.org/funding-opportunities/",
+      "item": "div.jet-listing-grid__item",
+      "closed": "\\bclosed\\b",
+      "detail": {
+        "max": 1,
+        "deadline_regex": "Full proposal deadline:\\s*([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+      }
+    },
+    "max_items": 40,
+    "filter": {
+      "any": [
+        "Accelerator"
+      ],
+      "fields": "title"
+    }
+  },
+  "collect_note": "The BARD Funding Opportunities list is read twice a day and only the Food Security Technology Accelerator is kept; its deadline is read from its own page. Its last round (full proposals July 27, 2026) is closed, so it shows as closed until BARD posts a new round.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "BARD Food Security Technology Accelerator",
+        "deadline": "2026-07-27",
+        "url": "https://www.bard-isus.org/bard-food-security-technology-accelerator/"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP GET 2026-11-12: https://www.bard-isus.org/funding-opportunities/ HTTP 200, Accelerator card reads 'BARD Food Security Technology Accelerator ... Maximum award: $1 million Closed Guidelines'. Own page https://www.bard-isus.org/bard-food-security-technology-accelerator/ states 'Pre-proposal deadline: May 1, 2026 Full proposal deadline: July 27, 2026'; no later round is announced. Harness with filter + detail: count 1, open 0, deadline 2026-07-27, status closed.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

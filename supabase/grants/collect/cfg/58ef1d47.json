@@ -1,0 +1,29 @@
+{
+  "id": "58ef1d47-6a95-423d-94bb-e9fe6daabd05",
+  "name": "Global Innovation Fund",
+  "program": "Investments and Innovating for Climate Resilience / Gender Equality calls (open windows announced on the apply page)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.globalinnovation.fund/apply-for-funding",
+  "feed_url": null,
+  "adapter_config": {
+    "self": {
+      "title": "Global Innovation Fund call for proposals"
+    }
+  },
+  "collect_note": "No call is open now: the Apply for funding page says the last window closed 15 January 2025 and future calls will be posted there. That page is checked twice a day and a new call with a stated closing date will be picked up.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": "Apply page (https://www.globalinnovation.fund/apply-for-funding, read 2026-11-12): \"Our last application window closed on 15 January 2025. ... After our review of this window has concluded, we will share the details of future calls for proposals.\" FAQ (https://www.globalinnovation.fund/frequently-asked-questions): \"GIF is not currently open for applications\". Detection test: Wayback copy of the apply page from 2024-06-21 (https://web.archive.org/web/20240621194240/https://www.globalinnovation.fund/apply-for-funding) says \"It will close on 30th June 2024 so please aim to complete your application before this deadline\"; the engine's findDeadlines returns 2024-06-30 on that text (as of 2024-06-21), so a new window stated that way is collected. Known gap: the 2024-08-11 copy says only \"It will next open between 1st and 30th September\" (no year, no deadline word), which the engine does not read; a window announced like that would be missed.",
+  "evidence": "Plain HTTP GET (desktop UA, 30 s): https://www.globalinnovation.fund/apply-for-funding 200 (45258 bytes): last window closed 15 January 2025, no future window stated; / 200, /investments, /what-we-do, /news, /growth, /partnerships, /learning-and-insights 200 with no call language; /apply/, /calls/, /opportunities/, /feed/, /rss, /wp-json/wp/v2/types 404; /sitemap.xml 200 (pages sub-sitemap lists apply-for-funding, application-process, innovating-for-climate-resilience, innovating-for-gender-equality); /applying-to-the-innovating-for-climate-resilience-fund 200 (eligibility text, no dated call). Checked 2026-11-12. Harness adapters/collect.ts and fetchSource not present yet, so this is verified by plain HTTP only.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

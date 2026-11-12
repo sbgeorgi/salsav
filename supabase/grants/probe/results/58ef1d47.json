@@ -1,0 +1,41 @@
+{
+ "key": "58ef1d47",
+ "verdict": "monitor_html_only",
+ "method": "html_listing",
+ "adapter": "html",
+ "confidence": "high",
+ "feed_url": null,
+ "row_fix": {
+  "url": "https://www.globalinnovation.fund/frequently-asked-questions",
+  "program": "Investments and calls for proposals (none open; FAQ states GIF is not currently open for applications)",
+  "reason": "apply-for-funding is 969 chars and fails the 1500-char html threshold. The FAQ page passes adapter_check (text_len 19450), and it carries the explicit 'not currently open for applications' status plus the call-announcement instruction."
+ },
+ "adapter_config": {},
+ "engine_requirements": "No structured opportunity source exists. Round 2 found no feed, sitemap-level call records, JSON/XHR, GraphQL, open-data, or third-party portal listing. Point the html adapter at https://www.globalinnovation.fund/frequently-asked-questions (plain HTTP 200, server-rendered, 19450 chars). Change signal: text hash of the page. Alternative change signal: sitemaps-2-section-pages-2-sitemap.xml lastmod for /apply-for-funding and /application-process. Zero opportunity rows should be stored until a call is published.",
+ "prototype": "",
+ "attempted": [
+  "Round 2 path probes on www.globalinnovation.fund (curl, UA Mozilla/5.0): /funding /opportunities /calls /open-calls /press /blog /open-data /data /api /graphql /wp-json/wp/v2/pages /feed/ /sitemap-news.xml : all 404 (HTML 404 page); /resources 301; /news 200 HTML; /apply-for-funding 200 HTML; /sitemaps-2-sitemap.xml 200 XML index (12 children)",
+  "Sitemap children read: section-pages (apply-for-funding lastmod 2025-01-27, application-process 2025-01-15, applying-to-the-innovating-for-climate-resilience-fund 2025-01-15, applying-to-the-innovating-for-gender-equality-fund 2023-10-09, frequently-asked-questions 2025-12-08), section-news, section-investments, section-thriveHomepage (/thrive), categorygroup-stageOfFunding (/stage-of-funding/completed, /stage-of-funding/gif-growth-debt-investment): no call-level records and no dates of open windows",
+  "Read pages as text: /apply-for-funding (last window closed 15 Jan 2025; future calls to be published there), /frequently-asked-questions (states 'GIF is not currently open for applications, please check back regularly... for details of upcoming calls for proposals'), /news (portfolio and report posts, 2026), /learning-and-insights, /funding-stages, /thrive, /stage-of-funding/gif-growth-debt-investment, /applying-to-the-innovating-for-climate-resilience-fund: no open call, no deadline listing",
+  "Homepage and news JSON-LD: WebSite/WebPage/BreadcrumbList/LocalBusiness only, no Grant, Event or call objects. No __NEXT_DATA__ or window.__DATA__. Scripts are Cookiebot, GA, webpixel analytics, Createsend and jQuery-free bootstrap; no data API endpoints in the page source",
+  "Application-portal lens: the only external form link on the FAQ is a tfaforms.com survey (post-submission feedback, not a call listing). No Airtable, Fluxx, SmartSimple, Submittable, Foundant, or Grants.gov reference on the site",
+  "WebSearch for GIF 2026 open calls and API/open data: aggregators disagree (one says rolling, one says last window closed 15 Jan 2025); no machine-readable GIF source found. Official site remains the authority",
+  "Wayback: curl https://web.archive.org/web/2026/https://www.globalinnovation.fund/apply-for-funding returned HTTP 302 (not followed to a snapshot), so no historical feed URL could be recovered",
+  "Chrome click-through XHR capture was not run: the claude-in-chrome extension is not connected in this session, and the probe browser tool was not used for this round. The static HTML is server-rendered and the page has no client-side listing to trigger",
+  "adapter_check html https://www.globalinnovation.fund/frequently-asked-questions: ok=true, text_len 19450, count 0 (monitor only)"
+ ],
+ "check": {
+  "ok": true,
+  "mode": "page",
+  "kind": "ok",
+  "http": 200,
+  "count": 0,
+  "open": 0,
+  "text_len": 19450,
+  "sample": [],
+  "error": null,
+  "expect_min": 1,
+  "fetchability": "easy"
+ },
+ "summary": "Global Innovation Fund still exposes no machine-readable call or opportunity source in round 2 (no feed, JSON/XHR, GraphQL, sitemap call records, or portal listing). The site states it is not currently open for applications. Keep html monitoring, and move the row to /frequently-asked-questions, which passes the adapter threshold and carries the explicit not-open status. Zero open opportunities are stored today."
+}

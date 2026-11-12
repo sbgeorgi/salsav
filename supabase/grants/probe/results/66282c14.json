@@ -1,0 +1,37 @@
+{
+ "key": "66282c14",
+ "verdict": "structured_needs_new_adapter",
+ "method": "html_listing",
+ "adapter": "html",
+ "feed_url": null,
+ "confidence": "high",
+ "row_fix": null,
+ "attempted": [
+  "endpoint_recon.py: plain fetch 200 WordPress, 6293 chars, no XHR, no __NEXT_DATA__, no embedded JSON; sitemap_index only (no grant hits)",
+  "WP REST /wp-json/wp/v2/types 401 (auth required), /wp-json/wp/v2/grants 404, /wp-json/wp/v2/posts 307 to trailing-slash route",
+  "RSS /feed/ 500, /feed/?post_type=grant 500, ?feed=rss2 500, /grants/feed/ 403",
+  "sitemaps: post-sitemap, page-sitemap, product, state-profile, sare_category, publication_date: no per-call opportunity records",
+  "grants page HTML: server-rendered li.listing blocks with h3 title, p description, h4.grant-deadline and a.learn link (7 programs)",
+  "adapter_check current html config: ok=true, text_len 3013, count 0 (html adapter stores no rows)",
+  "prototype extractor run against live page: 7 listings parsed"
+ ],
+ "engine_requirements": "New adapter html_listing. Request: GET https://western.sare.org/grants/ (plain HTTP, no cookies, UA as engine). Parse: for each <li class=\"listing(...)\"> block take h3 text as title (prefix \"SARE Western: \"), first <p> as description, <a class=\"learn\"> href as url (external_id = last URL path segment), and <h4 class=\"grant-deadline\"> text split at first colon into status (lowercased: closed|open|opens) and deadline text (\"Mon D, YYYY H:MM AM/PM (TZ)\", parsed to a timestamp in America/Denver). Emit one opportunity per listing; if the h4 text is missing, deadline null. Fail the run if zero listings parse (guard against layout change). Keep a row per program: the programs recur annually so status changes in place. Config: {url, list_selector:\"li.listing\", title_selector:\"h3\", desc_selector:\"p\", link_selector:\"a.learn\", deadline_selector:\"h4.grant-deadline\"}.",
+ "prototype": "import re, html, sys, urllib.request\nURL = \"https://western.sare.org/grants/\"\nreq = urllib.request.Request(URL, headers={\"User-Agent\": \"Mozilla/5.0 (compatible; SALSAV-GrantWatch/1.0)\"})\nsrc = urllib.request.urlopen(req, timeout=20).read().decode(\"utf-8\", \"replace\")\ndef txt(s): return re.sub(r\"\\s+\", \" \", html.unescape(re.sub(r\"<[^>]+>\", \" \", s))).strip()\nout = []\nfor m in re.finditer(r'<li class=\"listing(?P<state>[^\"]*)\">(?P<body>.*?)</li>', src, re.S):\n    b = m.group(\"body\")\n    title = re.search(r\"<h3[^>]*>(.*?)</h3>\", b, re.S)\n    desc = re.search(r\"<p[^>]*>(.*?)</p>\", b, re.S)\n    dl = re.search(r'<h4 class=\"grant-deadline\"[^>]*>(.*?)</h4>', b, re.S)\n    link = re.search(r'<a href=\"([^\"]+)\"[^>]*class=\"learn', b)\n    if not title: continue\n    dl_t = txt(dl.group(1)) if dl else \"\"\n    status, _, when = dl_t.partition(\":\")\n    out.append({\"external_id\": (link.group(1) if link else txt(title.group(1))).rstrip(\"/\").split(\"/\")[-1],\n                \"title\": \"SARE Western: \" + txt(title.group(1)),\n                \"url\": link.group(1) if link else URL,\n                \"description\": txt(desc.group(1))[:500] if desc else \"\",\n                \"status\": status.strip().lower() or m.group(\"state\").strip(),\n                \"deadline_text\": when.strip()})\nprint(len(out), \"opportunities\")\nimport json; print(json.dumps(out[:7], indent=1, ensure_ascii=False))\n",
+ "check": {
+  "adapter_check_html_current": {
+   "ok": true,
+   "count": 0,
+   "http": 200,
+   "text_len": 3013,
+   "links": 4
+  },
+  "prototype_run": "7 opportunities parsed from live page; see sample",
+  "prototype_output_head": "7 opportunities\n[\n {\n  \"external_id\": \"graduate-student-research-and-education\",\n  \"title\": \"SARE Western: Graduate Student\",\n  \"url\": \"https://western.sare.org/grants/graduate-student-research-and-education/\",\n  \"description\": \"The Graduate Student Research & Education Program involves Masters or Ph.D students leading a team that includes their major professor and a producer(s) to test, apply, and share new ideas for sustainable farming and ranching.\",\n  \"status\": \"closed\",\n  \"deadline_text\": \"Oct 28, 2026 12:00 PM (Mountain Time)\"\n },\n {\n  \"external_id\": \"professional-producer\",\n  \"title\": \"SARE Western: Professional + Producer\",\n  \"url\": \"https://western.sare.org/grants/professional-produ"
+ },
+ "evidence": [
+  "live listing HTML: <li class=\"listing closed\"> ... <h4 class=\"grant-deadline\">Closed: Oct 28, 2026 12:00 PM (Mountain Time)</h4>",
+  "all 7 programs currently show status Closed; latest deadline Oct 28 2026 (today is 2026-11-11); page text says 2027 Calls for Proposals are upcoming, so the status label will change when they post (the Opens/Open label text is not yet observed; the parser must tolerate it)",
+  "wp-json and feeds not usable without auth or return 500/403"
+ ],
+ "summary": "USDA SARE Western exposes all seven program calls as a server-rendered HTML listing (li.listing with title, description, deadline h4 and Learn More link). No JSON/RSS/sitemap route carries them. Needs a new html_listing adapter (CSS-style selectors, plain HTTP). Prototype parses 7 real programs with deadlines. Currently all are Closed (latest Oct 28 2026), so the dashboard will show closed status until the 2027 calls post."
+}

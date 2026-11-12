@@ -1,0 +1,31 @@
+{
+  "key": "ce6018cf",
+  "funder": "Welthungerhilfe Global Food System Challenge",
+  "verdict": "monitor_html_only",
+  "method": "html_listing",
+  "adapter": "html",
+  "feed_url": null,
+  "adapter_config": {},
+  "confidence": "high",
+  "summary": "One annual challenge with no list of calls and no published deadline. The page says the next round opens 1 Jan 2027. The only feed on the host is a news feed, so it is rejected. Monitor the application page with the html adapter.",
+  "attempted": [
+    "endpoint_recon.py on the your-application URL: verdict rss, but the feed is the general news feed (rss-whh.xml, 30 items, all press releases). Rejected.",
+    "adapter_check rss on rss-whh.xml: ok count=29, all news and press releases with deadline null. False positive, rejected.",
+    "Probed /feed, /rss, /wp-json/wp/v2/types, /wp-json/wp/v2/posts on www.welthungerhilfe.org: 404 (TYPO3, no WP API).",
+    "Sitemap: welthungerhilfe.org/sitemap.xml is an index to /s/pages/sitemap.xml (CMS page sitemap, no funding items). robots.txt points to .de sitemaps; news.xml 404.",
+    "Parsed page HTML: no __NEXT_DATA__, no embedded opportunity JSON, no XHR calls beyond cookie/consent and icon assets. ld+json is a BreadcrumbList only. Chrome found 16 XHR, none carrying opportunity data.",
+    "Checked external links: no portal (Submittable, SmartSimple, Fluxx, Typeform, Airtable) linked from the page. The apply flow is referenced on seedingthefuture.org.",
+    "seedingthefuture.org (partner foundation): /challenge page says 'Applications open Jan 1, 2027' and 'Hosted by our partner, Welthungerhilfe'. Its /feed, /rss, /wp-json return 404. Its sitemap.xml is a 200 with about 40 CMS pages, no opportunity records.",
+    "adapter_check html on the your-application URL: ok=true, text_len=16930, http=200, count=0 (html monitor stores no rows, as expected)."
+  ],
+  "check": {
+    "html_your_application": "{\"ok\":true,\"count\":0,\"sample\":[],\"error\":null,\"http\":200,\"text_len\":16930,\"links\":6}",
+    "rss_rejected_candidate": "{\"ok\":true,\"count\":29,\"sample\":[{\"external_id\":\"article-6355\",\"title\":\"Statement by Mathias Mogge, Welthungerhilfe CEO, on the floods in Gaza\",\"deadline\":null,\"status\":\"open\"}],\"error\":null,\"http\":200}"
+  },
+  "row_fix": null,
+  "notes": [
+    "The html adapter's labeled-future-date rule may read 'Applications open Jan 1, 2027' as next_deadline. That is an open date, not a close date. Treat next_deadline from this source with care, or review it when the round opens.",
+    "Do not use the rss-whh.xml feed: it is general news, and the rss adapter would store news as funding rows.",
+    "Second html monitor candidate: https://www.seedingthefuture.org/challenge (same program, shows the 2027 open date)."
+  ]
+}

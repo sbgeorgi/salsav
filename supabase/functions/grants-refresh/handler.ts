@@ -8,6 +8,7 @@ export interface HandlerDeps {
   env: Env;
   clock: Clock;
   fetchImpl: typeof fetch;
+  fetchH1?: typeof fetch;
   supabaseUrl?: string; // enables self-chaining
   waitUntil?: (p: Promise<unknown>) => void;
   engine?: Partial<EngineDeps>; // test overrides (politeness, timeouts, lease)
@@ -51,7 +52,7 @@ export async function handle(req: Request, deps: HandlerDeps): Promise<Response>
     const rr = parseRequest(body);
     if (typeof rr === "string") return json(400, { error: rr });
     const canChain = !!deps.supabaseUrl && !rr.dry_run;
-    const result = await runShard({ store, clock: deps.clock, fetchImpl: deps.fetchImpl, env: deps.env, canChain, ...deps.engine }, rr);
+    const result = await runShard({ store, clock: deps.clock, fetchImpl: deps.fetchImpl, fetchH1: deps.fetchH1, env: deps.env, canChain, ...deps.engine }, rr);
     if (result.stats.chained) {
       const next = { ...rr, chain_depth: rr.chain_depth + 1, trigger: "chain", parent_run: result.run_id };
       const p = deps.fetchImpl(`${deps.supabaseUrl}/functions/v1/grants-refresh`, {

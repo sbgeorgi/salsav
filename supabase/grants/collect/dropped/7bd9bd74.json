@@ -1,0 +1,31 @@
+{
+  "id": "7bd9bd74-1db6-41e7-93ce-f23182b83206",
+  "name": "USDA National Institute of Food and Agriculture (NIFA)",
+  "program": "Agriculture and Food Research Initiative (AFRI) Foundational and Applied Science Program, FY2026 RFA (USDA-NIFA-AFRI-011134)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://simpler.grants.gov/opportunity/10a7404c-3e2f-4355-9044-78c8bafc35cd",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-NIFA",
+    "oppStatuses": "forecasted|posted",
+    "rows": 50,
+    "auto_vet": true,
+    "filter": {
+      "fields": "title",
+      "any": ["Agriculture and Food Research", "Tribal Colleges"]
+    }
+  },
+  "collect_note": "Grants.gov search2 for every open or forecasted NIFA opportunity (agency USDA-NIFA, no keyword, so the next AFRI cycle, AFRI program area or tribal-college NOFO appears without a new NOFO number), kept on title to the AFRI Competitive Grants Program and the Tribal Colleges Research Grants Program; SBIR, HSI Education and other NIFA lines are dropped. The aln 10.310 query was tried first and returned unrelated HHS and NIH hits, so the agency code is the working key. The funder page is a single-NOFO page on simpler.grants.gov (JavaScript app), kept as the funder url for change watch only.",
+  "expect": {
+    "min_items": 3,
+    "sample": [
+      { "title": "Agriculture and Food Research Initiative Competitive Grants Program Education and Workforce Development", "deadline": "2026-12-31", "url": "https://www.grants.gov/search-results-detail/361169" },
+      { "title": "Tribal Colleges Research Grants Program", "deadline": "2026-12-31", "url": "https://www.grants.gov/search-results-detail/362029" },
+      { "title": "Agriculture and Food Research Initiative Competitive Grants Program Foundational and Applied Science Program", "deadline": "2026-12-31", "url": "https://www.grants.gov/search-results-detail/360205" }
+    ]
+  },
+  "evidence": "Plain HTTP POST https://api.grants.gov/v1/api/search2 with body {rows:50, oppStatuses:'forecasted|posted', agencies:'USDA-NIFA'}, HTTP 200, 5 hits (AFRI-011596, TCRGP-011697, HSI-011903, AFRI-011134, SBIR-012221), checked 2026-11-12. Probe with aln 10.310 returned 25 unrelated hits, no NIFA hit; oppNum USDA-NIFA-AFRI-011134 returned 1 hit. Title filter replay: 3 of 5 pass. Funder url https://simpler.grants.gov/opportunity/10a7404c-3e2f-4355-9044-78c8bafc35cd not fetched as a source (JavaScript app). Harness not run: fetchSource is not yet in adapter_check.mjs; verified with plain HTTP replay instead.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

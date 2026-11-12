@@ -1,0 +1,50 @@
+{
+  "id": "9110afb8-9476-40c3-be2e-f6c929675a23",
+  "name": "NOAA (Inflation Reduction Act climate data and services)",
+  "program": "Regional Climate Data and Information (about $50M IRA pool; supports NIHHIS, CSCI, RISA, NIDIS)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.noaa.gov/inflation-reduction-act/inflation-reduction-act-climate-data-and-services/regional-climate-data-and-information",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "DOC-DOCNOAAERA",
+    "oppStatuses": "forecasted|posted",
+    "rows": 50,
+    "auto_vet": false,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "re:\\bRISA\\b",
+        "re:\\bNIDIS\\b",
+        "re:\\bNIHHIS\\b",
+        "re:\\bCSCI\\b",
+        "Regional Integrated Sciences",
+        "National Integrated Drought",
+        "Integrated Heat Health",
+        "Climate Smart",
+        "Climate-Smart",
+        "Regional Climate Data"
+      ]
+    }
+  },
+  "collect_note": "NOAA postings on Grants.gov are checked twice a day and kept only when the title names RISA, NIDIS, NIHHIS or Climate Smart. Nothing is open today, so none are shown. A new posting appears for review with its deadline.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "POST https://api.grants.gov/v1/api/search2 {rows:50, oppStatuses:'forecasted|posted', agencies:'DOC-DOCNOAAERA'} HTTP 200, 11 hits (fisheries, marine, BAAs, CPO Super Intelligence/ML); keywords 'RISA' and 'NIDIS' 0 hits; 'drought' 1 hit (the CPO ML call, not NIDIS). Program page GET returned the text quoted in zero_reason, checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "zero_reason": {
+    "quote": "Announcements  More information about funding opportunities coming soon.",
+    "url": "https://www.noaa.gov/inflation-reduction-act/inflation-reduction-act-climate-data-and-services/regional-climate-data-and-information",
+    "checked": "2026-11-12",
+    "also": "Grants.gov search2 agencies=DOC-DOCNOAAERA, forecasted|posted, no keyword: 11 notices, none naming RISA, NIDIS, NIHHIS or Climate Smart (keywords RISA and NIDIS return 0 hits)."
+  },
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}
