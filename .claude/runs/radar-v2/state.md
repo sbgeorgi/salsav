@@ -24,8 +24,10 @@ grants-refresh engine.ts/types.ts/adapters/index.ts (v10: probe report opps/open
 - Concurrent or >=10-source full probes -> 546 CPU kill; 14:19 cron kick lost 4/8 shards (rows left 'running'); funders recovered next run via lease expiry.
 - 020 alias `o` clashed with plpgsql var o -> aliases e/op.
 
+- 021 candidate_calls live (20261112163023), DO-block tested (feed 23 -> 62, 39 candidates; reject drops one, repeat is unchanged); anon/authenticated cannot run reject_opportunity. Drawer shows "Unverified" chip (checked in preview on Colorado Water Plan). discovery-task step 6(a): nearest deadline first, enrich from call page, reject_opportunity for out-of-scope.
+
 ## Current state
-Probe + triage complete; committed.
+Probe + triage complete; collected calls now show on the radar at once as Unverified; committed.
 
 ## Next step
 Next scheduled discovery run (Tue/Fri 07:00) should end with a PushNotification; check it did.

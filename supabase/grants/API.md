@@ -81,6 +81,12 @@ select grants.upsert_opportunity($j${"funder_id":"<uuid>","title":"FY27 Call","u
 Reads: `funder_id` uuid required, must be a funder with status `vetted` else raises `funder <uuid> is not a listed source`. `title` (<=300) and `url` (http/https) required else `title and an http(s) url are required`. `deadline` YYYY-MM-DD optional; past raises `deadline <date> is in the past` (closed calls cannot be inserted). `external_id` default `disc:<md5 of url_norm(url)>`; conflict key (funder_id, external_id) updates in place. `status` forecasted else stored `open` (closed/archived not accepted). Optional: `apply_url` (http(s) only), `description` (1200), `open_date`, `deadline_text` (300), `award_min_usd`, `award_max_usd`, `doc_links` (array, else []), `source` (default discovery -> source_adapter). vet_status is always set `vetted` (visible at once). Bad uuid/date/number -> Postgres cast error.
 Returns `{result:'inserted'|'updated', id, funder_id, run}`. Side effects: INSERT or UPDATE grants.opportunities only; v_funders.deadline becomes the earliest future deadline among open/forecasted vetted opportunities.
 
+## 5b. grants.reject_opportunity(p_id uuid, p_reason text, p_run_label text default null) returns jsonb
+```sql
+select grants.reject_opportunity('<opportunity uuid>'::uuid, 'maternal health grant, outside SALSAV scope', 'run-2026-11-12');
+```
+Only a `candidate` call changes: it becomes `rejected`, leaves the radar, and later crawler fetches keep it rejected. Returns `{result:'rejected', id, title, run}`, or `{result:'unchanged', id, vet_status}` for a vetted or already rejected call. Empty reason raises `reject_opportunity needs a reason`; unknown id raises `opportunity <uuid> not found`. Side effects: UPDATE grants.opportunities.vet_status, INSERT vet_events (kind updated, note `Call rejected: ...`). Candidates show on the radar marked "Unverified" until confirmed (upsert_opportunity) or rejected here.
+
 ## 6. grants.set_target(p_id uuid, p_status text, p_note text default null) returns jsonb
 ```sql
 select grants.set_target('<target uuid>'::uuid, 'deferred', 'page is login-gated');

@@ -211,7 +211,8 @@ function callsSection(r, app) {
   return sec(el, 'Open calls', 'calls', calls.length ? el('ul', { class: 'calls' }, calls.map((o) => {
     const days = D.daysLeft(o.deadline, S.now), u = D.safeUrl(o.url) || D.safeUrl(o.apply_url), seen = o.first_seen_at && D.fmtDate(String(o.first_seen_at).slice(0, 10));
     return el('li', {}, el('div', { class: 'call-t' }, u ? el('a', { href: u, target: '_blank', rel: 'noopener noreferrer', text: o.title }) : el('b', { text: o.title }),
-      o.status === 'forecasted' ? el('span', { class: 'chip chip--line', text: 'Forecast' }) : o.status && o.status !== 'open' && el('span', { class: 'chip chip--line', text: o.status })),
+      o.status === 'forecasted' ? el('span', { class: 'chip chip--line', text: 'Forecast' }) : o.status && o.status !== 'open' && el('span', { class: 'chip chip--line', text: o.status }),
+      o.vet_status === 'candidate' && el('span', { class: 'chip chip--warn', title: 'Collected automatically; the next discovery pass checks the call page and confirms or removes it', text: 'Unverified' })),
       el('div', { class: 'sub num' }, o.deadline ? `${D.fmtDate(o.deadline)} · ${D.countdown(days)}` : o.deadline_text || 'No date', (o.award_min_usd != null || o.award_max_usd != null) && ` · ${D.amountRange(o)}`),
       o.description && el('p', { class: 'call-d', text: o.description }),
       el('p', { class: 'sub call-o', text: [callOrigin(o), seen && `First seen ${seen}`].filter(Boolean).join(' · ') }));
