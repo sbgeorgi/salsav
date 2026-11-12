@@ -1,0 +1,42 @@
+{
+  "id": "b280a1b5-ae4e-43e2-aca4-ece5d0159037",
+  "name": "The Mosaic Company Foundation",
+  "program": "Mosaic Company Foundation for Sustainable Food Systems (hunger, smallholder agriculture, agricultural research, water conservation)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.mosaicco.com/foundation",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "url": "https://www.mosaicco.com/news",
+      "item": "article.mi_blogList",
+      "title": "h3.bn",
+      "link": "a.blogMoreLink"
+    },
+    "filter": {
+      "any": [
+        "foundation for sustainable food systems",
+        "request for proposals",
+        "call for proposals",
+        "grant program",
+        "grants",
+        "applications open",
+        "apply now"
+      ],
+      "fields": "title+description"
+    }
+  },
+  "collect_note": "Reads the Mosaic news listing (mosaicco.com/news, server-rendered article cards) twice a day and keeps only posts whose title or text names the Foundation for Sustainable Food Systems or call words (request or call for proposals, grants, applications open). Nothing is open today: the Foundation works through long-term partners, so zero items is expected until a call is announced; matches wait as candidates (auto_vet false) for the discovery pass.",
+  "zero_reason": {
+    "quote": "The Foundation's work is rooted in long-term commitments and a hands-on approach with partners such as The Nature Conservancy and Ducks Unlimited in the United States.",
+    "url": "https://mosaicco.com/Article/Announcing-The-Mosaic-Company-Foundation-for-Sustainable-Food-Systems"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12: foundation page and Community-Investments page (HTTP 200, server-rendered) name no open call, RFP or award size; Community-Investments has an Apply Now guideline link (company-wide, not read). Channels tried: endpoint_recon (no feed, sitemap.php is HTML with no calls section, no JSON/XHR endpoints), /rss 404, /Press-Releases lists nothing server-side (investors site holds press releases), /news lists 4 article cards (article.mi_blogList, h3.bn title, a.blogMoreLink) parsed ok by adapter_check; the March 2025 Foundation announcement is not in that listing now, so the filter was tested on its title ('Announcing The Mosaic Company Foundation for Sustainable Food Systems', matches 'foundation for sustainable food systems') and none of the 4 current posts match. Page watch rejected: a news listing exists.",
+  "edge_risk": "none",
+  "confidence": "low"
+}

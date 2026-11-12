@@ -1,0 +1,27 @@
+{
+  "id": "f2dcd774-1fa7-4a00-97ff-694d517979da",
+  "name": "North American Development Bank (NADBank)",
+  "program": "Water Resiliency Fund (US-Mexico border; grants plus low-interest loans for water conservation and diversification)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://nadbank.org/solutions-and-services/water-resiliency-fund",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "NADBank Water Resiliency Fund call for projects"
+    }
+  },
+  "collect_note": "Reads the Water Resiliency Fund program page twice a day; NADBank says each new call for projects is posted on that page, so a call with a labeled future deadline becomes one call row (title 'NADBank Water Resiliency Fund call for projects'). Nothing is open today: the only call so far (Lower Rio Grande Irrigation Districts, Texas) closed February 2026, so zero items is expected.",
+  "zero_reason": {
+    "quote": "The first call for projects for the Lower Rio Grande Irrigation Districts in Texas closed on February 2026.",
+    "url": "https://nadbank.org/solutions-and-services/water-resiliency-fund"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12 plain HTTP: program page HTTP 200 (3.9 KB text, server-rendered HubSpot) says 'From time to time, NADBank will issue a call for projects ... Such opportunities will be posted here'. endpoint_recon verdict html_ok, no opportunity endpoint. /blog/rss.xml HTTP 200 but an empty channel (no items); /rss.xml, /news/rss.xml, /news/press-release/rss.xml 404; no link rel=alternate feed; no wp-json/jsonapi (HubSpot); sitemap.xml (1999 URLs) has the program page and press releases but no calls section. News releases listing (/news/press-releases) renders only 3 latest items with no pagination link, so it is not a reliable call listing; /news/press-release is empty. No Grants.gov or EU channel (binational bank). Program guidelines PDF https://nadbank.org/hubfs/WRF/WRF%20Guidelines_Eng.pdf: sponsors are utilities, districts, municipalities, states, irrigation districts, agricultural water users; WRF funds up to 50% of project cost; no universities named.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

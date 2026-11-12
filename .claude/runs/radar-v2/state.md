@@ -31,3 +31,6 @@ Probe + triage complete; collected calls now show on the radar at once as Unveri
 
 ## Next step
 Next scheduled discovery run (Tue/Fri 07:00) should end with a PushNotification; check it did.
+
+## Discovery pass 2 (2026-11-12, scheduled)
+Reverified 6 kept; 3 collection gaps unchanged (UAE TLS chain -> engine per-host CA fix would be needed; EPRI js_only; Gulbenkian 403 datacenter). Candidates: 2 confirmed, 27 rejected, AFRI Education/Workforce (1da45bda) left as candidate (borderline, workforce in scope). Listed FEMSA 9f186bfc, Mosaic b280a1b5, NADBank f2dcd774, NextEnergy db43b41c (all verified auto); Grundfos rejected 31. private_sector gap 7 -> 4. 12 candidates remain.

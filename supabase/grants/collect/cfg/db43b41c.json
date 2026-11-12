@@ -1,0 +1,47 @@
+{
+  "id": "db43b41c-e536-4fcb-93c0-65e9ad9744f8",
+  "name": "NextEnergy Foundation",
+  "program": "NextEnergy Foundation project funding (clean energy, water and livelihoods; partner charities)",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://www.nextenergyfoundation.org/about-us/",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://www.nextenergyfoundation.org/wp-json/wp/v2/update?per_page=100&_fields=id,date,link,title,content",
+    "method": "GET",
+    "items_path": "$",
+    "map": {
+      "external_id": "id",
+      "title": "title.rendered",
+      "url": "link",
+      "description": "content.rendered",
+      "open_date": "date"
+    },
+    "filter": {
+      "any": [
+        "re:open\\w* (of )?applications",
+        "re:applications? (are )?(now )?open",
+        "re:accepting (applications|proposals)",
+        "re:call for (applications|proposals|expressions)",
+        "re:seeking proposals",
+        "re:request for proposals",
+        "re:\\brfp\\b"
+      ],
+      "fields": "title"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "NEF has no calls listing (it takes project ideas through a standing short form and funds partner charities), so the twice-daily run reads the WordPress API behind its News section (post type 'update') and keeps only items whose title announces open applications, a call or a request for proposals; they wait as candidates. All 16 current news items are project progress reports, so zero items is expected until NEF announces a call; the filter was tested only against synthetic call-style titles because NEF has no past call.",
+  "zero_reason": {
+    "quote": "Submit a short form to help us determine if your project aligns with NextEnergy Foundation’s commitment to clean energy and sustainable development.",
+    "url": "https://www.nextenergyfoundation.org/contact-us/"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12: endpoint_recon verdict html_ok (WordPress/Elementor); /feed/ HTTP 200 with 0 items; sitemap.xml 11 urls, no calls section; /wp-json/wp/v2/types lists post types update, projects, team, company, none of them calls; /wp-json/wp/v2/update?per_page=20 returns 16 progress-report posts (latest 2026-06-25), none a call; /news/ renders the same posts as e-loop-item buttons; /contact-us/ links only a standing project short form (jet-form-builder, not submitted).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

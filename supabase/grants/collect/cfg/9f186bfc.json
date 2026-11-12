@@ -1,0 +1,46 @@
+{
+  "id": "9f186bfc-238e-4993-bb59-84f8cda76408",
+  "name": "FEMSA Foundation",
+  "program": "Water Security (water and sanitation, ecosystem conservation, local capacity building; Latin America)",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://fundacionfemsa.org/noticias/",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://fundacionfemsa.org/wp-json/wp/v2/noticias?per_page=100&_fields=id,date,link,title,content",
+    "method": "GET",
+    "items_path": "$",
+    "map": {
+      "external_id": "id",
+      "title": "title.rendered",
+      "url": "link",
+      "description": "content.rendered",
+      "open_date": "date"
+    },
+    "deadline_regex": "hasta el (\\d{1,2} de [a-z]+ de \\d{4})",
+    "filter": {
+      "all": [
+        "re:convocatoria|postulaci|inscripcion|call for|abierta",
+        "re:\\bagua\\b|h[ií]dric|\\bwater\\b|saneamiento"
+      ],
+      "fields": "title"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "FEMSA Foundation has no standing call list; it announces water calls (for example the BID-FEMSA innovation prize) as news in its noticias section, which the twice-daily run reads through the site's WordPress API and keeps only titles that announce a convocatoria and mention water, sanitation or hydric topics. Calls wait for review; the closing date is read from the Spanish phrase 'hasta el <day> de <month> de <year>' in the post.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Convocatoria abierta: Premios BID-FEMSA 2024: Reconociendo la Innovación en Agua, Saneamiento y Residuos Sólidos en América Latina y el Caribe",
+        "deadline": "2024-08-23",
+        "url": "https://fundacionfemsa.org/noticias/convocatoria-abierta-premios-bid-femsa-2024-reconociendo-la-innovacion-en-agua-saneamiento-y-residuos-solidos-en-america-latina-y-el-caribe/"
+      }
+    ]
+  },
+  "evidence": "Checked 2026-11-12. endpoint_recon on femsa.com foundation page found only the corporate /feed/ (10 corporate items, no calls) and no calls sitemap section. fundacionfemsa.org (foundation's own site): robots.txt HTTP 200, no calls page; /wp-json/wp/v2/types lists the custom type noticias; GET /wp-json/wp/v2/noticias?per_page=100 HTTP 200 returns 100 posts back to 2019. The only post that passes the filter is the 2024-08-05 'Convocatoria abierta: Premios BID-FEMSA 2024' (closing date 23 Aug 2024 stated in the post: 'hasta el 23 de agosto de 2024', prize USD 15,000), which the engine reads as closed. Other call-like posts ('llamado urgente ... Seguridad Hidrica 2030', 'Premio BID-FEMSA 2019', 'Convocatoria En Accion por la Primera Infancia') are commitment appeals, results or early-childhood calls and are filtered out on purpose. Zero open calls today.",
+  "zero_reason": "No open water call today: the latest water call, 'Convocatoria abierta: Premios BID-FEMSA 2024', closed 23 Aug 2024 (https://fundacionfemsa.org/noticias/convocatoria-abierta-premios-bid-femsa-2024-reconociendo-la-innovacion-en-agua-saneamiento-y-residuos-solidos-en-america-latina-y-el-caribe/ : 'Los interesados pueden postularse hasta el 23 de agosto de 2024'); the filter passes that title, so it is tested against the last known call.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}
