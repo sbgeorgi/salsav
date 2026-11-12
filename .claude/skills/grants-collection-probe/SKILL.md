@@ -11,7 +11,7 @@ Steps:
 - Write the probe helpers (grants.probe_refresh and grants.probe_result) as a NAME.sql file plus a NAME-rollback.sql before applying them.
 - After apply_migration, check has_function_privilege is false for anon and authenticated on both helpers.
 - Deploy the engine version that reports per-funder opps, open and text_len before probing, so the probe shows counts.
-- Group funders by host (grants.gov and EU F&T each as one group), batches of at most 10, at most 50 ids per call.
+- Group funders by host (grants.gov and EU F&T each as one group), batches of at most 5 html funders (API/feed-only batches up to 15), at most 50 ids per call: on v10+ a dry run fetches every page in full, and 10 html pages in one invocation hit "CPU Time exceeded" even alone (2026-11-12).
 - Fire one batch at a time and wait for its result before the next: concurrent probe requests land in one edge worker and a single "CPU Time exceeded" kills all of them (HTTP 546 WORKER_RESOURCE_LIMIT, 2026-11-12).
 - Call probe_refresh with the batch array, then read probe_result with the returned request id; it reports pending until pg_net finishes.
 - Count a funder as returning: calls and cycle modes need at least 1 opportunity; page mode needs text_len of at least 300.
