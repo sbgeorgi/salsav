@@ -107,7 +107,7 @@
 <script type="module">
 import * as D from './dashboard.js';
 import { fitBar, spark } from './dash/viz.js';
-import { horizon, unverifiedPoints } from './dash/horizon.js';
+import { horizon, horizonLayout, unverifiedPoints } from './dash/horizon.js';
 
 const API = 'https://iuzgfldgvueuehybgntm.supabase.co/rest/v1/rpc/';
 const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1emdmbGRndnVldWVoeWJnbnRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4Mjc0MjUsImV4cCI6MjA3MjQwMzQyNX0.do919Hvw2AK-Ql-2V5guoRRH2yx4Rmset4eeVXi__o8'; // public anon key by design
@@ -122,6 +122,8 @@ const store = {
 const el = (t, a = {}, ...k) => {
   const e = document.createElement(t);
   for (const [n, v] of Object.entries(a)) {
+    // aria states need the literal "true"/"false" (CSS and screen readers read [aria-pressed="true"]), not a bare attribute
+    if (typeof v === 'boolean' && n.startsWith('aria-')) { e.setAttribute(n, String(v)); continue; }
     if (v == null || v === false) continue;
     if (n === 'class') e.className = v; else if (n === 'text') e.textContent = v;
     else if (n.startsWith('on')) e.addEventListener(n.slice(2), v); else e.setAttribute(n, v === true ? '' : v);
@@ -397,6 +399,9 @@ function renderBuckets() {
   const k = S.kpi || D.kpis(S.base, ctx());
   $('#buckets').replaceChildren(...Object.keys(D.BUCKETS).filter((b) => k.byBucket[b] || S.F.bucket.includes(b)).map((b) =>
     el('button', { class: 'bchip', type: 'button', style: `--c:${bcolor(b)}`, 'aria-pressed': S.F.bucket.includes(b), onclick: () => toggle('bucket', b) }, SHORT[b], el('b', { class: 'num', text: k.byBucket[b] || 0 }))));
+  // legend for the horizon's dashed dots, counted the same way the horizon plots them
+  const nu = horizonLayout(unverifiedPoints(S.list, S.feed.opportunities, S.now)).items.length;
+  if (nu) $('#buckets').append(el('span', { class: 'bchip bchip--uv', title: 'Dashed dots on the deadline horizon: calls the crawler collected that the next discovery pass confirms or removes' }, 'Unverified calls', el('b', { class: 'num', text: nu })));
 }
 function renderMeta() {
   $('#count').textContent = `${num(S.list.length)} of ${num(S.rows.length)} funders`;
