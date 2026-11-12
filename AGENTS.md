@@ -14,6 +14,10 @@ There is no backend, no Netlify Functions, no `/api` route, no server-side secre
 
 The owner explicitly accepts direct browser-to-Pantry mode. Pantry access and the Pantry ID are visible in frontend code by design. Do not call this secure. It is owner-accepted direct static Pantry editing with a convenience admin gate.
 
+## Git
+
+Standing permission (owner, 2026-11-12): agents may `git push` this repository's branches without asking. Never force-push.
+
 ## Primary Rule
 
 Editing happens directly on the live public pages.
