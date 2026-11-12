@@ -1,0 +1,34 @@
+{
+  "id": "9f9cd7c7-ffd6-4c23-b42f-18cbc4c5a4d2",
+  "name": "Water Research Foundation",
+  "program": "Research Priority Program (project-specific RFPs) and Unsolicited Research Program",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://portal.waterrf.org/outbound-grants",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://portal.waterrf.org/scs_ss2/extensions/Saralux/M360_SLXG_Outbound_Grant/26.9.0/Modules/OutboundGrantApplication/SuiteScript2/OutboundGrantApplication.Service.ss?c=9336228&n=2",
+    "method": "POST",
+    "body": {
+      "action": "get_outbound_grants_list",
+      "filters": [],
+      "pagination": { "index": 0, "pageSize": 50, "currentPage": 1 },
+      "filterId": "2"
+    },
+    "items_path": "outboundGrants",
+    "map": { "external_id": "id", "title": "grantTitle", "description": "description" },
+    "auto_vet": false
+  },
+  "collect_note": "Reads the list behind WRF's Available Grants page (the portal's own JSON service, the same call the page makes) twice a day; every open or upcoming RFP of the Research Priority, Unsolicited, Tailored Collaboration and Emerging Opportunities programs appears there. It lists 0 grants today, so zero items is expected until WRF posts its next RFP (the next Unsolicited pre-proposal call opens in 2028). Items wait as candidates for review.",
+  "zero_reason": {
+    "quote": "Available Grants (0 Results)",
+    "url": "https://portal.waterrf.org/outbound-grants"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12. Channels tried: (1) www.waterrf.org (Drupal) returns HTTP 403 to plain HTTP and to fetch_text.py (Cloudflare), but opens in a real browser; /open-rfps 301-redirects to portal.waterrf.org/outbound-grants and /proposals says 'There are currently no RFPs available'. (2) portal.waterrf.org/outbound-grants is plain HTTP 200 but the list is rendered by a NetSuite SuiteCommerce script; its XHR is a POST to OutboundGrantApplication.Service.ss with body action get_outbound_grants_list, which replays over plain HTTP (curl) and returns {hasError:false,outboundGrants:[],count:0,totalPages:0}. (3) endpoint_recon: html_ok, no endpoint found, no sitemap (portal /sitemap.xml 404). (4) Grants.gov and feeds not applicable (private foundation). Item field names (id, grantTitle, description, grantCategory, grantRange, isClosed, isUpcoming) come from the portal's own list template, because no item exists today to inspect; the item link and deadline fields are not known, so no url or deadline is mapped. The /26.9.0/ path segment is the portal extension version and may change on a portal upgrade: collection_state health then turns stale.",
+  "edge_risk": "medium",
+  "confidence": "medium"
+}

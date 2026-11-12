@@ -1,0 +1,35 @@
+{
+  "id": "5187626d-6392-4636-a168-f14cacd3d836",
+  "name": "U.S. Department of Energy, Office of Science",
+  "program": "Early Career Research Program (annual) and the open Office of Science Financial Assistance continuing NOFO",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://science.osti.gov/grants/FOAs/Open",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://science.osti.gov/grants/FOAs/Open",
+      "item": "article.funding_preview",
+      "title": "h3.title",
+      "link": "h3.title a",
+      "date": "div.funding_closedate",
+      "match": "Early Career|Financial Assistance Program|Continuation of Solicitation",
+      "amount": false
+    },
+    "max_items": 10
+  },
+  "collect_note": "Reads the Office of Science Open FOAs listing (server-rendered) and keeps the Early Career Research Program announcement and the continuing Financial Assistance NOFO, so the next Early Career cycle is caught when DOE posts it; other Office of Science announcements (Genesis Mission fellowships, AI) are filtered out and calls wait as candidates.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "FY 2027 Continuation of Solicitation for the Office of Science Financial Assistance Program",
+        "deadline": "2027-09-30",
+        "url": "https://science.osti.gov/-/media/grants/pdf/foas/2027/DE-FOA-0003665-000001-Part-1.pdf"
+      }
+    ]
+  },
+  "evidence": "Checked 2026-11-12. Grants.gov search2 holds no 2026 or 2027 Office of Science Early Career NOFO (only DE-FOA-0002734 Distinguished Early Career, archived), so no API; Office of Science runs its own PAMS portal. https://science.osti.gov/grants/FOAs/Open = 200, server-rendered article.funding_preview cards with title, announcement number, close date and PDF link; 3 open FOAs today (Genesis Graduate Fellowship Pilot, DE-FOA-0003665 continuing solicitation open to 30 Sep 2027, Genesis Mission AI). No RSS found, /grants/FOAs/Closed is the archive. The early-career page announces the 2026 cycle (pre-applications 24 Mar 2026, applications 2 Jun 2026), now past.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

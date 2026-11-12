@@ -1,0 +1,58 @@
+{
+  "id": "eaa51231-d17d-4ce0-a2bf-de8058e67206",
+  "name": "IDRC / FCDO (CLARE: Climate Adaptation and Resilience)",
+  "program": "CLARE portfolio of competitive calls (and IDRC funding calls)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://idrc-crdi.ca/en/initiative/climate-adaptation-and-resilience-clare",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://idrc-crdi.ca/en/funding",
+      "item": "div.views-row",
+      "title": ".views-field-title a",
+      "link": ".views-field-title a",
+      "date": ".views-field-field-award-deadline",
+      "amount": false
+    },
+    "filter": {
+      "any": [
+        "climate",
+        "resilien",
+        "adaptation",
+        "CLARE",
+        "food",
+        "agri",
+        "livestock",
+        "farm",
+        "water",
+        "energy",
+        "drought",
+        "solar",
+        "re:\bcrop"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20
+  },
+  "collect_note": "Reads IDRC's official list of funding calls (open and closed, with deadlines) twice a day and keeps calls whose title names climate, adaptation, resilience, food, agriculture, livestock, water or energy, which is where a next CLARE or climate-resilient food systems call would appear; items wait for review. Zero open calls today: the only open IDRC calls are an SRHR/Africa call and a Canadian-student fellowship; CLARE's own page announces no current call.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Global call for research concept notes: climate-smart livestock systems",
+        "deadline": "2024-01-25",
+        "url": "https://idrc-crdi.ca/en/funding/global-call-research-concept-notes-climate-smart-livestock-systems"
+      }
+    ]
+  },
+  "evidence": "GET https://idrc-crdi.ca/en/funding HTTP 200 (checked 2026-11-12): 12 call cards (div.views-row) each with title link, Call For and Deadline time element; /en/funding/rss.xml (HTTP 200, 10 items, no deadline field in the feed, last known climate call absent) and /jsonapi (404), sitemap.xml (4 urls, no calls) also probed; Grants.gov and EU F&T do not apply (Canada-UK funder).",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

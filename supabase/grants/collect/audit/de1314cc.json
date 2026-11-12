@@ -1,0 +1,61 @@
+{
+  "id": "de1314cc-eee3-45dc-9cbc-f7542b0a2992",
+  "name": "Netherlands Ministry of Foreign Affairs, implemented by RVO",
+  "program": "Climate, Water and Food facility (CWF); the Ministry's development-cooperation subsidy programmes run by RVO",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://english.rvo.nl/subsidies-financing/cwf",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://english.rvo.nl/api/rvo/v1/search-subsidies?query=&f%5B0%5D=audience%3A173&f%5B1%5D=audience%3A175&f%5B2%5D=status%3A3294&f%5B3%5D=status%3A3295",
+    "method": "GET",
+    "items_path": "searchResults",
+    "also_page": true,
+    "map": {
+      "external_id": "url",
+      "title": "title",
+      "description": "summary"
+    },
+    "deadline_regex": "until\\s+(\\d{1,2}\\s+[a-z]+\\s+\\d{4})",
+    "filter": {
+      "any": [
+        "africa",
+        "mena",
+        "middle east",
+        "water",
+        "food",
+        "cooking",
+        "climate",
+        "land governance",
+        "agricult",
+        "biogas"
+      ],
+      "none": [
+        "horizon europe",
+        "eureka",
+        "techbridge",
+        "aviation",
+        "sde++",
+        "ukraine",
+        "re:until\\s+(?:\\d{1,2}\\s+[a-z]+\\s+)?202[0-5]\\b"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 40,
+    "auto_vet": false
+  },
+  "collect_note": "Reads RVO's own public subsidy-finder JSON (api/rvo/v1/search-subsidies, the endpoint the english.rvo.nl finder calls), restricted to NGO and research-institute audiences and to programmes marked open or opening soon, and keeps the development-cooperation programmes (Africa, MENA, water, food, climate, clean cooking, land) that the Ministry of Foreign Affairs funds through RVO; CWF itself is a government-to-government facility that RVO does not list in the finder, so a new CWF call would only appear if RVO lists it there. The finder gives no link to an absolute URL (paths only), so rows carry no link and fall back to the funder page.",
+  "expect": {
+    "min_items": 4,
+    "sample": [
+      {
+        "title": "African Biodigester Component (ABC)",
+        "deadline": "2026-12-31",
+        "url": null
+      }
+    ]
+  },
+  "evidence": "Plain HTTP GET 2026-11-12: https://english.rvo.nl/api/rvo/v1/search-subsidies (200, JSON, 50 per page, facets audience/status/sectors/countries/subsidyTarget); the facet URL used returns 32 programmes. Not usable: sitemap.xml 500, /rss and /feed 404, /wp-json and /jsonapi 404, cms.rvo.nl 403, /news is a client-rendered Next.js page.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

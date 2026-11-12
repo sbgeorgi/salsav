@@ -1,0 +1,50 @@
+{
+  "id": "6cc2c30d-b795-446d-acd2-c5e53787d8e7",
+  "name": "Adaptation Fund",
+  "program": "Locally-Led Adaptation: Single Country Grants",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://www.adaptation-fund.org/apply-funding/locally-led-adaptation/lla-single-country-grants/",
+  "feed_url": "https://www.adaptation-fund.org/feed/",
+  "adapter_config": {
+    "auto_vet": false,
+    "filter": {
+      "any": [
+        "call for",
+        "calls for",
+        "call to ",
+        "request for proposals",
+        "applications open",
+        "applications are open",
+        "applications invited",
+        "applications now open",
+        "new funding window",
+        "additional funding window",
+        "re:launch\\w* .*grants?"
+      ],
+      "none": [
+        "public comments",
+        "public inputs"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20
+  },
+  "collect_note": "Reads the Adaptation Fund news feed twice a day and keeps posts that announce a call for proposals, an application round or a new funding window; they wait for review because the Fund takes proposals on a rolling basis and rarely announces dated calls. Today no post matches, so zero items is expected; the filter matches the title of its last announced call (April 2021).",
+  "zero_reason": {
+    "quote": "Submissions for all funding windows are accepted on a rolling basis.",
+    "url": "https://www.adaptation-fund.org/"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://www.adaptation-fund.org/feed/ HTTP 200 application/rss+xml, 10 items, newest 2026-11-10, none a call. wp-json returns 401, /event/feed/ lists only upcoming events, category feeds 404, ?s=call&feed=rss2 returns relevance-ranked news not calls. Checked 2026-11-12. Last announced call: 'Adaptation Fund Launches Call for Proposals for Projects Up to US$ 5M to Support Innovation and Enhanced Direct Access' (2021-04-22) matches the filter term 'call for'.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0
+  }
+}

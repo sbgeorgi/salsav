@@ -1,0 +1,45 @@
+{
+  "id": "51e95f02-7aed-475e-beb4-5cbf28ba0970",
+  "name": "USDA National Institute of Food and Agriculture, SBIR/STTR",
+  "program": "NIFA SBIR/STTR Phase I and II",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.nifa.usda.gov/grants/programs/small-business-innovation-research-program-sbir",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-NIFA",
+    "keyword": "Small Business Innovation Research",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "filter": {
+      "any": [
+        "Small Business Innovation Research"
+      ],
+      "fields": "title"
+    },
+    "detail": true,
+    "auto_vet": true,
+    "max_items": 10
+  },
+  "collect_note": "Each NIFA SBIR/STTR Phase I or Phase II notice (forecasted or open) is read from Grants.gov twice a day and shown at once; the closing date is the Grants.gov date, and a university can take part only as the STTR research partner of a small business.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Small Business Innovation Research and Small Business Technology Transfer Programs Phase II",
+        "deadline": "2026-11-17",
+        "url": "https://www.grants.gov/search-results-detail/364020"
+      }
+    ]
+  },
+  "evidence": "POST https://api.grants.gov/v1/api/search2 {agencies:USDA-NIFA, keyword:'Small Business Innovation Research', oppStatuses:'forecasted|posted|closed|archived'} HTTP 200, 848 hits, USDA-NIFA-SBIR-012221 (Phase II, posted 2026-10-01, closes 2026-11-17) plus past Phase I and II notices back to 2010 (Phase I titles identical, so next Phase I is caught); aln 10.212 not honored (unrelated agencies); NIFA funding-opportunity page lists the same number with range $600,000 - $650,000. NIFA has no RSS; /jsonapi and /sitemap.xml time out or reset over plain HTTP. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "edge_case": "none",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

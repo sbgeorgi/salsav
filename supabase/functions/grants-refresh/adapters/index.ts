@@ -60,8 +60,29 @@ const heavySelector = (s: string): boolean => {
   return /:has\(/i.test(bare) || bare.includes("~");
 };
 
+/** Path of the first string holding a control character other than tab, newline or carriage return, or null. */
+function controlCharPath(v: unknown, path: string): string | null {
+  // char codes, not escapes: deploys retype source and escapes drift (2026-11-12); tab, LF and CR are allowed
+  if (typeof v === "string") return [...v].some((c) => { const n = c.charCodeAt(0); return n < 32 && n !== 9 && n !== 10 && n !== 13; }) ? path : null;
+  if (Array.isArray(v)) {
+    for (let i = 0; i < v.length; i++) {
+      const p = controlCharPath(v[i], `${path}[${i}]`);
+      if (p) return p;
+    }
+  } else if (isObj(v)) {
+    for (const [k, x] of Object.entries(v)) {
+      const p = controlCharPath(x, `${path}.${k}`);
+      if (p) return p;
+    }
+  }
+  return null;
+}
+
 /** First problem with the funder's adapter_config, or null. Checked before any request, so a bad config never throws. */
 export function configError(cfg: Cfg, src: Source): string | null {
+  // A JSON "\b" decodes to a backspace, so a regex word boundary written that way silently never matches.
+  const ctl = controlCharPath(cfg, "adapter_config");
+  if (ctl) return `${ctl} contains a control character; a regex word boundary must be written "\\\\b" in JSON`;
   for (const k of ["list", "self", "filter"]) {
     const v = cfg[k];
     if (v !== undefined && v !== null && !isObj(v)) return `${k} must be an object`;

@@ -1,25 +1,45 @@
 {
   "id": "71f3a111-3bbb-4753-b739-00ac1cd55880",
   "name": "Rockefeller Foundation",
-  "program": "Food systems, Universal Energy Abundance (Mission 300 Africa), Latin America & Caribbean; Cities Deliver call (out of nexus)",
-  "mode": "page",
+  "program": "Food systems, Universal Energy Abundance (Mission 300 Africa), Latin America & Caribbean; open calls announced on the home page",
+  "mode": "calls",
   "adapter": "html",
   "url": "https://www.rockefellerfoundation.org/",
   "feed_url": null,
-  "adapter_config": {},
-  "collect_note": "Rockefeller gives grants by invitation and posts no list of open calls, so only its home page is watched for a new call. The one open call now, Cities Deliver (AI for city services, due 2026-11-29), is outside our food, energy and water scope and is not collected.",
-  "page_reason": "Rockefeller does not accept unsolicited grant proposals (own FAQ at /our-grants/: \"The Rockefeller Foundation does not accept unsolicited grants proposals\"), and no page, feed or API on rockefellerfoundation.org lists grant calls as items: /wp-json/wp/v2/rfp holds only 6 vendor procurement RFPs (consultant and evaluation contracts, not grants), /feed/ is news, /our-grants/ lists awarded grants, and each open call is a one-off page. The one open call today, Cities Deliver: AI Solutions for Public Services (Rockefeller + OpenAI Foundation, Round 1 due 2026-11-29), is AI for city public services with nothing on food, energy, water or agriculture; the owner ruled it out of SALSAV scope, so it is deliberately not collected. The home page, where any new open call is announced first, is watched for changes.",
-  "expect": {
-    "min_items": 0,
-    "sample": []
+  "adapter_config": {
+    "list": {
+      "url": "https://www.rockefellerfoundation.org/",
+      "item": ".introtext",
+      "title": "h3",
+      "link": "a[href]",
+      "match": "open call|call for proposals|request for proposals|applications? (?:are |is )?(?:now )?open|accepting (?:applications|proposals)|apply (?:now|by)|\\brfp\\b",
+      "amount": false,
+      "detail": {
+        "max": 3,
+        "deadline_regex": "([A-Z][a-z]+ \\d{1,2}, 20\\d\\d)\\s*[–—-][^\\n]{0,200}?\\bdue\\b"
+      }
+    },
+    "max_items": 10,
+    "auto_vet": false
   },
-  "evidence": "GET https://www.rockefellerfoundation.org/ -> 200 text/html, 105289 bytes, about 6500 chars of text after script/style strip (checked 2026-11-12). GET /feed/ 200 (news only). GET /wp-json/wp/v2/rfp -> 200, 6 vendor RFPs, no structured deadline field. GET /rfp/ -> 404, /sitemap.xml -> 200 (rfp-sitemap.xml lists the same 6). /our-grants/ 200 (grantee listings, no calls). /funding-opportunities/, /apply/, /open-calls/ -> 404. Re-checked 2026-11-12: wp-json search for call for proposals / open call / funding opportunities finds no listing of grant calls (only Cities Deliver, Bellagio residency/convening calls, news, awarded grants).",
+  "collect_note": "Reads the Rockefeller Foundation home page twice a day and keeps any feature block that announces an open call for proposals or applications (today Cities Deliver, AI for city services, Round 1 due 2026-11-29); the deadline is read from the call page. Rockefeller is invite-only for ordinary grants, so its open calls are one-offs and are announced on the home page first.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Cities Deliver: A $50 Million Commitment to Better Public Services",
+        "deadline": "2026-11-29",
+        "url": "https://www.rockefellerfoundation.org/cities-deliver-ai-solutions-for-public-services/"
+      }
+    ]
+  },
+  "evidence": "GET https://www.rockefellerfoundation.org/ -> 200; feature block div.introtext (h3 + 'Applications are now open for the global call for proposals' + EXPLORE THE OPEN CALL link) held 1 item; call page GET -> 200, text 'November 29, 2026 - Eligibility Screening, Round 1 proposals ... due' (Round 2 due March 1, 2027); harness deadline 2026-11-29 matches. Checked 2026-11-12. Other channels: /wp-json/wp/v2/rfp (6 vendor procurement RFPs, deadline in page text), /feed/ and /news/feed/ (10 items, news), /wp-json/wp/v2/news_post and /pages and /search (no call-type field, calls not labelled), sitemap_index.xml (rfp, news_post, page sitemaps, no calls list), /funding-opportunities/ /apply/ /open-calls/ 404.",
   "edge_risk": "none",
   "confidence": "medium",
   "harness": {
     "ok": true,
-    "count": 0,
-    "open": 0,
+    "count": 1,
+    "open": 1,
     "checked": "2026-11-12"
   }
 }

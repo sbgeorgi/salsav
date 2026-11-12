@@ -1,0 +1,56 @@
+{
+  "id": "432314cf-89c8-408e-bb5e-064c7b9e1015",
+  "name": "Arizona Board of Regents",
+  "program": "Regents' Grants (Technology and Research Initiative Fund)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://azregents.edu/regents-grants",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://azregents.edu/news-releases",
+      "item": "div.views-row",
+      "title": "h2.node__title a",
+      "link": "h2.node__title a",
+      "date_label": true,
+      "amount": false
+    },
+    "filter": {
+      "any": [
+        "re:request for proposals?",
+        "re:call for (proposals|ideas|applications|letters)",
+        "re:\\brfp\\b",
+        "re:applications? (are )?(now )?(open|being accepted)",
+        "re:now accepting",
+        "re:funding opportunit",
+        "re:letters? of intent",
+        "re:solicit"
+      ],
+      "all": [
+        "re:regents.{0,2} (research )?grants?|\\btrif\\b|technology and research initiative"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the ABOR news-release listing twice a day and keeps only releases that pair Regents' Grant (TRIF) wording with call words (request for proposals, applications open, call for ideas); none exists today because ABOR announces Regents' Grants only as awards to tri-university teams, so the first announced call will appear here and wait for review.",
+  "zero_reason": {
+    "quote": "Regents' Grants bring together Arizona public universities' researchers, state government agencies and community organizations to tackle pressing challenges facing our state.",
+    "url": "https://azregents.edu/regents-grants",
+    "note": "The program page and every grant release (latest 5 Nov 2026 extension, 8 Dec 2025 $3M agriculture hub) describe awards only; no open solicitation, RFP page (the site's Request for Proposal page is a 2024 consulting procurement) or feed exists. The /rss.xml feed is empty."
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://azregents.edu/regents-grants HTTP 200 (drupal, 4200 chars, no call or deadline); /rss.xml 200 but zero items; /jsonapi 404; /sitemap.xml 404; /request-proposal 200 = RFP 2024004 consulting procurement; /news-releases 200 lists 10 releases per page with div.views-row cards. Checked 2026-11-12. Harness without filter: count 10 (all releases, no deadlines); with a Regents Grant-only filter: 1 (the 5 Nov 2026 extension release); the call filter keeps none today and matches synthetic titles 'Regents Grants request for proposals now open' and 'ABOR opens call for ideas for Regents Grant' while excluding '2027 Regents Cup applications are now open' and award releases.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

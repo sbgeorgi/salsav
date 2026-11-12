@@ -1,0 +1,49 @@
+{
+  "id": "b6fda0d5-1a63-4c0d-81f3-daa1b46d35b5",
+  "name": "Waverley Street Foundation",
+  "program": "Clean energy and healthy food and land grantmaking",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.waverleystreet.org/about",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.waverleystreet.org/news",
+      "item": "li.search-result--article__item",
+      "title": ".search-result--article__title",
+      "link": "a.search-result--article__link",
+      "date": ".search-result--article__meta"
+    },
+    "filter": {
+      "any": [
+        "re:call for (proposals|applications|ideas|letters)",
+        "re:request for (proposals|applications|letters)",
+        "re:\\brfp\\b",
+        "re:applications? (are )?(now )?(open|invited)",
+        "re:open call",
+        "re:funding opportunit",
+        "re:\\bprize\\b",
+        "re:\\bchallenge\\b",
+        "re:(accepting|invites?|invited) (proposals|applications)"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 20,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the Waverley Street Foundation News list (its only dated announcements listing, 8 entries, static Craft HTML) twice a day and keeps entries whose title or excerpt announces a call, RFP, applications, open call, prize or challenge; none today because the foundation funds by invitation, so a one-off call announcement would surface as a hidden candidate.",
+  "expect": {
+    "min_items": 0,
+    "sample": [],
+    "zero_reason": "FAQ (https://www.waverleystreet.org/about): 'we do not accept unsolicited proposals'; News list (https://www.waverleystreet.org/news) holds 8 items (year reviews, hires, press), none a call."
+  },
+  "evidence": "Plain HTTP GET 2026-11-12 with a desktop UA: https://www.waverleystreet.org/about HTTP 200 (197 KB, Craft CMS, SEOmatic metadata, static HTML). FAQ text: 'we do not accept unsolicited proposals'. Grants pages: /grants, /funding, /apply, /opportunities, /request-proposal, /api, /api/grants, /work/grantees, /grantees all HTTP 404. Feeds: /feed, /rss, /news.rss, /news/feed, /feed.xml, /atom.xml, /stories.rss all HTTP 404. Sitemap /sitemaps-1-sitemap.xml HTTP 200 (9 sections; the grantees section has 1 grantee profile, not a call; 85 URLs total, no call or deadline keywords). /static/dist/main.js: no fetch, XHR, /api or algolia calls. No ld+json call data, no Airtable, Google Sheets, Submittable, SmartSimple, Fluxx, iCal or PDF call document found on the home, about, work, learning, news, stories, careers or contact pages. Grants.gov search2 keyword 'Waverley Street Foundation' returned 281 generic hits, none a Waverley call. EU SEDIA text search 'Waverley Street Foundation' returned 0 results. | Round 2: /news HTTP 200 static list, 8 li.search-result--article__item (newest 2025-12-18); recon (no Chrome) found no API/feed/JSON; /feed /rss /atom.xml /wp-json 404; sitemap has news, stories, learning sections, no call section; stories/learning/work text has no call wording.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

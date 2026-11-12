@@ -1,0 +1,29 @@
+{
+  "id": "466fc039-ab72-4820-8805-df4dddf255f0",
+  "name": "US Department of State, Office of Global Food Security",
+  "program": "Feed the Future Innovation Labs",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://simpler.grants.gov/opportunity/7b148400-3d26-4af7-ab04-cb82c2799a97",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "DOS-GFS",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "auto_vet": true,
+    "max_items": 40
+  },
+  "collect_note": "Reads Grants.gov twice a day for any forecasted or posted opportunity of the State Department Office of Global Food Security (agency code DOS-GFS, the office that now runs Feed the Future Innovation Labs); nothing is open today, and the only opportunity that office has ever listed is the closed 2026 Innovation Labs call, so a new call appears as soon as it is posted. state.gov is bot protected (HTTP 403 to plain requests), so Grants.gov is the one official channel.",
+  "zero_reason": {
+    "quote": "Closed: April 9, 2026",
+    "url": "https://simpler.grants.gov/opportunity/7b148400-3d26-4af7-ab04-cb82c2799a97",
+    "note": "Grants.gov search2 with agencies DOS-GFS and statuses forecasted|posted|closed returns exactly one hit, DFOP0017826 Feed the Future Innovation Labs, status closed; the same filter with only forecasted|posted returns none."
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "POST https://api.grants.gov/v1/api/search2 {agencies:DOS-GFS, oppStatuses:forecasted|posted|closed} HTTP 200 hitCount 1 (361430 DFOP0017826 Feed the Future Innovation Labs, DOS-GFS, closed 04/09/2026), checked 2026-11-12. Other channels tried: state.gov pages, /feed, /wp-json, /sitemap.xml, /robots.txt all HTTP 403 (bot protection); feedthefuture.gov and mygrants.gov do not connect; usaid.gov/innovation-labs HTTP 403; endpoint_recon on the simpler.grants.gov listing found only the site sitemap, no JSON list; no EU channel applies.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

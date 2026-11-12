@@ -1,0 +1,28 @@
+{
+  "id": "8979ef4a-8baa-408d-9f9b-d9a42fe87053",
+  "name": "USDA NIFA",
+  "program": "Organic Agriculture Research and Extension Initiative (OREI)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.nifa.usda.gov/grants/programs/organic-agriculture-research-extension-initiative-orei-program",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-NIFA",
+    "keyword": "Organic Agriculture Research and Extension Initiative",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "filter": { "fields": "title", "any": ["Organic Agriculture Research and Extension Initiative", "re:\\bOREI\\b"] },
+    "auto_vet": true,
+    "max_items": 10
+  },
+  "collect_note": "Reads Grants.gov twice a day for forecasted or posted USDA-NIFA opportunities whose title names the Organic Agriculture Research and Extension Initiative or OREI; nothing is open today because the three FY26 NOFOs closed 14 May 2026, so the next NOFO appears when posted. nifa.usda.gov resets plain edge requests, so Grants.gov is the official channel.",
+  "zero_reason": {
+    "quote": "USDA-NIFA-D113A-32481 OREI Research Projects with Extension and/or Education Components Closed",
+    "url": "https://www.nifa.usda.gov/grants/programs/organic-agriculture-research-extension-initiative-orei-program",
+    "note": "Grants.gov search2 for the three FY26 NOFOs (USDA-NIFA-D113A-32481, -32357, -32483) returns status archived, open 2026-03-11, close 2026-05-14; with forecasted|posted the OREI title filter matches nothing. The same filter with archived status matches those titles."
+  },
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "Channels tried 2026-11-12: Grants.gov search2 oppNum USDA-NIFA-D113A-32481/32357/32483 HTTP 200, each archived (closed 05/14/2026); agencies USDA-NIFA + keyword OREI with forecasted|posted returns 5 other NIFA programs, none OREI; nifa.usda.gov program page is static HTML but lists only closed NOFOs and has no feed or JSON listing; aln search param returned unrelated results.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

@@ -1,0 +1,32 @@
+{
+  "id": "3ffa8ec6-3b6d-4f99-9c78-6196e76efbc3",
+  "name": "USDA Foreign Agricultural Service, Food for Progress",
+  "program": "Food for Progress Program NOFO (annual; FY2026 closed 6 Jul 2026)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.fas.usda.gov/programs/food-progress",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-FAS",
+    "keyword": "Food for Progress",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "filter": {
+      "any": [
+        "Food for Progress"
+      ],
+      "fields": "title"
+    },
+    "auto_vet": true,
+    "max_items": 10
+  },
+  "collect_note": "Grants.gov is checked twice a day for the Food for Progress Program NOFO (agency USDA-FAS, title match), once posted or forecasted. None is open today: the FY2026 NOFO closed 6 Jul 2026 and the FAS page shows no FY2027 notice yet.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "POST https://api.grants.gov/v1/api/search2 2026-11-12 (HTTP 200), keyword 'Food for Progress', all statuses: archived NOFOs USDA-FAS-FOOD-FOR-PROGRAM-26-00 (21 May-6 Jul 2026), USDA-FAS-10606-0700-25, -24 and -23, all agency USDA-FAS, so the program recurs yearly and the title filter is exact. FAS program page https://www.fas.usda.gov/programs/food-progress: 'Application Deadline: Jul 6, 2026 Status: Closed'. No RSS or JSON feed tried beyond Grants.gov; the FAS page is a Drupal page with no call listing.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "zero_reason": "No Food for Progress NOFO is posted or forecast on 2026-11-12: the FY2026 NOFO (Grants.gov id 362536) is archived, closed 6 Jul 2026, and the FAS page says 'Application Deadline: Jul 6, 2026 Status: Closed'. The next annual NOFO will match the title filter."
+}

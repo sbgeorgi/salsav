@@ -1,0 +1,41 @@
+{
+  "id": "d91ff6b5-9c51-4b6e-aeac-e794c4f8317a",
+  "name": "LEAP-SE (LEAP ENERGY, AU-EU sustainable energy partnership)",
+  "program": "LEAP-SE joint calls",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://leap-energy.eu/call-funding",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://leap-energy.eu/news",
+      "item": "article.news-card-leap",
+      "title": "h4",
+      "link": "a.read-more",
+      "match": "\bcalls?\b|pre-announcement|funding|\bRFP\b",
+      "amount": false
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the LEAP ENERGY news listing twice a day and keeps articles whose title mentions a call, pre-announcement or funding, so the announcement of the next LEAP-SE joint call becomes a call row for review; the 2026 call (full-proposal deadline 24 June 2026) is closed and no next call is announced, so only the pre-announcement article shows today.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Pre-announcement 2026 Call for AU-EU collaborative research and Innovation projects on sustainable Energy - LEAP-SE Joint Call 2026",
+        "deadline": null,
+        "url": "https://leap-energy.eu/news-pre-announcement-2026-call-for-au-eu-collaborative-research-and-innovation-projects-on-sustainable-energy-leap-se-joint-call-2026"
+      }
+    ]
+  },
+  "evidence": "Checked 2026-11-12. www.leap-re.eu answers 301 to leap-energy.eu (every path); endpoint_recon (no Chrome) found no feed, no WordPress/JSON API, no sitemap entry for news (sitemap.xml says news articles are generated dynamically and not listed), no EU F&T or Grants.gov listing (national funders pay; Horizon Europe Cofund GA 101172838). /feed and /rss.xml 404. leap-energy.eu/news HTTP 200 server-rendered article cards; call page leap-energy.eu/call-funding HTTP 200 with calendar (pre-proposal 5 Feb 2026, full proposal 24 June 2026). Call text PDF docs/call-funding/LEAP-SE_2026_Call-text-V1_4.pdf read for eligibility and award limits.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

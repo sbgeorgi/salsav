@@ -1,0 +1,50 @@
+{
+  "id": "c7f5894e-e6c4-4993-8dd4-39d00b441e07",
+  "name": "Rockefeller Foundation",
+  "program": "Grants (invitation only) and Requests for Proposals",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.rockefellerfoundation.org/grants/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.rockefellerfoundation.org/rfps/",
+      "item": "article.tease-rfp",
+      "title": ".post-title",
+      "link": "a.download",
+      "date_label": true,
+      "closed": "\\(Closed\\)"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "The Rockefeller Foundation takes no unsolicited grant proposals, so the only open calls it publishes are the Requests for Proposals on its RFP page; those are read twice a day and any new one is filed for review, with the page currently showing no open RFP.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Transition Credit Market Development Consultant",
+        "deadline": "2025-12-19",
+        "url": "https://www.rockefellerfoundation.org/wp-content/uploads/2025/11/Transition-Credit-Market-Development-Consultant.pdf"
+      },
+      {
+        "title": "Evaluation | Climate and Health Diplomacy and Advocacy",
+        "deadline": "2025-10-03",
+        "url": "https://www.rockefellerfoundation.org/wp-content/uploads/2025/09/Evaluation-Climate-and-Health-Diplomacy-and-Advocacy.pdf"
+      }
+    ]
+  },
+  "evidence": "GET https://www.rockefellerfoundation.org/rfps/ HTTP 200 (checked 2026-11-12): page states there are no open RFPs and lists 6 closed RFPs as article.tease-rfp. Channels tried: RSS /feed/ (news and perspectives only), WP REST /wp-json/wp/v2/rfp (same 6 RFPs, but robots.txt disallows /wp-json/), rfp-sitemap.xml (same 6), /grants/ (FAQ, grants database, no call listing), Grants.gov not applicable (private foundation).",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 6,
+    "open": 0,
+    "checked": "2026-11-12"
+  },
+  "zero_reason": {
+    "quote": "There are no open RFPs at this time.",
+    "url": "https://www.rockefellerfoundation.org/rfps/"
+  }
+}

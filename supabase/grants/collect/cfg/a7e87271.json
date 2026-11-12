@@ -1,0 +1,32 @@
+{
+  "id": "a7e87271-2a2b-4109-b03e-3f6fcdf76cd3",
+  "name": "Research Corporation for Science Advancement (RCSA)",
+  "program": "Team Science Accelerator",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://rescorp.org/team-science-accelerator/",
+  "feed_url": "https://rescorp.org/feed/",
+  "adapter_config": {
+    "auto_vet": false,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "re:funding (program|opportunit)",
+        "re:call for (proposals|applications)",
+        "re:request for proposals|\\bRFP\\b",
+        "re:letters? of intent|\\bLOI\\b",
+        "re:applications? (are )?(now )?(open|being accepted)|now accepting",
+        "Team Science Accelerator"
+      ]
+    },
+    "max_items": 10
+  },
+  "collect_note": "RCSA's WordPress news feed is read twice a day and only posts whose title announces a funding program, call, \\bRFP\\b, letter of intent or the Team Science Accelerator are kept; they wait as candidates for a check on the program page. The 10 Aug 2026 post 'Team science focus of new RCSA funding program' matches, so the next call post will too.",
+  "expect": {
+    "min_items": 1,
+    "sample": []
+  },
+  "evidence": "GET https://rescorp.org/feed/ HTTP 200 application/rss+xml, 10 items, newest 2026-11-02, categories RCSA, Scialog, Cottrell Scholar Awards. /wp-json/wp/v2/types HTTP 200 (only post and page types, no opportunity post type); /wp-sitemap.xml 404; /news/ HTTP 200 is the same WordPress posts as the feed. Program page https://rescorp.org/team-science-accelerator/ lists \\bLOI\\b due 9 Nov 2026 (passed), finalists early Feb 2027, final applications 1 Jul 2027; the first cohort is closed to new LOIs so no open call is stored. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

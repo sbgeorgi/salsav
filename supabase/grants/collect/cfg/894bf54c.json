@@ -2,24 +2,40 @@
   "id": "894bf54c-8dca-4673-a356-14406185b0e3",
   "name": "The 11th Hour Project (Schmidt Family Foundation)",
   "program": "Food & Agriculture",
-  "mode": "page",
-  "adapter": "html",
+  "mode": "calls",
+  "adapter": "rss",
   "url": "https://11thhourproject.org/food-and-agriculture/",
-  "feed_url": null,
-  "adapter_config": {},
-  "collect_note": "No public call for proposals exists: the Foundation's Inbound Inquiries Policy (/about/) and FAQ say it does not accept unsolicited proposals and funds through its network. The program page is watched twice a day as a change feed, and any new text is flagged for review. The WordPress /feed/ is a blog feed (one 2025 post), so it is not used as a call source. No deadlines are collected.",
+  "feed_url": "https://11thhourproject.org/feed/",
+  "adapter_config": {
+    "filter": {
+      "any": [
+        "request for proposals",
+        "re:\\bRFP\\b",
+        "call for proposals",
+        "call for applications",
+        "open call",
+        "applications open",
+        "now accepting",
+        "funding opportunity",
+        "prize",
+        "challenge"
+      ],
+      "none": [
+        "job",
+        "career",
+        "hiring"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20
+  },
+  "collect_note": "The foundation is invite-only and has no calls page, so this watches its WordPress news feed (the only publishing channel, 1 post since 2025) twice a day for any post titled like an RFP, open call, prize or challenge; the page text is still change-watched. Items stay hidden candidates (no auto_vet) because the feed is general news and carries no deadline.",
+  "zero_reason": "Foundation FAQ (https://11thhourproject.org/faq/): 'we generally do not respond to unsolicited proposals and requests'; Inbound Inquiries Policy at https://11thhourproject.org/about/ says it does not accept unsolicited proposals. The only feed item (https://11thhourproject.org/in-defense-of-dignity-and-democracy-for-all/, 2025-06-25) is an advocacy statement, not a call. No prior call exists to test the filter words against; they were tested against typical call titles instead.",
   "expect": {
     "min_items": 0,
     "sample": []
   },
-  "evidence": "Plain HTTP GET (desktop UA) https://11thhourproject.org/food-and-agriculture/ 200, 151343 bytes, static WordPress/Elementor HTML, 1428 chars of visible text, no login. /about/ 200 (Inbound Inquiries Policy: 'we do not accept unsolicited proposals or requests'). /faq/ 200 ('we generally do not respond to unsolicited proposals and requests'). /feed/ 200 RSS, 1 item (2025-06-25 blog post), lastBuildDate 2025-09-19. /comments/feed/ 0 items. /category/announcement/feed/ 200, 1 item (same blog post). /sitemap.xml 200 -> page-sitemap (no calls URLs: about, faq, press, programs, careers) and category-sitemap (announcement only). /wp-json/wp/v2/types 200: no opportunity-type custom post types (post, page, our_team, perspectives, elementor_library only). /wp-json/wp/v2/pages?slug=food-and-agriculture 200 (modified 2025-11-06). /press/ 200 (no calls). Parent foundation tsffoundation.org 200 (no calls; /feed/ 0 items; /grants/ 404). Grants.gov search2 POST 200 (keyword query returned unrelated federal calls; the Foundation is a private foundation with no federal pass-through). Page scripts: only admin-ajax for theme filters and Elementor/Jet widgets, no calls data endpoint. Chrome stage: port 9333 down, rerun with --no-chrome: rss verdict on blog feed only, rejected as not calls. Checked 2026-11-12.",
+  "evidence": "Checked 2026-11-12: /feed/ 200 RSS 1 item (lastBuildDate 2025-09-19); /category/announcement/feed/ 200 same item; /comments/feed/ 0 items; /wp-json/wp/v2/types 200 only post, page, our_team, perspectives, elementor_library (perspectives returns []); /wp-json/wp/v2/posts?search=proposal and /wp-json/wp/v2/search?search=RFP return []; /news/ and /press/ 200 no calls; /?s=request+for+proposals no results; sitemap.xml 3 sitemaps, no calls section; /faq/ and /about/ state no unsolicited proposals; parent tsffoundation.org no calls, /grants/ 404; Grants.gov search2 unrelated (private foundation); endpoint_recon --no-chrome found only the blog feed; no Algolia/Airtable/Submittable/iCal found.",
   "edge_risk": "none",
-  "confidence": "high",
-  "page_reason": "Invite-only / network-based grantmaking: the Foundation states it does not accept unsolicited proposals, has no calls page, no call feed and no opportunity post type, so the only monitorable signal is the program page text.",
-  "harness": {
-    "ok": true,
-    "count": 0,
-    "open": 0,
-    "checked": "2026-11-12"
-  }
+  "confidence": "medium"
 }

@@ -67,11 +67,11 @@ Thin page: an html fetch that yields under 300 chars of text from at least 5000 
 
 ## C4. Source preference (first that works over plain HTTP, no JavaScript, no cookies, no login)
 1. Official API: Grants.gov `search2` for US federal programs (`oppNum` for one NOFO, `aln` for a program, else `agencies` + `keyword`); EU SEDIA for EU topics.
-2. RSS or Atom feed of funding opportunities (not news, not blog).
+2. RSS or Atom feed of funding opportunities; a news or blog feed only with a `filter` on call words (call, RFP, request for proposals, applications open, prize, challenge, grant) tested on the funder's last known call title.
 3. Site JSON: WordPress REST custom post types (`/wp-json/wp/v2/types`), XHR endpoints the page itself calls.
-4. `list` extraction from the official calls page.
+4. `list` extraction from the official calls page, or from the RFP, funding, prizes or news listing where the funder's next call would appear (with `match` or `filter` on call words).
 5. `self` on the program page (one dated cycle).
-6. Page watch only, with a `collect_note` saying why (invite-only funders have no public calls: say that).
+6. Page watch, last resort: it only flags a change and makes no call rows. Allowed only when no listing of calls, RFPs, prizes or news exists on the funder's sites over plain HTTP; the `collect_note` names the blocker (js_only, bot_protected, login_required, no_listing_anywhere). Invitation-only, closed or one-off funders are NOT a reason for page watch: watch the listing where a new call would be announced, with `expect.min_items` 0 and a `zero_reason`.
 A source counts only if its items are real calls for proposals of that funder or program. Aggregator sites are not sources.
 
 ## C5. Harness (acceptance check for a config)

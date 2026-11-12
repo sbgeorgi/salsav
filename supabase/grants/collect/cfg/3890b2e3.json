@@ -1,0 +1,43 @@
+{
+  "id": "3890b2e3-7d19-4833-8771-431d3903a013",
+  "name": "Global Energy Alliance for People and Planet",
+  "program": "Energizing Agriculture Programme (Powering Opportunity pillar)",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://www.energyalliance.org/",
+  "feed_url": "https://energyalliance.org/feed",
+  "adapter_config": {
+    "auto_vet": false,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "request for proposals",
+        "requests for proposals",
+        "call for proposals",
+        "call for applications",
+        "call for partners",
+        "expression of interest",
+        "expressions of interest",
+        "open call",
+        "applications open",
+        "applications are open",
+        "now accepting",
+        "funding opportunit"
+      ]
+    },
+    "max_items": 10
+  },
+  "collect_note": "The alliance's WordPress news feed is read twice a day and only posts whose title announces an RFP, call, expression of interest or funding opportunity are kept; none is posted today, and calls wait as candidates because the feed is a shared news stream.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "Founded in 2021 by The Rockefeller Foundation, IKEA Foundation and Bezos Earth Fund, we build public, private, philanthropic partnerships to accelerate clean energy and economic opportunity.",
+    "url": "https://www.energyalliance.org/",
+    "note": "The funder works through partnerships and catalytic capital and publishes no open-call section: the home page, Powering Opportunity page and the 10 newest feed items (2026-09-14 to 2026-11-04) contain no call for proposals. The filter words are the standard call phrasings; no past call title exists to test against, so the filter was checked against the feed titles and matches none of them."
+  },
+  "evidence": "Channels tried 2026-11-12: /feed (WordPress RSS, HTTP 200, 10 news items, newest 2026-11-04, none a call); /news-and-insights/feed (comments feed only, empty); /sitemap.xml 404; /our-projects, /join-us, /faqs, /about-us/faqs 404; /our-work/powering-opportunity, /our-work/how-we-work and home page list no call, grant portal or RFP section; no JSON API or public grant portal found.",
+  "edge_risk": "none",
+  "confidence": "low"
+}

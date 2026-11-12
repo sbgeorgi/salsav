@@ -1,0 +1,18 @@
+{
+  "id": "a33531b0-be5f-4a33-821b-7f2818f11347",
+  "name": "Intel Corporation",
+  "program": "Water restoration projects in Arizona",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.intel.com/content/www/us/en/environment/water-restoration-arizona.html",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch only (blocker: no_listing_anywhere): Intel funds Arizona water restoration through nonprofit partners it selects itself and publishes no call, RFP or application listing, so the Arizona project page is watched and a new funded project or any added application wording is flagged for review.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12 of the Arizona water restoration page: HTTP 200, 19 KB text, lists 20 funded projects with implementation partners and no application route. Intel water page (/corporate-responsibility/water.html) and the community-giving and newsroom pages returned no grant, RFP, proposal or apply wording (fetch_text grep: 0 windows). A web search found no process for proposing a project to Intel. No feed, API or call listing found on the channels tried.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

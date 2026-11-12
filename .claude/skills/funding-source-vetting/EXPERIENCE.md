@@ -64,3 +64,93 @@ evidence: reflect R20261112T023603-747f15c5
 situation: reflect patch
 lesson: Discovery prompt edit in this session added the date-ownership rule; the skill should state it so every vetting run applies it.
 evidence: reflect R20261112T023603-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: After the EU source collected 16 calls they all stayed candidates, so the horizon ignored them until one was promoted by hand. The promotion step belongs in the vetting procedure.
+evidence: reflect R20261112T061353-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The user corrected a thin NGO and private-foundation pool and expects many more sources. The breadth rule needs a concrete check against the per-bucket floor.
+evidence: reflect R20261112T113101-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The user asked that every listed funder be monitored by the edge function with no agent in the loop, using the existing collection path as the blueprint. The skill should require trying each channel and recording the result.
+evidence: reflect R20261112T113101-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The user asked that agents triage any funder that stops allowing systematic collection. The skill had no triage procedure, so the next run would improvise.
+evidence: reflect R20261112T113101-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Cloud edge fetches can get HTTP 403 where a desktop fetch works (Gulbenkian); the skill's pitfalls only cover desktop-side blocks, so a funder can sit stale unnoticed.
+evidence: reflect R20261112T120732-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Full evidence payloads for 18 rejections bloated the MCP SQL batches; trimmed rejection rows were all accepted, so the skill should say so.
+evidence: reflect R20261112T120732-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The scheduled prompt and the repo copy had drifted, and the fix had to be applied to both by hand; a standing diff step prevents silent divergence.
+evidence: reflect R20261112T120732-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: A correctly collected call (Eni, closing in 8 days) looked missing on the dashboard; the skill should tell the checker where it went.
+evidence: reflect R20261112T120732-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Two Bash parses of a saved grants.* execute_sql output failed with JSONDecodeError at char 0 because the JSON sits inside an untrusted-data envelope; the third attempt, which regex-extracted the block first, succeeded. The pitfall saves the next discovery run that retry.
+evidence: reflect R20261112T125253-dfcb7303
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The 2026-11-12 discovery run vetted 23 leads and rejected every one on the coded gates, so it listed no funder. The fix was to target searches at gate-passing programs.
+evidence: reflect R20261112T130438-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: During the 2026-11-12 run a hook blocked subagents from calling check_known, so the first search fell back to plain reads. The main agent must run the dedupe itself.
+evidence: reflect R20261112T130438-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The live skill still allowed page watch with a note saying 'why there is no call list', which contradicts the corrected COLLECT.md and discovery-task.md rules. A page-watch funder never produces call rows, so its next call does not reach the dashboard by itself. The user objected that none of the funders were tested for automatic updates.
+evidence: reflect R20261112T131016-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Discovery run hit a Python certificate-chain failure on a funder site; the rule keeps future runs from disabling TLS or storing paraphrased quotes. Most other lessons from this window (subagents blocked from check_known, edge 403, 14-day deadline floor, closed one-off calls) are already in this skill.
+evidence: reflect R20261112T131303-dfcb7303
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Skeptic review of the re-vet batch found configs whose JSON \b filters could never match and whose cycle label contradicted open calls; both are now named as pitfalls so the next vetting run checks them before set_collection.
+evidence: reflect R20261112T134818-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Line 9 still told agents to reject any funder not clearing the gates, but the database now re-scores judgment rejects as vetted. The 2026-11-12 run stored 23 judgment rejects, none scored, and listed 0 new funders, so the old instruction produced the empty dashboard.
+evidence: reflect R20261112T135553-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Same contradiction as line 9: the line did not name the reject_kind values the database now requires to keep a rejection. Without them the row is re-scored and listed.
+evidence: reflect R20261112T135553-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The scheduled task now only reads supabase/grants/discovery-task.md; the old rule to diff two copies is obsolete and would send editors to the wrong file.
+evidence: reflect R20261112T141501-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: Batch set_collection calls with 8-character ids aborted whole UNION ALL batches; the fix was full ids from cfg files plus a checksum of config strings after apply. Both belong in the pitfalls line.
+evidence: reflect R20261112T141501-747f15c5

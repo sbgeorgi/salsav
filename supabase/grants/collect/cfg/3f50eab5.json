@@ -2,24 +2,38 @@
   "id": "3f50eab5-8727-4c92-b052-4d9b291f0971",
   "name": "Adaptation Fund",
   "program": "Large Grants for Innovation",
-  "mode": "page",
-  "adapter": "html",
+  "mode": "calls",
+  "adapter": "rss",
   "url": "https://www.adaptation-fund.org/apply-funding/innovation-grants/large-grants-for-innovation/",
-  "feed_url": null,
-  "adapter_config": {},
-  "collect_note": "No call list or fixed deadline exists: proposals are accepted at any time on a rolling basis. The program page is watched twice a day and any change to it is flagged for review. No deadlines are collected.",
+  "feed_url": "https://www.adaptation-fund.org/feed/",
+  "adapter_config": {
+    "also_page": true,
+    "auto_vet": true,
+    "max_items": 20,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "re:(^| )calls? (for|to|on) ",
+        "re:(^| )calls? (applications|proposals|grants)",
+        "re:request for (proposals|applications)",
+        "re:invites? (proposals|applications)",
+        "re:applications? (are )?(now )?open",
+        "re:launches? .{0,60}(grant|funding window|accelerator)",
+        "re:grant (window|opportunit)"
+      ],
+      "none": [
+        "re:board meeting",
+        "re:approves"
+      ]
+    }
+  },
+  "collect_note": "Adaptation Fund news RSS filtered on titles that announce a call, grant window or funding opening; the fund now takes proposals on a rolling basis (Decision B.40/59) so no calls listing or dated calendar exists, and a new window or call is announced as a news post.",
   "expect": {
     "min_items": 0,
     "sample": []
   },
-  "evidence": "Plain HTTP GET 2026-11-12, desktop UA, 30 s: program page HTTP 200 (158,720 bytes, labeled 'Call for Proposals', rolling wording not on this page but 'twice a year' Board consideration and 'next submission deadline' pointer to the calendar); /apply-funding/ HTTP 200 (states 'Submissions for all funding windows are now accepted on a rolling basis (Decision B.40/59)'); /feed/ HTTP 200 (news only, latest 2026-11-10); /wp-json/wp/v2/types HTTP 401; /wp-json/wp/v2/pages/38731 HTTP 401; /calendar/ HTTP 200 (not parsed for dated calls); /apply-funding/innovation-grants/innovation-proposals/ HTTP 404.",
+  "zero_reason": "No call is open or announced today: https://www.adaptation-fund.org/apply-funding/ states 'Submissions for all funding windows are now accepted on a rolling basis (Decision B.40/59)'; the 10 newest posts in /feed/ (latest 2026-11-10) contain no call announcement.",
+  "evidence": "Plain HTTP 2026-11-12: /feed/ 200 application/rss+xml 10 items; /wp-json/wp/v2/* 401 rest_not_logged_in; /sitemap_index.xml 200 (post, event, af_document sitemaps, no calls section); /calendar/ and /news/ 301; /news-and-events/events-calendar/ 200 lists only COP31 events, old 'Deadline for proposal submissions to the Nth AFB meeting' events stop at the 30th meeting (rolling since B.40/59); no Grants.gov or EU listing (not US federal or EU).",
   "edge_risk": "none",
-  "confidence": "high",
-  "page_reason": "The Adaptation Fund now accepts proposals for all funding windows on a rolling basis (Board decision B.40/59, stated on /apply-funding/), so Large Innovation Projects has no per-round deadline or call list to read. The program page only says 'the next submission deadline can be found under Apply for Funding and on the calendar', and neither shows a current dated deadline.",
-  "harness": {
-    "ok": true,
-    "count": 0,
-    "open": 0,
-    "checked": "2026-11-12"
-  }
+  "confidence": "medium"
 }

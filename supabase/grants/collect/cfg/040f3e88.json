@@ -1,0 +1,37 @@
+{
+  "id": "040f3e88-45cd-450c-bdfe-cc2e37921c2d",
+  "name": "Foundation for Food and Agriculture Research (FFAR)",
+  "program": "Open Opportunities (RFAs and prizes)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://foundationfar.org/grants-funding/open-opportunities/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "list": {
+      "item": "div.open-opps__cards:first-of-type div.open-opps__card",
+      "title": "h3",
+      "link": "a[href]",
+      "date_label": true,
+      "closed": "under review"
+    }
+  },
+  "collect_note": "Reads FFAR's Open Opportunities page twice a day and keeps only the cards in its first block, 'Opportunities Accepting Applications' (the second block, 'Applications Under Review', is left out). That block says there are no open funding opportunities today, so zero items is expected until FFAR announces its next RFA; it is the one place FFAR lists every open call, and the same calls are also in its opportunity post type (wp-json/wp/v2/opportunity) which has no deadline field.",
+  "zero_reason": {
+    "quote": "There are currently no open funding opportunities.",
+    "url": "https://foundationfar.org/grants-funding/open-opportunities/"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12: GET https://foundationfar.org/grants-funding/open-opportunities/ HTTP 200 (WordPress, server-rendered). First block 'Opportunities Accepting Applications' holds div.open-opps__no-items ('There are currently no open funding opportunities.'); second block 'Applications Under Review' holds 12 div.open-opps__card cards (Crop-Animal Systems RFA, Efficient Fertilizer Consortium 2026 RFA, ICASA 2026 RFA, ...). A variant selector div.open-opps__card parsed all 12 under-review cards with correct titles and opportunity links, so the card markup is parsed correctly. Channels without a deadline field or no call listing: wp-json opportunity CPT (46 posts, titles and dates only), sitemap opportunity-sitemap.xml, no RSS for opportunities.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

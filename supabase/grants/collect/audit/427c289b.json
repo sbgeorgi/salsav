@@ -1,0 +1,24 @@
+{
+  "id": "427c289b-dd79-4e97-8e59-ce965c9537d3",
+  "name": "IKEA Foundation",
+  "program": "Climate grants (partner-based, no public portal)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.ikeafoundation.org/what-we-do",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "no_listing_anywhere: the foundation publishes no calls, RFPs or prizes and its FAQ says it takes no unsolicited requests; its grants list shows only awards already made to chosen partners, so the page watch flags a change in the funding-focus page (a new call or an opening of applications would show there or in the FAQ).",
+  "expect": {
+    "min_items": 0
+  },
+  "evidence": "GET https://www.ikeafoundation.org/what-we-do HTTP 200 text/html (checked 2026-11-12); /faq 'No. IKEA Foundation does not accept unsolicited funding requests.'; sitemap.xml sections hold only /grants/* (awards), /insights-and-reports/*, static pages; no /feed, /rss, /atom.xml, /wp-json (301 to non-existent, site is Craft CMS), robots.txt has only Disallow /cpresources/; endpoint_recon.py found no opportunity endpoint.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "edge_case": "no_listing_anywhere",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

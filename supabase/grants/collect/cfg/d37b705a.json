@@ -1,0 +1,44 @@
+{
+  "id": "d37b705a-b746-4748-b848-dc8602f456c9",
+  "name": "U.S. Department of Energy SBIR/STTR (Office of Technology Commercialization)",
+  "program": "DOE SBIR/STTR Phase I and II releases (reauthorized April 2026)",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://sbir-sttr.connectwerx.org/opportunities/",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://sbir-sttr.connectwerx.org/wp-json/wp/v2/avada_portfolio?per_page=30",
+    "method": "GET",
+    "items_path": "$",
+    "map": {
+      "external_id": "link",
+      "title": "title.rendered",
+      "url": "link",
+      "description": "excerpt.rendered",
+      "open_date": "date"
+    },
+    "deadline_regex": "Submission\\s+Deadline:\\s*(\\d{1,2}/\\d{1,2}/\\d{4})",
+    "date_order": "mdy",
+    "max_items": 30,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the DOE SBIR/STTR Application Hub (ConnectWerx, the DOE partnership intermediary that runs every OTC release) as a WordPress list of solicitations twice a day, so each new Phase I or Phase II release becomes a dated call row; the old Office of Science SBIR page lists no open calls and the energy.gov pages have no machine-readable list. Each release covers many DOE topics, so rows wait for review (auto_vet false) to judge whether a topic fits agrivoltaics.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "FY26 Fall Opportunity",
+        "deadline": "2026-12-16",
+        "url": "https://sbir-sttr.connectwerx.org/portfolio-items/fy26-fall-opportunity/"
+      }
+    ]
+  },
+  "evidence": "GET sbir-sttr.connectwerx.org/wp-json/wp/v2/avada_portfolio HTTP 200 application/json (checked 2026-11-12): 3 solicitations (FY26 Fall deadline 12/16/2026, Genesis Mission 09/10/2026, FY25 Phase II 10/02/2026). Dead channels: /feed/ holds only a WordPress Hello World post; Grants.gov search2 has no DOE OTC SBIR releases (only ARPA-E ones); science.osti.gov/sbir says all Office of Science funding opportunities are closed and points to OTC; energy.gov/technologycommercialization SBIR page is a prose page with no list.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 3,
+    "open": 1
+  }
+}

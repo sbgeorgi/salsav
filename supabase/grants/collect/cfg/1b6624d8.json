@@ -1,0 +1,29 @@
+{
+  "id": "1b6624d8-131c-46d6-b46f-7d48c1598cd1",
+  "name": "U.S. Department of Energy, Solar Energy Technologies Office (now listed under the Integrated Energy Systems Office)",
+  "program": "Solar funding notices: agrivoltaics calls FARMS and SolWEB2, and any new solar notice",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.energy.gov/eere/solar/funding-opportunities",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "item": "div.block-title--open-funding-opportunities li, div.block-title--upcoming-funding-opportunities li",
+      "match": "agrivolt|agricultur|farm|SolWEB|wildlife|ecosystem|dual.use|FARMS|LASSO|grazing",
+      "amount": false,
+      "date_label": true
+    },
+    "auto_vet": false,
+    "max_items": 20
+  },
+  "collect_note": "Reads the Open and Upcoming Funding Opportunities lists on the DOE solar funding page and keeps notices whose title names agrivoltaics, agriculture, farms, wildlife or ecosystems; nothing matching is open today (the two open notices are space photovoltaics and a tribal energy prize), so a new agrivoltaics notice appears as a candidate once listed. DOE posts these notices on EERE Exchange, which Grants.gov does not list.",
+  "zero_reason": {
+    "quote": "There are no upcoming funding opportunities at this time.",
+    "url": "https://www.energy.gov/eere/solar/funding-opportunities",
+    "note": "The Open list holds only the Space Photovoltaics partnership intermediary agreement and the Tribal Energy Capacity Expansion Prize, neither agrivoltaics; the filter was tested against the closed SolWEB2 title, which it matches."
+  },
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "GET energy.gov/eere/solar/funding-opportunities HTTP 200 (server-rendered lists), checked 2026-11-12. Grants.gov search2 keyword agrivoltaics (forecasted|posted) and agencies DOE-EERE keyword solar returned 0 hits. Other channels: SolWEB2 page DE-FOA-0003492 is HTML only; no RSS or JSON list found on the page.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

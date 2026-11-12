@@ -1,0 +1,41 @@
+{
+  "id": "b51e4426-67ba-4e64-8dee-49b646ed31fe",
+  "name": "National Science Foundation",
+  "program": "DISES: Dynamics of Integrated Socio-Environmental Systems (NSF 23-609, concluded) and NSF human-environment successor programs",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://www.nsf.gov/funding/opportunities/dises-dynamics-integrated-socio-environmental-systems",
+  "feed_url": "https://www.nsf.gov/rss/rss_www_funding.xml",
+  "adapter_config": {
+    "filter": {
+      "any": [
+        "socio-environmental",
+        "dises",
+        "sustainable regional systems",
+        "coupled natural and human",
+        "nexus of food, energy"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20,
+    "auto_vet": true
+  },
+  "zero_reason": {
+    "quote": "Although there will be no funding for new DISES awards in Fiscal Year 2025, support for research on interactions between human and environmental systems will continue through other programs across the Foundation.",
+    "url": "https://www.nsf.gov/funding/opportunities/dises-dynamics-integrated-socio-environmental-systems/13681/announcements/105012"
+  },
+  "collect_note": "The NSF funding announcements feed is read twice a day for a new DISES call or a successor human-environment systems solicitation (title words socio-environmental, DISES, sustainable regional systems, coupled natural and human, food-energy nexus). Nothing is open today because NSF concluded DISES after FY2024; the feed carries no deadlines, so a new call's date may need adding by hand.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://www.nsf.gov/rss/rss_www_funding.xml HTTP 200 application/rss+xml, 20 items (latest pubDate 6 Nov 2026), none match; the filter was checked against the last known call title 'Dynamics of Integrated Socio-Environmental Systems (DISES)' (matches 'socio-environmental'). Grants.gov search2 agencies NSF keyword 'Socio-Environmental Systems' returns only archived 14-601 and no posted or forecasted DISES; DISES page shows 'Status: Archived'; NSF announcement 105012 says the program was concluded after FY2024. Drupal /jsonapi 404, /feed 404, no calls section in sitemap.xml; endpoint_recon found no opportunity endpoint. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

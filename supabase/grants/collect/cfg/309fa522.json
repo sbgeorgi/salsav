@@ -1,0 +1,55 @@
+{
+  "id": "309fa522-ce06-422d-a1cd-133e43f2f464",
+  "name": "National Fish and Wildlife Foundation (NFWF)",
+  "program": "Conservation programs (periodic NOFOs)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.nfwf.org/programs",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "url": "https://www.nfwf.org/apply-grant",
+      "item": "#block-views-block-grant-opportunities-block-5 tbody tr",
+      "title": "td.views-field-title a",
+      "link": "td.views-field-title a",
+      "date_label": true,
+      "detail": {
+        "max": 5,
+        "deadline_regex": "Full\\s+Proposal\\s+Due\\s+Date:?\\s*(?:[A-Za-z]+,\\s*)?([A-Za-z]+\\s+\\d{1,2},\\s*\\d{4})"
+      }
+    },
+    "filter": {
+      "any": [
+        "Request for Proposals"
+      ],
+      "fields": "title"
+    },
+    "max_items": 15
+  },
+  "collect_note": "Reads NFWF's Apply for a Grant page twice a day: its Announcements table lists every new Request for Proposals, and the full proposal date is read from each RFP page (up to five per run); RFQs and contracting notices are filtered out, and new calls wait for review because the programs range from shorebirds to working lands.",
+  "expect": {
+    "min_items": 4,
+    "sample": [
+      {
+        "title": "Great Plains Grassland Fund 2026 - 2027 Request for Proposals",
+        "deadline": "2027-01-27",
+        "url": "https://www.nfwf.org/great-plains-grassland-fund-2026-2027-request-proposals"
+      },
+      {
+        "title": "Atlantic Flyway Shorebird Initiative 2027 Request for Proposals",
+        "deadline": "2026-11-05",
+        "url": "https://www.nfwf.org/programs/atlantic-flyway-shorebird-initiative/atlantic-flyway-shorebird-initiative-2027-request"
+      }
+    ]
+  },
+  "evidence": "GET https://www.nfwf.org/apply-grant HTTP 200 text/html 2026-11-12 (https://www.nfwf.org/grants redirects there): Announcements table (view block-5) lists 5 posts, 4 of them RFPs/RFQ; Due Dates table (block-6) lists upcoming full proposal dates. RFP page for Great Plains Grassland Fund HTTP 200 shows 'Full Proposal Due Date: January 27, 2027'. rss.xml exists but carries only program documents and grant slates; sitemap lists 2617 mostly press releases; no JSON API, no Grants.gov listing (NFWF is not a federal agency).",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 4,
+    "open": 3,
+    "checked": "2026-11-12"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "0d2d0a5f-2836-4183-933c-c9386a076849",
+  "name": "National Science Foundation",
+  "program": "PIRE: Partnerships for International Research and Education (NSF 22-546, archived; next solicitation not announced)",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://www.nsf.gov/funding/opportunities/pire-partnerships-international-research-education/505038",
+  "feed_url": "https://www.nsf.gov/rss/rss_www_funding.xml",
+  "adapter_config": {
+    "auto_vet": true,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "Partnerships for International Research and Education",
+        "re:\\bPIRE\\b"
+      ]
+    },
+    "max_items": 10
+  },
+  "collect_note": "NSF's official feed of new and updated funding opportunities is read twice a day and only a PIRE (Partnerships for International Research and Education) solicitation is kept. None is posted today: NSF 22-546 is archived and no successor is announced.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "Archived funding opportunity This document has been archived.",
+    "url": "https://www.nsf.gov/funding/opportunities/pire-partnerships-international-research-education/505038",
+    "note": "PIRE page states Program status: Archived, Program 22-546 was archived (last updated January 24, 2025). Grants.gov search2 (agency NSF, forecasted|posted, PIRE keyword) returns no PIRE; the NSF funding feed holds 20 recent items, none PIRE. The filter matches the title of the last known call, 'Partnerships for International Research and Education (PIRE)', so the next PIRE posting will be collected."
+  },
+  "evidence": "GET https://www.nsf.gov/rss/rss_www_funding.xml HTTP 200 application/rss+xml, 20 items, newest 2026-11-06; program page HTTP 200 (Status: Archived); solicitation nsf22-546 HTTP 200; Grants.gov search2 oppNum 22-546 returns 0 hits, so NSF does not mirror it there. Other channels: endpoint_recon (no-chrome) found no JSON API (jsonapi 404), nsf.gov/funding/opportunities returns 202 empty without JS; sitemap has no funding entries; rss_www_funding_pgm_annc_inf.xml (program announcements) exists but a second feed cannot be configured. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

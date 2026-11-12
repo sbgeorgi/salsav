@@ -1,0 +1,30 @@
+{
+  "id": "3745dceb-7fb2-441e-9d1b-91d840e2efaa",
+  "name": "UAE National Center of Meteorology",
+  "program": "UAE Research Program for Rain Enhancement Science (UAEREP)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.uaerep.ae/section/outreach/applicants/apply-now?nID=2030&locale=en",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "UAEREP rain enhancement research cycle: pre-proposals",
+      "deadline_regex": "Submit the pre-proposal by (\\d{1,2} [A-Z][a-z]+ 20\\d\\d)"
+    }
+  },
+  "collect_note": "UAEREP runs one research cycle a year; the Apply now page lists the pre-proposal deadline, which is read here so the next cycle's date is caught when the page is updated. Page is plain HTTP, not JavaScript.",
+  "expect": {
+    "min_items": 1,
+    "sample": ["UAEREP rain enhancement research cycle: pre-proposals"]
+  },
+  "evidence": "GET apply-now page (fetch_text, 2026-11-12): 'Submit the pre-proposal by 12 March 2027, midnight GMT.' FAQ page agrees: 'pre-proposals are due on 12 March 2027.' Channels tried: no RSS or API seen in the site HTML (links are server-rendered /section/ pages); timeline page is a diagram with no text dates; the apply-now page carries the labelled date.",
+  "edge_risk": "none",
+  "confidence": "low",
+  "blocker": "tls_chain_incomplete: www.uaerep.ae serves a leaf certificate without its intermediate (openssl verify code 21), so Node (adapter_check: unable to verify the first certificate) and the edge function cannot fetch it; curl and fetch_text.py pass. Not applied with set_collection; re-run adapter_check after the site fixes its chain.",
+  "harness": {
+    "ok": false,
+    "error": "fetch failed: unable to verify the first certificate",
+    "checked": "2026-11-12"
+  }
+}

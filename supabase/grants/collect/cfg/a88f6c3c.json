@@ -1,0 +1,28 @@
+{
+  "id": "a88f6c3c-2cee-4658-9963-5ba3d8f0ea65",
+  "name": "UM6P-J-PAL Applied Lab for Agriculture (UJALA), funded by OCP Nutricrops",
+  "program": "UJALA Researcher-Led Evaluations RFP",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.povertyactionlab.org/initiative/ujala-researcher-led-evaluations-request-proposal-rfp",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "UJALA Researcher-Led Evaluations RFP (Letter of Intent)",
+      "deadline_regex": "Letter of Intent \\(LOI\\) Deadline: ([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads the Letter of Intent deadline from the UJALA Researcher-Led Evaluations RFP page twice a day. The fall 2026 round (LOI 30 Oct 2026) is closed, so no call shows until J-PAL posts the next round's dates on this page.",
+  "zero_reason": {
+    "quote": "The fall RFP is closed to new applications. Submitted applications are under review.",
+    "url": "https://www.povertyactionlab.org/initiative/ujala-researcher-led-evaluations-request-proposal-rfp"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Channels tried 2026-11-12: plain GET of the RFP page HTTP 200 (Drupal, static HTML, 15 KB text); endpoint_recon verdict html_ok, no opportunity endpoint; /jsonapi/node/article 404; sitemap.xml has 2 URLs and no RFP section; site-wide /rss.xml is HTTP 200 but is a general research-news feed with no RFP items; /rfp, /funding-opportunities and /research-resources/rfps all 404; the UJALA initiative page only repeats the same closed notice. Page labels the program's own dates: 'Required Letter of Intent (LOI) Deadline: October 30, 2026', full proposal 18 Dec 2026 by invitation. The regex matches that labelled LOI date and a past date yields no item, so the filter was tested against the last known call.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

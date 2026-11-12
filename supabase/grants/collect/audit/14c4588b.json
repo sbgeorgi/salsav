@@ -1,0 +1,44 @@
+{
+  "id": "14c4588b-222c-44f7-b692-9b898cd3e953",
+  "name": "Green Climate Fund",
+  "program": "Readiness and Preparatory Support",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.greenclimate.fund/access-funding/readiness-preparatory-support",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.greenclimate.fund/access-funding/other-funding-options",
+      "item": "div[data-component=\"content-sections:sidebyside\"]",
+      "match": "Request for proposals",
+      "title": "h2",
+      "link": "a[href*=\"other-funding-options/\"]",
+      "closed": "Request for proposals ended",
+      "amount": false
+    },
+    "self": {
+      "title": "GCF Readiness proposals through the Partner Portal",
+      "deadline_regex": "Partner Portal by\\s+(\\d{1,2}\\s+[a-z]+\\s+\\d{4})"
+    },
+    "auto_vet": true
+  },
+  "collect_note": "Two sources are read: the GCF page of request-for-proposals windows (Enhancing Direct Access shown as active, the REDD+, MSME and Mobilising Funding at Scale pilots as ended) plus the 31 March 2027 Readiness proposal date on the Readiness page, because GCF has no feed, API or news JSON and a new RFP would appear on that page.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "GCF Readiness proposals through the Partner Portal",
+        "deadline": "2027-03-31",
+        "url": "https://www.greenclimate.fund/access-funding/readiness-preparatory-support"
+      },
+      {
+        "title": "Enhancing Direct Access (EDA)",
+        "deadline": null,
+        "url": "https://www.greenclimate.fund/access-funding/other-funding-options/rfp/enhancing-direct-access"
+      }
+    ]
+  },
+  "evidence": "Checked 2026-11-12: Readiness page 200 (16k chars text, deadline sentence); other-funding-options 200 (RFP blocks with active/ended status); /rss.xml 200 but empty channel; /feed, /wp-json, /jsonapi, /calls, /rfp 404; sitemap.xml lists only article, project, landing, document, event sections; endpoint_recon verdict html_ok with no opportunity endpoint; news listing /about/news-and-updates has no feed.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

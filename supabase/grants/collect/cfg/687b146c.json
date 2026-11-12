@@ -1,0 +1,54 @@
+{
+  "id": "687b146c-9b6a-4b65-bfbc-e94349ef5a83",
+  "name": "Colorado Department of Agriculture",
+  "program": "Agrivoltaics Research and Demonstration Grant",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://ag.colorado.gov/conservation/agrivoltaics-grants",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://ag.colorado.gov/category/press-release",
+      "item": "article.teaser",
+      "title": "h2 a",
+      "link": "h2 a",
+      "amount": false,
+      "detail": {
+        "max": 3,
+        "deadline_regex": "(?:by|until)\\s+(?:5\\s*p\\.?m\\.?\\s+on\\s+)?(?:[a-z]+day,\\s+)?([a-z]+\\s+\\d{1,2},\\s+\\d{4})"
+      }
+    },
+    "filter": {
+      "all": [
+        "agrivolt"
+      ],
+      "any": [
+        "re:grant|apply|applications|funding|proposals"
+      ],
+      "none": [
+        "continues to lead",
+        "awarded to innovative"
+      ]
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the first page of the Colorado Department of Agriculture press releases twice a day and keeps releases about agrivoltaics grants or funding, so the next round of the Agrivoltaics Research and Demonstration Grant shows up as a dated call. Nothing is open today; the 2026-27 window closed June 15, 2026.",
+  "expect": {
+    "min_items": 0,
+    "zero_reason": {
+      "quote": "Application window for Fiscal Year 2026-27 closed on June 15, 2026.",
+      "url": "https://ag.colorado.gov/conservation/agrivoltaics-grants"
+    },
+    "sample": []
+  },
+  "evidence": "Checked 2026-11-12 with the grants-recon user agent (a bare Mozilla/5.0 agent gets HTTP 403 from the site CDN). endpoint_recon.py --no-chrome: html_ok, 8885 chars, no opportunity endpoint, rejected_candidates empty. Channels: Grants.gov search2 keyword agrivoltaics: 0 hits (state program, not federal). Feeds: /rss.xml, /feed, /rss, /category/press-release/feed all 404; no link rel=alternate. Site JSON: /jsonapi 404, /jsonapi/node/article 404, /api/press 404, no __NEXT_DATA__, no ld+json. Portals: none, applications go by email. Sitemap.xml 200 (1598 urls) lists the agrivoltaics press releases and webinar events, no calls listing. /events has no static items. Chosen: press release listing https://ag.colorado.gov/category/press-release HTTP 200, 10 teasers per page, filter agrivolt plus grant words. Filter replayed on archived pages: ?page=13 gives 'Agrivoltaics Research and Demonstration Grant Now Open' deadline 2025-05-30, ?page=21 same title deadline 2024-07-21, ?page=26 'Grants Available for Projects Showcasing Agrivoltaics in Colorado' deadline 2023-10-27, ?page=10 'Colorado Continues to Lead' correctly excluded. Page 0 today: 0 items. Weakness: the FY2026-27 round has no press release in the listing (only webinar events), so a future round may appear only on the program page.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "894bf54c-8dca-4673-a356-14406185b0e3",
+  "name": "The 11th Hour Project (Schmidt Family Foundation)",
+  "program": "Food & Agriculture",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://11thhourproject.org/food-and-agriculture/",
+  "feed_url": "https://11thhourproject.org/feed/",
+  "adapter_config": {
+    "filter": {
+      "any": [
+        "request for proposals",
+        "re:\\bRFP\\b",
+        "call for proposals",
+        "call for applications",
+        "open call",
+        "applications open",
+        "now accepting",
+        "funding opportunity",
+        "prize",
+        "challenge"
+      ],
+      "none": [
+        "job",
+        "career",
+        "hiring"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20
+  },
+  "collect_note": "The foundation is invite-only and has no calls page, so this watches its WordPress news feed (the only publishing channel, 1 post since 2025) twice a day for any post titled like an RFP, open call, prize or challenge; the page text is still change-watched. Items stay hidden candidates (no auto_vet) because the feed is general news and carries no deadline.",
+  "zero_reason": "Foundation FAQ (https://11thhourproject.org/faq/): 'we generally do not respond to unsolicited proposals and requests'; Inbound Inquiries Policy at https://11thhourproject.org/about/ says it does not accept unsolicited proposals. The only feed item (https://11thhourproject.org/in-defense-of-dignity-and-democracy-for-all/, 2025-06-25) is an advocacy statement, not a call. No prior call exists to test the filter words against; they were tested against typical call titles instead.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Checked 2026-11-12: /feed/ 200 RSS 1 item (lastBuildDate 2025-09-19); /category/announcement/feed/ 200 same item; /comments/feed/ 0 items; /wp-json/wp/v2/types 200 only post, page, our_team, perspectives, elementor_library (perspectives returns []); /wp-json/wp/v2/posts?search=proposal and /wp-json/wp/v2/search?search=RFP return []; /news/ and /press/ 200 no calls; /?s=request+for+proposals no results; sitemap.xml 3 sitemaps, no calls section; /faq/ and /about/ state no unsolicited proposals; parent tsffoundation.org no calls, /grants/ 404; Grants.gov search2 unrelated (private foundation); endpoint_recon --no-chrome found only the blog feed; no Algolia/Airtable/Submittable/iCal found.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

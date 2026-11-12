@@ -1,0 +1,47 @@
+{
+  "id": "1135c5ca-a4d2-49ba-9772-188a3339a306",
+  "name": "Curt Bergfors Foundation (Food Planet Prize)",
+  "program": "Curt Bergfors Food Planet Prize",
+  "url": "https://foodplanetprize.org/foundation/prize/",
+  "mode": "calls",
+  "adapter": "rss",
+  "feed_url": "https://foodplanetprize.org/feed/",
+  "adapter_config": {
+    "filter": {
+      "any": [
+        "nominat",
+        "call for",
+        "calling for",
+        "open call",
+        "applications open",
+        "apply now"
+      ],
+      "none": [
+        "longlist",
+        "shortlist",
+        "wins",
+        "winner"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20
+  },
+  "collect_note": "Reads the Food Planet Prize news feed twice a day and keeps posts whose title announces a call for nominations; longlist, shortlist and winner posts are excluded.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "Our nominations process is open all year around",
+    "url": "https://foodplanetprize.org/nominate/",
+    "note": "No dated call is open; the latest feed posts (2027 Longlist, 4 Nov 2026) are evaluation-stage announcements, not calls."
+  },
+  "evidence": "GET https://foodplanetprize.org/feed/ HTTP 200: 10 items, newest 2026-11-04 'The 2027 Longlist Is Here!'; wp-json types (post, page, entry, person, press, prizewinner, report) hold no calls type; sitemaps have no calls/opportunity section; no Grants.gov or EU listing. Last known call-style post: 'Calling for More Nominations to Run for the Food Planet Prize 2025!' (2024-03-21), tested against this filter via wp-json posts.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0
+  }
+}

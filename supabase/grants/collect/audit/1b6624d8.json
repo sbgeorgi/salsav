@@ -1,0 +1,45 @@
+{
+  "id": "1b6624d8-131c-46d6-b46f-7d48c1598cd1",
+  "name": "U.S. Department of Energy, Solar Energy Technologies Office (now listed under the Integrated Energy Systems Office)",
+  "program": "Solar funding notices: past agrivoltaics calls FARMS and SolWEB2, and any new solar notice",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.energy.gov/eere/solar/funding-opportunities",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "DOE-GFO",
+    "oppStatuses": "forecasted|posted",
+    "rows": 50,
+    "also_page": true,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "solar",
+        "photovoltaic",
+        "agrivolt",
+        "re:\bPV\b"
+      ]
+    },
+    "auto_vet": false,
+    "max_items": 40
+  },
+  "collect_note": "Grants.gov is checked twice a day for DOE Golden Field Office notices (the office that issued FARMS and SolWEB2) with solar, photovoltaic or agrivoltaic in the title, including notices of intent, and they wait for review. Nothing is open today: DOE posts no upcoming solar notice, so the next solar call is caught the day it is posted. Prizes such as LASSO run outside Grants.gov and are only seen through the watched funding page.",
+  "expect": {
+    "min_items": 0,
+    "zero_reason": {
+      "quote": "There are no upcoming funding opportunities at this time.",
+      "url": "https://www.energy.gov/eere/solar/funding-opportunities"
+    },
+    "sample": []
+  },
+  "evidence": "POST https://api.grants.gov/v1/api/search2 HTTP 200 checked 2026-11-12: agencies DOE-GFO, forecasted|posted returns 3 notices (PROSPECT education NOI, ASPECT chemical scale-up, a Leveraging Domestic Infrastructure NOI), none solar; DOE-GFO solar all statuses returns 150 hits, and the archived SolWEB2 (DE-FOA-0003492, closed 05/02/2025), FARMS (DE-FOA-0002697) and SMASH Incubator (DE-FOA-0003460) titles are matched by the filter. Agency codes DOE-EERE and DOE return 0. Funding page HTTP 200, 7627 chars. exchange.energy.gov is an ASP.NET portal with no public listing endpoint, energy.gov /rss.xml is site history pages, no /feed or wp-json (Drupal, /jsonapi 404), sitemap.xml has no funding section, americanmadechallenges.org has no feed or JSON. Filter proven by replaying with oppStatuses archived: matched SolWEB2 (grants.gov 357901, closed 2025-05-02), FARMS (340464), SolWEB (338480), SMASH, PVRD, SEEDS 4.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "edge_case": "none",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

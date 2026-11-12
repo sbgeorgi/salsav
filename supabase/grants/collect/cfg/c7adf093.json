@@ -1,0 +1,30 @@
+{
+  "id": "c7adf093-ce2d-4e2c-a2bc-297dac569e8e",
+  "name": "Global Ecosystem-based Adaptation (EbA) Fund",
+  "program": "Global EbA Fund, medium-size (up to USD 500,000) and small-size (up to USD 250,000) grants",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://globalebafund.org/medium-size-grants/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "Global EbA Fund Medium-Size Grants Call for Proposals",
+      "deadline_regex": "Submission Window: \\d{1,2} [A-Za-z]+ to (\\d{1,2} [A-Za-z]+,? \\d{4})"
+    }
+  },
+  "collect_note": "Reads the closing date of the Global EbA Fund medium-size grants submission window from its own call page twice a day; today that is 16 November 2026. The page is reused for each new call, so a new window shows up as a new dated call; once the window passes nothing is shown until new dates are posted.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Global EbA Fund Medium-Size Grants Call for Proposals",
+        "deadline": "2026-11-16",
+        "url": "https://globalebafund.org/medium-size-grants/"
+      }
+    ]
+  },
+  "evidence": "Checked 2026-11-12. https://globalebafund.org/medium-size-grants/ HTTP 200 static WordPress HTML, text 'Submission Window: 12 October to 16 November 2026'. /feed/ HTTP 200 RSS but has no items; /wp-json/wp/v2/posts returns [] (only posts, pages and media types, no calls type); /news/ lists events and updates only, with no per-call listing; the small-size page (https://globalebafund.org/small-size-grants/, window 28 Sep to 26 Oct 2026, closed) has the same layout but is not tracked. No Grants.gov or EU API applies (IKI funds via IUCN and UNEP). Calls are downloaded and submitted on an online platform, no public portal list.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

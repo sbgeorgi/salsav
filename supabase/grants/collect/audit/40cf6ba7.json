@@ -1,0 +1,39 @@
+{
+  "id": "40cf6ba7-069c-4d12-b4b3-a2853f0e2526",
+  "name": "XPRIZE Foundation",
+  "program": "XPRIZE Adaptive Plants (Food + Water + Waste)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.xprize.org/prizes/adaptive-plants",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.xprize.org/competitions?status=Active",
+      "item": "li.card-wrapper",
+      "title": ".competition-title",
+      "link": "a.competition-card",
+      "closed": "(?:Awarded|Impact) XPRIZE",
+      "detail": {
+        "max": 5,
+        "deadline_regex": "(?:due|deadline[^.]{0,40}\\bis|will close)\\s+([A-Z][a-z]+\\s+\\d{1,2},\\s+\\d{4})",
+        "closed": "no open spots"
+      }
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "XPRIZE's list of non-fundraising grand challenges (competitions?status=Active) is read twice a day; a prize that leaves Currently Fundraising and launches appears there as a new card (Adaptive Plants is still under Future, so it is not listed yet), and registration due dates are read from up to three prize pages per run. Awarded and Impact prizes are marked closed; undated active prizes may be past registration.",
+  "expect": {
+    "min_items": 7,
+    "sample": [
+      {
+        "title": "XPRIZE Accelerate Learning",
+        "deadline": "2027-02-15",
+        "url": "https://www.xprize.org/competitions/accelerate-learning"
+      }
+    ]
+  },
+  "evidence": "Checked 2026-11-12, plain HTTP with desktop UA: https://www.xprize.org/competitions?status=Active HTTP 200 server-rendered, 7 li.card-wrapper cards (accelerate-learning, qc-apps, water, healthspan, wildfire, carbonremoval, rainforest) each with a status word (Active/Awarded/Impact); ?status=Future lists the fundraising prizes incl. adaptive-plants (so it is not yet launched). Accelerate Learning page: 'Registration opens in November 2026. Moonshot Track registration and Qualifying Submissions are due February 15, 2027' matches deadline 2027-02-15. Healthspan page: 'no open spots for additional' teams. Other channels: /rss.xml /news/rss /articles/rss.xml 404, /feed is HTML, /wp-json 404, /jsonapi 404, /api/competitions 404, robots disallows /form/ and /graphql only, sitemap.xml 2011 URLs (no dedicated prizes feed), pop.xprize.org/prizes JS app, Grants.gov not applicable (private funder).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

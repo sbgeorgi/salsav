@@ -1,0 +1,19 @@
+{
+  "id": "96a6477c-726b-48c7-8807-4496155d2fb1",
+  "name": "International Fund for Agricultural Development (IFAD)",
+  "program": "IFAD calls for proposals (regular grants; ASAP+ climate finance)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.ifad.org/en/call-for-proposals",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "bot_protected: ifad.org sits behind a Cloudflare managed challenge that answers HTTP 403 to Node, Python and the harness client on every page (call listing, call pages, sitemap.xml, news, feeds), so only a page watch of the official Call for Proposals listing is configured; its server-rendered listing (12 calls per page, 51 in all, each with a call page stating its deadline) would support a list config if the edge function's client passes the challenge.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12: curl with a Chrome user agent got HTTP 200 for https://www.ifad.org/en/call-for-proposals listing (51 calls, newest 3 Nov 2026, call pages carry 'Deadline for submissions' or 'submission deadline of' dates); Node fetch with the engine's user agent, urllib and endpoint_recon got 403 'Checking your browser' (cf-mitigated: challenge) on /en/call-for-proposals, call pages, /sitemap.xml, /en/rss, /documents/*; /feed, /rss and Liferay headless endpoints return 404 or 403; only robots.txt (Allow: / for *) is open; ifad.org apex 403 and webapps.ifad.org Access denied.",
+  "edge_risk": "bot_protection",
+  "confidence": "low",
+  "edge_case": "bot_protected"
+}

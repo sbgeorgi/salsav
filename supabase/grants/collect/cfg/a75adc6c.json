@@ -1,25 +1,40 @@
 {
   "id": "a75adc6c-51d2-4d90-9c68-c1b37c2a0852",
   "name": "Fonds francais pour l'environnement mondial (FFEM)",
-  "program": "FFEM project financing (paused for new proposals until end 2026)",
-  "mode": "page",
-  "adapter": "html",
+  "program": "FFEM calls for project proposals (thematic calls, PPI small initiatives, FISP Climat); new proposals paused until end 2026",
+  "mode": "calls",
+  "adapter": "rss",
   "url": "https://www.ffem.fr/en/calls-for-projects/list",
-  "feed_url": null,
-  "adapter_config": {},
-  "collect_note": "FFEM is not accepting new proposals until the end of 2026 and its calls list is empty. No calls are collected. The calls list page is watched, and a new call appearing there is flagged for review.",
+  "feed_url": "https://www.ffem.fr/rss.xml",
+  "adapter_config": {
+    "filter": {
+      "any": [
+        "re:appels? (a|à) (projets?|propositions?|candidatures?|manifestations?)",
+        "re:calls? for (project|proposal|application|tender|expression)",
+        "re:request for proposal",
+        "re:(lancement|launch).{0,40}(appel|call)"
+      ],
+      "none": [
+        "re:r(e|é)sum(e|é) d.[ée]valuation",
+        "re:evaluation summary"
+      ],
+      "fields": "title"
+    },
+    "auto_vet": true,
+    "max_items": 20
+  },
+  "collect_note": "FFEM's own calls list is empty (the view has no nodes in any status), but FFEM announces each call (thematic calls, PPI small initiatives, FISP Climat) as a news item, so this reads FFEM's news RSS twice a day and keeps titles that announce a call; none is announced today (new proposals paused until end 2026). The feed gives no deadline, so check the linked page for dates.",
   "expect": {
     "min_items": 0,
     "sample": []
   },
-  "evidence": "Plain HTTP GET (desktop UA): ffem.fr/en/calls-for-projects/list 200, 4.6 KB text, 'No calls for projects found' (status filters Ongoing / Opening soon / Closed call); ffem.fr/en/frequently-asked-questions 200, pause statement present; ffem.fr/en/call-projects 200 (editorial, only the One Health call open until 30 April 2024); ffem.fr/rss.xml 200 (news and evaluation items, no calls); www.ffem.fr/feed and /wp-json/wp/v2/types 404 (site is Drupal). Checked 2026-11-12.",
+  "zero_reason": {
+    "quote": "No calls for projects found",
+    "url": "https://www.ffem.fr/en/calls-for-projects/list",
+    "date": "2026-11-12",
+    "note": "The same empty result shows with the Ongoing, Opening soon and Closed filters on /en/calls-for-projects/list and /fr/appels-a-projets/liste; the news feed (10 items, 2026-10-06 to 2026-11-10) has no call announcement. Filter checked against past FFEM call-announcement titles (slugs in sitemap.xml): 'Approche One Health : lancement d'un nouvel appel a projets', 'Programme de petites initiatives : un nouvel appel a projets', 'Nouvel appel a projets : production de froid et climatisation durables', 'FFEM launches new call for project proposals ... chemicals'."
+  },
+  "evidence": "Plain HTTP GET (desktop UA) checked 2026-11-12: ffem.fr/en/calls-for-projects/list and /fr/appels-a-projets/liste 200 'No calls for projects found' (also with status[ongoing|soon|closed]); ffem.fr/rss.xml and /en/rss.xml 200 Drupal news/resources feed, 10 items, FR titles; sitemap.xml 200 (1821 URLs) shows calls announced as /actualites/ news items (One Health, PPI5, FISP Climat 4th and 5th, chemicals, refrigeration); /jsonapi/node/article 404, /wp-json 404 (Drupal); /en/call-projects editorial, only the One Health call (closed 30 April 2024); endpoint_recon found no embedded JSON, no XHR, no calls sitemap hits.",
   "edge_risk": "none",
-  "confidence": "high",
-  "page_reason": "FFEM has no open or upcoming call: its FAQ says it cannot receive new project proposals until the end of 2026, and its calls list view shows 'No calls for projects found' (the list renders server-side, so no card markup exists yet to build a list selector on). Calls are announced ad hoc after the 2027-2030 programming and the earlier ones (One Health, closed 30 April 2024) were one-off thematic calls.",
-  "harness": {
-    "ok": true,
-    "count": 0,
-    "open": 0,
-    "checked": "2026-11-12"
-  }
+  "confidence": "medium"
 }

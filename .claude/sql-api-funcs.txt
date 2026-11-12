@@ -1,0 +1,14 @@
+# Vetted grants API (SECURITY DEFINER, validated, schema grants only) that subagents may call in one SELECT.
+# Read by ~/.claude/hooks/boundary-guard.py. No raw INSERT/UPDATE/DELETE is ever allowed.
+grants.discovery_brief
+grants.check_known
+grants.register_source
+grants.reverify_source
+grants.upsert_opportunity
+grants.set_target
+grants.add_targets
+grants.set_collection
+grants.collection_state
+grants.metrics_now
+grants.log_discovery_run
+grants.kick_refresh

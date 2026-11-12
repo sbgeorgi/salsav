@@ -1,0 +1,48 @@
+{
+  "id": "f0b48ea9-67b4-4abc-b279-ab8993cf9ca1",
+  "name": "Global Environment Facility (GEF)",
+  "program": "GEF-managed funds and Agency-delivered projects (LDCF, SCCF, GBFF; Food Security focal area)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.thegef.org/projects-operations/how-projects-work",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "url": "https://www.thegef.org/newsroom/news",
+      "item": "div.views-row",
+      "title": "h3 a",
+      "link": "h3 a",
+      "date": "time"
+    },
+    "filter": {
+      "any": [
+        "re:call for (proposals|concepts|expressions|applications|submissions)",
+        "re:request for (proposals|applications|expressions)",
+        "re:(challenge|window) (is )?(open|launch)",
+        "re:applications? (are )?(now )?open",
+        "re:launch(es|ed)? .{0,40}(challenge|call)",
+        "re:issues? .{0,20}call"
+      ],
+      "none": [
+        "re:^winners"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20
+  },
+  "expect": {
+    "min_items": 0,
+    "zero_reason": {
+      "quote": "Applications are due September 15, 2026",
+      "url": "https://www.thegef.org/what-we-do/topics/gef-small-grants-programme",
+      "note": "The GEF's last open call, the SGP CSO Challenge Program (grants up to $300,000, CSOs), closed 15 September 2026 with no next round announced; no call is open on the GEF news page today."
+    },
+    "filter_test": "Run against ?page=7 of the same listing, the filter returns 'The GEF issues call for proposals for blended finance global program' (15 Feb 2024); page 0 returns none.",
+    "sample": []
+  },
+  "collect_note": "Reads the first page of the GEF news listing twice a day and keeps titles that announce a call (call for proposals or concepts, request for proposals, challenge or window opening); nothing is open today, so it waits for the next one. Calls with no date show open with no deadline and are reviewed by hand.",
+  "evidence": "Checked 2026-11-12. GEF news listing https://www.thegef.org/newsroom/news HTTP 200 (10 per page, titles with dates; 0 call titles on page 0; blended finance call found on page 7). /rss.xml HTTP 200 but only staff profiles; /jsonapi, /api, /feed 404; sitemap.xml has only 8 sitemap pages of mixed nodes; Drupal search is relevance ranked, not by date; /documents is a landing page not a list; endpoint_recon verdict html_ok, no opportunity endpoint. csochallenge.org is one page with PDFs and no listing, no feed, no sitemap. Grants.gov not applicable (multilateral, not federal). UNDP country SGP calls are on country pages, not one listing.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

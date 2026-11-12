@@ -1,0 +1,28 @@
+{
+  "id": "d91ff6b5-9c51-4b6e-aeac-e794c4f8317a",
+  "name": "LEAP-SE (LEAP ENERGY, AU-EU sustainable energy partnership)",
+  "program": "LEAP-SE joint calls",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://leap-energy.eu/call-funding",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "LEAP-SE joint call for AU-EU sustainable energy research projects",
+      "deadline_regex": "([A-Z][a-z]+ \\d{1,2}(?:st|nd|rd|th),? \\d{4})[^\\n]*\\s+Deadline for full-proposal"
+    }
+  },
+  "collect_note": "Reads the full-proposal deadline of the current LEAP-SE joint call from the funder's call page (the site moved from leap-re.eu to leap-energy.eu; the call-funding page always shows the latest call). The 2026 call closed 24 Jun 2026, so nothing is shown until the next call is published at the same address.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "June 24th 2026 at 16:00 CET Deadline for full-proposal submission (mandatory)",
+    "url": "https://leap-energy.eu/call-funding"
+  },
+  "evidence": "Channels tried 2026-11-12: https://www.leap-re.eu/ 301 to https://leap-energy.eu/ (HTTP 200, static server-rendered HTML); /wp-json/wp/v2/types gives a 404 page (not WordPress); no RSS or feed link in the page head; /news lists three forum and portfolio posts, no call announcements; https://leap-energy.app/opportunities is a consortium-search app, not a call list; archived calls sit at /call-funding-2025, /call-funding-2022-2023, /call-funding-2021-2022 (2025 call: pre-proposal 27 Mar 2025, full proposal 11 Sep 2025). The current page /call-funding carries the dated call calendar, so the cycle mode reads it.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

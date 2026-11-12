@@ -1,0 +1,30 @@
+{
+  "id": "17e81cff-aa7e-418c-80ef-cd6559d989e6",
+  "name": "Quadrature Charitable Foundation (QCF)",
+  "program": "Climate risk (partner database)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.qc.foundation/news-and-research/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.qc.foundation/news-and-research/",
+      "match": "RFP|requests? for proposals|call for (proposals|applications|partners)|applications (are )?(now )?open|now accepting|open call|expressions? of interest|funding opportunit",
+      "date_label": true,
+      "amount": false
+    },
+    "max_items": 10
+  },
+  "collect_note": "QCF grantmaking is invitation-only with no open calls, so this watches the news and research page (its server-rendered story blocks; the full list is client-rendered) and keeps only posts that announce an RFP, open call or funding opportunity, so a future open route (the FAQ says alternative models are being explored) is caught. Zero items is expected today.",
+  "zero_reason": {
+    "quote": "We do not currently accept unsolicited applications, but we are exploring alternative models.",
+    "url": "https://www.qc.foundation/faqs/"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12: GET https://www.qc.foundation/news-and-research/ HTTP 200; the story, perspective and research blocks are server-rendered (a with news-teaser, h5 title, news-date) and the newslist div is empty (JS). Channels tried: /feed/ 404, /news-and-research/feed 404, sitemap.xml lists site pages only, no WordPress or JSON API seen; partner database page (https://www.qc.foundation/our-grants/our-partner-database/) lists awarded grants only, not calls; FAQ states grantmaking is invitation-only.",
+  "edge_risk": "none",
+  "confidence": "low"
+}

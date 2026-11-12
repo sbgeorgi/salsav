@@ -1,0 +1,25 @@
+{
+  "id": "dbd50a7e-180d-46ad-9928-0301302574ef",
+  "name": "Collaborative Crop Research Network: CCARDESA (Southern Africa)",
+  "program": "Regional research grants and calls (RMRN agroecology consortium call 2023-24; no call open now)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.ccardesa.org/procurement-opportunities",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.ccardesa.org/procurement-opportunities",
+      "item": "div.views-row",
+      "match": "call for (expressions? of interest|proposals|applications|concept notes)|research grants?|grants? (call|facility|scheme)|competitive (grant|call)",
+      "skip": "\\b(consultan|audit|vacanc|recruit|facilitation|firm)",
+      "date_label": true,
+      "amount": false
+    },
+    "max_items": 10
+  },
+  "collect_note": "Reads the CCARDESA Procurement Opportunities listing, where the 2023-24 agroecology RMRN call for expressions of interest was posted (as a procurement page), and keeps rows that announce a call for expressions of interest, proposals or applications or a research grant, skipping consultancies, audits and recruitment. No grant call is listed now, so zero items is expected; a new call appears as a hidden candidate to check.",
+  "expect": { "min_items": 0, "sample": [], "zero_reason": "CCARDESA lists no open grant call: its listing holds only consultancy and audit tenders, and the last grant call (RMRN agroecology consortium) closed 1 Feb 2024." },
+  "evidence": "Plain HTTP GET 2026-11-12: /procurement-opportunities HTTP 200 (7 listed items, all consultancies or audits); /tenders says no open procurement opportunities; /rss.xml is an empty channel; /calls and /call-for-proposals 404; the old call page /procurement-0 holds CEI No. 01-2023 (Dec 4 2023 to Feb 1 2024); knowledgehub.ccardesa.org funding-institutions is a country selector with no list. The 2026 RMRN research grant call (EUR 5,000 awards, deadline 30 Mar 2026) is run by FARA and RUFORUM for consortium members, not by CCARDESA.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

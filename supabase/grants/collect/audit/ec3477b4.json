@@ -1,0 +1,39 @@
+{
+  "id": "ec3477b4-a014-4d94-b2c2-407da5e2562b",
+  "name": "Google.org",
+  "program": "Google.org Impact Challenges (AI for Science and later challenges)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.google.org/impact-challenges/ai-science/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.google.org/impact-challenges/",
+      "item": "ul.glue-cards li[data-cy=\"card-list\"]",
+      "title": "p[data-cy=\"card-title\"]",
+      "link": "a[href]",
+      "amount": false,
+      "detail": {
+        "max": 5,
+        "closed": "announce the selected projects"
+      }
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the Google.org Impact Challenge hub, which has one card per challenge (the 2026 AI for Science and AI for Government Innovation challenges today), and hops to each challenge page: a page that says 'We are delighted to announce the selected projects' is closed, so a newly launched challenge appears as an open call with its deadline read from its page. Nothing is open today; the hub is the only official listing of Google.org's open calls.",
+  "zero_reason": "Hub https://www.google.org/impact-challenges/ lists only AI for Science and AI for Government Innovation; both challenge pages say 'We are delighted to announce the selected projects' and carry a 'Recipients announced' banner (checked 2026-11-12), so no call is open and every listed item reads closed.",
+  "expect": {
+    "min_items": 0,
+    "sample": [
+      {
+        "title": "Google.org Impact Challenge: AI for Science",
+        "deadline": null,
+        "url": "https://www.google.org/impact-challenges/ai-science/"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP GET https://www.google.org/impact-challenges/ HTTP 200 text/html 94 KB, 2 cards in ul.glue-cards; challenge pages HTTP 200 with 'Recipients announced'. Probed and rejected: /index.rss and /impact-challenges/index.rss (valid RSS, 0 items), /feed /rss.xml /wp-json (404), sitemap.xml (only the two challenge pages), https://blog.google/outreach-initiatives/google-org/rss/ (HTTP 200, 20 news items, funding announcements and recipient lists, no call listing, none a call title), Grants.gov (no Google.org opportunities), no Algolia/Next/ld+json call data. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

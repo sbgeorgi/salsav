@@ -1,0 +1,19 @@
+{
+  "id": "278cceed-3e84-4e46-9d12-5ca212b1e739",
+  "name": "EPRI (Electric Power Research Institute)",
+  "program": "University Global Research Award (Supporting a Clean Energy Future)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.epri.com/university-rfp",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch only, blocker js_only: epri.com is a React single-page app, so every route returns the same 9-character shell over plain HTTP (the registered call page now renders Page Not Found in a browser). No call rows can be made. The shell is watched twice a day; a change flags the site for review, a weak signal that a new university call page may exist. The press-release and university pages are not in sitemap.xml and the content API (restservice.epri.com) answers 401 without a token.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12: curl https://www.epri.com/university-rfp HTTP 200, 10,488 B HTML shell, 9 chars of text; same shell for /research/universities, /about/media-resources/press-releases and the 2024 press-release URL. fetch_text.py and endpoint_recon.py (no Chrome) report THIN/none. Browser render of /university-rfp: Page Not Found. sitemap.xml (HTTP 200, 635 URLs) lists only research programs, products and index pages, no university, award or press entries. Site JS bundle: REST base restservice.epri.com, page route /api/urlaccess/ returns 401 UnAuthorized. No RSS or feed found. Third-party 2024 call summaries (not official) gave a typical award of USD 100,000 and a maximum of USD 250,000.",
+  "edge_risk": "none",
+  "confidence": "low",
+  "page_reason": "js_only: the only official pages are a JavaScript shell with no readable text over plain HTTP, and no feed, sitemap entry or open endpoint carries the university award call; revisit when a headless browser is available or EPRI publishes a static call page."
+}

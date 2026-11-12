@@ -1,24 +1,39 @@
 {
   "id": "ec3477b4-a014-4d94-b2c2-407da5e2562b",
   "name": "Google.org",
-  "program": "Google.org Impact Challenge: AI for Science",
-  "mode": "page",
+  "program": "Google.org Impact Challenges (AI for Science and later challenges)",
+  "mode": "calls",
   "adapter": "html",
   "url": "https://www.google.org/impact-challenges/ai-science/",
   "feed_url": null,
-  "adapter_config": {},
-  "collect_note": "No call is collected: this page lists the announced recipients of the 2026 $36M open call (its deadline was spring 2026), and no later cycle or deadline is published on any official page. Recipients are awards, not calls, so they are not rows. The program page is watched twice a day; a new cycle, a deadline or an apply link appearing there is flagged for review. Google.org's challenge hub (https://www.google.org/impact-challenges/) is not watched by this config because one config has one url.",
+  "adapter_config": {
+    "list": {
+      "url": "https://www.google.org/impact-challenges/",
+      "item": "ul.glue-cards li[data-cy=\"card-list\"]",
+      "title": "p[data-cy=\"card-title\"]",
+      "link": "a[href]",
+      "amount": false,
+      "detail": {
+        "max": 5,
+        "closed": "announce the selected projects"
+      }
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the Google.org Impact Challenge hub, which has one card per challenge (the 2026 AI for Science and AI for Government Innovation challenges today), and hops to each challenge page: a page that says 'We are delighted to announce the selected projects' is closed, so a newly launched challenge appears as an open call with its deadline read from its page. Nothing is open today; the hub is the only official listing of Google.org's open calls.",
+  "zero_reason": "Hub https://www.google.org/impact-challenges/ lists only AI for Science and AI for Government Innovation; both challenge pages say 'We are delighted to announce the selected projects' and carry a 'Recipients announced' banner (checked 2026-11-12), so no call is open and every listed item reads closed.",
   "expect": {
     "min_items": 0,
-    "sample": []
+    "sample": [
+      {
+        "title": "Google.org Impact Challenge: AI for Science",
+        "deadline": null,
+        "url": "https://www.google.org/impact-challenges/ai-science/"
+      }
+    ]
   },
-  "evidence": "Checked 2026-11-12. Plain HTTP GET https://www.google.org/impact-challenges/ai-science/ HTTP 200, 194 KB, static HTML (about 7.9K chars visible text, no JavaScript needed); page header 'Recipients announced'. RSS https://www.google.org/impact-challenges/ai-science/index.rss HTTP 200 with 0 items (channel only). Sitemap https://www.google.org/sitemap.xml HTTP 200 lists only ai-science and ai-government-innovation under impact-challenges. Hub https://www.google.org/impact-challenges/ HTTP 200 lists 2 challenges, no deadlines, both with recipients announced. No labeled future deadline on either page; no apply, faq or feed paths (404). JSON probes (wp-json, api/grants, index.json) 404. Grants.gov search2 keyword 'Google' returned NASA ROSES hits only (no Google.org opportunity). Web search (not a source) shows the 2026 cycle closed 2026-04-17, extended to 2026-05-01.",
+  "evidence": "Plain HTTP GET https://www.google.org/impact-challenges/ HTTP 200 text/html 94 KB, 2 cards in ul.glue-cards; challenge pages HTTP 200 with 'Recipients announced'. Probed and rejected: /index.rss and /impact-challenges/index.rss (valid RSS, 0 items), /feed /rss.xml /wp-json (404), sitemap.xml (only the two challenge pages), https://blog.google/outreach-initiatives/google-org/rss/ (HTTP 200, 20 news items, funding announcements and recipient lists, no call listing, none a call title), Grants.gov (no Google.org opportunities), no Algolia/Next/ld+json call data. Checked 2026-11-12.",
   "edge_risk": "none",
-  "confidence": "medium",
-  "harness": {
-    "ok": true,
-    "count": 0,
-    "open": 0,
-    "checked": "2026-11-12"
-  }
+  "confidence": "medium"
 }

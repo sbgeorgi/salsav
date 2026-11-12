@@ -251,12 +251,12 @@ const FOREIGN_MONTHS: Record<string, number> = {};
   "julio jul juillet juil", "agosto ago aout", "septiembre setiembre sep sept set septembre", "octubre oct octobre",
   "noviembre nov novembre", "diciembre dic decembre dec",
 ].forEach((names, i) => names.split(" ").forEach((n) => (FOREIGN_MONTHS[n] = i + 1)));
-const FOREIGN_DATE = /\b(\d{1,2})\s+(de\s+)?([a-z\u00C0-\u017F]{3,10})(\.)?,?\s+(?:de\s+)?(\d{4})\b/gi;
+const FOREIGN_DATE = /\b(\d{1,2})\s+(de\s+)?([a-zÀ-ſ]{3,10})(\.)?,?\s+(?:de\s+)?(\d{4})\b/gi;
 // "set" and "ago" are also English words ("phase 2 set 2027"): months only with a period after or "de" before
 const NEEDS_MARK = new Set(["set", "ago"]);
 /** 1-12 for a Spanish or French month word, else 0. */
 function foreignMonth(word: string): number {
-  return FOREIGN_MONTHS[word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()] ?? 0;
+  return FOREIGN_MONTHS[word.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase()] ?? 0;
 }
 
 /** First recognizable date in a string (ISO, US m/d/y, 'March 15, 2027', ...) as YYYY-MM-DD. */

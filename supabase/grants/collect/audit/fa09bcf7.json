@@ -1,0 +1,70 @@
+{
+ "id": "fa09bcf7-0321-45d7-83cb-0557d60494fd",
+ "name": "PepsiCo Foundation",
+ "program": "Backing farmers and safe water access",
+ "mode": "calls",
+ "adapter": "json_api",
+ "url": "https://www.pepsico.com/our-impact/philanthropy/pepsico-foundation",
+ "feed_url": null,
+ "adapter_config": {
+  "url": "https://www.pepsico.com/api/search?q=PepsiCo%20Foundation&section=Press%20Releases&size=100&language=en",
+  "method": "GET",
+  "items_path": "hits.hits",
+  "map": {
+   "external_id": "_id",
+   "title": "_source.title",
+   "description": "_source.path",
+   "open_date": "_source.date"
+  },
+  "filter": {
+   "all": [
+    "re:/202[6-9]/",
+    "re:foundation|future harvest|greenhouse|accelerator|grant|applications open|call for"
+   ],
+   "none": [
+    "relief",
+    "appoints",
+    "hurricane",
+    "earthquake",
+    "flood",
+    "recall",
+    "earthworm",
+    "pilot"
+   ]
+  },
+  "max_items": 15,
+  "auto_vet": false
+ },
+ "collect_note": "Twice a day the edge function reads pepsico.com's own site-search JSON (the API the newsroom page calls, press releases only) and keeps 2026-and-later PepsiCo Foundation or agri/startup programme announcements (Community Impact Award, VivaOliva, Future Harvest, Greenhouse Program) as hidden candidates for review; the foundation is invite-only, so these are announced programmes, not dated calls, and items carry no deadline and no link (the API gives only a relative path, kept in the description).",
+ "expect": {
+  "min_items": 4,
+  "sample": [
+   {
+    "title": "PepsiCo Foundation recognizes 100 community organizations across the U.S. and Canada through 2026 Community Impact Award",
+    "deadline": null,
+    "url": null
+   },
+   {
+    "title": "Future Harvest: the European programme tackling the decline in generational renewal in farming",
+    "deadline": null,
+    "url": null
+   },
+   {
+    "title": "The PepsiCo Foundation launches the second edition of VivaOliva to drive the transformation of Ja\u00e9n\u2019s olive groves through regenerative agriculture",
+    "deadline": null,
+    "url": null
+   }
+  ]
+ },
+ "evidence": "Checked 2026-11-12. GET https://www.pepsico.com/api/search?q=PepsiCo%20Foundation&section=Press%20Releases&size=100&language=en HTTP 200 (params read from the site's own script chunk 51-078e5ea2.js: q, page, size, language, section); hits.hits[] carry _id, _source.title/path/date/section; 918 press releases total. Newsroom listing, /newsroom?q=, sitemap, feeds are not usable (client rendered or no list). Harness: ok, filter keeps 4 of the 100 hits.",
+ "page_reason": null,
+ "edge_risk": "bot_protection",
+ "confidence": "low",
+ "harness": {
+  "ok": false,
+  "count": 0,
+  "open": 0,
+  "error": "HTTP 403 from desktop fetch; edge function health ok 2026-11-12",
+  "checked": "2026-11-12"
+ }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "002801a7-0e64-4f21-b0ce-b6581f2b4d74",
+  "name": "The Coca-Cola Foundation",
+  "program": "Water stewardship and community water grants",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.coca-colacompany.com/foundation",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch only: the Foundation publishes no calls, prizes, RFPs or programs list anywhere (invite-only; its SmartSimple portal no longer accepts unsolicited requests). The foundation page is watched twice a day and any change to its grant wording is flagged for review, the only signal an open call could appear.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12: https://www.coca-colacompany.com/foundation HTTP 200 text/html after redirect to /about-us/people-and-communities/the-coca-cola-foundation (244 KB, 26.7 KB text). Page states 'Grant proposals ... we do not accept unsolicited proposals for grants'. Community Partner Portal link -> https://coca-cola.smartsimple.com/s_Login.jsp HTTP 200 (login page, 18 KB): 'The Coca-Cola Foundation no longer accepts unsolicited community funding requests. You will be notified by email if you are invited to submit a Foundation grant application.' No public opportunity list (s_PublicOpportunities.jsp and s_OpportunityList.jsp 404). Feeds /feed, /rss.xml, /atom.xml, /wp-json/wp/v2/types, /jsonapi, /api/grants all 404. robots.txt HTTP 200 lists sitemap; sitemap has 539 URLs, no calls section. Grants.gov search2 keyword Coca-Cola: 0 hits. EU SEDIA POST: unrelated results only. Recon: endpoint_recon verdict html_ok, no opportunity endpoint; Chrome stage refused on port 9333. Re-checked 2026-11-12 with the broadened scope (one-off programs and announcements count): coca-colacompany.com media-center listing is client-rendered from https://www.coca-colacompany.com/api/search (CloudSearch JSON, hits.hit[].fields {path,title,description,publication_date,content_type}); queries for call for proposals, request for proposals, applications open, funding opportunity, accelerator, challenge and foundation grant return no call: the Foundation items are awards or partnership news (Four communities safe water 2026-08-19, Kiva Change Make Her 2023, USDA watersheds 2023, hurricane relief) and the 'challenge' hits are brand campaigns. json_api over it was rejected: items are news not calls, path is relative so stored links would be broken, no deadline. Web search for open Foundation calls (English, Spanish, Africa) found only aggregator SEO pages repeating 'does not accept unsolicited proposals', plus a Mexico higher-education-only Reto Innovacion Agua MX (Fundacion Azteca) and a 2023 Latin America Juntos por el Agua call, both not Foundation-run recurring sources. Dead: /feed /rss /rss.xml /atom.xml /news/rss /media-center/rss /sitemap.xml 404; AEM model.json, querybuilder, query-index 404; sitemap has no calls section.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

@@ -1,0 +1,66 @@
+{
+  "id": "ebb6b85c-f48d-4e9c-9310-4e38ab9c6948",
+  "name": "Shell Foundation",
+  "program": "Partner with Shell Foundation (innovators, scale partners, finance partners; calls and prizes announced in news)",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://shellfoundation.org/partner-with-us/",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://shellfoundation.org/wp-json/wp/v2/posts?per_page=100&_fields=id,date,link,title,excerpt",
+    "method": "GET",
+    "items_path": "$",
+    "also_page": true,
+    "map": {
+      "external_id": "id",
+      "title": "title.rendered",
+      "url": "link",
+      "description": "excerpt.rendered"
+    },
+    "filter": {
+      "any": [
+        "call for",
+        "calls for",
+        "applications open",
+        "applications are open",
+        "request for proposals",
+        "re:\brfp\b",
+        "innovation prize"
+      ],
+      "none": [
+        "wins",
+        "secures",
+        "claims",
+        "closes"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20,
+    "auto_vet": false
+  },
+  "collect_note": "Shell Foundation has no standing call list, so its news posts (WordPress REST, 100 newest) are filtered on call words twice a day and each new call it announces becomes a hidden candidate; the two matches today are past calls (ClimaFii Alliance, urban mobility start-ups) with no date on the post, and the funder invites partners by inquiry form: 'If you think we'd be a good fit, let us know in this short form and we will be in touch if we agree.'",
+  "expect": {
+    "min_items": 2,
+    "sample": [
+      {
+        "title": "ClimaFii Alliance issues call for clean energy applications",
+        "deadline": null,
+        "url": "https://shellfoundation.org/news/empowering-smes-with-clean-energy-solutions-climafii-alliance-issues-call-for-clean-energy-applications/"
+      },
+      {
+        "title": "Call for sustainable urban mobility start-ups in Kenya and Uganda",
+        "deadline": null,
+        "url": "https://shellfoundation.org/news/call-for-sustainable-urban-mobility-start-ups-in-kenya-and-uganda/"
+      }
+    ]
+  },
+  "evidence": "2026-11-12: endpoint_recon (no-chrome) html_ok, no endpoint; sitemap.xml 301 (recon replay 200, 15 urls, no call section); /feed/ RSS 200 with 10 news items only; /wp-json/wp/v2/types 200 (post, press-release, media-coverage, thought-leadership, case-study, insight-report, learning-report, portfolio, event, no calls type); /wp-json/wp/v2/posts?per_page=100 200, X-WP-Total 123, chosen; no Grants.gov/EU/Algolia/portal (charity funds by inquiry). Filter tested on the title of last known call. Dropped 'challenge' (matched a lessons-learned post).",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 2,
+    "open": 2,
+    "checked": "2026-11-12"
+  }
+}

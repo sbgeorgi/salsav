@@ -1,0 +1,52 @@
+{
+  "id": "eb906c5c-d234-4e3a-8629-e700592f85ee",
+  "name": "New York State Energy Research and Development Authority (NYSERDA)",
+  "program": "Sun and Soil Program (PON 6206)",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://www.nyserda.ny.gov/Funding-Opportunities/Current-Funding-Opportunities",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://www.nyserda.ny.gov/rapi/fundingopportunitiesapi/getfundingopportunities?dataSourceId=a8166835-baba-4c2b-843d-c55e4583f19a",
+    "method": "GET",
+    "items_path": "FundingOpportunities.0.FundingOpportunities",
+    "also_page": true,
+    "map": {
+      "external_id": "SolicitationID",
+      "title": "SolicitationTitle",
+      "url": "DetailPageLink",
+      "description": "ShortDescription",
+      "deadline": "SortDate"
+    },
+    "filter": {
+      "any": [
+        "agri",
+        "farm",
+        "soil",
+        "applied research"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 40,
+    "auto_vet": false
+  },
+  "collect_note": "Reads NYSERDA's own public solicitations feed (the JSON the Current Solicitations page loads, Program Opportunity Notices section) twice a day and keeps notices that mention agriculture, farms, soil or applied research, so the next Sun and Soil round or any new NYSERDA agrivoltaics notice becomes a call row; the first listed round date is the deadline, so a notice whose first round has passed shows as closed even if a later round is open. The RFP section of the same feed is not read.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "PON 6206 Sun and Soil Program",
+        "deadline": "2026-12-10",
+        "url": "https://portal.nyserda.ny.gov/CORE_Solicitation_Detail_Page?SolicitationId=a0rcr00001HNTqDAAX"
+      }
+    ]
+  },
+  "evidence": "GET /rapi/fundingopportunitiesapi/getfundingopportunities?dataSourceId=a8166835-... HTTP 200 application/json (the endpoint FundingOpportunities.js calls), 5 sections (PON 29, RFI 4, RFP 9, RFQL 5), PON 6206 Sun and Soil round 1 due 12/10/2026, round 2 draft 4/20/2027; robots.txt 200 with no rule for /rapi; no RSS, no sitemap.xml (404); curl with a plain browser UA gets 403 but the SALSAV UA gets 200. Checked 2026-11-12.",
+  "edge_risk": "bot_protection",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "0fe468ef-a0bd-4658-95c0-5f9cb0fa41ce",
+  "name": "International Development Research Centre (IDRC)",
+  "program": "Funding calls (competitive and institutional grants; climate-resilient food systems programming)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://idrc-crdi.ca/en/funding",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://idrc-crdi.ca/en/funding",
+      "item": "div.views-row",
+      "title": "a",
+      "link": "a",
+      "date_label": true,
+      "amount": false
+    },
+    "max_items": 20
+  },
+  "collect_note": "Reads IDRC's official funding page, which lists every open and closed call with its deadline, so the next food-systems or climate call is caught as a candidate; auto_vet stays off because the list also carries health, gender and fellowship calls.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "IDRC invites applications for the John G. Bene Fellowship 2026",
+        "deadline": "2026-11-30",
+        "url": "https://idrc-crdi.ca/en/funding/idrc-invites-applications-john-g-bene-fellowship-2026"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP GET 2026-11-12: https://idrc-crdi.ca/en/funding HTTP 200, server-rendered Drupal views with div.views-row per call (title link, Call For, Deadline time element); one open call (John G. Bene Fellowship 2026, 30 Nov 2026) and about a dozen closed ones.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

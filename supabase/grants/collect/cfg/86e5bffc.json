@@ -1,0 +1,38 @@
+{
+  "id": "86e5bffc-382a-4bd4-a704-7ecde630a6db",
+  "name": "FONTAGRO (IDB-hosted fund for agri-food R&D in Latin America and the Caribbean)",
+  "program": "FONTAGRO Challenge 2027 (annual call for regional R&D&I consortia)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.fontagro.org/en/iniciativas/convocatorias/convocatoria-2027",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "list": {
+      "url": "https://www.fontagro.org/en/iniciativas/convocatorias",
+      "item": "div.initiative-item",
+      "title": "h4.initiative-title",
+      "match": "convocatoria-20(2[7-9]|3\\d)|Call 20(2[7-9]|3\\d)",
+      "detail": {
+        "max": 3,
+        "deadline_regex": "documents before ([A-Z][a-z]+ \\d{1,2}, \\d{4}), at"
+      },
+      "amount": false
+    },
+    "max_items": 10
+  },
+  "collect_note": "Reads FONTAGRO's calls-for-proposals index and keeps the yearly call pages for 2027 and later, then opens each to read its single-phase submission deadline; the 2027 call closes 30 Apr 2027.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Call 2027",
+        "deadline": "2027-04-30",
+        "url": "https://www.fontagro.org/en/iniciativas/convocatorias/convocatoria-2027"
+      }
+    ]
+  },
+  "evidence": "fetch_text of /en/iniciativas/convocatorias HTTP 200 lists Call 2027 down to Call 2019; /convocatoria-2027 HTTP 200 plain text with labelled Single Phase timeline. Channels tried: site HTML (works); document links are not in the static HTML; no feed found. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

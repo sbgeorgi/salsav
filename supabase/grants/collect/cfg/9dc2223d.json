@@ -2,24 +2,52 @@
   "id": "9dc2223d-158a-4d84-b631-d8e2f80b2beb",
   "name": "Thornburg Foundation",
   "program": "Initiatives (Water, Land, K-12 Education, Housing, Community Funding)",
-  "mode": "page",
+  "mode": "calls",
   "adapter": "html",
   "url": "https://www.thornburgfoundation.org/news",
   "feed_url": null,
-  "adapter_config": {},
-  "collect_note": "No public call list exists: the Foundation says it does not accept unsolicited proposals. Its news page is watched twice a day and any change is flagged for review. No deadlines are collected. Not every news post is a funding announcement.",
+  "adapter_config": {
+    "list": {
+      "url": "https://www.thornburgfoundation.org/news",
+      "item": "a[href^=\"/news/\"]",
+      "title": "h3",
+      "date": "span.text-gray",
+      "amount": false
+    },
+    "filter": {
+      "any": [
+        "re:\\brfps?\\b",
+        "re:request for (proposals|applications|qualifications|letters)",
+        "re:call for (proposals|applications|letters|nominations|submissions|ideas)",
+        "re:open call",
+        "re:(applications?|proposals?|submissions?) (are |is )?(now )?(open|being accepted|due)",
+        "re:accepting (proposals|applications|submissions|letters)",
+        "re:letters? of inquiry",
+        "re:funding opportunit",
+        "re:(grant|funding) (round|cycle|program) (opens|launch)",
+        "re:apply (by|for|now)",
+        "re:(prize|challenge) (opens|launch|applications)"
+      ],
+      "none": [
+        "re:^press release:"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the Thornburg Foundation news list (server-rendered, 72 stories) twice a day and keeps only a story whose title or text announces an open call (RFP, call for proposals/applications, applications open, letters of inquiry, funding opportunity); it waits for review and carries no deadline because news cards show only a month. Thornburg does not accept unsolicited proposals and has no calls page, feed or API, so today's list is empty by design; this is the best source that exists.",
   "expect": {
     "min_items": 0,
     "sample": []
   },
-  "evidence": "Plain HTTP GET (desktop UA, 30 s): https://www.thornburgfoundation.org/ 200 (105697 bytes); /grantees, /initiatives/community-funding, /initiatives/pursuing-public-funds 200 with the unsolicited-proposals sentence; /sitemap.xml 200 (no calls URLs: about, board, careers, financials, grantees, initiatives/*, news/*); /feed 200 returns HTML not a feed; /rss, /grants, /apply, /grant-opportunities 404; /wp-json/wp/v2/types 403. Checked 2026-11-12. Re-checked 2026-11-12: homepage, /initiatives/community-funding, /news, /grantees all carry 'The Thornburg Foundation does not accept unsolicited proposals'; no deadline or application wording found.",
+  "zero_reason": "https://www.thornburgfoundation.org/ and /initiatives/community-funding state 'The Thornburg Foundation does not accept unsolicited proposals'; none of the 72 news stories (2013-2026) announces an open call, RFP or application window (grep of /news for rfp, request for proposal, call for, applications returned 0 hits).",
+  "evidence": "Checked 2026-11-12 plain HTTP: /news 200 (server-rendered, 72 anchors a[href^=/news/] with h3 title and Month Year span); endpoint_recon --no-chrome found no feed, API or JSON (sitemap.xml 200 only about/board/staff/financials/careers/jeff-harnar-award/grantees/research/news/initiatives/*, no calls section); /feed 308 to HTML, /rss.xml /atom.xml /feed.xml /news/feed /api/news /api/posts /opportunities /rfp /funding-opportunities 404, /wp-json/wp/v2/posts 403 (Next.js, not WordPress), robots.txt Disallow /api/ and /studio only. /jeff-harnar-award is an architecture prize run by UNM with an external site, not Thornburg funding for SALSAV. No Grants.gov or EU relevance (private family foundation).",
   "edge_risk": "none",
-  "confidence": "high",
-  "page_reason": "Thornburg states on its homepage and initiative pages that it does not accept unsolicited proposals (contact info@thornburgfoundation.org if your work aligns with a current initiative), so there is no public call list, feed, API or labelled deadline. Grant rounds appear only as news posts without deadlines, so the news page is watched for a new announcement.",
+  "confidence": "medium",
   "harness": {
     "ok": true,
     "count": 0,
-    "open": 0,
-    "checked": "2026-11-12"
+    "open": 0
   }
 }

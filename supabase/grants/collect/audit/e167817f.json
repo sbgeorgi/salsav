@@ -1,0 +1,39 @@
+{
+  "id": "e167817f-ec3b-483a-af48-f9cb9a4060a1",
+  "name": "Allen Family Philanthropies (formerly Paul G. Allen Family Foundation)",
+  "program": "Environment RFPs (Accelerating Natural Climate Solutions in the United States RFP, closed 2026)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.allenphilanthropies.org/accelerating-ncs-rfp",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.allenphilanthropies.org/",
+      "item": "div[data-event=\"blog-card\"]",
+      "title": "h4",
+      "match": "RFP|request for proposals|requests for proposals|call for (proposals|applications)|applications (are )?(now )?open|now accepting|open call|letters? of interest|funding opportunit",
+      "skip": "\\b(arts|youth|creative|culture|cultural|dance|theatre)\\b",
+      "date_label": true,
+      "amount": false
+    },
+    "max_items": 10
+  },
+  "collect_note": "Reads the Recent News cards on the Allen Family Philanthropies home page (the only plain-HTTP list of new posts; the full news list is client-rendered) and keeps cards that announce an RFP or call, skipping arts and youth ones, so the next environment RFP is caught when it is announced; today none of the three cards is a call.",
+  "zero_reason": {
+    "quote": "This RFP is now closed, learn more about environment and natural climate solutions grants from Allen Family Philanthropies here .",
+    "url": "https://www.allenphilanthropies.org/accelerating-ncs-rfp"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET (desktop UA) https://www.allenphilanthropies.org/ = 200, Next.js server-rendered, Recent News holds 1 highlight plus 3 blog-card items (Ebola crisis response, Natural Climate Solutions story, ballet story), none an open call. /accelerating-ncs-rfp = 200 and says closed. No RSS (/feed, /rss, /atom.xml 404), no WordPress or ld+json call list; sitemap.xml lists 77 URLs but no adapter reads XML sitemaps; the news list is fed by /api/posts, which robots.txt disallows (not used). Domain pgafamilyfoundation.org returns 502 and allenfamilyphilanthropies.org does not resolve. Checked 2026-11-12.",
+  "edge_risk": "js",
+  "confidence": "low",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0
+  },
+  "edge_case": "none"
+}

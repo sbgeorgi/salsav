@@ -1,0 +1,17 @@
+{
+  "id": "126166eb-9fce-4db5-b0cd-da479bed2c67",
+  "name": "Arizona Water Protection Fund (ADWR)",
+  "program": "Annual grant cycle: capital projects, research and water conservation for Arizona rivers and riparian areas",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.azwpf.gov/",
+  "feed_url": null,
+  "adapter_config": {},
+  "edge_case": "bot_protected",
+  "collect_note": "Page watch only, and it may not be able to read the page: every azwpf.gov and azwater.gov URL (home, grant pages, PDFs, robots.txt, sitemap.xml, rss, jsonapi) answers HTTP 403 with a Cloudflare managed challenge (Cf-Mitigated: challenge) to plain HTTP, so no calls listing, feed, API or sitemap can be read without a browser. Calls are applied for in a login-gated eCivis portal, not listed publicly. The Commission opens one cycle a year (manual in May, applications due mid-August); a person should check the Grant Information pages by browser each spring.",
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "Plain HTTP GET 2026-11-12 with desktop UA: https://www.azwpf.gov/, azwpf.gov, new.azwater.gov, azwater.gov, /robots.txt, /sitemap.xml, /rss.xml, /jsonapi, grant manual PDF all = 403, body 'Just a moment...', header Cf-Mitigated: challenge. endpoint_recon (--no-chrome, Chrome port 9333 down) found no endpoint (page 403, sitemap 403). The eCivis link on the grant page (gn.ecivis.com/GO/gn_redir/T/ow03q6lj2ia9) = 200 but is a Euna Grants login landing page with no public opportunity list. Grants.gov does not carry state funds. Only the Wayback Machine copy of the official pages could be read (azwpf.gov/grant-information/fy-2026-grant-cycle capture 2025-09-10 lists the cycle schedule with applications due 2025-08-15).",
+  "edge_risk": "high",
+  "confidence": "high",
+  "harness": { "ok": false, "count": 0, "open": 0, "error": "HTTP 403 bot protection or forbidden", "checked": "2026-11-12" }
+}

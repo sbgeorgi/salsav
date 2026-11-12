@@ -1,0 +1,28 @@
+{
+  "id": "5e7b14bf-8476-4d26-9b12-3a1706ac59ea",
+  "name": "Breakthrough Energy",
+  "program": "Breakthrough Energy Fellows (Innovator, Business and Explorers tracks)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://befellows.smapply.org/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "self": {
+      "title": "Breakthrough Energy Fellows",
+      "deadline_regex": "applications accepted through ([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads the application window stated on the Breakthrough Energy Fellows application page twice a day; the current Innovator concept-paper window closed 2 Nov 2026, so zero items is expected until the next cohort window is posted. Explorers and Business Fellows are rolling and carry no date.",
+  "zero_reason": {
+    "quote": "applications accepted through November 2, 2026",
+    "url": "https://befellows.smapply.org/"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-12: GET https://befellows.smapply.org/ HTTP 200 (SurveyMonkey Apply, static, ~4 KB text) states the Innovator concept paper window and that Business Fellows and Explorers are considered on a rolling basis. endpoint_recon: no opportunity endpoint, sitemap 404 on smapply. breakthroughenergy.org is a client-rendered app (same ~940 KB shell for /news, /feed, /newsroom; sitemap lists only portfolio, programs, people, perspectives pages) with no feed or call list over plain HTTP. befellows.org does not resolve.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

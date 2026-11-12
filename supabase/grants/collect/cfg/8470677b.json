@@ -1,0 +1,69 @@
+{
+  "id": "8470677b-fe1b-40de-973b-ebb5a21705d6",
+  "name": "Fondation Prince Albert II de Monaco",
+  "program": "Annual Call for Projects (climate and renewable energy; water and desertification; biodiversity)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://fpa2.org/en/submit-a-project",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.fpa2.org/en/actualites",
+      "item": "article.news_item",
+      "title": "h3",
+      "link": "a.readmore",
+      "date_label": true,
+      "amount": false,
+      "detail": {
+        "max": 5,
+        "deadline_regex": "(?:submitted|submit|apply|applications?)[^.]{0,120}? by (\\d{1,2} [A-Za-z]+ \\d{4})"
+      }
+    },
+    "filter": {
+      "any": [
+        "call for project",
+        "call for proposal",
+        "call for interest",
+        "call for micro",
+        "call for action",
+        "call for applications",
+        "applications open",
+        "open applications",
+        "opens its call",
+        "request for proposals",
+        "re:\\bRFP\\b"
+      ],
+      "none": [
+        "photography",
+        "winners",
+        "rewards",
+        "awarded",
+        "key takeaways"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the Foundation's English news listing (newest 20 articles) twice a day and keeps announcements of calls for projects, proposals, interest, micro-initiatives and applications (photography award entries and winner news are skipped), reading the closing date from each call's own article; calls wait as candidates because the news also carries ocean and polar calls outside SALSAV's scope. The main annual June call is announced only on the Submit a project page, not in the news.",
+  "expect": {
+    "min_items": 1,
+    "zero_reason": null,
+    "sample": [
+      {
+        "title": "Call for proposals for the Blue Charter Incubator Round II to accelerate ocean action",
+        "deadline": "2026-12-11",
+        "url": "https://www.fpa2.org/en/news/Second_call_for_proposals_for_the_Commonwealth_Blue_Charter_Incubator-08561"
+      }
+    ]
+  },
+  "evidence": "channels tried 2026-11-12: endpoint_recon (rss verdict, https://www.fpa2.org/en/feed/actualites, ~40 recent items, no descriptions, no deadlines, so it cannot give dated calls); sitemap.xml 3155 news urls; no WordPress/Drupal/JSON API, no ld+json, no grant portal; submit-a-project is plain HTML with only the June 2026 session text. Chosen: English news listing https://www.fpa2.org/en/actualites (20 articles, article.news_item, h3, a.readmore) with a call-words filter and detail hop. Harness item: Commonwealth Blue Charter Incubator Round II (call announced 2026-10-05), article text 'Applications must be submitted through the online application form by 11 December 2026 at 23:59 GMT' = engine deadline 2026-12-11. Filter also matches the Foundation's earlier titles (2023 call for projects, DIMFE 2025 call for projects, Human-Wildlife 2025 call, BeMed 10th call for micro-initiatives); older ones fall off page 1 (listing is paged, only page 1 is read).",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

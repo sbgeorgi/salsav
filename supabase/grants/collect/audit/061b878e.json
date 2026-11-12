@@ -1,0 +1,53 @@
+{
+  "id": "061b878e-a17f-4471-8836-616dcfcbdd44",
+  "name": "Minciencias (Ministerio de Ciencia, Tecnologia e Innovacion, Colombia)",
+  "program": "Convocatorias de CTeI (SGR science fund: energy, food, climate, research and innovation calls)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://minciencias.gov.co/convocatorias/todas",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://minciencias.gov.co/convocatorias/todas",
+      "item": "table tbody tr",
+      "title": "td.views-field-title a",
+      "link": "td.views-field-title a",
+      "date_label": true,
+      "detail": {
+        "max": 5,
+        "deadline_regex": "Cierre\\s+\\S+\\s+(\\d{1,2}\\s+\\S+\\s+\\d{4})"
+      }
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the newest Minciencias (Colombia) calls twice a day from its list of all calls, including the energy, food and climate calls of the Sistema General de Regalias bienal plan, reads each call's closing date from its own page, and holds the calls for review; the Drupal JSON API is 404 and the RSS feed carries press releases only, so this list is the only structured source.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Convocatoria especial para la financiación de macroproyectos nacionales para el fortalecimiento de las capacidades cient",
+        "deadline": "2026-11-13",
+        "url": "https://minciencias.gov.co/node/9581"
+      },
+      {
+        "title": "Convocatoria 54 convocatoria especial para la financiación de proyectos para el fortalecimiento de las capacidades cient",
+        "deadline": "2026-11-13",
+        "url": "https://minciencias.gov.co/node/9582"
+      },
+      {
+        "title": "Convocatoria de emergencia para la recuperación y generación de capacidades transformadoras, en el marco del decreto 141",
+        "deadline": "2026-11-03",
+        "url": "https://minciencias.gov.co/node/9577"
+      }
+    ]
+  },
+  "evidence": "GET https://minciencias.gov.co/convocatorias/todas HTTP 200 (checked 2026-11-12): 5 calls on page 0 (nodes 9581, 9582, 9577, 9573, 9572), page 1 holds older calls. Each call page carries 'Cierre <weekday> <d> <month> <yyyy>' (9582: viernes 13 noviembre 2026; 9577: martes 03 noviembre 2026). detail.max 5 is needed: with 3 hops the engine rotates and leaves calls undated. Convocatoria 49 (energy) is announced at node/9324 and now closed. /jsonapi/node/article 404; /rss.xml press releases only; sitemap.xml lists 349 urls, no calls section beyond node pages.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 5,
+    "open": 2
+  }
+}

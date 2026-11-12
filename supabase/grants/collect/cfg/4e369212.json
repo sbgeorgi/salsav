@@ -1,0 +1,46 @@
+{
+  "id": "4e369212-bc88-481d-9d98-ab13e7e93085",
+  "name": "Lightsource bp",
+  "program": "Agrivoltaics research with agricultural and academic partners",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://lightsourcebp.com/agrivoltaics/",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://lightsourcebp.com/wp-json/wp/v2/posts?per_page=100&_fields=id,link,title,date",
+    "method": "GET",
+    "items_path": "$",
+    "map": {
+      "external_id": "id",
+      "title": "title.rendered",
+      "url": "link",
+      "open_date": "date"
+    },
+    "filter": {
+      "any": [
+        "studentship",
+        "re:call for (proposals|applications|projects|research)",
+        "re:request for proposals",
+        "re:applications? (are )?(now )?open",
+        "re:research (grant|fund|partnership|programme|program)",
+        "re:partnership (to|with) .*(agricultur|farm|universit|college|research)"
+      ],
+      "fields": "title"
+    },
+    "max_items": 20,
+    "auto_vet": false
+  },
+  "collect_note": "Lightsource bp (a solar developer) has no grants listing; a research partnership, studentship or funding call would be announced as a post on its WordPress news feed, so the engine reads the site's wp-json posts list (latest 100, titles only) twice a day and keeps only titles that name a call, studentship, research grant or research partnership. Hidden candidates (auto_vet false) because news titles are not always a call.",
+  "expect": {
+    "min_items": 0,
+    "zero_reason": {
+      "quote": "At Lightsource bp, we aim to continue to evolve our agrivoltaics projects by investing in research with agricultural and academic partners to verify our outcomes and scale solutions.",
+      "url": "https://lightsourcebp.com/agrivoltaics/",
+      "note": "Research funding here is by partnership and invitation: no call, application route or amount is published anywhere on lightsourcebp.com (agrivoltaics page, non-profit partnerships page, wp-json posts, feed, sitemaps checked 2026-11-12), so nothing is open today. Filter tested against the title of its last known research-partnership announcement, Partnership to Explore Solar Farms and Agriculture (2014-11-19, with University of Northampton and Moulton College), which it matches."
+    },
+    "sample": []
+  },
+  "evidence": "Checked 2026-11-12: agrivoltaics page 200 (WordPress); wp-json/wp/v2/types 200 (only post type); wp-json/wp/v2/posts 200, 100 items/26 KB with _fields; /feed 200 RSS (10 items, PPAs and projects, no calls); sitemap.xml 200 (post, page, project sitemaps); robots 200; endpoint_recon (no-chrome): no embedded JSON, no XHR endpoints, no post endpoints beyond WordPress. Grants.gov/EU not applicable (private company). No public grant portal found.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

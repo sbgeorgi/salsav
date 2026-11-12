@@ -1,0 +1,79 @@
+{
+  "id": "801ece37-aef0-4116-8993-979074a16b67",
+  "name": "European Commission (Horizon Europe, EUPI-PV Partnership)",
+  "program": "HORIZON-CL5-2026-11-D3-14: Improved system design for innovative PV applications (agriPV or offshore PV)",
+  "mode": "calls",
+  "adapter": "eu_ft",
+  "url": "https://ec.europa.eu/info/funding-tenders/opportunities/data/topicDetails/horizon-cl5-2026-11-d3-14.json",
+  "feed_url": null,
+  "adapter_config": {
+    "query": {
+      "bool": {
+        "must": [
+          {
+            "terms": {
+              "callIdentifier": [
+                "HORIZON-CL5-2026-11",
+                "HORIZON-CL5-2027-01",
+                "HORIZON-CL5-2027-02",
+                "HORIZON-CL5-2027-03",
+                "HORIZON-CL5-2027-04",
+                "HORIZON-CL5-2027-05",
+                "HORIZON-CL5-2027-06",
+                "HORIZON-CL5-2027-07",
+                "HORIZON-CL5-2027-08",
+                "HORIZON-CL5-2028-01",
+                "HORIZON-CL5-2028-02"
+              ]
+            }
+          },
+          {
+            "terms": {
+              "type": [
+                "1",
+                "2",
+                "8"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "filter": {
+      "any": [
+        "agri",
+        "farm",
+        "rural",
+        "crop",
+        "irrigat",
+        "land use",
+        "co-locat",
+        "re:PV.{0,40}applications",
+        "re:photovoltaic.{0,40}applications"
+      ],
+      "fields": "title+description"
+    },
+    "auto_vet": false,
+    "max_items": 40,
+    "text": "PV"
+  },
+  "collect_note": "Horizon Europe Energy (Cluster 5) topics with PV in the title that name agriPV, farming or PV applications are read from the EU funding portal twice a day, each with its next deadline; later Cluster 5 call codes are pre-listed so the next EUPI-PV round is caught. Items wait for review before showing. The agriPV topic needs an EU consortium and US partners are not automatically funded.",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1
+  },
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Improved system design for innovative PV applications (EUPI-PV Partnership)",
+        "deadline": "2026-12-01",
+        "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/HORIZON-CL5-2026-11-D3-14"
+      }
+    ]
+  },
+  "evidence": "POST https://api.tech.ec.europa.eu/search-api/prod/rest/search?apiKey=SEDIA (same wire format as adapters/api.ts euFt), checked 2026-11-12; callIdentifier HORIZON-CL5-2026-11 returns 5 topics, deadline 2026-12-01, status open. Topic JSON GET https://ec.europa.eu/info/funding-tenders/opportunities/data/topicDetails/horizon-cl5-2026-11-d3-14.json HTTP 200 (lowercase id; uppercase 404); the portal topic page itself is JavaScript-only (fetch_text THIN). Cluster 5 call codes with topics today: 2026-01 to 2026-11 and 2027-01 to 2027-07; the rest are watch values.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

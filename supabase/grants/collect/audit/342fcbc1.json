@@ -1,0 +1,41 @@
+{
+  "id": "342fcbc1-c677-4be9-9dea-8b1bd16585c4",
+  "name": "Gates Foundation",
+  "program": "Gates Foundation Grand Challenges grant opportunities and RFPs",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://gcgh.grandchallenges.org/grant-opportunities",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://gcgh.grandchallenges.org/grant-opportunities",
+      "item": "article",
+      "title": "h3",
+      "link": "a[href]",
+      "date_label": true,
+      "closed": "\\bclosed\\b",
+      "skip": "grandchallenges\\.org/grants/"
+    },
+    "max_items": 20
+  },
+  "collect_note": "Reads the Gates Foundation's Grand Challenges grant opportunities list twice a day and turns each opportunity on it into a call row that waits for review; the list is empty today, so a new call appears the day it is posted.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "There are no open Grant Opportunities at this time.",
+    "url": "https://gcgh.grandchallenges.org/grant-opportunities",
+    "note": "Page server-renders its opportunities as article cards; same markup tested on www.grandchallenges.org/grant-opportunities (1 card, Keystone Symposia, parsed with title, link and deadline). The main Gates RFP portal https://submit.gatesfoundation.org/ renders its program list by JavaScript from an API that needs login (403), so it cannot be read over plain HTTP; it is linked from https://www.gatesfoundation.org/about/how-we-work/grant-opportunities."
+  },
+  "evidence": "GET https://gcgh.grandchallenges.org/grant-opportunities HTTP 200 (Gates-run Grand Challenges site, empty list 2026-11-12); hub page with identical markup parsed into 1 item by this config; gatesfoundation.org/about/how-we-work/grant-opportunities HTTP 200 points to submit.gatesfoundation.org (SurveyMonkey Apply, list JS-only, /api/programs/ 403) and to this Grand Challenges list; no RSS/Atom (gcgh /rss.xml, /feed 404), drupal.grandchallenges.org json:agg is behind Cloudflare Access, gatesfoundation.org sitemaps hold no RFP section; endpoint_recon verdict html_ok with no opportunity endpoint.",
+  "edge_risk": "js",
+  "confidence": "low",
+  "edge_case": "none",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

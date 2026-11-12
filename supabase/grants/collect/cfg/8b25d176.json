@@ -1,0 +1,54 @@
+{
+  "id": "8b25d176-c9d8-4292-917b-b1cba568acda",
+  "name": "OPEC Fund for International Development",
+  "program": "Food Security and Climate Adaptation Facility; grants and Annual Award for Development",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://opecfund.org/what-we-do/special-initiatives/annual-award",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://opecfund.org/news-events/news",
+      "item": "div.newsroom-item",
+      "title": "h3",
+      "link": "a.text-wrapper",
+      "date_label": true
+    },
+    "filter": {
+      "any": [
+        "Annual Award",
+        "Award for Development",
+        "call for",
+        "applications",
+        "nominations",
+        "competition",
+        "accelerator",
+        "grant",
+        "to apply",
+        "prize",
+        "request for"
+      ],
+      "fields": "title"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the OPEC Fund news listing twice a day (list.url) and keeps items about grants, accelerators, competitions and the Annual Award for Development (US$250,000 Innovation award open to research institutions, 2027 round not yet open), where its next open call would be announced; the monitored url is the Annual Award page so its text changes when applications open. Items wait for review.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://opecfund.org/news-events/news HTTP 200 2026-11-12 (div.newsroom-item cards with h3 title and a.text-wrapper link). No RSS/Atom (/feed, /rss, /rss.xml, /feed.xml, /atom.xml all 404), no WordPress or JSON API (/wp-json 404, /api/search 404), sitemap.xml lists content sitemaps only (no calls section), no Grants.gov or EU F&T programme. Annual Award page fetched HTTP 200 as the monitored url. Public press-release listing has a different markup (div.list-item). Annual Award page https://opecfund.org/what-we-do/special-initiatives/annual-award says applications for 2027 are not yet open ('GET NOTIFIED WHEN THE 2027 AWARD OPENS').",
+  "zero_reason": {
+    "quote": "We'll be opening applications for the 2027 Annual Award for Development soon.",
+    "url": "https://opecfund.org/news-events/want-to-apply-for-the-2027-annual-award-for-development"
+  },
+  "edge_risk": "none",
+  "confidence": "low",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

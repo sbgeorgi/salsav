@@ -111,7 +111,7 @@ function parse(src: string): { root: Node; sets: CharSet[]; captures: number } {
     } else if (c === "k") no("named backreferences (\\k<name>) are not supported");
     else if (c === "p" || c === "P") no("unicode property escapes (\\p{...}) are not supported; list the letters in a class such as [a-záéíóúñ]");
     else if (c === "c") no("control-letter escapes (\\cX) are not supported; write \\xHH");
-    else if (/[A-Za-z]/.test(c) || c > "\x7f") no(`the escape \\${c} is not supported`);
+    else if (/[A-Za-z]/.test(c) || c.charCodeAt(0) > 127) no(`the escape \\${c} is not supported`);
     else i++;
   };
   const atom = (): Node => {

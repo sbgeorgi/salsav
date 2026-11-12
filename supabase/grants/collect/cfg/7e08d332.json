@@ -1,0 +1,51 @@
+{
+  "id": "7e08d332-dd8d-46c3-8d94-45c414ba84ae",
+  "name": "Global Agriculture and Food Security Program (GAFSP)",
+  "program": "GAFSP Calls for Proposals (country-led and producer-organization grants)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.gafspfund.org/call-proposals",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.gafspfund.org/call-proposals",
+      "item": "article.card",
+      "title": "h3",
+      "link": "a.button",
+      "closed": "Closed on",
+      "amount": false,
+      "detail": {
+        "max": 3,
+        "deadline_regex": "closed on ([A-Z][a-z]+ [0-9]+, [0-9]{4})",
+        "closed": "Successfully Closes|closed on [A-Z][a-z]+ [0-9]"
+      }
+    },
+    "max_items": 12,
+    "auto_vet": true
+  },
+  "collect_note": "Every call on GAFSP's own Call for Proposals page (one card per call, past and new) is read twice a day, so the next country-led or producer-organization call is recorded when GAFSP adds its card; none is open today because the Ninth Call closed 2026-09-15.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Ninth Call 2026 Country-led Projects",
+        "deadline": "2026-09-15",
+        "url": "https://www.gafspfund.org/9th-call-proposals"
+      },
+      {
+        "title": "Eighth Call 2025 Producer Organizations",
+        "deadline": "2025-11-11",
+        "url": "https://www.gafspfund.org/8th-call-proposals-producer-organizations"
+      }
+    ]
+  },
+  "evidence": "GET https://www.gafspfund.org/call-proposals HTTP 200 text/html (checked 2026-11-12): Drupal page with one article.card per call (Ninth 2026 through First 2010), closed cards carry 'Closed on <date>'. /rss.xml HTTP 200 is a news feed with no call entries; /jsonapi 404; sitemap.xml lists only the home page; no WordPress API.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "edge_case": "none",
+  "harness": {
+    "ok": true,
+    "count": 10,
+    "open": 0
+  }
+}

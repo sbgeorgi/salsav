@@ -494,6 +494,10 @@ test("self.deadline_regex honours top-level date_order and refuses an ambiguous 
   const dmy = await fetchSource(harness({ [PROGRAM]: { body } }).c, src({ adapter: "html", url: PROGRAM, adapter_config: { self, date_order: "dmy" } }));
   assert.equal(dmy?.opportunities?.[0]?.external_id, "cycle:2027");
   assert.match(String(configError({ date_order: "ymd" }, src())), /date_order/);
+  // JSON.parse turns a hand-written "\b" into a backspace (U+0008): refuse it instead of never matching.
+  const bad = JSON.parse('{"filter":{"any":["re:\\bRFP\\b"]}}');
+  assert.match(String(configError(bad, src())), /^adapter_config\.filter\.any\[0\] contains a control character/);
+  assert.equal(configError(JSON.parse('{"filter":{"any":["re:\\\\bRFP\\\\b"]}}'), src()), null);
 });
 
 test("common patterns pass config validation; nested quantifiers are accepted (the step budget bounds them at run time)", () => {

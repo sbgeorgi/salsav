@@ -1,0 +1,47 @@
+{
+  "id": "610978d8-7dab-416b-8ea1-9615461de4dd",
+  "name": "Grantham Foundation for the Protection of the Environment",
+  "program": "Climate change grants and investments (clean energy, agriculture)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://granthamfoundation.org/grants-investments/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://granthamfoundation.org/thinking/",
+      "item": "article.thinking-post",
+      "title": "h2.thinking-post__title a",
+      "link": "h2.thinking-post__title a"
+    },
+    "filter": {
+      "any": [
+        "re:call for (proposals|applications|ideas)",
+        "re:request for (proposals|applications)",
+        "re:\\brfp\\b",
+        "re:applications? (are )?(now )?(open|invited)",
+        "re:open call",
+        "re:funding opportunit",
+        "re:\\bprize\\b",
+        "re:\\bchallenge\\b"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 20,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the Grantham Foundation Thinking list (its only dated news and announcements listing, 8 entries) twice a day and keeps only entries whose title or excerpt announces a call, RFP, applications, open call, prize or challenge; none today, because the foundation funds by invitation only, so any one-off call announcement would surface as a hidden candidate for review.",
+  "expect": {
+    "min_items": 0,
+    "sample": [],
+    "zero_reason": "Contact page (https://granthamfoundation.org/contact/): 'review proposals by invitation only'; Thinking list (https://granthamfoundation.org/thinking/) holds 8 publications, books and videos, none a call."
+  },
+  "evidence": "Plain HTTP GET 2026-11-12, desktop UA: https://granthamfoundation.org/grants-investments/ HTTP 200 (21 KB static HTML, 4692 chars of text, no JS needed; sections Clean Firm Energy, Agriculture, Toxicity, Carbon Removal, Climate Stabilization, Raising Ambition list grantees and investees, no deadline or apply wording). https://granthamfoundation.org/contact/ HTTP 200: 'review proposals by invitation only and are not able to consider proposals with indirect costs above 10%'. https://granthamfoundation.org/about/ and /privacy/ HTTP 200 (no call wording). https://www.granthamfoundation.org/robots.txt HTTP 200 (Sitemap entry). /sitemap.xml HTTP 200 (8 URLs: home, thinking, grants-investments, about, contact, accessibility, privacy, sitemap; no dated calls section). /sitemap/ HTTP 200 (HTML sitemap, same pages). /thinking/ HTTP 200 (publications and videos, no calls). /feed, /feed/, /rss, /rss.xml, /atom.xml, /wp-json/, /wp-json/wp/v2/types, /jsonapi, /api/grants, /api/opportunities, /grants.json, /index.json, /thinking/feed/, /calendar.ics, /apply, /funding/, /opportunities/, /request-funding/, /submit-proposal/ all HTTP 404. Site JS (lenis, smooth-scroll, mobile-menu, chart-dialog) has no fetch or XHR calls. endpoint_recon.py (--no-chrome): verdict html_ok, plain text 4692, no feed, no embedded JSON, no opportunity endpoint. WebSearch (aggregators: Zeffy, Impact Stars, OpenGrants, Grantedai) conflicts: Impact Stars says an annual Aug 15 deadline, Grantexec says 'open to applications'; both are aggregators and not used as sources. granthamtrust.org failed TLS, not used. Round 2: /thinking/ is a static list of article.thinking-post entries (date, type, title link, excerpt); no entry names a call, so filter yields 0. Sitemap has only 8 pages; no news, press or calls section; no feed, WP or JSON endpoints (all 404). Grants.gov and EU F&T not applicable (private US foundation). Filter words could not be tested on a past Grantham call because none has ever been posted there.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

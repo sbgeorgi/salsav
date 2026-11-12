@@ -1,0 +1,33 @@
+{
+  "id": "908c4f15-73b6-479b-936d-d31e0e7b8bd8",
+  "name": "USDA Natural Resources Conservation Service, Regional Conservation Partnership Program",
+  "program": "RCPP Classic and Alternative Funding Arrangements",
+  "adapter": "grants_gov",
+  "url": "https://www.nrcs.usda.gov/programs-initiatives/rcpp-regional-conservation-partnership-program",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-NRCS",
+    "keyword": "Regional Conservation Partnership Program",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "filter": {
+      "any": [
+        "Regional Conservation Partnership",
+        "RCPP"
+      ],
+      "fields": "title"
+    },
+    "auto_vet": false,
+    "max_items": 20
+  },
+  "collect_note": "Watches Grants.gov for a posted or forecasted USDA-NRCS notice whose title names the Regional Conservation Partnership Program; calls stay candidates until checked. Nothing is open today: the FY2026 round closed in August 2026 and the nrcs.usda.gov pages reset plain HTTP requests, so Grants.gov is the only readable channel.",
+  "zero_reason": {
+    "quote": "RCPP 2026 Project Selections",
+    "url": "https://www.nrcs.usda.gov/programs-initiatives/rcpp-regional-conservation-partnership-program"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Tried 2026-11-12: Grants.gov search2 (keyword RCPP, agency USDA-NRCS, all statuses) returns RCPP notices for 2019 and 2022 only (USDA-NRCS-NHQ-RCPP-19-GEN0010372, USDA-NRCS-NHQ-RCPPNM-22-NOFO0001221) and nothing posted or forecasted; the FY2023 and FY2024 RCPP notices were also published on Grants.gov and nrcs.usda.gov, and the FY2026 round uses the NRCS RCPP partner portal (login.gov, no public list) or Grants.gov. No RSS feed. Plain HTTP to nrcs.usda.gov ends in ECONNRESET in adapter_check, so an html list or page watch there cannot be collected; fetch_text reads the pages. The RCPP page says 2026 selections are made; its How to Apply page names the FY26 Notice of Funding Opportunity Proposal Guide and shows no open deadline."
+}
