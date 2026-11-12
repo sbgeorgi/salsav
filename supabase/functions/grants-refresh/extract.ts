@@ -342,17 +342,28 @@ function horizonOf(today: string): string {
   return h.toISOString().slice(0, 10);
 }
 
+/** A month-and-day capture with no year ("December 1") as its next occurrence on or after today (this year, else next); opt-in only. */
+function nextOccurrence(s: string, today: string): string | null {
+  const y = Number(today.slice(0, 4));
+  for (const yr of [y, y + 1]) {
+    const d = captureDate(`${s} ${yr}`);
+    if (d && d >= today) return d;
+  }
+  return null;
+}
+
 /**
  * Config regex (adapter_config deadline_regex): group 1 of each match through captureDate, nearest rule, dates past the horizon ignored.
  * Never invents a date. A refused pattern gives null; a spent step budget throws RegexBudgetError (the caller ends the source with an error).
  */
-export function regexDeadline(text: string, src: string, today: string, order?: DateOrder, budget?: RegexBudget): string | null {
+export function regexDeadline(text: string, src: string, today: string, order?: DateOrder, budget?: RegexBudget, assumeNextYear = false): string | null {
   try {
     if (!src) return null;
     const horizon = horizonOf(today);
     const ds: string[] = [];
     for (const m of configRegex(src).matchAll(String(text ?? "").slice(0, MAX_PARSE_CHARS), budget)) {
-      const d = captureDate(m.groups[1] ?? "", order);
+      const cap = m.groups[1] ?? "";
+      const d = captureDate(cap, order) ?? (assumeNextYear ? nextOccurrence(cap, today) : null);
       if (d && d <= horizon) ds.push(d);
     }
     return nearestOf(ds, today);

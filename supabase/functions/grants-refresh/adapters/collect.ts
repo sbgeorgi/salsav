@@ -77,7 +77,10 @@ export function plainText(s: unknown): string {
   }
 }
 
-/** Absolute http(s) URL with the fragment and utm_* parameters removed, or null. */
+// a route fragment (#/x, #!x, #word/x) names a different page on a single-page app; a plain anchor (#top) does not
+const ROUTE_HASH = /^#(?:!|\/|\w+\/)./;
+
+/** Absolute http(s) URL with utm_* parameters and a plain-anchor fragment removed (a route fragment stays), or null. */
 function resolveUrl(href: string, base: string): string | null {
   if (!href) return null;
   let u: URL;
@@ -87,7 +90,7 @@ function resolveUrl(href: string, base: string): string | null {
     return null;
   }
   if (u.protocol !== "http:" && u.protocol !== "https:") return null;
-  u.hash = "";
+  if (!ROUTE_HASH.test(u.hash)) u.hash = "";
   for (const k of [...u.searchParams.keys()]) if (k.toLowerCase().startsWith("utm_")) u.searchParams.delete(k);
   return u.href;
 }
@@ -238,7 +241,7 @@ export function extractList(html: string, baseUrl: string, cfg: ListCfg, today: 
 export function selfCycle(
   text: string,
   src: { name: string; url: string },
-  cfg: { title?: string; deadline_regex?: string },
+  cfg: { title?: string; deadline_regex?: string; assume_next_year?: boolean },
   today: string,
   order?: DateOrder,
   budget?: RegexBudget,
@@ -246,7 +249,7 @@ export function selfCycle(
 ): Opportunity[] {
   try {
     // deadline_regex (optional) replaces the labelled-date search; a date before today gives no call
-    const d = cfg?.deadline_regex ? regexDeadline(String(raw ?? ""), cfg.deadline_regex, today, order, budget) : findDeadlines(String(text ?? ""), today).future;
+    const d = cfg?.deadline_regex ? regexDeadline(String(raw ?? ""), cfg.deadline_regex, today, order, budget, cfg.assume_next_year === true) : findDeadlines(String(text ?? ""), today).future;
     if (!d || d < today) return [];
     const title = cfg?.title?.trim() || src.name;
     // keyed on the deadline year, so a moved or extended deadline updates the same call instead of adding a second open one

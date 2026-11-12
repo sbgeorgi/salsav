@@ -932,3 +932,34 @@ test("configError: list selectors with :has( or the ~ combinator are refused; [a
   assert.equal(configError({ list: { item: 'li[class~="call"]', title: "h3" } }, s), null);
   assert.equal(configError({ list: { item: 'li[title="a~b"]' } }, s), null);
 });
+
+test("route fragments (#/x, #!x, #word/x) stay in url and external_id, plain anchors are dropped", () => {
+  const html = `<ul>
+    <li><a href="https://portal.example.org/#competitionDetail/2000555">Water RFP one</a></li>
+    <li><a href="https://portal.example.org/#competitionDetail/2000556">Water RFP two</a></li>
+    <li><a href="https://portal.example.org/#/call/7">Water RFP three</a></li>
+    <li><a href="https://portal.example.org/#!call7">Water RFP four</a></li>
+    <li><a href="https://portal.example.org/rfp/#apply">Water RFP five</a></li>
+  </ul>`;
+  const out = extractList(html, BASE, { match: "rfp" }, TODAY);
+  assert.deepEqual(out.map((o) => o.url), [
+    "https://portal.example.org/#competitionDetail/2000555",
+    "https://portal.example.org/#competitionDetail/2000556",
+    "https://portal.example.org/#/call/7",
+    "https://portal.example.org/#!call7",
+    "https://portal.example.org/rfp/",
+  ]);
+  assert.equal(new Set(out.map((o) => o.external_id)).size, 5);
+  assert.equal(out[0].external_id, "https://portal.example.org/#competitionDetail/2000555");
+});
+
+test("selfCycle: assume_next_year reads a yearless month and day as its next occurrence, only when set", () => {
+  const text = "Applications are accepted with deadlines on July 1 and December 1.";
+  const rx = "\\b(?:on|and) ((?:July|December) \\d{1,2})\\b";
+  const src = { name: "n", url: "u" };
+  assert.deepEqual(selfCycle(text, src, { deadline_regex: rx }, "2026-11-12"), []);
+  assert.deepEqual(selfCycle(text, src, { deadline_regex: rx, assume_next_year: false }, "2026-11-12"), []);
+  assert.equal(selfCycle(text, src, { deadline_regex: rx, assume_next_year: true }, "2026-11-12")[0].deadline, "2026-12-01");
+  assert.equal(selfCycle(text, src, { deadline_regex: rx, assume_next_year: true }, "2026-12-02")[0].deadline, "2027-07-01");
+  assert.equal(selfCycle(text, src, { deadline_regex: rx, assume_next_year: true }, "2026-12-01")[0].deadline, "2026-12-01");
+});

@@ -133,6 +133,7 @@ export function configError(cfg: Cfg, src: Source): string | null {
 
   const self = cfg.self;
   if (isObj(self) && self.title !== undefined && self.title !== null && typeof self.title !== "string") return "self.title must be a string";
+  if (isObj(self) && self.assume_next_year !== undefined && typeof self.assume_next_year !== "boolean") return "self.assume_next_year must be true or false";
   for (const v of [isObj(self) ? self.deadline_regex : undefined, cfg.deadline_regex]) {
     if (v === undefined || v === null) continue;
     if (typeof v !== "string") return "deadline_regex must be a string";
