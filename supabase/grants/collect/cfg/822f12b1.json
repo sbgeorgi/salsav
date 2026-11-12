@@ -1,0 +1,24 @@
+{
+  "id": "822f12b1-dedd-4c1f-9d60-d1e21abbd7b1",
+  "name": "Google Research",
+  "program": "Carbon Removal and Superpollutant Abatement R&D Awards (2026 call; official title: 2026 Google Carbon Removal and Superpollutant Elimination R&D Awards)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://research.google/programs-and-events/2026-google-carbon-removal-and-superpollutant-elimination-rd-awards/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "2026 Google Carbon Removal and Superpollutant Elimination R&D Awards",
+      "deadline_regex": "applications\\s+close\\s+([A-Z][a-z]+\\.?\\s+\\d{1,2}(?:st|nd|rd|th)?,?\\s+\\d{4})"
+    }
+  },
+  "collect_note": "Reads the program's own page twice a day for a labeled 'applications close' date and creates one call per cycle (external_id cycle:<deadline year>) only while that date is in the future; the 2026 call closed Sept. 25, 2026, so nothing is shown today (0 items, correct for a closed call). No public list, RSS, JSON, sitemap-dated call feed or grants portal exists for this funder (Google is not a federal grantor, so Grants.gov and SEDIA have no record of it); the program page is the only official source that carries call dates.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://research.google/programs-and-events/2026-google-carbon-removal-and-superpollutant-elimination-rd-awards/ HTTP 200, 231 KB static HTML, checked 2026-11-12. Visible text: 'applications open Aug. 11, 2026', 'applications close Sept. 25, 2026', 'Applications are now closed'. No application portal link on the page. Also checked: research.google/sitemap.xml -> sitemap_main.xml (program page lastmod 2026-09-26), no RSS/Atom (rss.xml, feed/ 404), wp-json and jsonapi redirect to a 404, no __NEXT_DATA__/ld+json/XHR, /programs-and-events/ listing shows only 3 program links in plain HTML, Grants.gov search2 keyword 'carbon removal superpollutant' 200 with no Google hit, SEDIA 405 on GET. Chrome port 9333 down, recon run with --no-chrome.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

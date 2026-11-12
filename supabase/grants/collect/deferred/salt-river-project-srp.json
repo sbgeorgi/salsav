@@ -1,0 +1,20 @@
+{
+  "id": null,
+  "name": "Salt River Project (SRP)",
+  "program": "Research and development partnerships with Arizona State University, Northern Arizona University and University of Arizona",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://media.srpnet.com/srp-invests-29-million-in-research-at-asu-nau-and-u-of-a-for-2025-2026-school-year/",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "No public call for proposals exists for SRP university R&D: SRP funds 37 projects per school year (2025-26 release, $2.9M) and states every proposal is reviewed by SRP project advisors and internal experts, with no open solicitation. The press release page is watched so a new annual funding announcement (for example the 16 Sep 2026 release 'SRP Invests $3 Million in Research at ASU, NAU and U of A') changes the content hash and is flagged for review. The SRP newsroom feed at https://media.srpnet.com/feed/ carries these releases and is the better change signal if a feed watch is supported later.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12: media.srpnet.com press release HTTP 200 (51 KB, static HTML, text ~6.3k chars, dated 27 Aug 2025). media.srpnet.com/feed/ HTTP 200 application/xml, 25 newsroom items (news only; no call-type items; latest 10 Nov 2026; includes 16 Sep 2026 'SRP Invests $3 Million in Research at ASU, NAU and U of A'). media.srpnet.com/sitemap.xml HTTP 200 (795 URLs, news only). media.srpnet.com/rss, /atom.xml, /wp-json/wp/v2/types HTTP 404. srpnet.com/doing-business/suppliers/proposal-request HTTP 200: public RFPs are supplier procurement (2026 All-Source RFP, Boggs substation switchgear), not university research solicitations. srpnet.com/sitemap.xml HTTP 200 (244 URLs): no research or university call page. WebSearch (2 queries, 2026-11-12): no SRP call for proposals or application process for ASU, NAU or U of A research; results point to direct invited partnerships and internal review. endpoint_recon --no-chrome run: verdict and proposal fields recorded in scratchpad recon.json.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "page_reason": "No systematic call source exists over plain HTTP: the only program-specific page is an annual press release, and the funding model is invited, internally reviewed partnerships with no public solicitation or deadline. Page watch on the release is the only monitorable channel.",
+  "edge_case": "invite_only_no_public_calls"
+}

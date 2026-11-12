@@ -1,0 +1,25 @@
+{
+  "id": "894bf54c-8dca-4673-a356-14406185b0e3",
+  "name": "The 11th Hour Project (Schmidt Family Foundation)",
+  "program": "Food & Agriculture",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://11thhourproject.org/food-and-agriculture/",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "No public call for proposals exists: the Foundation's Inbound Inquiries Policy (/about/) and FAQ say it does not accept unsolicited proposals and funds through its network. The program page is watched twice a day as a change feed, and any new text is flagged for review. The WordPress /feed/ is a blog feed (one 2025 post), so it is not used as a call source. No deadlines are collected.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET (desktop UA) https://11thhourproject.org/food-and-agriculture/ 200, 151343 bytes, static WordPress/Elementor HTML, 1428 chars of visible text, no login. /about/ 200 (Inbound Inquiries Policy: 'we do not accept unsolicited proposals or requests'). /faq/ 200 ('we generally do not respond to unsolicited proposals and requests'). /feed/ 200 RSS, 1 item (2025-06-25 blog post), lastBuildDate 2025-09-19. /comments/feed/ 0 items. /category/announcement/feed/ 200, 1 item (same blog post). /sitemap.xml 200 -> page-sitemap (no calls URLs: about, faq, press, programs, careers) and category-sitemap (announcement only). /wp-json/wp/v2/types 200: no opportunity-type custom post types (post, page, our_team, perspectives, elementor_library only). /wp-json/wp/v2/pages?slug=food-and-agriculture 200 (modified 2025-11-06). /press/ 200 (no calls). Parent foundation tsffoundation.org 200 (no calls; /feed/ 0 items; /grants/ 404). Grants.gov search2 POST 200 (keyword query returned unrelated federal calls; the Foundation is a private foundation with no federal pass-through). Page scripts: only admin-ajax for theme filters and Elementor/Jet widgets, no calls data endpoint. Chrome stage: port 9333 down, rerun with --no-chrome: rss verdict on blog feed only, rejected as not calls. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "page_reason": "Invite-only / network-based grantmaking: the Foundation states it does not accept unsolicited proposals, has no calls page, no call feed and no opportunity post type, so the only monitorable signal is the program page text.",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

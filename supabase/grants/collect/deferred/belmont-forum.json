@@ -1,0 +1,39 @@
+{
+  "id": null,
+  "name": "Belmont Forum",
+  "program": "Collaborative Research Actions (CRAs)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.belmontforum.org/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "url": "https://belmontforum.org/open-opportunities/",
+      "match": "archives/open-opportunity/",
+      "title": ".elementor-heading-title",
+      "date_label": true,
+      "amount": false
+    }
+  },
+  "collect_note": "Reads the Belmont Forum Open Opportunities page (the CRA call list) twice a day and keeps each CRA call card with its Deadline date; closed calls stay listed as closed. Future CRAs (Biodiversity 3, Polar) are on a separate page and are not covered by this config.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Ocean 2 CRA – Towards the Ocean We Want: Biodiversity and Ecosystem Sustainability for Nature and Human Well-being",
+        "deadline": "2026-08-27",
+        "url": "https://belmontforum.org/archives/open-opportunity/ocean-2/"
+      }
+    ]
+  },
+  "evidence": "GET https://www.belmontforum.org/ 301 to https://belmontforum.org/ (HTTP 200, 426 KB, WordPress/Elementor, plain HTTP). GET https://belmontforum.org/open-opportunities/ HTTP 200: one CRA card, Ocean 2, Deadline August 27, 2026, link /archives/open-opportunity/ocean-2/. Feed https://belmontforum.org/feed/ HTTP 200 is news only (rejected). WP REST open_opportunity (1 item, Ocean 2), _future_opportunity (Biodiversity 3, Polar), previous_opportunity (20 shown, 2025 and earlier) HTTP 200 but no deadline fields (acf empty, no content). Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

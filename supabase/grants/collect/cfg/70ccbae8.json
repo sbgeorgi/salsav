@@ -1,0 +1,35 @@
+{
+  "id": "70ccbae8-693a-41f5-aecb-5d6a87247a1d",
+  "name": "Eni S.p.A. (Eni Award)",
+  "program": "Eni Award 2027 (Advanced Environmental Solutions, Energy Transition, Energy Frontiers main prizes)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.eni.com/en-IT/strategic-vision/innovation/eni-award.html",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "item": "div.fascia-link",
+      "match": "2027 Eni Award",
+      "title": "h2",
+      "link": "a[href]",
+      "date_label": true,
+      "amount": false
+    },
+    "auto_vet": true,
+    "max_items": 10
+  },
+  "collect_note": "Eni's own Eni Award page (server-rendered HTML, no JavaScript) carries the 2027 round block with the application deadline (November 20th, 2026; Eni for Innovation Recognitions January 31st, 2027) and its Apply link to the official candidate portal eniaward2027.net. Each prize's Official Announcement PDF and regulations sit on eni.com (AEM DAM), but the PDFs carry no machine-readable deadline line, so the monitored item is the round itself; a new round (new year) changes its text and deadline.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "The 2027 Eni Awards - Official announcements",
+        "deadline": "2026-11-20",
+        "url": "https://eniaward2027.net/"
+      }
+    ]
+  },
+  "evidence": "GET https://www.eni.com/en-IT/strategic-vision/innovation/eni-award.html HTTP 200, 605 KB, server-rendered; block div.fascia-link: 'Deadline for applications is November 20th, 2026 (only for Eni for Innovation Recognitions the deadline is January 31st, 2027)', Apply link https://eniaward2027.net/; six accordion items 'Eni Award 2027 - <prize>' with PDF links under /content/dam/enicom/documents/eng/visione/innovation/eni-award/eni-award-2027/. GET eni.com/en-IT/strategic-vision/innovation/eni-award/jcr:content.model.json HTTP 200 JSON (AEM model, same deadline text). No RSS (/en-IT/feed, /en-IT/rss.xml 404), no WordPress REST (404), sitemap.xml 404 on root, en-IT sitemap.xml HTTP 200 (2993 urls, no calls section), robots.txt 200. eniaward2027.net HTTP 302 then candidate login portal (credentials required, not read). Eni is not a US or EU federal funder: Grants.gov and SEDIA not applicable. checked 2026-11-12",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

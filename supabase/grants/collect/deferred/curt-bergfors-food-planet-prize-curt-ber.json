@@ -1,0 +1,18 @@
+{
+  "id": null,
+  "name": "Curt Bergfors Food Planet Prize (Curt Bergfors Foundation)",
+  "program": "Food Planet Prize",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://foodplanetprize.org/prize/",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch only. The Food Planet Prize has no call for proposals and no deadline-bearing call page: it is an annual award that takes nominations through a form open year-round (the page advises nominating before May for the following year's cycle, which is guidance, not a dated call). The prize page is watched twice a day and any text change (for example a new cycle, longlist or shortlist wording) changes the content hash and is flagged. The nomination form itself is not a call and is not collected.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Checked 2026-11-12. Plain HTTP GET https://foodplanetprize.org/prize/ HTTP 200 (49 KB, WordPress, 7,711 chars visible text, no 'deadline' wording; nominations form open year-round, submit before May for next year). https://foodplanetprize.org/nominate/ HTTP 200 (nomination form, open all year). /wp-json/wp/v2/types HTTP 200: types entry, person, press, prizewinner, report, no opportunity or call type. /wp-json/wp/v2/prizewinner HTTP 200 (winners, not calls). /feed/ and /rss/ HTTP 200: 10 news items (latest 2026-11-04 'The 2027 Longlist Is Here!'), news not calls. Sitemaps HTTP 200: news, press, entry, person, report, joblisting (foundation jobs), page, post. /apply/ and /nominations/ HTTP 404. Grants.gov search2 keyword 'Food Planet Prize' HTTP 200: 0 title hits. SEDIA search API GET HTTP 405. endpoint_recon.py --no-chrome: verdict html_ok, no endpoint found (Chrome port 9333 was down).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

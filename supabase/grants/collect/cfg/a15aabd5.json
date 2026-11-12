@@ -1,0 +1,30 @@
+{
+  "id": "a15aabd5-c77c-4c65-a093-abd8db4123da",
+  "name": "Prince Sultan Bin Abdulaziz International Prize for Water (PSIPW)",
+  "program": "PSIPW 13th Award (2028): Creativity Prize and four Specialized Prizes (Surface Water, Groundwater, Alternative Water Resources, Water Management and Protection)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://psipw.org/nomination-info/",
+  "feed_url": null,
+  "adapter_config": {
+    "self": {
+      "title": "PSIPW 13th Award (2028): nominations for the Creativity and Specialized Prizes",
+      "deadline_regex": "(\\d{1,2}\\s+[A-Za-z]+\\s+\\d{4})\\s*:\\s*Deadline\\s+for\\s+receiving\\s+nominations"
+    },
+    "auto_vet": true
+  },
+  "collect_note": "Reads the one dated nomination cycle printed on the official Nomination Info page (\"31 December 2027: Deadline for receiving nominations\") twice a day; the call is open until that date and the same call updates in place if the date moves. Chosen over the WordPress RSS feed (psipw.org/feed/ is news and laureate items only, 0 calls, rejected), the sitemap (no call URLs), the wp-json types (no opportunity post type; only Elementor/plugin types), and the Open New Nomination form page (/new-nomination/, which has no deadline text and only links the two PDF application guides). Prize, not a grant: nominations are self or institution nominations on the prize's own form, so auto_vet is left off and the item is a hidden candidate until vetted.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "PSIPW 13th Award (2028): nominations for the Creativity and Specialized Prizes",
+        "deadline": "2027-12-31",
+        "url": "https://psipw.org/nomination-info/"
+      }
+    ]
+  },
+  "evidence": "GET https://psipw.org/nomination-info/ (HTTP 200, text/html, 137505 bytes, WordPress/Elementor; visible text 6962 chars via endpoint_recon). Visible timeline: '15 January 2026: Call for nominations to the Prize and opening of the online application form for the 13th award.' and '31 December 2027: Deadline for receiving nominations.' Also checked: /feed/ (200 RSS, 10 items, news), /sitemap_index.xml (200, post/page/category sitemaps only), /robots.txt (200), /wp-json/wp/v2/types (200, no opportunity CPT), /new-nomination/ (200, form landing, no date), no Grants.gov or SEDIA equivalent. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

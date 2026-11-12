@@ -1,0 +1,30 @@
+{
+  "id": "6cae3342-97a8-4683-9f6f-ef2b2dfedd81",
+  "name": "Greenacres Foundation",
+  "program": "Regenerative Agriculture Research Grant (2027 targeted RFP)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://green-acres.org/research/regenerative-agriculture-research-grant/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "Regenerative Agriculture Targeted RFP (Greenacres Foundation)",
+      "deadline_regex": "Application\\s+Deadline:\\s+([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads the dated 2027 Application Deadline of the Greenacres Foundation Regenerative Agriculture targeted RFP from its own page twice a day (plain HTML, no JavaScript). The program's main page (/research/agriculture-research-grant/) states its Letter of Intent deadline only as month and year ('anticipated February 2027'), which the parser cannot store, so the dated call lives on this sibling page; the main page is not monitored as a dated call. The Greenacres site has no grant portal, no opportunity post type and no calls feed (its RSS feed is news and blog posts), so this page is the best source that exists.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Regenerative Agriculture Targeted RFP (Greenacres Foundation)",
+        "deadline": "2027-04-26",
+        "url": "https://green-acres.org/research/regenerative-agriculture-research-grant/"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP GET https://green-acres.org/research/regenerative-agriculture-research-grant/ HTTP 200, 216 KB, static WordPress HTML, text reads '2027 Grant Information ... Grant Budget: $250,000 Application Deadline: April 26, 2027'. Program page https://green-acres.org/research/agriculture-research-grant/ HTTP 200: 'Letter of Intent Deadline: anticipated February 2027' (month only). Also checked: /feed/ (10 blog or news items, no calls), /wp-json/wp/v2/types (no grant post type; programs CPT is not opportunities), sitemap_index (page sitemap lists research RFP pages), ical special-events feed (0 grant events), robots.txt (no block). Sibling /research/agricultural-grants-part-2/ also shows 'Application Deadline: April 26, 2027' and is not covered by this one-url config. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "b6fda0d5-1a63-4c0d-81f3-daa1b46d35b5",
+  "name": "Waverley Street Foundation",
+  "program": "Clean energy and healthy food and land grantmaking",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.waverleystreet.org/about",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "No public call list exists: Waverley Street Foundation states on its FAQ that it does not accept unsolicited proposals, and it is a spend-down foundation that funds by invitation. The About page (with its FAQ) is watched twice a day, so a change such as a new call or an opened application route is flagged for review.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12 with a desktop UA: https://www.waverleystreet.org/about HTTP 200 (197 KB, Craft CMS, SEOmatic metadata, static HTML). FAQ text: 'we do not accept unsolicited proposals'. Grants pages: /grants, /funding, /apply, /opportunities, /request-proposal, /api, /api/grants, /work/grantees, /grantees all HTTP 404. Feeds: /feed, /rss, /news.rss, /news/feed, /feed.xml, /atom.xml, /stories.rss all HTTP 404. Sitemap /sitemaps-1-sitemap.xml HTTP 200 (9 sections; the grantees section has 1 grantee profile, not a call; 85 URLs total, no call or deadline keywords). /static/dist/main.js: no fetch, XHR, /api or algolia calls. No ld+json call data, no Airtable, Google Sheets, Submittable, SmartSimple, Fluxx, iCal or PDF call document found on the home, about, work, learning, news, stories, careers or contact pages. Grants.gov search2 keyword 'Waverley Street Foundation' returned 281 generic hits, none a Waverley call. EU SEDIA text search 'Waverley Street Foundation' returned 0 results.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "page_reason": "invite_only_no_public_calls: the foundation does not accept unsolicited proposals and no public call list, feed, API or portal exists over plain HTTP.",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

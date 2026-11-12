@@ -1,0 +1,26 @@
+{
+  "id": null,
+  "name": "The Lemelson Foundation",
+  "program": "Climate Action initiative (invention and innovation)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.lemelson.org/funding/climate-action/",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch only: the Climate Action program page is watched twice a day and any change is flagged for review. The foundation states it primarily awards grants through an invited process and does not accept unsolicited proposals, so no public call rows exist to collect. Its site RSS feed and sitemap carry news, staff and grantee posts only, and its one RFP post is a consultant procurement, not a funding call.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Checked 2026-11-12 (America/Phoenix). GET https://www.lemelson.org/funding/climate-action/ HTTP 200, text/html, 190 KB, WordPress, static HTML; visible text has no call, RFP, deadline or apply wording (only 'Read Eric's complete definition' and resource reports). GET https://www.lemelson.org/funding/climate/ HTTP 200 (same page). GET https://www.lemelson.org/what-we-fund/ HTTP 200: 'we do not accept unsolicited proposals' and 'primarily awards grants through an invited process'; 'How do you evaluate submitted proposals' answers invited proposals only. GET https://www.lemelson.org/funding/ HTTP 200 (no open call). GET https://www.lemelson.org/feed/ HTTP 200 application/rss+xml, 12 items dated 2026-05-01 to 2026-10-20 (news, staff, NIM profiles; no calls). GET https://www.lemelson.org/category/initiatives/climate/feed/ HTTP 200 (Climate Action archive: reports and grantee profiles). GET https://www.lemelson.org/wp-json/wp/v2/types HTTP 200 (post, page, attachment, wp_block etc.; no custom call or grant post type). GET https://www.lemelson.org/wp-json/wp/v2/search?search=request%20for%20proposals HTTP 200: one hit, 'Request for Proposals: Diversity, Equity, Inclusion and Justice Consultant for Oregon Regional Innovation Hubs' (procurement, not a funding call). GET /wp-json/wp/v2/search?search=grant HTTP 200: historic grant announcements only. GET /post-sitemap.xml HTTP 200 (425 URLs, none a current call). GET /page-sitemap.xml HTTP 200 (61 URLs, no call pages). GET /sitemap_index.xml and /wp-sitemap.xml HTTP 200. GET /robots.txt HTTP 200 (no crawl block for the program page). GET https://lemelson.givingdata.com/portal/login HTTP 200, grantee portal login page (grantees only, not read). endpoint_recon.py --no-chrome: verdict rss (feed of news, not calls), confidence 0.9; the rss verdict was rejected as a calls source because the feed items are not calls for proposals. Old call announcements found only as historic posts: EOP network applications (2022) and ASEE/NSF grants (not Climate Action).",
+  "edge_risk": "none",
+  "confidence": "high",
+  "edge_case": "invite_only_no_public_calls",
+  "page_reason": "The Lemelson Foundation primarily awards Climate Action grants through an invited process and states it does not accept unsolicited proposals, so no public calls for proposals exist; only the program page is watched for a change.",
+  "harness": {
+    "ok": true,
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-12"
+  }
+}

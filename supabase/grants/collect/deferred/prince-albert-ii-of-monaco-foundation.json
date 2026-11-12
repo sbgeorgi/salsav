@@ -1,0 +1,36 @@
+{
+  "id": null,
+  "name": "Prince Albert II of Monaco Foundation",
+  "program": "Call for projects (2026 session; environmental priorities, priority geographies)",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://www.fpa2.org/en/submit-a-project",
+  "feed_url": "https://www.fpa2.org/en/feed/actualites",
+  "adapter_config": {
+    "filter": {
+      "any": [
+        "re:calls? for [a-z\\- ]{0,30}(project|proposal|entr|application|micro|interest|expression)"
+      ]
+    },
+    "max_items": 40
+  },
+  "collect_note": "Reads the Foundation's own news feed (actualites, 1216 items, newest first; the adapter reads the newest 50) and keeps only call announcements (call for projects, proposals, entries, micro-initiatives, interest or expressions of interest), so new calls of the Foundation and its initiatives (Pelagos, DIMFE, BeMed, Human-Wildlife, OACIS, MedFund, Photography Award, partner calls such as the Commonwealth Blue Charter Incubator) surface twice a day with no agent. The program's own submit-a-project page only describes the 2026 session (online 1-30 June 2026, now closed; priorities: climate and renewables, biodiversity, water and desertification; priority geographies: Mediterranean, polar zones, LDCs), so it is not a dated list and cannot be collected as one. Feed items carry no deadline; the feed is the best plain-HTTP source (C4 step 2), and deadlines must be read from each call article.",
+  "expect": {
+    "min_items": 2,
+    "sample": [
+      {
+        "title": "Call for proposals for the Blue Charter Incubator Round II to accelerate ocean action",
+        "deadline": null,
+        "url": "https://www.fpa2.org/en/news/call-for-proposals-for-the-blue-charter-incubator-round-ii-to-accelerate-ocean-action-08561"
+      },
+      {
+        "title": "The Prince Albert II of Monaco Foundation launches the call for entries for its 2027 Environmental Photography Award",
+        "deadline": null,
+        "url": "https://www.fpa2.org/en/news/the-prince-albert-ii-of-monaco-foundation-launches-the-call-for-entries-for-its-2027-environmental-photography-award-08553"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP GET 2026-11-12: https://www.fpa2.org/en/submit-a-project HTTP 200 text/html (2160 chars text; 'The 2026 session ... will be online from 1st to 30th June 2026 included... Shortlisted projects will be considered for funding from 2028 onwards'); feed https://www.fpa2.org/en/feed/actualites HTTP 200 text/xml (1216 items, newest 11 Nov 2026); robots.txt HTTP 200 with Sitemap entry; sitemap.xml HTTP 200 (3155 urls, no dated calls section). Matching calls in newest 50 items: Blue Charter Incubator Round II (05 Oct 2026; article: applications due 11 Dec 2026 23:59 GMT, opened by Commonwealth Secretariat with the Foundation as partner); 2027 Environmental Photography Award call for entries (01 Sep 2026). Deadlines are not in the feed.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

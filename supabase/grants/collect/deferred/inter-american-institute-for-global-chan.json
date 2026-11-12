@@ -1,0 +1,43 @@
+{
+  "id": null,
+  "name": "Inter-American Institute for Global Change Research (IAI)",
+  "program": "Research projects and seed grants (calls for applicants, STeP fellowships, training scholarships, co-funded calls)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.iai.int/en/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.iai.int/en/",
+      "item": "div.bloque-news",
+      "match": "call|applicant|applications?|fellow|scholarship|convocat|expressions? of interest|request for",
+      "date_label": true,
+      "detail": {
+        "max": 5,
+        "deadline_regex": "Application deadline:?\\s*(\\d{1,2}\\s+[a-z]+\\s+\\d{4})"
+      }
+    },
+    "max_items": 20,
+    "auto_vet": false
+  },
+  "collect_note": "The IAI home page 'Recently Published' cards are read twice a day; a card whose text names a call, applicants, applications, fellows, scholarships or a request for expressions of interest becomes a row, and its own page is read for the 'Application deadline' date (up to five pages per run). Chosen because the IAI calls hub (post/detail/Call-for-applicants) has no list of current calls (it shows only a 'Past calls' link), and the news archive (/en/news) lags behind: its newest call (HARMONIZE, deadline 23 Nov 2026) is absent there but present on the home page. Only the home page cards are read, so a call that is posted and leaves the three-card window between runs is missed; the funder-owned pages past-calls and news are not read by this config because one config has one listing.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Call for applications: HARMONIZE workshop in Lima",
+        "deadline": "2026-11-23",
+        "url": "https://www.iai.int/en/post/detail/Call-for-applications:-HARMONIZE-workshop-in-Lima"
+      }
+    ]
+  },
+  "evidence": "Checked 2026-11-12. GET https://www.iai.int/en/ HTTP 200 text/html 32 KB, server-rendered (no XHR needed); 'Recently Published' has 3 div.bloque-news cards: EC-62 (3 Dec 2026, not a call), 'Call for applications: HARMONIZE workshop in Lima' ('Full scholarships. Apply by 23 November'), Webinar 3 (18 Nov 2026). Its detail page https://www.iai.int/en/news/detail/Call-for-applications:-HARMONIZE-workshop-in-Lima HTTP 200 states 'Application deadline: 23 November 2026' and 'Applications open: 2 November 2026'. Also checked: /en/news HTTP 200 (83 cards, newest call 'Call for STRI-CMAR ... Open Until 26 May' from 2025, no 2026 call); /en/post/detail/Call-for-applicants HTTP 200 (no call list, only a 'PAST CALLS' link); /en/post/detail/Past-calls-for-applicants HTTP 200 (past only); /en/capacity-building/seed-grant HTTP 200 (lists funded projects; its call PDF SGPCall_English.pdf is an old CRN-era pre-proposal call with no 2026 date); endpoint_recon (plain) html_ok, no JSON/RSS/sitemap content (sitemap.xml, rss, feed, atom.xml, wp-json return HTTP 200 with empty bodies or 404); Grants.gov search2 keyword 'IAI' 0 hits.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": null,
+  "name": "The Mosaic Company Foundation for Sustainable Food Systems",
+  "program": "Soil health, water quality and community development",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://mosaicco.com/foundation",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "No public calls list exists; the quarterly deadlines (Dec 21 2026, Mar 22 2027, ...) appear only in the 2026 Funding Guidelines PDF linked from mosaicco.com/Community-Investments, which the html adapter cannot read, and the Benevity application form is a single form with no dates. This is a page watch on the funder page only (change detection, no call rows).",
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "Checked 2026-11-12. mosaicco.com/foundation HTTP 200, 8207 chars, no grant or deadline text. mosaicco.com/Community-Investments HTTP 200, 3835 chars, with an APPLY NOW link to forms.benevity.org/f5fdb16a-6f63-434e-982f-7914dcd9c02e (Mosaic Community Investments application form, no dates) and a COMMUNITY INVESTMENT GUIDELINES PDF at mosaicco.com/fileLibrary/publicFiles/0-2026-Funding-Guidelines.pdf (Revised January 2026; application deadlines printed in its table, due midnight EST). robots.txt Sitemap points to http://mosaicco.com/sitemap.php, an HTML page with no call links. /feed, /sitemap_index.xml, /wp-json/ and /wp-json/wp/v2/types return 404; /sitemap.xml returns HTML. Endpoint recon verdict html_ok, no endpoint found.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "c59e28a1-92f3-4158-8011-0f257f8aeeab",
+  "name": "Frontiers Planet Prize (National Academies of Sciences, Engineering, and Medicine, U.S. National Representative Body)",
+  "program": "Frontiers Planet Prize (USD 1M per International Champion)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.nationalacademies.org/programs/PGA-GLOBAL-22-03/application-process",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.nationalacademies.org/programs/PGA-GLOBAL-22-03/updates",
+      "item": "div[data-component=\"card:generic\"]",
+      "title": "p.f-heading-05",
+      "match": "Now Open|Call for|Applications? open|Nominations? open|Open for (?:nominations|applications)",
+      "skip": "Winner|Feature Story"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads every call announcement ('... Now Open', 'Call for ...') from the National Academies program updates page for this prize, which is the official program page and lists each edition's opening, twice a day. The card date is the announcement date, not the deadline, so the 5th edition (announced Mar 16, 2026; national deadline Oct 30, 2026 per the program page) reads as closed; a future edition will show its opening date. Not auto-vetted: review before showing. Sources checked and not used: Grants.gov search2 (no match), NAS and prize-site RSS (news only), Squarespace JSON (news only), NAS sitemaps (no call page), no public portal (NNB registration requires the platform).",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Frontiers Planet Prize - 5th Edition Now Open",
+        "deadline": "2026-03-16",
+        "url": "https://www.nationalacademies.org/news/frontiers-planet-prize-5th-edition-now-open"
+      }
+    ]
+  },
+  "evidence": "Fetched 2026-11-12: program application-process page (HTTP 200, 13.6k chars text, no JS needed for text; key dates: applications open Mar 15 to Oct 30, 2026; national deadline Oct 30, 2026 5pm EDT; international review Dec 2026 to Feb 2027; champions announced Apr 22, 2027; USD 1M per International Champion). Program updates page (HTTP 200, server-rendered cards with data-component card:generic, 8 updates; 5th edition card dated Mar 16, 2026). Endpoint recon: html_ok, no opportunity endpoint, sitemap has no call pages, Chrome port 9333 down (no render stage). Grants.gov search2 keyword 'Frontiers Planet Prize': 2247 hits, none for this program. Prize site frontiersplanetprize.org: Squarespace (news RSS and JSON only, 20 recent news items, no calls).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

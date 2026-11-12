@@ -1,0 +1,30 @@
+{
+  "id": null,
+  "name": "Transforming Energy Access (TEA), FCDO Ayrton Fund",
+  "program": "Open calls, technology accelerators and foundational research",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://tea.carbontrust.com/latest-funding-opportunities",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "TEA latest funding opportunity (open call or technology accelerator)",
+      "deadline_regex": "(?:applications? (?:are )?open until|deadline:?|closing date:?|closes? (?:on|by))\\s+(\\d{1,2}\\s+[A-Za-z]+\\s+\\d{4})"
+    }
+  },
+  "collect_note": "Reads the one open call that TEA lists on its own Latest Funding Opportunities page (the page every TEA call is posted to) twice a day, and uses the closing date stated in its text. TEA has no API, feed or sitemap entry for calls, so this page is the best source that exists. Nothing is shown while the listed call is closed (the only call listed today, Digital Energy Challenge 2026, closed 17 June 2026); a new call with a future 'open until' date is picked up. Only one call at a time is read, so a second call posted in the same year is not seen until the first closes.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "Applications are open until 17 June 2026 (23:59 CET).",
+    "url": "https://tea.carbontrust.com/latest-funding-opportunities",
+    "checked": "2026-11-12",
+    "also": "Open Calls and Technology Accelerators page lists no dated call; homepage, foundational research and grant application support pages carry no deadline text; news RSS (https://tea.carbontrust.com/news/feed/) is news, not calls."
+  },
+  "evidence": "GET https://tea.carbontrust.com/latest-funding-opportunities HTTP 200, 181 KB static WordPress HTML, text in the page (no JavaScript needed), checked 2026-11-12. Only listed call: 'Digital Energy Challenge 2026 - Call for projects' (partner TEA on the Tech Accelerator category; run by AFD, EU co-funded), applications open until 17 June 2026, APPLY NOW link https://digital-energy.eu/en/digital-energy-challenge-appel-projets. Channels checked: robots.txt (Sitemap entry, /wp-json/ disallowed), sitemap_index.xml (post, page, category, region, output_type, technology, the_year, activity sitemaps, no opportunity post type), /feed/ and /news/feed/ (news only), /feed/atom/ (HTML), endpoint_recon --no-chrome (verdict html_ok, no JSON, no XHR endpoint, cms wordpress), Grants.gov and EU SEDIA not applicable (UK FCDO funder).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

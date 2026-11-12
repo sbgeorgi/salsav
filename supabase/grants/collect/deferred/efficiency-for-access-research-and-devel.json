@@ -1,0 +1,18 @@
+{
+  "id": null,
+  "name": "Efficiency for Access Research and Development Fund",
+  "program": "Agritech Advance (2026) and Agritech Call (2023)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://efficiencyforaccess.org/rd-fund/agritech-call/",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "No open call exists to collect: the Agritech page describes Agritech Advance (2026) as follow-on support already awarded to four named organisations, and the Agritech Call (2023) as closed with 11 funded projects. The fund's other calls (Open Call 2018, Cooling Call 2019, Enabling Technologies Call 2020, Kenya Cold Chain Accelerator) are closed too, and no RSS, WordPress call post type, sitemap entry, Grants.gov or SEDIA record names the fund. The page is watched twice a day so a new call announcement changes the content hash and is flagged for review; no deadlines are collected because none is published.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12: https://efficiencyforaccess.org/rd-fund/agritech-call/ 200 text/html (7203 chars plain text, WordPress, one ld+json block); /rd-fund/ 200 (lists Agritech Call & Advance, First Open Call, Cooling Call, Enabling Technologies Call, Completed Projects, Kenya Cold Chain Accelerator, About); /rd-fund/open-call/, /cooling-call/, /enabling-technologies-call/, /kenya-cold-chain-accelerator/, /completed-projects/, /about-the-rd-fund/ all 200 and all closed (awarded cohorts or history, no deadline). /feed/ 200 with 0 items; /comments/feed/ 200 with 0 items; /news/feed/ and /publications/feed/ 404; /sitemap_index.xml 200 (page, news, program, publication sitemaps; page-sitemap lists the rd-fund pages above, no call URL beyond them); /wp-json/wp/v2/types 200 (only post, page, attachment and theme types, no opportunity CPT); /wp-json/wp/v2/pages?slug= returns []. Grants.gov search2 keyword 'Efficiency for Access': 5 unrelated hits (DOE, HRSA, NPS), none from this funder. EU SEDIA search returned an internal error (no result). endpoint_recon.py verdict html_ok (confidence 0.7), no json_api or feed candidate. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

@@ -1,0 +1,58 @@
+{
+  "id": "c1a8d745-6a95-40b6-85ff-793966e33dbe",
+  "name": "Calouste Gulbenkian Foundation",
+  "program": "Gulbenkian Prize for Humanity (the Prize has no public call; climate, energy, water and environment calls of the Foundation are read from its grants list)",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://gulbenkian.pt/en/the-foundation/gulbenkian-prize-for-humanity/",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://gulbenkian.pt/wp-json/wp/v2/grant?per_page=100",
+    "method": "GET",
+    "items_path": "$",
+    "also_page": true,
+    "map": {
+      "external_id": "id",
+      "title": "title.rendered",
+      "url": "link",
+      "description": "acf.description",
+      "deadline": "acf.applications.0.end_date",
+      "open_date": "acf.applications.0.start_date"
+    },
+    "filter": {
+      "any": [
+        "clim",
+        "energ",
+        "água",
+        "agua",
+        "ambiental",
+        "biodivers",
+        "natureza",
+        "sustentab",
+        "alimentar",
+        "agrícol",
+        "agricult",
+        "renov",
+        "conservação",
+        "hídric"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 40,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the Foundation's public WordPress grants list (wp-json grant type, every published call with its application start and end dates) twice a day and keeps the climate, energy, water, agriculture and environment calls. The Gulbenkian Prize for Humanity itself has no public call for applications (nominations only, the page publishes statistics and winners), so nothing from the Prize is collected; the funder's own calls are the best live source that exists.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Comunidades de Energia Gulbenkian",
+        "deadline": "2026-09-16",
+        "url": "https://gulbenkian.pt/bolsas-lista/comunidades-de-energia-gulbenkian/"
+      }
+    ]
+  },
+  "evidence": "Plain HTTP GET https://gulbenkian.pt/wp-json/wp/v2/grant?per_page=100 returned 200 application/json, X-WP-Total 52, no login (checked 2026-11-12). Prize page https://gulbenkian.pt/en/the-foundation/gulbenkian-prize-for-humanity/ returned 200, 7396 chars, no nomination or application call text. Sitemaps grant-sitemap.xml, program-sitemap.xml and funding_type-sitemap.xml returned 200. wp/v2/types, wp/v2/program and wp-json root return 401 (login required). /feed returns 500. Chrome recon unavailable (port 9333 down).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

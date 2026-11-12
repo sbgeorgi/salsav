@@ -1,0 +1,36 @@
+{
+  "id": "af4f0a9f-a40d-4907-8716-a76ce50bb1f9",
+  "name": "W. M. Keck Foundation",
+  "program": "Research Program (science and engineering, new application process)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.wmkeck.org/research-overview/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "W. M. Keck Foundation Research Program (Basic Science Research)",
+      "deadline_regex": "\\(([A-Za-z]+ \\d{1,2}, \\d{4})\\)"
+    }
+  },
+  "collect_note": "Reads the Research Program's two named cycle deadlines (the second Monday after Thanksgiving and the first Monday after Memorial Day, each printed with its date in parentheses) from the program's own overview page, twice a day; the nearest future date is the open call. Chosen over the GOapply portal (login wall, no public opportunity list), the RSS feed (news only, 0 items), the WordPress news type (announcements, not calls), and the application PDF (rule only, no dates).",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "W. M. Keck Foundation Research Program (Basic Science Research)",
+        "deadline": "2026-12-07",
+        "url": "https://www.wmkeck.org/research-overview/"
+      }
+    ]
+  },
+  "evidence": "GET https://www.wmkeck.org/research-overview/ HTTP 200, text/html, 23-344 KB, static WordPress/Elementor HTML, no login, text 13052 chars; 'Grant Cycle Timeline' lists 'Second Monday after Thanksgiving by 4:30pm PT (December 7, 2026)' and 'First Monday after Memorial Day by 4:30pm PT (June 7, 2027)' (exactly these two parenthesized dates on the page). Dates verified by calendar: Thanksgiving 2026 is Nov 26, so the second Monday after is Dec 7; Memorial Day 2027 is May 31, so the first Monday after is June 7. Also checked: /feed/ HTTP 200 0 items; /wp-json/wp/v2/types lists custom type 'news' (38 posts, announcements only); /wp-json/wp/v2/pages?slug=research-overview HTTP 200 (same content); sitemap_index.xml HTTP 200 (page, news, news_category sitemaps only, no call list); PDF WMKF_Research_Application_Instructions_260826.pdf HTTP 200 (rule only, no dates); goapply2.akoyago.com/WMKF/opportunities HTTP 200 but a sign-in page (login_required). Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high",
+  "harness": {
+    "ok": true,
+    "count": 1,
+    "open": 1,
+    "checked": "2026-11-12"
+  }
+}

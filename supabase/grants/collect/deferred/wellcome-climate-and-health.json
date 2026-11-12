@@ -1,0 +1,24 @@
+{
+  "id": null,
+  "name": "Wellcome (Climate and Health)",
+  "program": "Climate Impacts Awards (Climate and Health)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://wellcome.org/research-funding/schemes/climate-impacts-awards-unlocking-urgent-climate-action-making-health-2",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "Climate Impacts Awards: Unlocking urgent climate action by making the health effects of climate change visible (Wellcome)",
+      "deadline_regex": "(\\d{1,2}\\s+[A-Za-z]+\\s+\\d{4})\\s+Application\\s+deadline"
+    }
+  },
+  "collect_note": "Reads the next dated application deadline for the Wellcome Climate Impacts Awards (Climate and Health) from its own scheme page, twice a day, as a cycle item. Chosen over the site JSON because the schemes JSON leaves the deadline blank and keeps a stale Open status for this scheme; the page's application timeline is the only plain-HTTP source of the deadline. Right now the 2026 round closed on 8 April 2026, so nothing is listed until Wellcome posts the next round's deadline on this page.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://wellcome.org/research-funding/schemes/climate-impacts-awards-unlocking-urgent-climate-action-making-health-2 HTTP 200, text/html 466 KB, __NEXT_DATA__ timeline: Application deadline 8 April 2026 (2026 round), Interviews 21-23 July 2026, Decision August 2026; schemeStatus open, schemeClosesForApplications null. Listing JSON GET https://wellcome.org/_next/data/pwm1ge7xjHHDKL0W1lj88/research-funding/schemes.json HTTP 200 (buildId-bound, blank deadline). /api/search-listing/funding-schemes 404, /feed /rss.xml /wp-json 404, sitemap.xml lists 2 sitemap pages only. checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

@@ -1,0 +1,24 @@
+{
+  "id": null,
+  "name": "Fondation Prince Albert II de Monaco",
+  "program": "Annual Call for Projects (climate and renewable energy; water and desertification; biodiversity)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.fpa2.org/en/submit-a-project",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "self": {
+      "title": "Annual Call for Projects (climate and renewable energy; water and desertification; biodiversity)",
+      "deadline_regex": "online from \\d{1,2}(?:st|nd|rd|th)? to (\\d{1,2}(?:st|nd|rd|th)? [a-z]+ \\d{4})"
+    }
+  },
+  "collect_note": "Reads the next dated Annual Call for Projects window from the foundation's own submit-a-project page twice a day: the page states the session as 'online from 1st to 30th June YYYY', so the deadline is the 30 June after the year it names. Currently empty by design: the 2026 session (1 to 30 June 2026) is closed and no 2027 session is posted, and the adapter drops past dates. Other channels were rejected: the only RSS (/en/feed/actualites) is a news feed with no call items, the sitemap and news pages hold only dated call announcements with no list endpoint, no JSON, API or portal exists, and the eligibility geography (Mediterranean, polar zones, Least Developed Countries) excludes Southwest US projects, so auto_vet is false and a human must vet any item.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Checked 2026-11-12. Plain HTTP GET https://fpa2.org/en/submit-a-project returns HTTP 200 and redirects to https://www.fpa2.org/en/submit-a-project (20.9 KB HTML, about 2.2k chars of visible text). The page reads '2026 call for projects ... will be online from 1st to 30th June 2026 included' and 'Shortlisted projects will be considered for funding from 2028 onwards'. The 2023 announcement (https://www.fpa2.org/en/actualites/2023-call-for-projects-of-the-prince-albert-ii-of-monaco-foundation-08316, dated 30 April 2023) uses the same wording: 'online from 1st to 30th June 2023', which supports the regex. Feed https://www.fpa2.org/en/feed/actualites (HTTP 200, 1216 news items) is news only. Sitemap https://www.fpa2.org/sitemap.xml (HTTP 200, 3155 URLs) lists dated call announcements (for example 2022 and 2023 openings) without a machine-readable call list. Probed and not found (HTTP 200 HTML home page fallback, no feed): /feed, /rss, /rss.xml, /atom.xml, /en/feed, /wp-json/wp/v2/types, /jsonapi, /api, /en/api/calls. /en/projects and /en/projets are funded-project showcases, not calls. /en/monitor-a-project is a project-monitoring form for grantees. Chrome stage skipped: port 9333 is down, so endpoint_recon ran with --no-chrome.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

@@ -1,0 +1,18 @@
+{
+  "id": "002801a7-0e64-4f21-b0ce-b6581f2b4d74",
+  "name": "The Coca-Cola Foundation",
+  "program": "Water stewardship and community water grants",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.coca-colacompany.com/foundation",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch only: the Foundation does not publish calls for proposals and states it does not accept unsolicited grant proposals; its SmartSimple request portal says applicants are invited by email, so there is no public call list to collect. The foundation page (which redirects to /about-us/people-and-communities/the-coca-cola-foundation) is watched twice a day and any change to its grant wording is flagged for review, which is the only signal that an open call could appear.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12: https://www.coca-colacompany.com/foundation HTTP 200 text/html after redirect to /about-us/people-and-communities/the-coca-cola-foundation (244 KB, 26.7 KB text). Page states 'Grant proposals ... we do not accept unsolicited proposals for grants'. Community Partner Portal link -> https://coca-cola.smartsimple.com/s_Login.jsp HTTP 200 (login page, 18 KB): 'The Coca-Cola Foundation no longer accepts unsolicited community funding requests. You will be notified by email if you are invited to submit a Foundation grant application.' No public opportunity list (s_PublicOpportunities.jsp and s_OpportunityList.jsp 404). Feeds /feed, /rss.xml, /atom.xml, /wp-json/wp/v2/types, /jsonapi, /api/grants all 404. robots.txt HTTP 200 lists sitemap; sitemap has 539 URLs, no calls section. Grants.gov search2 keyword Coca-Cola: 0 hits. EU SEDIA POST: unrelated results only. Recon: endpoint_recon verdict html_ok, no opportunity endpoint; Chrome stage refused on port 9333.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

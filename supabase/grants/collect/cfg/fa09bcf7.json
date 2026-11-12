@@ -1,0 +1,26 @@
+{
+  "id": "fa09bcf7-0321-45d7-83cb-0557d60494fd",
+  "name": "PepsiCo Foundation",
+  "program": "Backing farmers and safe water access",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.pepsico.com/our-impact/philanthropy/pepsico-foundation",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch. pepsico.com refused a desktop fetch (HTTP 403) on 2026-11-12 but the edge function reads it (health ok). The Foundation funds partners it selects and publishes no open calls; no sitemap, feed or JSON list of calls exists.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Checked 2026-11-12. Plain HTTP GET https://www.pepsico.com/our-impact/philanthropy/pepsico-foundation HTTP 200, 193 KB Next.js/Sitecore page, about 4.7k chars of visible text (Backing farmers and safe water copy, no call or deadline wording). /about/social-impact redirects to /about/pepsico-foundation (HTTP 200, same funder copy). /contact HTTP 200: Submit ideas card links to the Open Innovation and Unsolicited Idea Policy (product ideas, not grants). /sitemap.xml HTTP 200, 2,567 URLs, no calls, RFP or applications path (only newsroom, ESG and philanthropy pages). /robots.txt lists the sitemap only. Feeds /feed, /rss.xml, /newsroom.rss, /newsroom/rss, /en/rss: HTTP 404. /wp-json/wp/v2/types: HTTP 404 (not WordPress). Next data JSON /_next/data/<buildId>/... (buildId -aF1NPaf7VPE7hRQoIs9o): HTTP 404 both with and without /en. Site search JSON /api/search?q=... HTTP 200 (Elasticsearch-style hits of newsroom, story and ESG pages; its hits for apply, call for proposals and request for proposals are unrelated, none is a foundation call). Grants.gov search2 keyword PepsiCo: hitCount 0 (not a federal funder). SEDIA search GET: HTTP 405 (EU topics, not relevant). Recon: Chrome CDP port 9333 down, plain-HTTP stage only. Web search summaries (secondary, not verified on pepsico.com) say the foundation solicits proposals through invitation.",
+  "page_reason": "Invite-only: the foundation selects its grantees and publishes no calls. No systematic plain-HTTP channel exists (no feed, no JSON call list, no sitemap section). Watching the program page catches a future announcement.",
+  "edge_risk": "none",
+  "confidence": "medium",
+  "harness": {
+    "ok": false,
+    "count": 0,
+    "open": 0,
+    "error": "HTTP 403 from desktop fetch; edge function health ok 2026-11-12",
+    "checked": "2026-11-12"
+  }
+}
