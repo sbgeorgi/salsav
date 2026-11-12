@@ -1,0 +1,24 @@
+{
+  "id": "56f06ceb-5ba8-4836-8d8c-83e93e35bb0a",
+  "name": "Colorado Water Conservation Board",
+  "program": "Water Plan Grants (Agriculture category)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://cwcb.colorado.gov/funding/colorado-water-plan-grants",
+  "feed_url": null,
+  "adapter_config": {
+    "self": {
+      "title": "Colorado Water Plan Grants (Agriculture category)",
+      "deadline_regex": "(?:deadlines on|\\band) ((?:July|December) \\d{1,2})\\b",
+      "assume_next_year": true
+    }
+  },
+  "collect_note": "Cycle mode: the program page states two fixed rounds a year (\"application deadlines on July 1 and December 1\") without a year, so self.deadline_regex captures both month-and-day pairs and self.assume_next_year resolves each to its next occurrence on or after today; the nearest one becomes the open call (cycle:<year>, url = the program page). The date is a recurring-schedule inference, not a dated posting: when the page changes its rounds the capture stops matching and the item disappears. The remaining funding per category on the page is not read. Plain HTTP works for the program page; news and feed paths are 403.",
+  "expect": {
+    "min_items": 1,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-12: program page HTTP 200 text/html (Drupal, 16.7 KB text), no ld+json, no embedded JSON. /jsonapi/node/article 404; /feed, /rss.xml, /news-feed, /funding/feed, /news, /news-articles all 403; sitemap.xml 200 (600 URLs, only news-article pages and application-list pages, no open-call listing). Earlier self test with deadline_regex gave 0 items because the page text carries no year (engine had no yearless-date parsing); 2026-11-12 engine fix self.assume_next_year reads July 1 / December 1 as their next occurrence (program page text: 'The CWCB offers two grant cycles each year, with application deadlines on July 1 and December 1.'). Grants.gov not applicable (state funder). Recon: endpoint_recon verdict html_ok, no opportunity endpoint.",
+  "edge_risk": "bot_protection",
+  "confidence": "medium"
+}

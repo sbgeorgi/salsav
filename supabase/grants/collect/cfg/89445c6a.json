@@ -1,0 +1,30 @@
+{
+  "id": "89445c6a-d4c9-403f-a507-8aab4bf9abe5",
+  "name": "National Science Foundation, Advanced Technological Education (ATE)",
+  "program": "NSF ATE (solicitation NSF 24-584)",
+  "adapter": "grants_gov",
+  "url": "https://www.nsf.gov/funding/opportunities/ate-advanced-technological-education",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "NSF",
+    "keyword": "Advanced Technological Education",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "also_page": true,
+    "auto_vet": true,
+    "detail": true,
+    "filter": {
+      "fields": "title",
+      "any": ["advanced technological education"]
+    },
+    "max_items": 10
+  },
+  "collect_note": "Grants.gov is checked twice a day for NSF Advanced Technological Education (ATE) solicitations once posted or forecasted; the current one, NSF 24-584, is posted with a 2027-10-07 deadline. The title filter keeps only ATE, so new solicitation numbers are caught.",
+  "expect": {
+    "min_items": 1,
+    "sample": ["Advanced Technological Education (ATE)"]
+  },
+  "evidence": "POST https://api.grants.gov/v1/api/search2 (HTTP 200), agencies NSF + keyword Advanced Technological Education, all statuses: 24-584 'Advanced Technological Education (ATE)' posted, close 10/07/2027; older ATE numbers 10-539, 11-692, 07-530 are archived or closed (not returned with forecasted|posted). Program page https://www.nsf.gov/funding/opportunities/ate-advanced-technological-education HTTP 200 via fetch_text.py: 'October 7 2027 - Deadline date First Thursday in October, Annually Thereafter'. NSF program page has no feed; solicitation page reachable over plain HTTP. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

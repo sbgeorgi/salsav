@@ -1,0 +1,30 @@
+{
+  "id": "b818abe6-897e-4c5c-b902-382c32a77c3a",
+  "name": "NSF America's Seed Fund (SBIR/STTR)",
+  "program": "NSF SBIR/STTR Phase I and II",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.nsf.gov/funding/opportunities/small-business-innovation-research-small-business-technology/nsf26-510/solicitation",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "NSF SBIR/STTR Phase I, Phase II and Fast-Track (NSF 26-510)",
+      "deadline_regex": "(July 27, 2026|November 0?4, 2026|March 0?4, 2027|July 0?7, 2027)"
+    }
+  },
+  "collect_note": "Reads the full-proposal deadlines of the current NSF SBIR/STTR solicitation (NSF 26-510) from the NSF solicitation page twice a day and shows the nearest one still ahead. Right now that is Mar 4, 2027.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "NSF SBIR/STTR Phase I, Phase II and Fast-Track (NSF 26-510)",
+        "deadline": "2027-03-04",
+        "url": "https://www.nsf.gov/funding/opportunities/small-business-innovation-research-small-business-technology/nsf26-510/solicitation"
+      }
+    ]
+  },
+  "evidence": "Channels tried 2026-11-12: Grants.gov search2 (agencies NSF, keyword 'SBIR STTR', oppStatuses forecasted|posted) returned 1 unrelated hit (PD-98-1331) and oppNum 'NSF 26-510' returned 0 hits, so NSF SBIR is not on Grants.gov. seedfund.nsf.gov/solicitations/ is static HTML that links NSF 26-510 and 26-511 but carries no deadlines and its linked solicitation pages sit on another host (nsf.gov), so a list with detail hop cannot read them. The nsf.gov solicitation page is static HTML (30 KB) with 'Full Proposal Deadline(s)': July 27 2026, November 04 2026, March 04 2027, July 07 2027.",
+  "edge_risk": "A replacement solicitation (new NSF number) would not be seen until this page changes; the deadline_regex is tied to the four listed dates.",
+  "confidence": "medium"
+}

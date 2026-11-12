@@ -1,0 +1,41 @@
+{
+  "id": "fafcf82e-e44f-49fe-b73c-fa9475f69424",
+  "name": "Novo Nordisk Foundation",
+  "program": "Challenge Programme (international, DKK 30-75 million per grant; theme rotates yearly)",
+  "mode": "calls",
+  "adapter": "json_api",
+  "url": "https://novonordiskfonden.dk/en/challenge-programme/",
+  "feed_url": null,
+  "adapter_config": {
+    "url": "https://novonordiskfonden.dk/wp-json/wp/v2/grant?per_page=100&_fields=id,date,link,title",
+    "method": "GET",
+    "items_path": "$",
+    "map": {
+      "external_id": "id",
+      "title": "title.rendered",
+      "url": "link",
+      "open_date": "date"
+    },
+    "filter": {
+      "any": [
+        "re:challenge programme 20(2[89]|[3-9]\\d)"
+      ],
+      "fields": "title"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "The foundation publishes every call as a post of type grant in its WordPress API; the twice-daily run reads the newest 100 and keeps titles of the form 'Challenge Programme 2028' or later (the 2027 round is closed), which wait as candidates because each year's theme decides whether it is in SALSAV scope.",
+  "zero_reason": {
+    "quote": "In 2027, the Foundation’s Challenge Programme will award up to DKK 600 million (EUR 80 million) for researchers who want to engage in the following four themes:",
+    "url": "https://novonordiskfonden.dk/en/challenge-programme/",
+    "note": "The 2027 round (4 themes, call closed 7 October 2026) is the newest; no 2028 call is published. Filter proof: the same json_api config with filter 're:challenge programme 20\\d\\d' returned the 2027 titles (for example 'CHALLENGE PROGRAMME 2027 – Harnessing novel Earth-abundant materials for sustainable technologies') and 2024-2026 titles, so the 2028+ pattern uses the same title form and matches the next call when posted."
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "GET https://novonordiskfonden.dk/wp-json/wp/v2/grant?per_page=100 HTTP 200 (140 grant posts, newest 2026-10-15; title, link and date only, no deadline or description field in the JSON, acf empty); /wp-json/wp/v2/types lists grant; endpoint_recon (no-chrome) proposed only the priser (prizes) type; the /en/challenge-programme/ page is plain HTML listing the yearly themes with no dates; no RSS feed found. Deadline lives only on each call's own page ('Call closes 7 October 2026 2:00pm'), which json_api cannot hop to. Checked 2026-11-12.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

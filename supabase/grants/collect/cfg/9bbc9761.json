@@ -1,0 +1,48 @@
+{
+  "id": "9bbc9761-fbe0-426d-b70a-e86a52d4cce6",
+  "name": "Water Infrastructure Finance Authority of Arizona (WIFA)",
+  "program": "Water Conservation Grant Fund (WCGF)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://wifa.az.gov/water-conservation-grant-fund",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://wifa.az.gov/news",
+      "item": "div.views-row",
+      "title": "h2 a",
+      "link": "h2 a",
+      "amount": false,
+      "date_label": true,
+      "detail": {
+        "max": 3,
+        "deadline_regex": "accept applications until\\s+([A-Z][a-z]+\\s+\\d{1,2},\\s+\\d{4})"
+      }
+    },
+    "filter": {
+      "any": [
+        "conservation grant",
+        "wcgf",
+        "opens new round",
+        "accepting applications",
+        "grant round"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads WIFA's news listing twice a day and keeps only releases that announce a Water Conservation Grant Fund round (call words in the title or teaser), reads a deadline from the release text ('accept applications until <date>') and holds them as candidates; the WCGF round of 2025 was announced as 'WIFA Opens New Round of Conservation Grants'. WIFA has no calls listing, feed or JSON API (jsonapi 500, no RSS).",
+  "zero_reason": {
+    "quote": "WIFA will accept applications until  March 6, 2025 .",
+    "url": "https://wifa.az.gov/node/76",
+    "note": "The last WCGF round closed 2025-03-06; the WCGF program page lists no open application period today. Filter tested against the title of that last release, WIFA Opens New Round of Conservation Grants (Feb 4, 2025)."
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Channels tried 2026-11-12: endpoint_recon on /news (verdict html_ok, no opportunity endpoint); /jsonapi/node/article HTTP 500; sitemap.xml 71 urls, program pages only; no RSS or atom link; WCGF page has no application listing (applications run through the eCivis portal, login-based). /news is a Drupal views list (div.views-row, h2 a, .field--name-node-post-date), 10 per page.",
+  "edge_risk": "none",
+  "confidence": "low"
+}

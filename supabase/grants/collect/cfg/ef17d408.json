@@ -1,0 +1,37 @@
+{
+  "id": "ef17d408-721f-4c71-906a-6dd21a11befb",
+  "name": "U.S. Department of Energy, Office of Indian Energy Policy and Programs",
+  "program": "Unleashing Tribal Energy Development (Tribal energy deployment and planning NOFO)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.energy.gov/indianenergy/current-funding-and-technical-assistance-opportunities",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "DOE-GFO",
+    "keyword": "Tribal",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "filter": {
+      "any": [
+        "Tribal",
+        "Indian Energy"
+      ],
+      "fields": "title"
+    },
+    "auto_vet": false,
+    "max_items": 40,
+    "also_page": true
+  },
+  "collect_note": "New Office of Indian Energy NOFOs are read from Grants.gov (DOE-GFO agency, keyword Tribal, title must say Tribal or Indian Energy) twice a day and wait as candidates for review; the funding page is also stored for change tracking.",
+  "zero_reason": {
+    "quote": "This page will be updated when new opportunities are available.",
+    "url": "https://www.energy.gov/indianenergy/current-funding-and-technical-assistance-opportunities"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Checked 2026-11-12. Funding page lists only Technical Assistance (ongoing); its Other Funding table is script-loaded. Drupal jsonapi /jsonapi/node/article 404; sitemap.xml 50 urls, no calls section; no RSS or WP JSON found by endpoint_recon (no-chrome); ie-exchange.energy.gov is a JS shell (1280 chars). Grants.gov search2: agencies DOE-IE returns 0 (agency code is DOE-GFO); {agencies DOE-GFO, keyword Tribal, forecasted|posted} returns 1 hit (ASPECT chemical technologies, not Indian Energy) removed by the title filter; {keyword 'Unleashing Tribal Energy Development', all statuses} returns DE-FOA-0003548 archived (closed 07/24/2026) and DE-FOA-0003547 'Energy Technology Deployment on Tribal Lands 2025' exists, both pass the title filter. Last round: 2026 NOFO DE-FOA-0003548 closed 2026-07-24; selections announced 2026-10-22.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

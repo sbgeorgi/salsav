@@ -1,0 +1,29 @@
+{
+  "id": "38f93828-3ca6-4550-8a2f-3333503ef8a1",
+  "name": "Google (data centers water stewardship)",
+  "program": "Water Replenishment Projects RFI (Infrastructure, Agriculture, Nature-Based Solutions)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://datacenters.google/water-rfi/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "Google Water Replenishment Projects RFI",
+      "deadline_regex": "RFI submissions due\\s*:\\s*([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads the RFI submission deadline from the program page twice a day. The 2026 round closed 30 Apr 2026, so nothing is shown until Google posts a new dated round on this page.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "RFI submissions due : April 30, 2026 by 5:00 p.m. PDT",
+    "url": "https://datacenters.google/water-rfi/",
+    "note": "The only RFI round is closed (30 Apr 2026), so no future dated call exists; the regex was tested against this past date and yields no item, as designed."
+  },
+  "evidence": "endpoint_recon on the page: html_ok, no feed (water-rfi/index.rss has 0 items), no embedded JSON, 1 ld+json block, sitemap lists only the page and /water/. datacenters.google /water/ and /discover-more/latest-news/ list blog posts and PDFs, no call listing; blog.google sustainability RSS (20 items) carries no RFI post. Last call: 2026 RFI, announced March 2026.",
+  "edge_risk": "page text may change wording; the regex needs the 'RFI submissions due :' label",
+  "confidence": "medium"
+}

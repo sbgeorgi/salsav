@@ -1,0 +1,23 @@
+{
+  "id": "bcf68cdc-552d-4385-8529-a9b733f43714",
+  "name": "National Alliance for Water Innovation (NAWI)",
+  "program": "NAWI RFPs (energy-water hub; 2026 Industrial Water Reuse RFP NAWI-4-2026)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.nawihub.org/funding/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "url": "https://www.nawihub.org/funding/opportunities/",
+      "item": ".wysiwyg-content li",
+      "match": "Request for Proposals|RFP|Funding Opportunity Announcement|FOA",
+      "skip": "RFP #:|FOA #:|Request for Information|RFI[)]|wp-content/uploads"
+    }
+  },
+  "collect_note": "The NAWI Opportunities page lists each RFP under Current and Past; the list adapter keeps Current RFP links (the application itself sits on a JavaScript InfoReady portal), skips past PDFs and the RFI, and no deadline is on the listing so it is read from the RFP page by hand. The engine keeps a route hash, so each InfoReady competition link keeps its own url and external_id (here https://nawi.infoready4.com/#competitionDetail/2000555).",
+  "expect": { "min_items": 1, "sample": [{ "title": "Industrial Water Reuse Request for Proposals (RFP): NAWI-4-2026", "deadline": null, "url": "https://nawi.infoready4.com/#competitionDetail/2000555" }] },
+  "evidence": "Checked 2026-11-12. Opportunities page https://www.nawihub.org/funding/opportunities/ HTTP 200, static WordPress with Current and Past lists. Tried: /feed/ (HTTP 200, a news feed with no calls: only news and blog posts, filtering on call words would catch announcements but the listing is cleaner); /wp-json/wp/v2/types (only post, page, attachment, nav_menu_item, no opportunity post type); /wp-json/wp/v2/media search NAWI-4-2026 (empty); robots.txt Sitemap wp-sitemap.xml (no calls section); nawi.infoready4.com (JavaScript single-page app, no plain HTTP listing); Grants.gov not used (NAWI issues its own RFPs through LBNL, not Grants.gov).",
+  "edge_risk": "js",
+  "confidence": "medium"
+}

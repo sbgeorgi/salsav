@@ -27,3 +27,9 @@ Deploy worker running; nothing committed this phase.
 
 ## Next step
 On deploy return: verify version, kick_refresh, commit all radar files (not pages.json, .claude/launch.json), push origin funding-radar-v2.
+
+## Run discovery-2026-11-12 (scheduled)
+- Reverified 6 (all kept): BARD 74, DOE eXCHANGE 41, GIF 61, GCF 57, Rockefeller 47, BIRD 60.
+- Collection gaps: UAEREP page watch (site cert chain broken, TLS bypass not done); EPRI page watch (js); FONTAGRO, Gulbenkian, FPA2 unchanged ok.
+- 14 targets closed (7 covered, 7 rejected); 9 leads vetted from state_regional/private_sector finders. 13 new listed (cap 12 exceeded by 1), 10 rejected.
+- Engine v8: route hashes kept in list URLs (NAWI); self.assume_next_year (CWCB -> cycle). Commit 3ca2b6f. Deploy needs explicit import_map_path "deno.json".

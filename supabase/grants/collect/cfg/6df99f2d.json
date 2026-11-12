@@ -1,0 +1,35 @@
+{
+  "id": "6df99f2d-1d7e-4359-98d7-d29ec2920575",
+  "name": "NOAA Climate Adaptation Partnerships",
+  "program": "Climate Adaptation Partnerships (formerly RISA) regional team competition",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://cpo.noaa.gov/divisions-programs/climate-adaptation-partnerships/",
+  "feed_url": null,
+  "adapter_config": {
+    "keyword": "Climate Adaptation Partnerships Regional Integrated Sciences and Assessments",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "filter": {
+      "any": [
+        "Regional Integrated Science",
+        "Climate Adaptation Partnerships"
+      ],
+      "fields": "title"
+    },
+    "auto_vet": false,
+    "max_items": 20
+  },
+  "collect_note": "New NOAA Climate Program Office regional-team competitions (RISA, now Climate Adaptation Partnerships) are read from Grants.gov twice a day by title and wait for review before showing. Nothing is open now: the FY2026 round (NOAA-OAR-CPO-2026-33094) closed June 2026.",
+  "zero_reason": {
+    "quote": "Archived opportunity Last Updated: Jun 9, 2026",
+    "url": "https://simpler.grants.gov/opportunity/32a5f745-085e-4800-bd56-a3b1c90e3e19"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP POST 2026-11-12 to https://api.grants.gov/v1/api/search2. cpo.noaa.gov returns HTTP 403 to curl and an empty 202 page to the recon tool, so no site channel is readable (bot_protected). {keyword:'Climate Adaptation Partnerships Regional Integrated Sciences and Assessments', oppStatuses:'forecasted|posted|archived'} returned the past RISA/CAP NOFOs including NOAA-OAR-CPO-2024-2008024 'Climate Adaptation Partnerships Program FY2024', NOAA-OAR-CPO-2022-2007019 RISA FY2022, NOAA-OAR-CPO-2021-2006677 RISA FY2021 (the title filter matches all of them); with forecasted|posted only, none of these is open now and no agencies key is used because the 2026 NOFO's agency is 'DOC NOAA - ERA Production' while older ones are 'Department of Commerce'. oppNum NOAA-OAR-CPO-2026-33094 returns the archived 2026 NOFO (id 362258, close 06/10/2026). aln is not honored by search2. No RSS/feed or sitemap readable on cpo.noaa.gov.",
+  "edge_risk": "bot_protection",
+  "confidence": "medium"
+}

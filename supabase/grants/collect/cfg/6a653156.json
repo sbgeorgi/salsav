@@ -1,0 +1,43 @@
+{
+  "id": "6a653156-2c54-468d-8b93-2f5bdbe57272",
+  "name": "California Energy Commission (EPIC 4 Emerging Solar Energy Technologies)",
+  "program": "GFO-25-306 Solar PV Located in Non-traditional Terrain (SPLINT)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.energy.ca.gov/solicitations/2026-03/gfo-25-306-solar-pv-located-non-traditional-terrain-splint",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.energy.ca.gov/funding-opportunities/solicitations?field_division_1_target_id=18&field_solicitation_type_target_id=27",
+      "item": ".abstract",
+      "title": "h3",
+      "closed": "Status:\\s*(Awarded|Closed|Cancelled|No Award|No Selection)",
+      "amount": false,
+      "detail": {
+        "max": 3,
+        "deadline_regex": "Submission Deadline\\s*([A-Z][a-z]+ \\d{1,2}, \\d{4})",
+        "closed": "This solicitation has been awarded"
+      }
+    },
+    "filter": {
+      "any": ["solar", "agrivolt", "photovolt", "agricultur", "farm", "crop", "irrigation"],
+      "fields": "title"
+    },
+    "auto_vet": false,
+    "max_items": 20
+  },
+  "collect_note": "The crawler reads the CEC grant-funding-opportunity listing filtered to the Energy Research and Development division (EPIC research) twice a day, keeps titles that name solar, agrivoltaics, agriculture, farm, crop or irrigation, and holds them as candidates for review; each call's own page supplies its submission deadline.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "GFO-25-306 – Solar PV Located in Non-traditional Terrain (SPLINT)",
+        "deadline": "2026-06-16",
+        "url": "https://www.energy.ca.gov/solicitations/2026-03/gfo-25-306-solar-pv-located-non-traditional-terrain-splint"
+      }
+    ]
+  },
+  "evidence": "Checked 2026-11-12 over plain HTTP. endpoint_recon.py (no-chrome) on /funding-opportunities/solicitations: Drupal site, no RSS/feed link, /jsonapi 404, sitemap.xml has 2 URLs and no solicitation hits, no ld+json. The Drupal views listing accepts query filters field_division_1_target_id=18 (Energy Research and Development) and field_solicitation_type_target_id=27 (Grant Funding Opportunity); page 0 returns 10 items incl. GFO-25-306 (HTTP 200). Each item card shows release date, division and status but no deadline, so the detail page (Submission Deadline label) is used. No API or portal listing exists (applications go through the ECAMS login).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

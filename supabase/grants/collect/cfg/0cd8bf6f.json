@@ -1,0 +1,26 @@
+{
+  "id": "0cd8bf6f-65d0-4afb-86ed-b09a92c3a1c5",
+  "name": "New Mexico Water Resources Research Institute, NMSU (state-funded)",
+  "program": "Agricultural Water Resilience Program (AgWRP), FY27 Request for Applications",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://nmwrri.nmsu.edu/nmwrri-agwrp/funding-opportunities.html",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "NM WRRI Agricultural Water Resilience Program (AgWRP) Request for Applications",
+      "deadline_regex": "due\\s+(?:[A-Za-z]+,\\s+)?([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads the AgWRP funding-opportunities page twice a day; that page is replaced each fiscal year with the new Request for Applications and its due date. Right now the FY27 round is closed (due 2026-06-29), so no item is produced until a new future due date is posted.",
+  "zero_reason": {
+    "quote": "The FY27 application period is now closed.",
+    "url": "https://nmwrri.nmsu.edu/nmwrri-agwrp/funding-opportunities.html",
+    "filter_test": "deadline_regex matches the last known call's own line 'Applications are due Monday, June 29, 2026, at 5:00 PM MDT.' (date 2026-06-29, past, so no item)"
+  },
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "Channels tried 2026-11-12: page GET HTTP 200 static HTML 3.3 KB; endpoint_recon (no-chrome) found no feed, JSON endpoint or sitemap (sitemap.xml, /feed, /rss, /wp-json all 404); application portal https://nmwrri.grantplatform.com/ returns HTTP 403 DataDome bot challenge (no plain-HTTP read); program page nmwrri-agwrp.html describes FY26 (41 projects, up to 250K each) and has no call listing; the RFA and FAQ PDFs are not read by the engine. FY26 maximum was 250K, FY27 is 300K (explains the conflicting sources).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}
