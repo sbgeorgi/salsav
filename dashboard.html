@@ -150,7 +150,7 @@ const qs = new URLSearchParams(location.search);
 const RADAR = ['table', 'cards', 'timeline'], MODS = ['board', 'insights', 'method'];
 const since = Number(store.get('lastVisit')) || 0; // read once: later writes must not clear this visit's badges
 const S = { feed: null, rows: [], F: D.defaultFilters(), view: 'table', radarView: 'table', sort: 'recommended', scope: 'all', sel: null, open: new Set(),
-  team: {}, pass: store.sget('pass'), me: store.get('me') || '', now: new Date(), list: [], base: [], since, stateLabel: STATE_LABEL, bucketLabel: SHORT };
+  team: {}, pass: store.sget('pass'), me: store.get('me') || '', uv: !store.get('hideUv'), now: new Date(), list: [], base: [], since, stateLabel: STATE_LABEL, bucketLabel: SHORT };
 const ctx = () => ({ since });
 const unlocked = () => !!S.pass && S.unlocked;
 const isRadar = () => RADAR.includes(S.view);
@@ -370,7 +370,7 @@ function renderKpis() {
 }
 function renderHorizon() {
   const box = $('#horizon'), md = S.feed.min_days ?? 14;
-  const uv = unverifiedPoints(S.list, S.feed.opportunities, S.now);
+  const uv = S.uv ? unverifiedPoints(S.list, S.feed.opportunities, S.now) : [];
   box.hidden = false; $('#hzNote').textContent = `Shaded band: closes before the ${md}-day cutoff, too soon to prepare.${uv.length ? ' Dashed dots: unverified calls, checked on the next discovery pass.' : ''} Select a dot for details.`;
   $('#hzBody').replaceChildren(horizon([...S.list, ...uv], { w: Math.max(280, Math.floor($('#hzBody').clientWidth || box.clientWidth || 600)), now: S.now, minDays: md, onOpen: openDrawer }));
 }
@@ -401,7 +401,8 @@ function renderBuckets() {
     el('button', { class: 'bchip', type: 'button', style: `--c:${bcolor(b)}`, 'aria-pressed': S.F.bucket.includes(b), onclick: () => toggle('bucket', b) }, SHORT[b], el('b', { class: 'num', text: k.byBucket[b] || 0 }))));
   // legend for the horizon's dashed dots, counted the same way the horizon plots them
   const nu = horizonLayout(unverifiedPoints(S.list, S.feed.opportunities, S.now)).items.length;
-  if (nu) $('#buckets').append(el('span', { class: 'bchip bchip--uv', title: 'Dashed dots on the deadline horizon: calls the crawler collected that the next discovery pass confirms or removes' }, 'Unverified calls', el('b', { class: 'num', text: nu })));
+  if (nu) $('#buckets').append(el('button', { class: 'bchip bchip--uv', type: 'button', 'aria-pressed': S.uv, title: 'Show or hide the dashed dots on the deadline horizon: calls the crawler collected that the next discovery pass confirms or removes',
+    onclick: () => { S.uv = !S.uv; store.set('hideUv', S.uv ? '' : '1'); renderBuckets(); renderHorizon(); } }, 'Unverified calls', el('b', { class: 'num', text: nu })));
 }
 function renderMeta() {
   $('#count').textContent = `${num(S.list.length)} of ${num(S.rows.length)} funders`;
