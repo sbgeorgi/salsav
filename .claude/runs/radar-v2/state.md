@@ -1,35 +1,30 @@
 ## Goal
-Self-improving SALSAV funding radar: the scheduled task salsav-funding-discovery lists funders, gives each a tested collection config, fixes and deploys the grants-refresh engine, commits and pushes, with no human session.
+Self-improving SALSAV funding radar. This phase: prove every auto (calls/cycle) funder extracts via the live edge function; fix broken configs; stop repeating empty fetches; explain missing completion notice.
 
 ## Files touched
-supabase/grants/discovery-task.md (scheduled SKILL.md now points to it), 018_judgment_rejects{,-rollback}.sql, API.md, .claude/sql-api-funcs.txt, funding-source-vetting SKILL.md, grants-refresh adapters/index.ts + extract.ts + safe_regex.ts (no \u/\x escapes), tests/collect.test.ts, collect/cfg + audit json, supabase/grants/tools/deploy_gate.mjs (escape check), .gitignore; ~/.claude/hooks/boundary-guard.py + tests.
+grants-refresh engine.ts (probe report opps/open/text_len/sample; dry_run drops etag/last_modified) + tests/engine.test.ts; 019_probe_refresh{,-rollback}.sql; 020_idle_backoff{,-rollback}.sql; discovery-task.md (health 'empty' triage, final PushNotification step); .claude/skills/grants-collection-probe/SKILL.md; ~/.claude/hooks/scheduled-task-mode.py.
 
 ## Done
-- 018 applied (20261112135341); live md5 = repo file.
-- Guard: sql-api-funcs allowlist + stamped deploy; hook tests 36 OK.
-- Revet workflow: judgment rejects re-scored; cfgs written per funder.
-- Audit batches 6-7 re-applied with full uuids: 12 ok, 8 page->calls; leaf checksums match local payloads.
-- Engine source escape-free; gate ok (19 files, 149484 bytes); gate regex self-check 7/7.
+- 019 live (20261112153616); 020 live (20261112154724): rollback-only DO test showed streak 1/2/3 -> 23h/46h/46h, new content -> 11.5h, empty-calls health 'empty', re-verified -> 'ok'.
+- v9 deployed (opps/open/text_len). Probes on v9: batch 1 (103) and grants.gov (104, 15/18 returned) saved in scratchpad/probe/r103-105.json.
+- Notification: run local_1c3c9e64 never called PushNotification; task now ends with one.
 
 ## Decisions
-- Deploy only via MCP with deploy_gate stamp; gate rejects \u/\x escapes because retyped deploys turn them into literal characters (cause of the 2026-11-12 stamp mismatch).
+- Backoff in SQL apply_fetch_result (idle_streak), cap 46h so health never reads 'stale' (3 days).
+- Repo migration files keep NNN_ names; live version stamped in line 1.
 
 ## Pending
-- Subagent deploy of grants-refresh (stamp path proof), get_edge_function version, kick_refresh.
+- v10 deploy worker (dry_run without validators) -> then add Fetched.raw_count (feed/API/html in adapters/index.ts) + SourceReport.raw in engine record(), gate, deploy v11.
+- Re-probe all 9 batches ONE AT A TIME on v11 (concurrent probes -> 546 CPU Time exceeded kills all).
+- Classify: opps>0 proven; opps 0 & raw>0 = watch waiting; raw 0 = check channel. Fix configs via set_collection.
 - Commit + push funding-radar-v2.
 
 ## Errors & fixes
-- apply_6/7 failed on 8-char ids cast to uuid (whole UNION aborted): rebuilt with full ids from cfg files.
-- Deploy denied: \u escapes retyped as literals; source rewritten without escapes.
+- 9 concurrent probes -> one worker, CPU Time exceeded, all 546; the 14:19 'cron' kick lost 4/8 shards the same way (cron-am/pm 16/16 ok).
+- 020 alias `o` clashed with plpgsql var o -> aliases e/op.
 
 ## Current state
-Deploy worker running; nothing committed this phase.
+v10 deploy running in background; engine files must not change until it reports.
 
 ## Next step
-On deploy return: verify version, kick_refresh, commit all radar files (not pages.json, .claude/launch.json), push origin funding-radar-v2.
-
-## Run discovery-2026-11-12 (scheduled)
-- Reverified 6 (all kept): BARD 74, DOE eXCHANGE 41, GIF 61, GCF 57, Rockefeller 47, BIRD 60.
-- Collection gaps: UAEREP page watch (site cert chain broken, TLS bypass not done); EPRI page watch (js); FONTAGRO, Gulbenkian, FPA2 unchanged ok.
-- 14 targets closed (7 covered, 7 rejected); 9 leads vetted from state_regional/private_sector finders. 13 new listed (cap 12 exceeded by 1), 10 rejected.
-- Engine v8: route hashes kept in list URLs (NAWI); self.assume_next_year (CWCB -> cycle). Commit 3ca2b6f. Deploy needs explicit import_map_path "deno.json".
+On v10 notice: implement raw_count, run deploy_gate, launch v11 deploy worker, then probe batches sequentially from scratchpad/batches.out.

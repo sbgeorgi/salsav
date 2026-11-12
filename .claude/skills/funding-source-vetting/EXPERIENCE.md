@@ -154,3 +154,13 @@ evidence: reflect R20261112T141501-747f15c5
 situation: reflect patch
 lesson: Batch set_collection calls with 8-character ids aborted whole UNION ALL batches; the fix was full ids from cfg files plus a checksum of config strings after apply. Both belong in the pitfalls line.
 evidence: reflect R20261112T141501-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: A discovery run zero-padded six shortened funder ids instead of copying the full ones, which the existing full-id rule did not prevent; the rule needs to name the padding failure explicitly.
+evidence: reflect R20261112T142636-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The run hit two schema-name errors (funders.collect_mode, funders.collection_verified_at, discovery_log.created_at) that the task file's own step 7 query used, costing retries.
+evidence: reflect R20261112T145055-a16f0c96

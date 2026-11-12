@@ -268,6 +268,7 @@ describe("dry_run and only_ids", () => {
     const r = await run({ dry_run: true, only_ids: [a] });
     assert.equal(r.results.length, 1);
     assert.deepEqual([r.results[0].kind, r.results[0].change, r.results[0].next_deadline], ["ok", "initial", SOON2.iso]);
+    assert.ok((r.results[0].text_len ?? 0) > 0, "probe reports the extracted text length");
     assert.equal(mock.contentHits(0).length, 1);
     assert.equal(mock.contentHits(1).length, 0);
     const f = await funder(a);

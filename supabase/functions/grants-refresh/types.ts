@@ -113,6 +113,8 @@ export interface Fetched {
   isHtml?: boolean;
   bytes?: number;
   truncated?: boolean;
+  /** items the channel listed before the config's filter and cap (probe report) */
+  raw_count?: number;
 }
 
 export interface ResultPayload {

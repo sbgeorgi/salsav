@@ -33,6 +33,14 @@ export interface SourceReport {
   summary?: string;
   error?: string;
   next_deadline?: string | null;
+  /** what the adapter extracted: calls collected (after the config's filter), how many open, page text length */
+  opps?: number | null;
+  open?: number | null;
+  /** items the channel listed before the config's filter */
+  raw?: number | null;
+  text_len?: number;
+  /** dry_run only: first collected calls, so a probe shows real content */
+  sample?: { title: string; deadline: string | null; status: string | null }[];
 }
 
 export interface RunResult {
@@ -96,7 +104,10 @@ export async function runShard(deps: EngineDeps, req: RunRequest): Promise<RunRe
   let crashed: unknown = null;
   let remaining = 0;
   try {
-    const claimed = req.dry_run ? await store.peek(req) : await store.claim(run, req, deps.leaseS ?? 240);
+    // dry_run is a probe: drop validators so every source is fetched in full and shows what it extracts
+    const claimed = req.dry_run
+      ? (await store.peek(req)).map((s) => ({ ...s, etag: null, last_modified: null }))
+      : await store.claim(run, req, deps.leaseS ?? 240);
     stats.planned = claimed.length;
     const byHost = new Map<string, Source[]>();
     for (const s of claimed) byHost.set(groupOf(s), [...(byHost.get(groupOf(s)) ?? []), s]);
@@ -118,6 +129,13 @@ export async function runShard(deps: EngineDeps, req: RunRequest): Promise<RunRe
       results.push({
         id: src.id, name: src.name, kind: f.kind, http_status: p.http_status ?? null, change: p.change?.kind, summary: p.change?.summary,
         error: p.error, next_deadline: p.next_deadline,
+        opps: f.opportunities ? f.opportunities.length : null,
+        open: f.opportunities ? f.opportunities.filter((o) => o.status !== "closed" && o.status !== "archived").length : null,
+        raw: f.raw_count ?? null,
+        text_len: f.text?.length ?? 0,
+        ...(req.dry_run && f.opportunities?.length
+          ? { sample: f.opportunities.slice(0, 3).map((o) => ({ title: String(o.title ?? "").slice(0, 120), deadline: o.deadline ?? null, status: o.status ?? null })) }
+          : {}),
       });
     };
 

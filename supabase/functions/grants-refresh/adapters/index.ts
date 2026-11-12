@@ -206,8 +206,9 @@ async function fetchPageFull(c: Ctx, src: Source, url: string, feed: boolean, co
   }
   const body = decodeBody(bytes, ct);
   if (feed && looksLikeFeed(ct, body)) {
-    const items = finalize(parseFeed(body, c.today), src.adapter_config, c.today, false, c.budget);
-    return { r: await finish(oppsResult(items, status, headers, bytes.length)) };
+    const listed = parseFeed(body, c.today);
+    const items = finalize(listed, src.adapter_config, c.today, false, c.budget);
+    return { r: await finish({ ...oppsResult(items, status, headers, bytes.length), raw_count: listed.length }) };
   }
   if (/^text\/plain/i.test(ct ?? "")) return { r: await finish({ ...base, text: normalizeText(body), links: [], isHtml: false }), raw: body };
   const { text, links, raw } = extractPage(body, o.finalUrl);
@@ -271,7 +272,7 @@ async function fetchApi(c: Ctx, src: Source, api: ApiAdapter, cfg: Cfg): Promise
   }
   if (api.detail && src.adapter === "grants_gov") await enrichDetail(c, api.detail, src, opps, profile);
   const items = finalize(opps, cfg, c.today, NATIVE_STATUS.has(src.adapter), c.budget);
-  return withPage(c, src, oppsResult(items, o.status, o.headers, o.bytes.length));
+  return withPage(c, src, { ...oppsResult(items, o.status, o.headers, o.bytes.length), raw_count: opps.length });
 }
 
 async function fetchRss(c: Ctx, src: Source): Promise<Result> {
@@ -392,6 +393,7 @@ async function fetchHtmlCalls(c: Ctx, src: Source, cfg: Cfg): Promise<Result> {
     text: withCalls(text, textOpps),
     links,
     opportunities: opps,
+    raw_count: found.length,
     isHtml: true,
     fetchability: thinPage(text.length, htmlLen) ? "js_required" : "easy",
   });
