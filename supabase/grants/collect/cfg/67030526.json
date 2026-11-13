@@ -1,0 +1,18 @@
+{
+  "id": "67030526-dbd4-4fed-bd00-f00f7010e127",
+  "name": "Arizona Department of Agriculture",
+  "program": "Agriculture and Water Innovation Fund Pilot Program (Agriculture, Soil Health, and Water Efficiency Innovation Pilot Program, A.R.S. 3-109.04)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://www.azleg.gov/ars/3/00109-04.htm",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch on the program's statute (A.R.S. 3-109.04) because the Arizona Department of Agriculture site is bot_protected (HTTP 403 to plain HTTP and headless Chrome, including sitemap and robots) and the program's public eCivis page is disallowed by robots.txt; it flags a statute change only and makes no call rows, so the next round still needs a manual check of agriculture.az.gov/grants.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-13: agriculture.az.gov (home, /grants, the program page, sitemap.xml, robots.txt) and azda.gov all HTTP 403, endpoint_recon verdict blocked, Chrome rendered 0 chars: no feed, JSON or listing reachable. gn.ecivis.com program page (HTTP 200, labelled Application End Date 11/25/2025, closed FY2026 round) is refused by robots.txt 'Disallow: /' and adapter_check returned robots_blocked. wrrc.arizona.edu/rss.xml is a UA center feed (30 items, no AZDA item), not the funder, so not used. azleg.gov statute page HTTP 200, 2748 chars static HTML, no dates, 'Rpld. 1/1/29'.",
+  "edge_risk": "bot_protection",
+  "confidence": "low"
+}

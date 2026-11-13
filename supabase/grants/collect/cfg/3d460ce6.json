@@ -1,0 +1,45 @@
+{
+  "id": "3d460ce6-5401-4783-8eeb-54fa2f300867",
+  "name": "AXA Foundation for Human Progress (AXA Research Fund)",
+  "program": "AXA Chairs and New Gen academic research grants",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://axafoundation.org/en/science/fund-your-research",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "url": "https://axafoundation.org/en/calls-for-projects",
+      "item": "article",
+      "title": "h3",
+      "closed": "^Closed"
+    },
+    "filter": {
+      "any": [
+        "Science",
+        "Nature"
+      ]
+    },
+    "also_page": true
+  },
+  "collect_note": "Reads the AXA Foundation's Calls for projects page (server-rendered, one article per call, split into Ongoing and Upcoming versus Closed) and keeps only calls tagged with the Science or Nature pillar, since the page also lists the Solidarity pillar's child-protection calls. Closed cards are marked closed. The AXA Chairs call is annual and its 2026 timetable sits on the institution platform (institution.axa-research.org), which shows only the New Gen call today. Zero open Science or Nature calls today: the one ongoing call is a Solidarity-pillar call that the pillar filter drops; the filter was tested on the last known call (AXA Chairs 2025, Science badge), which it keeps.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-13: https://axa-research.org redirects to axafoundation.org (AXA Research Fund merged into the AXA Foundation for Human Progress, June 2025). Channels tried: endpoint_recon.py (no API, no feed, no ld+json calls; sitemap only lists /en and /fr sitemaps, robots allows all); /en/calls-for-projects is server-rendered HTML with sections #calls-live and #calls-closed, one <article> per call, pillar badge (Science, Nature, Solidarity) in each; /en/science/fund-your-research describes AXA Chairs (up to EUR 1.5M) and New Gen without dates; institution.axa-research.org (Power Apps portal) shows the current New Gen call and key dates but is a portal page, no call list or login-free data feed. The Swiss Re Risk Resilience Partnership guidelines PDF returns HTTP 404 and the program is not on the current site.",
+  "edge_risk": "low",
+  "confidence": "medium",
+  "harness": {
+    "ok": true,
+    "count": 2,
+    "raw": 4,
+    "open": 0,
+    "text_len": 11713,
+    "checked": "2026-11-13"
+  },
+  "zero_reason": {
+    "quote": "Ongoing and Upcoming (1)",
+    "url": "https://axafoundation.org/en/calls-for-projects"
+  }
+}

@@ -30,7 +30,11 @@ grants-refresh engine.ts/types.ts/adapters/index.ts (v10: probe report opps/open
 Probe + triage complete; collected calls now show on the radar at once as Unverified; committed.
 
 ## Next step
-Next scheduled discovery run (Tue/Fri 07:00) should end with a PushNotification; check it did.
+Check Friday 2026-11-13 07:00 discovery run (first with COLLECTION e production probes, 961d056): each new funder applied unverified, probed via probe_refresh in serial batches, verified only on a match with adapter_check; summary lists probe numbers; ~30 more candidates resolved (39 left); confirmed calls enriched (apply_url/award, Colorado was thin); PushNotification sent.
 
 ## Discovery pass 2 (2026-11-12, scheduled)
 Reverified 6 kept; 3 collection gaps unchanged (UAE TLS chain -> engine per-host CA fix would be needed; EPRI js_only; Gulbenkian 403 datacenter). Candidates: 2 confirmed, 27 rejected, AFRI Education/Workforce (1da45bda) left as candidate (borderline, workforce in scope). Listed FEMSA 9f186bfc, Mosaic b280a1b5, NADBank f2dcd774, NextEnergy db43b41c (all verified auto); Grundfos rejected 31. private_sector gap 7 -> 4. 12 candidates remain.
+
+## Discovery pass 3 (2026-11-13, scheduled)
+Reverified 6 kept (NSF CBET 57->62). Listed AgMission 5dfae4ae (71), AXA 3d460ce6 (65), NMED/OSE 029fc6a2 (58), AZ Dept Agriculture 67030526 (49, page watch: site 403 + eCivis robots-blocked); rejected Cargill+GWC, Anglo American Fdn, Bayer Fdn by gates. EPRI 278cceed now calls via apim.epri.com GraphQL (University RFP page is item 12 of 147; engine caps raw at 100). Probes 141/142 all ok, verified. Candidates: 1 confirmed, 10 rejected, NAWI InfoReady (JS-only) left. Gaps left: UAE (proposed engine fix: Deno.createHttpClient caCerts with GlobalSign RSA OV SSL CA 2018 for uaerep.ae; untested on edge runtime), Gulbenkian (403 datacenter). private_sector gap 4 -> 2.
+Pending: reverify_source quotes from subpages never flip evidence_ok (DB checks only the registered url's crawled copy) — consider letting evidence carry its own url check.

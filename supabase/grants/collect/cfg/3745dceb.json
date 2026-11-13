@@ -16,12 +16,14 @@
   "collect_note": "UAEREP runs one research cycle a year; the Apply now page lists the pre-proposal deadline, which is read here so the next cycle's date is caught when the page is updated. Page is plain HTTP, not JavaScript.",
   "expect": {
     "min_items": 1,
-    "sample": ["UAEREP rain enhancement research cycle: pre-proposals"]
+    "sample": [
+      "UAEREP rain enhancement research cycle: pre-proposals"
+    ]
   },
-  "evidence": "GET apply-now page (fetch_text, 2026-11-12): 'Submit the pre-proposal by 12 March 2027, midnight GMT.' FAQ page agrees: 'pre-proposals are due on 12 March 2027.' Channels tried: no RSS or API seen in the site HTML (links are server-rendered /section/ pages); timeline page is a diagram with no text dates; the apply-now page carries the labelled date.",
+  "evidence": "GET apply-now page (fetch_text, 2026-11-12): 'Submit the pre-proposal by 12 March 2027, midnight GMT.' FAQ page agrees: 'pre-proposals are due on 12 March 2027.' Channels tried: no RSS or API seen in the site HTML (links are server-rendered /section/ pages); timeline page is a diagram with no text dates; the apply-now page carries the labelled date. Run discovery-2026-11-13 channels tried: http:// redirects 302 to https (no plain-HTTP route); apply.uaerep.ae, uaerep.ae, rain.ae serve the same incomplete chain (openssl code 20); sitemap.xml 404 (robots lists it); no RSS/JSON in page HTML; ncm.gov.ae (complete chain) only links out to uaerep.ae, no call text; wam.ae is a JS shell (14 KB for any URL); assets.ncm.gov.ae (complete chain) hosts only the static solicitation PDF (uaerep-2026-solicitation-c7.pdf); Technion R&D Foundation WordPress feed https://trdf.technion.ac.il/en/calls-for-proposals/feed/?s=UAEREP passes adapter_check (count 2, open 2) but both items are stale 6th-cycle posts with no deadline, so applying it would list closed calls as open: rejected.",
   "edge_risk": "none",
   "confidence": "low",
-  "blocker": "tls_chain_incomplete: www.uaerep.ae serves a leaf certificate without its intermediate (openssl verify code 21), so Node (adapter_check: unable to verify the first certificate) and the edge function cannot fetch it; curl and fetch_text.py pass. Not applied with set_collection; re-run adapter_check after the site fixes its chain.",
+  "blocker": "tls_chain_incomplete: www.uaerep.ae serves a leaf certificate without its intermediate (openssl verify code 21), so Node (adapter_check: unable to verify the first certificate) and the edge function cannot fetch it; curl and fetch_text.py pass. Not applied with set_collection; re-run adapter_check after the site fixes its chain. Engine fix proposed (per-host caCerts for uaerep.ae, see run report); until then page-watch state stays and the 7th-cycle date (2027-03-12) is tracked manually.",
   "harness": {
     "ok": false,
     "error": "fetch failed: unable to verify the first certificate",

@@ -2,18 +2,48 @@
   "id": "278cceed-3e84-4e46-9d12-5ca212b1e739",
   "name": "EPRI (Electric Power Research Institute)",
   "program": "University Global Research Award (Supporting a Clean Energy Future)",
-  "mode": "page",
-  "adapter": "html",
+  "mode": "calls",
+  "adapter": "json_api",
   "url": "https://www.epri.com/university-rfp",
   "feed_url": null,
-  "adapter_config": {},
-  "collect_note": "Page watch only, blocker js_only: epri.com is a React single-page app, so every route returns the same 9-character shell over plain HTTP (the registered call page now renders Page Not Found in a browser). No call rows can be made. The shell is watched twice a day; a change flags the site for review, a weak signal that a new university call page may exist. The press-release and university pages are not in sitemap.xml and the content API (restservice.epri.com) answers 401 without a token.",
+  "adapter_config": {
+    "url": "https://apim.epri.com/partner/graphql/v2?subscription-key=dd2b0fa52cab4d919c9451abdd9d3646",
+    "method": "POST",
+    "body": {
+      "query": "query($preview:Boolean,$locale:String){pageCollection(preview:$preview,locale:$locale){items{...P}}} fragment P on Page{title slug sys{id} content{...C}} fragment C on PagePreConfiguredTemplates{templateDataSource{...E}} fragment E on Entry{__typename sys{id}}",
+      "variables": {
+        "preview": false,
+        "locale": "en-US"
+      }
+    },
+    "items_path": "data.pageCollection.items",
+    "map": {
+      "external_id": "sys.id",
+      "title": "title",
+      "description": "content.templateDataSource.sys.id"
+    },
+    "filter": {
+      "any": [
+        "university rfp",
+        "university global research",
+        "university research award"
+      ],
+      "all": [
+        "re:[A-Za-z0-9]{20,}"
+      ]
+    },
+    "max_items": 10
+  },
+  "collect_note": "Reads EPRI's own content database (the GraphQL service the epri.com page calls; the public key in the URL is the one in epri.com's JavaScript) twice a day and keeps a page whose title is the university award call only once it has content, so the call page going live shows up as a candidate. The 'University RFP' page exists but is empty today (the website shows Page Not Found), so zero items is expected until EPRI republishes the call.",
+  "zero_reason": {
+    "reason": "EPRI's CMS entry 'University RFP' (slug university-rfp) has no content and the 2025 call PDFs (restservice.epri.com/publicattachment/91383, 91384, 94161) return 404; the site is a JavaScript app so no verbatim quote can be fetched with fetch_text.py",
+    "url": "https://www.epri.com/university-rfp"
+  },
   "expect": {
     "min_items": 0,
     "sample": []
   },
-  "evidence": "2026-11-12: curl https://www.epri.com/university-rfp HTTP 200, 10,488 B HTML shell, 9 chars of text; same shell for /research/universities, /about/media-resources/press-releases and the 2024 press-release URL. fetch_text.py and endpoint_recon.py (no Chrome) report THIN/none. Browser render of /university-rfp: Page Not Found. sitemap.xml (HTTP 200, 635 URLs) lists only research programs, products and index pages, no university, award or press entries. Site JS bundle: REST base restservice.epri.com, page route /api/urlaccess/ returns 401 UnAuthorized. No RSS or feed found. Third-party 2024 call summaries (not official) gave a typical award of USD 100,000 and a maximum of USD 250,000.",
-  "edge_risk": "none",
-  "confidence": "low",
-  "page_reason": "js_only: the only official pages are a JavaScript shell with no readable text over plain HTTP, and no feed, sitemap entry or open endpoint carries the university award call; revisit when a headless browser is available or EPRI publishes a static call page."
+  "evidence": "2026-11-13 channels: (1) epri.com/university-rfp is a React shell (9 chars over HTTP). (2) The site JS (main.3cd53501.chunk.js) calls https://apim.epri.com/partner/graphql/v2 with header Ocp-Apim-Subscription-Key (a public key embedded in the bundle); the same key also works as query parameter subscription-key (HTTP 200), which the json_api adapter can send because it has no header option; introspection is disabled. (3) pageCollection returns 147 Contentful pages incl. title 'University RFP' slug university-rfp sys.id 5eYHiC9PcUrf3GmJg38cZ8 with content null (unpublished/empty); all other pages have content. Query arguments (where, limit, skip) are ignored by the gateway so the whole collection is returned each time and the filter picks the page; first 100 items are read, the page is item 12. (4) pressReleaseLanding id 4ZmTDmJFUIOciU0O6oKqOK lists 217 press releases (newest 2026-11-10); the only university award one is 'EPRI Announces Recipients of 2023 University Global Research Awards; Opens 2024 Applications' (2024-02-20): no 2025 or 2026 round was announced there. (5) restservice.epri.com/publicattachment/{91383,91384,94161} (2025 call documents found by web search) return 404; 84836 (older University Research Award template) still 200. (6) sitemap.xml 635 URLs, no university entries; no RSS; web search finds no 2026 call, last known cycle: 2025 call with a 1 June 2025 deadline (secondary sources).",
+  "edge_risk": "low",
+  "confidence": "low"
 }

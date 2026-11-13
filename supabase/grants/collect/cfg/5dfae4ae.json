@@ -1,0 +1,38 @@
+{
+  "id": "5dfae4ae-463c-45c9-af86-0cfafcc9adbc",
+  "name": "AgMission",
+  "program": "AgMission climate-smart and regenerative agriculture research RFAs (with PepsiCo, McDonald's and other Founding Partners)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://agmission.org/our-work/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://agmission.org/news/",
+      "item": "article.single-grid",
+      "title": "h3",
+      "link": "a[href]",
+      "date_label": true,
+      "match": "request for (applications|proposals)|\\brfa\\b|call for (applications|proposals)|accepting (pre-)?(proposals|applications)|seeks? (applications|proposals)|seeks? [a-z ]{0,30}research|applications? (are )?(now )?open|(opens?|opening) (of )?(applications|a call)",
+      "skip": "seeding solutions",
+      "detail": {
+        "max": 5,
+        "deadline_regex": "(?:due|deadline is|deadline of|close[sd]? on)\\s+(?:on\\s+)?([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+      }
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "AgMission has no standing call list (its Open Opportunities block on the Our Work page says none are open); when a new RFA opens it is announced in the news section of agmission.org (as the 2023 PepsiCo RFA was), so the twice-daily run reads the first page of that news archive, keeps only items whose title announces a call, and reads each announcement page for a 'due <Month D, YYYY>' closing date. Calls wait as hidden candidates for review.",
+  "zero_reason": {
+    "quote": "Currently, there are no opportunities available",
+    "url": "https://agmission.org/our-work/"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-13: agmission.org/our-work/ HTTP 200, Open Opportunities block reads 'Currently, there are no opportunities available'. Channels tried: wp-json/wp/v2/news lists the 20 posts but content.rendered is empty (no deadline text), so the HTML news archive agmission.org/news/ (article.single-grid, 10 newest) plus a detail hop is chosen; wp-json/wp/v2/opportunity (4 posts, all 2021-2023 RFIs and FFAR strategy, stale mirror, last sitemap change 2025-01) no call; wp-json/wp/v2/grant empty; /feed/ and wp-json/types 403 to a desktop UA through Cloudflare; sitemap_index.xml lists news, opportunity, programs sitemaps only; no Algolia/XHR endpoint seen by endpoint_recon; FFAR's own Open Opportunities page already collected by the FFAR row (040f3e88), so the AgMission row reads only agmission.org.",
+  "edge_risk": "bot_protection",
+  "confidence": "medium"
+}

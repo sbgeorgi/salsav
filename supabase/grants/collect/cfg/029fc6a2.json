@@ -1,0 +1,31 @@
+{
+  "id": "029fc6a2-efd3-46aa-9277-db9a1ab87a53",
+  "name": "New Mexico Environment Department and Office of the State Engineer",
+  "program": "Strategic Water Supply Program grants and contracts (brackish water research, design pilots, demonstration)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.env.nm.gov/strategic-water-supply/strategic-water-supply-grant/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://nmose.submittable.com/submit",
+      "match": "/submit/[0-9a-f]{8}-[0-9a-f]{4}-",
+      "skip": "help|privacy|login",
+      "detail": 3
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "The program's own pages (env.nm.gov) return HTTP 503 to plain fetch and to headless Chrome, so the crawler reads the program's Submittable portal (nmose.submittable.com/submit), the only application route, which is server-rendered and lists each open call as a /submit/<guid> link; it keeps those links and hops to each call page for a deadline. The funder page is fetched second for text and a failure there is ignored. Calls wait as hidden candidates for review.",
+  "zero_reason": {
+    "quote": "There are presently no open calls for submissions.",
+    "url": "https://nmose.submittable.com/submit"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-13: env.nm.gov/strategic-water-supply/ (grant page, contracts page, how-to-apply, /requests-for-proposals/, robots.txt, sitemap_index.xml, wp-json/wp/v2/pages/19, /feed/) all HTTP 503 (plain curl, fetch_text, headless Chrome via endpoint_recon); env.nm.gov without www fails TLS hostname check; ose.nm.gov times out. Wayback capture of the grant page 2026-09-19 names the Submittable portal https://nmose.submittable.com/submit (200 over plain HTTP, 7971 chars of text, no sitemap, no feed; endpoint_recon verdict html_ok, only Submittable's own org JSON /api/organizations/<guid> which holds the same portal description, not a call list). Portal now reads 'There are presently no open calls for submissions.' (the 2026 round closed 2026-10-20), so zero items today; the link pattern /submit/<guid> is Submittable's standard call link and could not be tested on a live open call. No past call title exists on the portal to test the filter against.",
+  "edge_risk": "env.nm.gov_503",
+  "confidence": "low"
+}
