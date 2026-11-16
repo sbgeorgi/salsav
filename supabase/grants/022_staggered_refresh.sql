@@ -2,8 +2,9 @@
 -- Evidence (2026-11-16): kick_refresh fired all 8 shards at once with up to 12 funders each; they share one edge
 -- worker, which died with "CPU Time exceeded" (HTTP 546) ~10 s in. Shard 4 (all Grants.gov funders: NIFA, DOE,
 -- Reclamation) had not completed since 2026-11-12, and dead shards record no error, so consecutive_failures stayed 0.
--- Fix: one shard per request, staggered 3 minutes apart by cron, at most 4 funders per request; the edge function
--- self-chains further hops (chain_depth < 6) while that shard still has funders due.
+-- Fix: one shard per request, staggered 3 minutes apart by cron, at most 4 funders per request, every shard kicked
+-- twice per window (minutes 0..45). No self-chaining (chain_depth starts at the engine's cap of 6): a worker lives
+-- 150 s wall clock and a chained hop lands on the same aged worker, which was killed mid-hop in the 2026-11-16 test.
 
 create or replace function grants.kick_refresh_shard(p_trigger text, p_shard int, p_shards int default 8,
   p_max_sources int default 4, p_budget_ms int default 100000)
@@ -22,7 +23,7 @@ begin
     url := 'https://iuzgfldgvueuehybgntm.supabase.co/functions/v1/grants-refresh',
     headers := jsonb_build_object('Content-Type', 'application/json', 'x-grants-token', tok),
     body := jsonb_build_object('shard', p_shard, 'shards', p_shards, 'trigger', p_trigger,
-      'budget_ms', p_budget_ms, 'max_sources', p_max_sources),
+      'budget_ms', p_budget_ms, 'max_sources', p_max_sources, 'chain_depth', 6),
     timeout_milliseconds := 5000);
   return 1;
 end $$;
@@ -41,8 +42,8 @@ begin
 end $$;
 revoke execute on function grants.kick_refresh(text, int, int) from public, anon, authenticated;
 
--- minutes 0,3,...,21 -> shards 0..7
-select cron.schedule('grants-refresh-am', '0-21/3 13 * * *',
-  $$select grants.kick_refresh_shard('cron-am', extract(minute from now())::int / 3)$$);
-select cron.schedule('grants-refresh-pm', '0-21/3 1 * * *',
-  $$select grants.kick_refresh_shard('cron-pm', extract(minute from now())::int / 3)$$);
+-- minutes 0,3,...,45 -> shards 0..7, then 0..7 again (up to 8 funders per shard per window)
+select cron.schedule('grants-refresh-am', '0-45/3 13 * * *',
+  $$select grants.kick_refresh_shard('cron-am', (extract(minute from now())::int / 3) % 8)$$);
+select cron.schedule('grants-refresh-pm', '0-45/3 1 * * *',
+  $$select grants.kick_refresh_shard('cron-pm', (extract(minute from now())::int / 3) % 8)$$);
