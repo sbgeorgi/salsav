@@ -1,0 +1,38 @@
+{
+  "id": "269f191f-63d5-4f67-bdc5-b9073b5d20a2",
+  "name": "Elemental Excelerator",
+  "program": "Elemental Excelerator project funding (energy, food and agriculture, water)",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://elementalimpact.com/funding-opportunities/",
+  "feed_url": "https://elementalimpact.com/feed/",
+  "adapter_config": {
+    "auto_vet": false,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "re:\\binitiative\\b",
+        "re:\\bapplications?\\b",
+        "call for",
+        "request for",
+        "funding opportunit",
+        "re:\\bRFP\\b",
+        "re:\\bapply\\b"
+      ]
+    },
+    "max_items": 10
+  },
+  "collect_note": "Elemental's own news feed is read twice a day and only posts whose title carries call words (initiative, application, call for, request for, funding opportunity, RFP, apply) are kept as candidate calls. Its funding is open year-round with no listed deadline, so a new initiative or call shows up here as a news post.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Elemental Impact Launches the Data Center Innovation Initiative with Amazon, Google, Meta, and Microsoft",
+        "url": "https://elementalimpact.com/dcii-press-release/"
+      }
+    ]
+  },
+  "evidence": "Channels tried 2026-11-16: https://elementalimpact.com/feed/ HTTP 200 application/rss+xml (12 recent posts, news and portfolio stories); sitemap_index.xml HTTP 200 (post, page, company, events, newsletter sitemaps, no calls listing); /wp-json/wp/v2/types HTTP 401 (REST locked); funding-opportunities page HTTP 200 static HTML with one rolling application (Apply Now -> /funding-opportunities/apply/) and no listing or dated deadline, so mode cycle would return zero items; endpoint_recon --no-chrome found no opportunity endpoint. Filter replay: matches the title of the last known call (Data Center Innovation Initiative launch).",
+  "edge_risk": "low",
+  "confidence": "medium"
+}

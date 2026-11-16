@@ -1,0 +1,38 @@
+{
+  "id": "5c3bddc1-113a-4664-a108-5cb48a317e0c",
+  "name": "Swiss Re Foundation",
+  "program": "Entrepreneurs for Resilience / Climate Solutions (nature-based solutions, disaster risk reduction)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.swissrefoundation.org/who-we-partner-with/How-to-partner-with-us-.html",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.swissrefoundation.org/what-we-have-achieved/news.html",
+      "item": "li.Listing--item",
+      "match": "expressions? of interest|call for (proposals|applications)|global search|applications (are )?(open|now open|invited)|applications for|request for proposals|open call",
+      "date_label": true,
+      "closed": "applications (are )?(now )?closed",
+      "detail": {
+        "max": 3,
+        "deadline_regex": "Deadline for (?:submissions?|applications?):\\s*([0-9]{1,2} [A-Za-z]+,? [0-9]{4})"
+      }
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "The foundation announces its open calls (Expressions of Interest, global searches, annual award rounds) as news posts, so the crawler reads the server-rendered news list, keeps posts with call words and hops to each post for a labelled deadline. The funder's how-to-partner page is fetched second for text. Calls wait as hidden candidates for review.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Swiss Re Foundation announces Expressions of Interest for Urban Nature-based Solutions (NbS) in LMICs",
+        "deadline": "2026-01-20",
+        "url": "https://www.swissrefoundation.org/what-we-have-achieved/news/Swiss-Re-Foundation-announces-Expressions-of-Interest-for-Urban-Nature-based-Solutions--NbS--in-LMICs.html"
+      }
+    ]
+  },
+  "evidence": "2026-11-16: sitemap.xml (200, 270 urls), no RSS or API (endpoint_recon verdict html_ok, no opportunity endpoint, no wp-json); news.html (200) is server-rendered with li.Listing--item posts; /e4r27.html and Shine-2027 pages say applications are closed; How-to-partner page states annual open calls for Entrepreneurs for Resilience, Shine and Charity of the Year with no dates.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

@@ -1,40 +1,35 @@
 ## Goal
-Self-improving SALSAV funding radar. This phase: prove every auto (calls/cycle) funder extracts via the live edge function; fix broken configs; stop repeating empty fetches; explain missing completion notice.
+Self-improving SALSAV funding radar. Scheduled discovery passes (supabase/grants/discovery-task.md) keep the funder list true, collectable by the grants-refresh crawler, and growing where coverage is thin. Current pass: discovery-2026-11-16.
 
 ## Files touched
-grants-refresh engine.ts/types.ts/adapters/index.ts (v10: probe report opps/open/raw/text_len/sample; dry_run drops validators) + tests/engine.test.ts; 019_probe_refresh, 020_idle_backoff (+rollbacks); discovery-task.md (health 'empty' triage, final PushNotification); .claude/skills/grants-collection-probe/SKILL.md.
+- Earlier: grants-refresh engine.ts/types.ts/adapters/index.ts (v10 probe report) + tests/engine.test.ts; SQL 019_probe_refresh, 020_idle_backoff, 021_candidate_calls (+rollbacks); discovery-task.md; .claude/skills/grants-collection-probe/SKILL.md.
+- 2026-11-16 (uncommitted): supabase/functions/grants-refresh/handler.ts (background runs), tests/collect.test.ts (new handler test), tests/adapters-handler.test.ts (wait:true on 3 posts); .deploy-ok.json stamp; cfg files written by discovery subagents (supabase/grants/collect/cfg/*.json).
 
 ## Done
-- 019 live (20261112153616); 020 live (20261112154724), DO-block tested (23h/46h/46h, reset 11.5h, health 'empty').
-- v10 deployed; commit 6e3fabf pushed.
-- Full v10 probe, 96 vetted funders, results in scratchpad/probe/v10.txt (requests 106-122): 43 proven (opps>0), 27 working watch (raw>0, filter matched nothing), 6 page mode, 2 error (UAE conn error, Gulbenkian 403), 18 raw=0.
-- Production health 16:20: 89 auto (72 calls + 17 cycle), 88 ok in 24h, 0 overdue.
+- 019/020/021 live and DO-block tested; v10 deployed (6e3fabf). Full v10 probe 2026-11-12: 43 proven, 27 working watch, 6 page, 2 blocked (UAE TLS chain, Gulbenkian 403), 16 correct-empty, McKnight/BIRD regex fixed.
+- Pass 2 (11-12): 6 reverified kept; listed FEMSA 9f186bfc, Mosaic b280a1b5, NADBank f2dcd774, NextEnergy db43b41c; Grundfos rejected 31; private_sector gap 7 -> 4.
+- Pass 3 (11-13): 6 reverified kept; listed AgMission 5dfae4ae (71), AXA 3d460ce6 (65), NMED/OSE 029fc6a2 (58), AZ Dept Agriculture 67030526 (49, page watch); rejected Cargill+GWC, Anglo American Fdn, Bayer Fdn; EPRI 278cceed via GraphQL; probes 141/142 ok; private_sector gap 4 -> 2.
+- Pass 4 (11-16) so far: run logged; brief read (reverify 20, collection_gaps 14, failing 2, targets 0, candidate calls 1 = NAWI). Engine bug found and fixed locally: new test fails before / passes after; deploy gate ok (19 files). Probe 191 (8 stale grants_gov funders, dry run) all kind ok, 94 s.
 
 ## Decisions
-- Backoff in SQL apply_fetch_result (idle_streak), cap 46h.
-- Probe batches of 5: 10-20 full fetches (no 304) in one invocation hit 546 CPU Time exceeded even alone.
-
-- Triage of the 20 raw=0/error funders (5 sonnet workers, adapter_check evidence): 16 correct-empty, 2 regex fixed + applied verified (McKnight 4417a7e2, BIRD 9e33443a; re-probe 123 clean), 2 blocked (Gulbenkian 403 to datacenter IPs, UAE broken TLS chain) with collect_note set. Table: probe-2026-11-12.md.
+- Backoff in SQL apply_fetch_result (idle_streak), cap 46h. Probe batches of 5 html funders (546 CPU kill above that).
+- 2026-11-16 engine fix: non-dry runs answer 202 and finish in EdgeRuntime.waitUntil (the background task owns and closes the sql connection); dry_run and body {wait:true} stay synchronous. Reason: kick_refresh's pg_net timeout is 5 s and SQL changes are out of scope for discovery runs; every cron run that finished took <=13 s while runs called with long timeouts finished at up to 92 s.
+- Gulbenkian/UAE got one more channel attempt this pass (different host); else they stay unverified with the blocker named.
 
 ## Pending
-- Low-yield candidates for discovery to reconsider: CCARDESA (procurement only), Quadrature (invitation-only), Google water RFI (one-off).
-- Gulbenkian / UAE need a non-edge path or manual tracking.
+- Workflow wf_f7a3741d-e7b (6 reverify, private_sector leads -> up to 8 vet agents, Gulbenkian, UAE, NAWI candidate) running.
+- Deploy worker (grants-refresh v11 from stamp) running. After deploy: kick_refresh('discovery-2026-11-16-engine', 1, 100000) -> refresh_runs newest row finishes; at next cron (2026-11-17 01:00 UTC) check that all 8 shards finish and the 12 stale funders (last_ok 11-12) get last_ok_at. On error: redeploy HEAD files (git show HEAD:<path>).
+- Then: production probes (<=5 html per batch) for each set_collection applied this pass; verify passes; reject_opportunity for NAWI if recommended; verify counts; log_discovery_run finish; commit + push funding-radar-v2; PushNotification.
+- Older: reverify_source quotes from subpages never flip evidence_ok; UAE per-host CA fix idea (Deno.createHttpClient caCerts) untested; low-yield candidates CCARDESA, Quadrature, Google water RFI.
+- Postgres-backed tests (tests/adapters-handler.test.ts) not run: no scratch Postgres on localhost:54329.
 
 ## Errors & fixes
-- Concurrent or >=10-source full probes -> 546 CPU kill; 14:19 cron kick lost 4/8 shards (rows left 'running'); funders recovered next run via lease expiry.
-- 020 alias `o` clashed with plpgsql var o -> aliases e/op.
+- Concurrent or >=10-source full probes -> 546 CPU kill. 020 alias clash -> e/op.
+- 2026-11-13..16: 5-7 of 8 cron shards per run stuck 'running' (planned 0, never finished); 28 vetted funders overdue, 12 stale since 2026-11-12 with no failure recorded. Cause: request-bound work dropped after the 5 s pg_net caller hangs up. Fix: handler.ts background runs (above).
+- Brief parsing: the untrusted-data tag also appears in the envelope preamble; match the tag followed by newline + '[' (scratchpad env.py).
 
-- 021 candidate_calls live (20261112163023), DO-block tested (feed 23 -> 62, 39 candidates; reject drops one, repeat is unchanged); anon/authenticated cannot run reject_opportunity. Drawer shows "Unverified" chip (checked in preview on Colorado Water Plan). discovery-task step 6(a): nearest deadline first, enrich from call page, reject_opportunity for out-of-scope.
-
-## Current state
-Probe + triage complete; collected calls now show on the radar at once as Unverified; committed.
+## Pass 4 result (2026-11-16)
+Listed SRP 6d1957f0 (58), Elemental Excelerator 269f191f (52), Swiss Re Foundation 5c3bddc1 (42), all probe 195 ok and verified; 5 rejected; NAWI call rejected; 6 reverified kept. My handler.ts background-run fix was reverted unused: the crawler-health-2026-11-16 session proved with edge logs that 8 concurrent shards hit 546 CPU, and fixed it with SQL 022 (fc51fb3). The deploy never landed (production still v10).
 
 ## Next step
-Check Friday 2026-11-13 07:00 discovery run (first with COLLECTION e production probes, 961d056): each new funder applied unverified, probed via probe_refresh in serial batches, verified only on a match with adapter_check; summary lists probe numbers; ~30 more candidates resolved (39 left); confirmed calls enriched (apply_url/award, Colorado was thin); PushNotification sent.
-
-## Discovery pass 2 (2026-11-12, scheduled)
-Reverified 6 kept; 3 collection gaps unchanged (UAE TLS chain -> engine per-host CA fix would be needed; EPRI js_only; Gulbenkian 403 datacenter). Candidates: 2 confirmed, 27 rejected, AFRI Education/Workforce (1da45bda) left as candidate (borderline, workforce in scope). Listed FEMSA 9f186bfc, Mosaic b280a1b5, NADBank f2dcd774, NextEnergy db43b41c (all verified auto); Grundfos rejected 31. private_sector gap 7 -> 4. 12 candidates remain.
-
-## Discovery pass 3 (2026-11-13, scheduled)
-Reverified 6 kept (NSF CBET 57->62). Listed AgMission 5dfae4ae (71), AXA 3d460ce6 (65), NMED/OSE 029fc6a2 (58), AZ Dept Agriculture 67030526 (49, page watch: site 403 + eCivis robots-blocked); rejected Cargill+GWC, Anglo American Fdn, Bayer Fdn by gates. EPRI 278cceed now calls via apim.epri.com GraphQL (University RFP page is item 12 of 147; engine caps raw at 100). Probes 141/142 all ok, verified. Candidates: 1 confirmed, 10 rejected, NAWI InfoReady (JS-only) left. Gaps left: UAE (proposed engine fix: Deno.createHttpClient caCerts with GlobalSign RSA OV SSL CA 2018 for uaerep.ae; untested on edge runtime), Gulbenkian (403 datacenter). private_sector gap 4 -> 2.
-Pending: reverify_source quotes from subpages never flip evidence_ok (DB checks only the registered url's crawled copy) — consider letting evidence carry its own url check.
+After 2026-11-17 01:00 UTC: check refresh_runs (all staggered kicks ok) and that the 12 funders stale since 11-12 have a fresh last_ok_at. Elemental filter matches press releases (word 'initiative'); tighten it if they pile up as candidates.

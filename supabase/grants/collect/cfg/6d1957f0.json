@@ -1,0 +1,27 @@
+{
+  "id": "6d1957f0-af79-437c-8fcd-352319e090ab",
+  "name": "Salt River Project (SRP)",
+  "program": "SRP university research program (annual R&D investment at ASU, NAU, University of Arizona)",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://media.srpnet.com/srp-invests-29-million-in-research-at-asu-nau-and-u-of-a-for-2025-2026-school-year/",
+  "feed_url": "https://media.srpnet.com/feed/",
+  "adapter_config": {
+    "filter": {
+      "all": ["re:universit|research|R&D"],
+      "any": ["re:(call|request)s? for (proposals|applications|research)", "re:(accepting|solicit[a-z]*|seeking|invit[a-z]+) [^.]{0,40}(proposals|applications)", "re:(applications?|proposals?) (are |is )?(now )?(open|due|invited)"],
+      "none": ["re:teacher|K-12|homeowner|PowerAZ|heat relief"]
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "SRP runs its university research program by direct partnership and publishes no call list, so the crawler reads the SRP Newsroom RSS feed (the only place its program announcements appear) and keeps only posts that pair university or research words with call words (call for proposals, accepting proposals, applications open); matches wait as hidden candidates for review.",
+  "zero_reason": {
+    "quote": "SRP has invested in university research for more than 40 years and has seen lasting impacts from the joint research programs.",
+    "url": "https://media.srpnet.com/srp-invests-29-million-in-research-at-asu-nau-and-u-of-a-for-2025-2026-school-year/"
+  },
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "2026-11-16: official program page srpnet.com/about/innovation* and /about/research-and-development return 404; the only program page is the newsroom release (HTTP 200). media.srpnet.com/feed/ is an RSS 2.0 feed (HTTP 200, 25 items, Presspage, back to 24 Jul 2026); /wp-json/wp/v2/types 404; sitemap.xml lists 795 newsroom URLs with no calls section; endpoint_recon verdict html_ok, no opportunity endpoint; Grants.gov and EU SEDIA not applicable (private utility). Newsroom items on research are annual award announcements ('SRP Invests $3 Million in Research at ASU, NAU and U of A', 16 Sep 2026; the 2025-26 round, 27 Aug 2025), not open calls, so the call-word filter returns zero items today; filter tested against those announcement titles (correctly excluded) and against unrelated SRP grant posts (teacher, homeowner water-conservation grants, excluded).",
+  "edge_risk": "none",
+  "confidence": "low"
+}
