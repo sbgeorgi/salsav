@@ -33,3 +33,9 @@ Listed SRP 6d1957f0 (58), Elemental Excelerator 269f191f (52), Swiss Re Foundati
 
 ## Next step
 After 2026-11-17 01:00 UTC: check refresh_runs (all staggered kicks ok) and that the 12 funders stale since 11-12 have a fresh last_ok_at. Elemental filter matches press releases (word 'initiative'); tighten it if they pile up as candidates.
+
+## Pass 5 result (2026-11-17, discovery-2026-11-17)
+Crawler healthy (0 overdue shards, 0 stuck runs; staggered-kick fix holds). Reverified 6 kept (Frontiers 71, Gulbenkian 59, Bergfors 66, Keck 55 due 12-07, Greenacres 71 due 2027-04-26, Eni 54). Targets: California Forever, MN8, OCP all rejected not_a_funder (one-off gifts / 2021 MoU); queue empty. All bucket gaps 0, so no gap discovery. Elemental filter tightened (press release rejected), probe 244 ok -> verified. BARD re-verified (listing ok, round closed). Unverified: Gulbenkian (Cloudflare 403 in prod on every gulbenkian.pt path; no other official host), UAE (TLS chain; now cycle mode unverified).
+
+## Next step
+Gulbenkian/UAE need an engine-side fix to become collectable (UAE: Deno.createHttpClient caCerts with the missing intermediate; Gulbenkian: none known). Targets queue empty and gaps 0: next pass should re-verify the next 6 in the brief and consider raising bucket minimums or seeding targets.
