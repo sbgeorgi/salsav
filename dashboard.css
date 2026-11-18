@@ -130,7 +130,7 @@ body.dash { margin: 0; background: var(--bg); color: var(--ink); font: 400 var(-
   .gsearch.open { display: block; }
   .gs-open { display: inline-flex; }
 }
-@media (max-width: 760px) {
+@media (pointer: coarse), (max-width: 760px) {
   .gs-item, .btn { min-height: 44px; }
   .gs-clear { width: 44px; height: 44px; }
 }
@@ -365,19 +365,22 @@ footer.foot { padding: 2.5rem 0 3rem; color: var(--muted); font-size: var(--t-xs
   .topbar .wrap { gap: .25rem .5rem; padding-top: .35rem; }
   .brand span, .topbar .hide-m, .field kbd, .hide-m { display: none; }
   .nav { order: 5; width: 100%; margin: 0; overflow-x: auto; scrollbar-width: none; border-top: var(--hair-soft); align-self: auto; }
-  .nav button { min-height: 44px; padding: 0 .7rem; flex: 1; } .nav button::after { left: .7rem; right: .7rem; }
+  .nav button { padding: 0 .7rem; flex: 1; } .nav button::after { left: .7rem; right: .7rem; }
   .nav { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent); } /* edge cue: the strip scrolls */
   .pagehead { padding: 1.4rem 0 .8rem; }
   :root { --kpi-h: 154px; } .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--sp-4); min-height: calc(var(--kpi-h) * 4); } .kpi .n { font-size: 1.9rem; }
   .plist { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: var(--sp-3); padding-bottom: .5rem; margin-inline: -.75rem; padding-inline: .75rem; scroll-padding-inline: .75rem; scrollbar-width: none; } .plist > li { flex: 0 0 78%; scroll-snap-align: start; } .plist > .skel { flex: 0 0 78%; }
-  .info > button { min-height: 44px; display: inline-flex; align-items: center; } .field input, .field select { min-height: 44px; }
   .stickybar { position: static; } .field select { max-width: 100%; }
-  .btn, .fchip, .bchip, .field, .seg button { min-height: 44px; } .btn--sm { min-height: 44px; }
-  .dash .bchip { min-height: 44px; } .dash .linkbtn { min-height: 40px; display: inline-flex; align-items: center; } .dash label:has(> input[type="checkbox"]) { min-height: 40px; display: inline-flex; align-items: center; }
   .bucketrow { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; min-height: 44px; } .bchip { flex: none; }
-  .laneseg { min-height: 45px; gap: 0 .9rem; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; } .laneseg button { white-space: nowrap; min-height: 44px; }
-  .views { width: 100%; } .views button { flex: 1; justify-content: center; min-height: 44px; }
+  .laneseg { min-height: 45px; gap: 0 .9rem; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; } .laneseg button { white-space: nowrap; }
+  .views { width: 100%; } .views button { flex: 1; justify-content: center; }
   .agenda .itmain { grid-template-columns: 52px 1fr; } .agenda .itmain > :last-child { display: none; }
+}
+/* touch targets on phones and on coarse pointers: controls at least 44px tall, the same condition as the shared rule at the end of this file */
+@media (pointer: coarse), (max-width: 760px) {
+  .nav button, .field input, .field select, .btn, .fchip, .bchip, .field, .seg button, .btn--sm, .dash .bchip, .laneseg button, .views button { min-height: 44px; }
+  .info > button { min-height: 44px; display: inline-flex; align-items: center; }
+  .dash .linkbtn, .dash label:has(> input[type="checkbox"]) { min-height: 44px; display: inline-flex; align-items: center; }
 }
 @media (max-width: 900px) {
   .tbl, .tbl tbody, .tbl tr, .tbl td { display: block; } .tbl thead { display: none; }
@@ -388,8 +391,8 @@ footer.foot { padding: 2.5rem 0 3rem; color: var(--muted); font-size: var(--t-xs
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 @media print { .topbar, .stickybar, .ov, .laneblock, .views, .toasts, .btn, .twist, .nav { display: none !important; } body.dash { background: #fff; color: #000; } .tbl th { position: static; } .tablewrap { border: 0; } }
-/* touch targets: 44px hit areas on phones without moving the layout */
-@media (max-width: 760px) {
+/* touch targets: 44px hit areas on phones and coarse pointers without moving the layout */
+@media (pointer: coarse), (max-width: 760px) {
   .fitbtn { min-height: 44px; align-content: center; }
   .rl { box-sizing: border-box; min-height: 44px; padding-block: 12px; margin-block: -12px; }
   .checks label { min-height: 44px; } .checks input { width: 20px; height: 20px; }
@@ -397,6 +400,7 @@ footer.foot { padding: 2.5rem 0 3rem; color: var(--muted); font-size: var(--t-xs
   .brand { min-height: 44px; } .ov-toggle { min-height: 44px; }
   .twist { width: 44px; height: 44px; } .tbl th button { min-height: 44px; }
   .note-list .linkbtn { position: relative; } .note-list .linkbtn::before { content: ""; position: absolute; inset: -12px -10px; } /* 44px hit area without a taller line box */
+  .menu .list button { min-height: 44px; } /* presets and other menu rows: the base rule above is 36px */
 }
 /* preset rows: apply and delete are sibling buttons */
 .pitem { display: flex; align-items: stretch; } .pitem > .pbtn { flex: 1; min-width: 0; text-align: left; } .pitem > .pdel { flex: none; }

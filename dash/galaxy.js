@@ -14,6 +14,10 @@ const TIER_LABEL = Object.fromEntries(TIERS);
 const GEO_ORDER = ['sw', 'us', 'intl', 'global'];
 const UA_KEYS = ['eligible', 'eligible_with_partner', 'invitation_only', 'unlikely', 'unknown'];
 const OTHER = 'c:other';
+// generic research, partnership and programme words: they describe how a funder works, not what it funds, so they never
+// name a cluster or link two clusters (on live data "research" and "international partnerships" pulled unrelated funders in)
+const GENERIC = new Set(['research', 'agricultural research', 'innovation', 'international partnerships', 'partnerships', 'programs', 'youth programming', 'summer programs', 'funding', 'equity & inclusion']);
+const topics = (it) => (it.themes || []).filter((t) => !GENERIC.has(t));
 const MAX_CONCEPTS = 8;
 const MIN_GROUP = 3; // a concept needs this many funders to stand as its own cluster once the map is crowded
 const KW_TOP = 10;
@@ -30,8 +34,6 @@ const themeKey = (t) => String(t || '').trim().replace(/\s+/g, ' ').toLowerCase(
 const awardOf = (it) => (it.award_max_usd == null || !Number.isFinite(+it.award_max_usd) ? -1 : +it.award_max_usd);
 const byAward = (a, b) => awardOf(b) - awardOf(a) || cmp(a.id, b.id);
 const pairKey = (a, b) => (a < b ? `${a}\n${b}` : `${b}\n${a}`);
-const STOP_WORDS = new Set(['fund', 'funds', 'funding', 'program', 'programme', 'grant', 'grants', 'award', 'awards', 'foundation', 'initiative', 'call', 'open', 'annual', 'the', 'and', 'for', 'with', 'from']);
-const wordsOf = (it) => [...new Set(`${it.name} ${it.program}`.toLowerCase().match(/[a-z]{4,}/g) || [])].filter((w) => !STOP_WORDS.has(w)); // name and programme words: keyword overlap
 export const capLabel = (s) => { const t = String(s || '').trim(); return t ? t.charAt(0).toUpperCase() + t.slice(1) : ''; };
 
 /* node radius: log scale of the published maximum award, floor for unknown amounts */
@@ -87,7 +89,7 @@ export function groupOf(it, mode) {
     return g ? { key: `r:${g}`, label: GEOS[g], also: [] } : { key: 'r:none', label: 'Region not stated', also: [] };
   }
   if (mode === 'stage') return { key: `p:${it.stage}`, label: STAGE_LABEL[it.stage] || capLabel(it.stage), also: [] };
-  const [first, ...rest] = it.themes || [];
+  const [first, ...rest] = topics(it);
   if (!first) return { key: 'c:none', label: 'Unthemed', also: [] };
   return { key: `c:${first}`, label: capLabel(first), also: rest.map((t) => `c:${t}`) };
 }
@@ -98,47 +100,48 @@ export function galaxyLayout(items = [], { groupBy = 'concept', width = 960, hei
   const MT = 34, MB = 14, ML = 14, MR = 14, GAP = 22; // GAP: room between halos for their labels
   const list = (items || []).filter((it) => it && it.id != null).sort((a, b) => cmp(a.id, b.id));
   const keyed = list.map((it) => ({ it, g: groupOf(it, groupBy) }));
-  const df = new Map(); // in how many funders each word appears; a word most funders share says nothing about one of them
-  for (const it of list) for (const w of wordsOf(it)) df.set(w, (df.get(w) || 0) + 1);
-  const distinct = (it) => wordsOf(it).filter((w) => df.get(w) <= Math.max(2, list.length / 10));
-
-  // many concepts: a concept with fewer than MIN_GROUP funders folds into the nearest named concept, reached over keyword
-  // co-occurrence (a funder's keywords link each other); "Other concepts" keeps only what no named concept reaches
-  const counts = new Map(), labelOf = new Map(), adj = new Map();
-  const edge = (a, b) => { if (!adj.has(a)) adj.set(a, new Set()); adj.get(a).add(b); };
-  for (const { g } of keyed) {
-    counts.set(g.key, (counts.get(g.key) || 0) + 1); labelOf.set(g.key, g.label);
-    for (const raw of g.also) { edge(g.key, raw); edge(raw, g.key); }
-  }
+  // many concepts: a concept needs MIN_GROUP funders to stand as its own cluster. A funder joins a named concept only through
+  // its own themes, primary first (its primary theme if named, else its first named secondary theme). Keyword chains are not
+  // followed: a funder that links to a cluster only through a third funder's theme is not placed by that link.
+  const counts = new Map(), labelOf = new Map();
+  for (const { g } of keyed) { counts.set(g.key, (counts.get(g.key) || 0) + 1); labelOf.set(g.key, g.label); }
   const crowded = groupBy === 'concept' && counts.size > MAX_CONCEPTS;
   const named = (k) => counts.get(k) >= MIN_GROUP && k !== 'c:none';
-  const near = new Map(), queue = [...counts.keys()].filter(named).sort(cmp);
-  for (const k of queue) near.set(k, k);
-  for (let i = 0; i < queue.length; i++) {
-    for (const nb of [...(adj.get(queue[i]) || [])].sort(cmp)) if (!near.has(nb)) { near.set(nb, near.get(queue[i])); queue.push(nb); }
-  }
-  const home = (k) => (!crowded || named(k) ? k : near.get(k) || null); // null: no named concept reaches it
-  const keyOf = (g) => (home(g.key) === g.key ? g.key : g.also.find(named) || home(g.key));
-  // first pass: a funder that a named concept reaches keeps that cluster. Second pass: a funder no named concept reaches
-  // joins the cluster whose members share the most themes and name or programme words with it (tie: the cluster where its
-  // organisation class is most common). A funder that shares no theme and fewer than two such words stays in Other.
+  const home = (k) => (!crowded || named(k) ? k : null); // null: not a named concept of its own
+  const keyOf = (g) => home(g.key) || g.also.find(named) || null;
+  // first pass: a funder that a named concept reaches through its own themes keeps that cluster. Second pass: a funder no named concept reaches
+  // joins the concept one of its themes spells out (byName), else the cluster whose members share the most themes with it (tie:
+  // the cluster where its organisation class is most common). A shared funder name or programme word is not a topic, so a funder
+  // that shares no theme stays in Other.
   const seeds = new Map(), unplaced = [];
   for (const { it, g } of keyed) {
     const k = keyOf(g);
     if (k) { if (!seeds.has(k)) seeds.set(k, []); seeds.get(k).push(it); } else unplaced.push(it);
   }
   const profile = new Map([...seeds].sort(([a], [b]) => cmp(a, b)).map(([k, members]) => [k, {
-    themes: new Set(members.flatMap((m) => m.themes)), words: new Set(members.flatMap(distinct)),
+    themes: new Set(members.flatMap(topics)),
+    stems: (String(labelOf.get(k) || '').toLowerCase().match(/[a-z]{4,}/g) || []).map((w) => w.slice(0, 6)),
     bucket: members.reduce((c, m) => c.set(m.bucket, (c.get(m.bucket) || 0) + 1), new Map()),
   }]));
+  // a theme that spells out a concept's name ("water conservation" for Water) places the funder there, themes in order. A theme
+  // that names three or more concepts is a list of everything (an aggregator), not a topic.
+  // shortcut: word-start match on the concept label, move to a theme vocabulary in the data if labels gain ambiguous words
+  const byName = (it) => {
+    for (const t of topics(it)) {
+      const ws = t.match(/[a-z]{4,}/g) || [];
+      const hits = [...profile].map(([k, p]) => [k, p.stems.filter((s) => ws.some((w) => w.startsWith(s))).length, p.bucket.get(it.bucket) || 0]).filter((h) => h[1]);
+      if (!hits.length || hits.length > 2) continue;
+      return hits.sort((a, b) => b[1] - a[1] || b[2] - a[2])[0][0]; // stable sort over key-sorted profile: equal hits keep key order
+    }
+    return null;
+  };
   const bestFor = (it) => {
     let best = OTHER, score = 0, cls = 0;
-    const own = distinct(it);
     for (const [k, p] of profile) {
-      const th = it.themes.filter((t) => p.themes.has(t)).length, wd = own.filter((w) => p.words.has(w)).length;
-      if (!th && wd < 2) continue; // one shared name word ("pilot", "global") is not a topical match
-      const s = th + wd, c = p.bucket.get(it.bucket) || 0;
-      if (s > score || (s === score && s > 0 && c > cls)) { best = k; score = s; cls = c; }
+      const th = topics(it).filter((t) => p.themes.has(t)).length;
+      if (!th) continue; // no shared theme: name and programme words join nothing
+      const c = p.bucket.get(it.bucket) || 0;
+      if (th > score || (th === score && c > cls)) { best = k; score = th; cls = c; }
     }
     return best;
   };
@@ -149,7 +152,7 @@ export function galaxyLayout(items = [], { groupBy = 'concept', width = 960, hei
     byKey.get(k).items.push(it);
   };
   for (const [k, members] of seeds) for (const it of members) put(k, it);
-  for (const it of unplaced) put(bestFor(it), it);
+  for (const it of unplaced) put(byName(it) || bestFor(it), it);
   const clusters = [...byKey.values()].map((c) => ({
     key: c.key, label: c.label, items: c.items.slice().sort(byAward), n: c.items.length,
     total: c.items.reduce((s, it) => s + Math.max(0, +it.award_max_usd || 0), 0),
@@ -377,13 +380,14 @@ function build(root) {
   const old = STATE.get(root);
   if (old?.ro) old.ro.disconnect();
   root.replaceChildren();
-  const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+  // same condition as the 44px floor in galaxy.css, so phone widths get the large targets with a fine pointer too
+  const small = typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches;
   const st = {
     root, app: null, src: {}, items: [], byId: new Map(), filtered: [], hits: null,
     regState: 'idle', regPromise: null, layout: null, nodeLayout: new Map(), clusterLayout: new Map(),
     nodeEls: new Map(), clusterEls: new Map(), rowEls: new Map(), chipEls: new Map(), kwSig: '', kwCounts: new Map(),
     openCl: new Set(), seenCl: new Set(), more: new Set(), hover: null, focused: null, focusId: null, iso: null,
-    k: 1, tx: 0, ty: 0, canvasW: 0, canvasH: 0, raf: 0, hitPx: coarse ? 22 : 16, ro: null,
+    k: 1, tx: 0, ty: 0, canvasW: 0, canvasH: 0, raf: 0, hitPx: small ? 22 : 16, tapPx: small ? 46 : 26, ro: null, // taps: 2px spare, since the svg can render a fraction smaller than its viewBox
   };
   st.groupSeg = h('div', { class: 'seg gx-seg', role: 'group', 'aria-label': 'Group funders by' },
     GROUPS.map(([k, label]) => h('button', { type: 'button', 'data-group': k, 'aria-pressed': 'false', onclick: () => { uiOf(st.app).groupBy = k; update(st); } }, label)));
@@ -525,6 +529,7 @@ function layoutAndDraw(st, ui, w, hgt) {
   st.layout = galaxyLayout(st.filtered, { groupBy: ui.groupBy, width: w, height: hgt });
   st.canvasW = w; st.canvasH = hgt;
   st.nodeLayout = new Map(st.layout.nodes.map((n) => [n.id, n]));
+  st.hitCap = nodeCaps(st.layout.nodes);
   st.clusterLayout = new Map(st.layout.clusters.map((c) => [c.key, c]));
   if (st.iso && !st.clusterLayout.has(st.iso)) { st.iso = null; st.k = 1; st.tx = 0; st.ty = 0; }
   if (st.iso) focusView(st, st.iso);
@@ -555,6 +560,7 @@ function drawMap(st) {
     e.at = `translate(${c.lx}px, ${c.ly}px)`;
     e.name.textContent = c.name;
     e.label.setAttribute('aria-label', `${c.label}: ${c.meta}. Focus this group`);
+    e.lx = c.lx; e.ly = c.ly;
   }
   for (const [key, e] of st.clusterEls) if (!keepC.has(key)) { e.halo.remove(); e.label.remove(); st.clusterEls.delete(key); }
 
@@ -600,12 +606,13 @@ function makeCluster(st, key) {
   const circle = sv('circle', { class: 'gx-halo', r: 0 });
   const halo = sv('g', { class: 'gx-cluster', 'data-key': key }, circle);
   const name = sv('text', { class: 'gx-lname', 'text-anchor': 'middle', y: 13 });
-  const label = sv('g', { class: 'gx-label', role: 'button', tabindex: '0', 'data-key': key }, name);
+  const tap = sv('rect', { class: 'gx-tap', 'aria-hidden': 'true' });
+  const label = sv('g', { class: 'gx-label', role: 'button', tabindex: '0', 'data-key': key }, tap, name);
   label.addEventListener('click', () => isolate(st, key));
   label.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); isolate(st, key); } });
   st.layers.halo.append(halo);
   st.layers.labels.append(label);
-  return { halo, circle, label, name };
+  return { halo, circle, label, name, tap };
 }
 
 function makeNode(st, it) {
@@ -789,7 +796,7 @@ function applyTransform(st) {
   for (const [id, e] of st.nodeEls) {
     const n = st.nodeLayout.get(id);
     if (!n) continue;
-    e.hit.setAttribute('r', r2(Math.max(n.r + 4, st.hitPx / st.k)));
+    e.hit.setAttribute('r', hitRadius(n.r, st.k, st.hitPx, st.hitCap.get(id)));
     e.g.classList.toggle('is-away', !!st.iso && n.cluster !== st.iso);
   }
   for (const [key, e] of st.clusterEls) {
@@ -799,7 +806,46 @@ function applyTransform(st) {
     // labels keep their screen size when the map zooms
     e.label.style.transform = `${e.at} scale(${r2(1 / st.k)})`;
   }
+  placeTaps(st);
   st.reset.hidden = !(st.iso || Math.abs(st.k - 1) > 0.01 || st.tx || st.ty);
+}
+
+// Node hit radius in world units, for a node drawn at radius r. The halo is 4 world units past the dot and at least hitPx screen px,
+// but never more than 1.5 x hitPx screen px: a lone node (no neighbour cap) used to keep growing as the map was zoomed in, until
+// its hit covered cluster label taps. The hit is never smaller than the drawn dot, unless a neighbour's ring is closer (cap wins).
+export function hitRadius(r, k, hitPx, cap = Infinity) {
+  const z = Math.max(Number(k) || 1, 1e-6);
+  return r2(Math.max(0, Math.min(Math.max(r, Math.min(Math.max(r + 4, hitPx / z), (1.5 * hitPx) / z)), cap)));
+}
+
+// A node's hit circle stops short of every other node's ring (drawn at r + 4.5), so it never covers a neighbour.
+export function nodeCaps(nodes) {
+  return new Map(nodes.map((a) => [a.id, nodes.reduce((c, b) => (b === a ? c : Math.min(c, Math.hypot(a.x - b.x, a.y - b.y) - b.r - 5.5)), Infinity)]));
+}
+
+// Cluster label hit boxes: st.tapPx screen px tall, shortened where a node ring or another label's text would be covered.
+// Label-local units are screen px (the label is scaled by 1 / k inside the zoomed world).
+export function placeTaps(st) {
+  const k = st.k, els = [...st.clusterEls.values()], boxes = els.map((e) => e.name.getBBox());
+  els.forEach((e, i) => {
+    const b = boxes[i], x1 = b.x - 4, x2 = b.x + b.width + 4, cy = b.y + b.height / 2;
+    let allow = Infinity;
+    for (const n of st.layout.nodes) {
+      const dx = k * (n.x - e.lx), dy = k * (n.y - e.ly), R = k * (n.r + 4.5);
+      if (dx > x1 - R && dx < x2 + R) allow = Math.min(allow, Math.abs(dy - cy) - R);
+    }
+    els.forEach((o, j) => {
+      if (o === e) return;
+      const ob = boxes[j], ox1 = k * (o.lx - e.lx) + ob.x, oy1 = k * (o.ly - e.ly) + ob.y;
+      if (ox1 + ob.width > x1 && ox1 < x2) {
+        if (oy1 >= cy) allow = Math.min(allow, oy1 - cy);
+        else allow = Math.min(allow, cy - (oy1 + ob.height));
+      }
+    });
+    const H = Math.max(b.height, Math.min(st.tapPx, 2 * allow));
+    e.tap.setAttribute('x', r2(x1)); e.tap.setAttribute('width', r2(x2 - x1));
+    e.tap.setAttribute('y', r2(cy - H / 2)); e.tap.setAttribute('height', r2(H));
+  });
 }
 
 /* ---------- keyboard: arrows move between nodes, Enter opens the drawer ---------- */

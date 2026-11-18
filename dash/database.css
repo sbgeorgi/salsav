@@ -165,7 +165,11 @@
   .db-open { grid-template-columns: minmax(0, 1fr); }
   .db-item { grid-template-columns: minmax(0, 1fr); gap: var(--sp-2); }
   .db-item-act { justify-content: flex-start; }
-  .db-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  /* the sort controls stay on screen as a strip above the cards: the seven sortable headers wrap inside the viewport, and the rest of the header is hidden */
+  .db-table thead { display: block; position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+  .db-table thead tr { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); padding: var(--sp-1) 0 var(--sp-2); border-bottom: var(--hair); }
+  .db-table thead th[scope] { position: static; width: auto; padding: 0; border: 0; background: none; }
+  .db-table thead th:not([aria-sort]) { display: none; }
   .db-table, .db-table tbody { display: block; width: 100%; }
   .db-table tr.db-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sp-2) var(--sp-4); padding: var(--sp-3); border-bottom: var(--hair-soft); }
   .db-table tr.db-row td { display: grid; gap: 2px; min-width: 0; padding: 0; border: 0; box-shadow: none; text-align: left; }
@@ -193,6 +197,6 @@
   .db-dim .db-bar { grid-column: 1 / -1; }
   .db-head h1 { font-size: var(--t-xl); }
 }
-@media (max-width: 760px) {
-  .db-sort { min-height: 40px; }
+@media (pointer: coarse), (max-width: 760px) {
+  .db-sort, .db-tog { min-height: 44px; }
 }

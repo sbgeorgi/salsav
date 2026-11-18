@@ -105,7 +105,7 @@
 /* the ask dialog's confirm button when the action removes something (.btn is ink by default) */
 .btn.btn--danger { color: var(--bad-fg) !important; border-color: var(--bad-fg); }
 
-@media (max-width: 760px) {
+@media (pointer: coarse), (max-width: 760px) {
   .umenu-item { min-height: 44px; line-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {

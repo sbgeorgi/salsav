@@ -231,4 +231,42 @@ t('horizon svg: no bare text nodes at phone or desktop width (skipped month labe
   } finally { globalThis.document = realDocument; }
 });
 
+t('horizon tap: a lone dot is 26px fine and 46px on coarse or phone; two dots in one column keep 4.9 px radius each', () => {
+  class FakeText { constructor(s) { this.text = s; } }
+  class FakeEl {
+    constructor(tag) { this.tag = tag; this.kids = []; this.attrs = {}; }
+    append(...xs) { for (const x of xs) this.kids.push(x instanceof FakeEl || x instanceof FakeText ? x : new FakeText(String(x))); }
+    setAttribute(n, v) { this.attrs[n] = v; }
+    addEventListener() {}
+  }
+  const realDocument = globalThis.document, realMM = globalThis.matchMedia;
+  globalThis.document = { createElementNS: (_, tag) => new FakeEl(tag), createElement: (tag) => new FakeEl(tag), createTextNode: (s) => new FakeText(s) };
+  const taps = (rows, coarse) => {
+    globalThis.matchMedia = () => ({ matches: coarse });
+    const svg = horizon(rows, { w: 600, now: new Date('2026-11-17T12:00:00Z') });
+    return svg.kids.filter((k) => k.tag === 'circle' && k.attrs.class === 'hz-tap').map((k) => +k.attrs.r);
+  };
+  try {
+    const row = (id, days) => ({ id, name: id.toUpperCase(), bucket: 'tracker', _days: days });
+    assert.deepEqual(taps([row('a', 100)], false), [13], 'fine pointer: 26px target');
+    assert.deepEqual(taps([row('a', 100)], true), [23], 'coarse pointer: 46px target');
+    const pair = taps([row('a', 100), row('b', 100)], false); // same day: the second dot sits 11px above the first
+    assert.equal(pair.length, 2);
+    for (const r of pair) assert.ok(Math.abs(r - 4.9) < 1e-9, `shortened to 11 - 4.6 - 1.5 = 4.9, got ${r}`);
+  } finally {
+    globalThis.document = realDocument;
+    if (realMM === undefined) delete globalThis.matchMedia; else globalThis.matchMedia = realMM;
+  }
+});
+
+t('scatter: pointer target is 24px, zero where a neighbouring mark is in the way, and never a focus stop', () => {
+  const m = (id, days, fit) => ({ id, name: id.toUpperCase(), bucket: 'us_federal', days, fit, award: 1e6 });
+  const s = scatter([m('a', 100, 50), m('b', 102, 50), m('c', 300, 20)], { w: 360, h: 220, xMax: 365 });
+  const taps = [...s.matchAll(/<circle class="viz-tap" cx="[\d.]+" cy="[\d.]+" r="([\d.]+)" aria-hidden="true"\/>/g)].map((x) => +x[1]);
+  assert.equal(taps.length, 3);
+  assert.equal(taps[0], 0); // b sits 2 days away, inside a's reach
+  assert.equal(taps[2], 13); // c is clear of both: 26 user units, so at least 24px after the svg's own scaling
+  assert.doesNotMatch(s, /viz-tap[^>]*tabindex/);
+});
+
 console.log(`\n${n} tests, all ok`);

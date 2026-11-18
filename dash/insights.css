@@ -17,7 +17,7 @@
 .ins-empty { color: var(--muted); font-size: var(--t-sm); padding: var(--sp-3) 0; border-top: 1px dashed var(--line); }
 .ins svg.viz { width: 100%; height: auto; }
 .ins svg [data-id] { cursor: pointer; }
-.ins svg [data-id]:focus-visible { outline: var(--focus); outline-offset: 2px; }
+.ins svg [data-id]:focus-visible:not(.viz-mark) { outline: var(--focus); outline-offset: 2px; }
 
 /* opportunity map */
 .ins-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(12rem, 15rem); gap: var(--sp-5); align-items: start; }
@@ -32,6 +32,8 @@
 .ins-lane { margin-bottom: var(--sp-3); }
 .ins-lane h4 { margin: 0 0 2px; } /* the lane colour comes from the shared .lchip (dash/ui.css), as on the Radar */
 .ins-lane ul { list-style: none; margin: 0; padding: 0; }
+.ins-dated-wrap { margin-top: var(--sp-3); }
+.ins-dated { list-style: none; margin: 0; padding: 0; max-height: 18rem; overflow-y: auto; }
 .ins-link { display: flex; align-items: center; gap: .45rem; width: 100%; min-height: 30px; padding: 0 .2rem; border: 0; border-radius: var(--r-xs); background: transparent; text-align: left; cursor: pointer; color: var(--ink); font-size: var(--t-sm); }
 .ins-link:hover { background: var(--surface-2); }
 .ins-link .bdot { flex: none; }
@@ -119,4 +121,4 @@
   .cov-r .facts { grid-column: 1 / -1; grid-row: 3; }
 }
 @media (prefers-reduced-motion: reduce) { .bar i, .ins-jump button { transition: none; } }
-@media (max-width: 760px) { .ins-link { min-height: 44px; } .ins-jump button { min-height: 44px; min-width: 44px; } .ins-actions .btn, .ins-lock .btn { min-height: 44px; } }
+@media (pointer: coarse), (max-width: 760px) { .ins-link, .cov-r .ins-link { min-height: 44px; } .ins-jump button { min-height: 44px; min-width: 44px; } .ins-actions .btn, .ins-lock .btn { min-height: 44px; } }

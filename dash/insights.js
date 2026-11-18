@@ -13,7 +13,7 @@ const GLYPH = { us_federal: '●', intl_dev: '■', state_regional: '◆', priva
 const STAGES_ACTIVE = ['reviewing', 'applying', 'submitted'];
 const sv = (t, a = {}, ...k) => { const e = document.createElementNS(NS, t); for (const [n, v] of Object.entries(a)) if (v != null && v !== false) e.setAttribute(n, v === true ? '' : v); for (const c of k.flat()) if (c != null) e.append(typeof c === 'string' ? document.createTextNode(c) : c); return e; };
 const parse = (str) => document.importNode(new DOMParser().parseFromString(str.replace('<svg ', `<svg xmlns="${NS}" `), 'image/svg+xml').documentElement, true);
-const RH = () => (innerWidth <= 760 ? 44 : 24); // phone-sized rows give chart bars a 44px tap target
+const RH = () => (typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches ? 44 : 24); // the same test as the shared 44px rule in dashboard.css: phone-sized or touch rows give chart bars a 44px tap target
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const num = (n) => new Intl.NumberFormat('en-US').format(Number(n) || 0);
 const shortDay = (iso) => { const t = Date.parse(iso || ''); return Number.isFinite(t) ? new Date(t).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }) : ''; };
@@ -132,6 +132,10 @@ export function render(root, app) {
   });
   const legend = el('ul', { class: 'ins-legend', 'aria-label': 'Funder buckets' }, Object.keys(D.BUCKETS).filter((b) => dated.some((p) => p.bucket === b)).map((b) => el('li', {}, el('span', { class: `gl b-${b}`, 'aria-hidden': 'true', text: GLYPH[b] }), blabel(b))),
     el('li', { class: 'sub', text: 'Bigger mark = larger award. Shaded: fit 60+ closing within 90 days.' }));
+  // The marks above are 8-26px and carry their names only in svg titles, so the dated funders also get a list of 44px-on-phone rows (the same .ins-link rows as the lanes).
+  const datedList = el('div', { class: 'ins-dated-wrap' }, sub(`Dated funders (${dated.length})`, 'Soonest first. The same funders as the marks above.'),
+    el('ul', { class: 'ins-dated', 'aria-label': 'Dated funders, soonest first' }, dated.slice().sort((a, b) => a.days - b.days).map((p) => el('li', {}, el('button', { type: 'button', class: 'ins-link', title: p.name, onclick: () => app.openDrawer(p.id), 'aria-label': `${p.name}, ${p.days} days to deadline, fit ${p.fit}` },
+      ui.bucketDot(p.bucket), el('span', { class: 'nm', text: p.name }), el('span', { class: 'sc', text: `${p.days} d` }), el('span', { class: 'sc', text: String(p.fit) }))))));
   const queuedIn = (id) => S.regById?.get?.(id)?.queue === 'pending'; // the agent queue lives on the registry, not the feed row
   const lanes = Object.entries(D.LANES).map(([k, l]) => [k, l, I.undated.filter((p) => p.lane === k).sort((a, b) => b.fit - a.fit)]).filter(([, , a]) => a.length);
   const strip = el('aside', { class: 'ins-undated', 'aria-label': 'Funders without a fixed date', tabindex: '0' }, el('h3', { text: `No fixed date (${I.undated.length})` }),
@@ -139,7 +143,7 @@ export function render(root, app) {
       ui.bucketDot(p.bucket), el('span', { class: 'nm', text: p.name }), queuedIn(p.id) ? ui.statusChip('queue') : null, el('span', { class: 'sc', text: String(p.fit) }))))))) : empty('Every scored funder has a date.'));
   const s1 = section('map', mapTake, 'Follows search',
     el('p', { class: 'sub', text: `Height is fit score, distance from the left is days to the deadline. ${dated.length} dated${outside ? `, ${outside} outside the next 12 months` : ''}, ${I.undated.length} without a fixed date. Click a mark for details.` }),
-    el('div', { class: 'ins-split' }, el('div', {}, mapHost, dated.length ? legend : null), strip));
+    el('div', { class: 'ins-split' }, el('div', {}, mapHost, dated.length ? legend : null, dated.length ? datedList : null), strip));
 
   /* 2. Fit */
   const scoredN = I.fitHist.reduce((a, t) => a + t.n, 0), topN = I.fitHist.filter((t) => t.tier === 'prime' || t.tier === 'strong').reduce((a, t) => a + t.n, 0);

@@ -101,7 +101,7 @@
 }
 @media (max-width: 760px) {
   .msec h2, .mnum { font-size: var(--t-lg); }
-  .mjump { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -.1rem; } .mjump button { white-space: nowrap; min-height: 44px; }
+  .mjump { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -.1rem; } .mjump button { white-space: nowrap; }
   .mtbl, .mtbl tbody, .mtbl tr, .mtbl th, .mtbl td { display: block; width: auto !important; } .mtbl thead { display: none; }
   .mtbl tr { padding: .55rem 0; border-bottom: var(--hair-soft); } .mtbl th, .mtbl td { border: 0; padding: 0 0 .15rem; }
   .mtbl .pts { text-align: left; }
@@ -111,7 +111,7 @@
   .mex { padding: .8rem; }
   .mcrit-r { grid-template-columns: minmax(0, 1fr) auto; } .mcrit-r .pbar { grid-column: 1 / -1; grid-row: 2; }
 }
-@media (max-width: 760px) { .mtop .rl, .mex .rl, .mscr-h .rl { box-sizing: border-box; min-height: 44px; padding-block: 12px; margin-block: -12px; } .mrow .btn, .mretry .btn { min-height: 44px; } }
+@media (pointer: coarse), (max-width: 760px) { .mjump button { min-height: 44px; } .mtop .rl, .mex .rl, .mscr-h .rl { box-sizing: border-box; min-height: 44px; padding-block: 12px; margin-block: -12px; } .mrow .btn, .mretry .btn { min-height: 44px; } }
 .mnum { font-variant-numeric: tabular-nums lining-nums; }
 
 /* 7. how calls are collected */

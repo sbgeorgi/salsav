@@ -211,10 +211,13 @@ dialog.drawer::backdrop { background: color-mix(in srgb, var(--ink) 28%, transpa
   .drawer .emeter ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .drawer .fact { grid-template-columns: minmax(0, 1fr); gap: .125rem; }
   .drawer .fact dt { flex-direction: row; align-items: center; gap: .5rem; }
+  .drawer .dfoot kbd { display: none; }
+  .drawer .dfoot .btn { flex: 1 1 0; justify-content: center; }
+}
+/* touch targets: the drawer's controls at least 44px tall on phones and coarse pointers (same condition as the shared rule in dashboard.css) */
+@media (pointer: coarse), (max-width: 760px) {
   .drawer .dhead .btn, .drawer .dnav-b, .drawer .dact .btn, .drawer .dban-a .btn, .drawer .call .btn,
   .drawer .tf, .drawer .tin, .drawer .tstate, .drawer .dfoot .btn, .drawer .qsrc, .drawer .dfit,
   .drawer .cdemoted > summary, .drawer .docs a, .drawer .invite .btn { min-height: 44px; }
-  .drawer .dfoot kbd { display: none; }
   .drawer .call-t a { display: inline-flex; align-items: center; min-height: 44px; }
-  .drawer .dfoot .btn { flex: 1 1 0; justify-content: center; }
 }

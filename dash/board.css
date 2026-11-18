@@ -128,16 +128,17 @@
   .bstat { padding: var(--sp-2) var(--sp-3); }
   .bstat-n { font-size: var(--t-lg); }
   .bstat-s { display: none; }
-  .bowner { min-height: 44px; padding-inline: .45rem .65rem; }
+  .bowner { padding-inline: .45rem .65rem; }
   .bowners { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; } .bowner { flex: none; } /* one strip, like the Galaxy keyword row */
   .bowner--text { padding-left: .75rem; }
   .bowner-name { max-width: 12ch; }
-  .rl, .bmove, .bassign, .bmore, .bgrip { min-height: 44px; }
+  .bcount { white-space: normal; }
+}
+/* touch targets on phones and coarse pointers: the board's controls at least 44px tall (same condition as the shared rule in dashboard.css) */
+@media (pointer: coarse), (max-width: 760px) {
+  .bowner, .rl, .bmove, .bassign, .bmore, .bgrip, .bact-tools .seg button, .bact-toggle { min-height: 44px; }
   .bgrip { width: 44px; }
   .bgrip::before { left: 19px; top: 14px; }
-  .bact-tools .seg button { min-height: 44px; }
-  .bact-toggle { min-height: 44px; }
-  .bcount { white-space: normal; }
 }
 @media (prefers-reduced-motion: reduce) {
   .bcard, .bcol, .bowner { transition: none; }

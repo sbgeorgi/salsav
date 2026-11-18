@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { normalize } from '../dashboard.js';
-import { GROUPS, galaxyItems, galaxyLayout, galaxyFilter, groupOf, nodeRadius, themeCounts, totals, defaultGalaxy, moreActive } from './galaxy.js';
+import { GROUPS, galaxyItems, galaxyLayout, galaxyFilter, groupOf, nodeRadius, themeCounts, totals, defaultGalaxy, moreActive, nodeCaps, hitRadius, placeTaps } from './galaxy.js';
 
 const NOW = new Date('2026-11-11T20:00:00Z'); // fixed clock, same as dashboard.test.mjs
 let n = 0;
@@ -223,7 +223,7 @@ t('layout: concept mode folds single-funder concepts into one cluster when there
   assert.ok(L.clusters.length <= 9, `kept ${L.clusters.length} clusters`);
 });
 
-t('layout: a small concept folds into the named concept it co-occurs with, not Other', () => {
+t('layout: a small concept joins the named concept whose members share its theme, not Other', () => {
   const many = synth(60).map((it, i) => ({ ...it, themes: [`theme${i}`] }));
   // water is named (4 funders); drought has 2 funders, below the minimum, and co-occurs with water through item 0
   const link = [['water', 'drought'], ['water'], ['water'], ['water'], ['drought']];
@@ -233,18 +233,79 @@ t('layout: a small concept folds into the named concept it co-occurs with, not O
   assert.equal(L.clusters.find((c) => c.key === 'c:other')?.count, 55, 'unlinked single concepts stay in Other');
 });
 
-t('layout: an unlinked funder joins the named cluster that shares two distinctive name words, not Other', () => {
-  // water has 4 funders (named). Item 10 has no concept any named cluster reaches, but its programme shares "solar" and "pilot"
-  // with them; item 11 shares nothing; item 12 shares one word only, which is not a topical match.
-  // "funder" is in every name, so it is not a distinctive word and counts for nothing.
+t('layout: a funder that shares only name or programme words with a cluster stays in Other', () => {
+  // water has 4 funders (named), all with programme "Solar pilot". Items 10 and 11 share "solar" and "pilot" in their programme
+  // but no theme with any of them, so the shared words join nothing.
   const many = synth(60).map((it, i) => ({ ...it, themes: [`theme${i}`], program: '' }));
-  const items = many.map((it, i) => (i < 4 ? { ...it, themes: ['water'], program: 'Solar pilot' } : i === 10 ? { ...it, program: 'Solar pilot' } : i === 11 ? { ...it, program: 'Dairy herd' } : i === 12 ? { ...it, program: 'Solar orchard' } : it));
+  const items = many.map((it, i) => (i < 4 ? { ...it, themes: ['water'], program: 'Solar pilot' } : i === 10 || i === 11 ? { ...it, program: 'Solar pilot' } : it));
   const L = galaxyLayout(items, { groupBy: 'concept', width: W, height: H });
-  const water = L.clusters.find((c) => c.key === 'c:water');
-  assert.equal(water?.count, 5, 'the solar funder joins the water cluster');
-  assert.equal(L.nodes.find((n) => n.id === items[10].id)?.cluster, 'c:water', 'item 10 sits in water');
-  assert.equal(L.nodes.find((n) => n.id === items[11].id)?.cluster, 'c:other', 'the dairy funder shares nothing and stays in Other');
-  assert.equal(L.nodes.find((n) => n.id === items[12].id)?.cluster, 'c:other', 'one shared word is not enough');
+  assert.equal(L.clusters.find((c) => c.key === 'c:water')?.count, 4, 'the water cluster keeps its own four funders');
+  assert.equal(L.nodes.find((n) => n.id === items[10].id)?.cluster, 'c:other', 'a shared programme word alone does not join water');
+  assert.equal(L.nodes.find((n) => n.id === items[11].id)?.cluster, 'c:other', 'a shared name word alone does not join water');
+});
+
+t('layout: guard: an unplaced funder that shares a theme (not a word) with a cluster member joins that cluster', () => {
+  // water has 4 funders (named). Item 0 also carries the rare theme "tidal"; item 10 has only "tidal" and no name overlap.
+  const many = synth(60).map((it, i) => ({ ...it, themes: [`theme${i}`], program: '' }));
+  const items = many.map((it, i) => (i < 4 ? { ...it, themes: i === 0 ? ['water', 'tidal'] : ['water'] } : i === 10 ? { ...it, themes: ['tidal'] } : it));
+  const L = galaxyLayout(items, { groupBy: 'concept', width: W, height: H });
+  assert.equal(L.nodes.find((n) => n.id === items[10].id)?.cluster, 'c:water', 'the tidal funder joins the water cluster');
+  assert.equal(L.clusters.find((c) => c.key === 'c:water')?.count, 5, 'water now holds its four and the tidal funder');
+});
+
+t('layout: an unplaced funder joins the concept its theme spells out; a theme that lists three concepts places nothing', () => {
+  // water (4), solar (3) and food security (3) are named. "watershed restoration" starts with water's name word, "food systems"
+  // with one of food security's. A theme listing water, solar and food is an aggregator's catch-all and names no single topic.
+  const many = synth(60).map((it, i) => ({ ...it, themes: [`theme${i}`], program: '' }));
+  const items = many.map((it, i) => {
+    if (i < 4) return { ...it, themes: ['water'] };
+    if (i < 7) return { ...it, themes: ['solar'] };
+    if (i < 10) return { ...it, themes: ['food security'] };
+    if (i === 10) return { ...it, themes: ['soil health', 'watershed restoration'] };
+    if (i === 11) return { ...it, themes: ['food systems'] };
+    if (i === 12) return { ...it, themes: ['all grants (water, solar, food)'] };
+    return it;
+  });
+  const at = (i) => galaxyLayout(items, { groupBy: 'concept', width: W, height: H }).nodes.find((n) => n.id === items[i].id)?.cluster;
+  assert.equal(at(10), 'c:water', 'the second theme names water');
+  assert.equal(at(11), 'c:food security', 'food systems names food security');
+  assert.equal(at(12), 'c:other', 'a list of three concepts is not a topic');
+});
+
+t('layout: a funder that reaches a cluster only through a chain of other funders\' themes stays in Other', () => {
+  // water has 4 funders (named). Item 10 shares the theme "x" with item 0, so it joins water. Item 11 has only "y", which
+  // item 10 links to "x" and so to water. A chain of links does not place it; only a shared theme does.
+  const many = synth(60).map((it, i) => ({ ...it, themes: [`theme${i}`], program: '' }));
+  const items = many.map((it, i) => (i < 4 ? { ...it, themes: i === 0 ? ['water', 'x'] : ['water'] } : i === 10 ? { ...it, themes: ['x', 'y'] } : i === 11 ? { ...it, themes: ['y'] } : it));
+  const L = galaxyLayout(items, { groupBy: 'concept', width: W, height: H });
+  assert.equal(L.nodes.find((n) => n.id === items[11].id)?.cluster, 'c:other', 'the y funder shares no theme with water');
+  assert.equal(L.clusters.find((c) => c.key === 'c:water')?.count, 5, 'water holds its four and item 10, which shares "x"');
+});
+
+t('layout: second pass counts shared themes only: one shared theme with water beats two name or programme words shared with solar', () => {
+  // water (4 funders) and solar (3 funders) are named. Item 1 adds "tidal", so water's members share it. Item 10 is unplaced: its
+  // primary "pond" is unshared, its second theme "tidal" is water's, and its programme words "Solar pilot" match solar's. Words join
+  // nothing, so it goes to water. (A primary that co-occurs with water would fold the funder there in the first pass.)
+  const many = synth(60).map((it, i) => ({ ...it, themes: [`theme${i}`], program: '' }));
+  const items = many.map((it, i) => {
+    if (i < 4) return { ...it, themes: i === 1 ? ['water', 'tidal'] : ['water'] };
+    if (i < 7) return { ...it, themes: ['solar'], program: 'Solar pilot' };
+    if (i === 10) return { ...it, themes: ['pond', 'tidal'], program: 'Solar pilot' };
+    return it;
+  });
+  const L = galaxyLayout(items, { groupBy: 'concept', width: W, height: H });
+  assert.equal(L.nodes.find((n) => n.id === items[10].id)?.cluster, 'c:water', 'the tidal funder joins water, not solar');
+  assert.equal(L.clusters.find((c) => c.key === 'c:water')?.count, 5, 'water holds its four and the tidal funder');
+  assert.equal(L.clusters.find((c) => c.key === 'c:solar')?.count, 3, 'solar keeps its three');
+});
+
+t('layout: generic research and partnership words never name a cluster or join one', () => {
+  // four funders carry only generic words. Under the old rule "research" became a cluster of its own; now none of them is a topic.
+  const many = synth(60).map((it, i) => ({ ...it, themes: [`theme${i}`], program: '' }));
+  const items = many.map((it, i) => (i < 4 ? { ...it, themes: ['research', 'international partnerships'] } : it));
+  const L = galaxyLayout(items, { groupBy: 'concept', width: W, height: H });
+  assert.ok(!L.clusters.some((c) => c.key === 'c:research' || c.key === 'c:international partnerships'), 'no cluster named for a generic word');
+  for (const it of items.slice(0, 4)) assert.equal(L.nodes.find((n) => n.id === it.id)?.cluster, 'c:other', `${it.name} stays in Other`);
 });
 
 t('layout: links connect clusters that share a second concept', () => {
@@ -375,6 +436,33 @@ t('totals: counts and published award sum for the visible set', () => {
   assert.equal(tt.n, items.length);
   assert.equal(tt.award, items.reduce((s, i) => s + Math.max(0, +i.award_max_usd || 0), 0));
   assert.deepEqual(totals([]), { n: 0, award: 0 });
+});
+
+t('hit target: a node may grow only up to the next node ring; a lone node has no neighbour cap', () => {
+  const caps = nodeCaps([{ id: 'a', x: 0, y: 0, r: 4 }, { id: 'b', x: 20, y: 0, r: 4 }, { id: 'c', x: 300, y: 0, r: 4 }]);
+  assert.equal(caps.get('a'), 20 - 4 - 5.5); // b's dot plus its 4.5 ring and a 1px gap
+  assert.equal(caps.get('b'), 20 - 4 - 5.5);
+  assert.equal(caps.get('c'), 280 - 4 - 5.5); // nearest neighbour is b, 280 away
+  assert.equal(nodeCaps([{ id: 'solo', x: 0, y: 0, r: 4 }]).get('solo'), Infinity);
+});
+
+t('hit target: at desktop zoom 1 a node hit is 16px as before; zooming in never grows it past 1.5 x 16 screen px or below the dot', () => {
+  assert.equal(hitRadius(4, 1, 16), 16); // dot radius 4: the 16px screen floor wins, as before
+  assert.equal(hitRadius(13, 1, 16), 17); // a large dot keeps its own ring plus 4
+  assert.equal(hitRadius(4.5, 4, 16) * 4, 24, 'at zoom 4 a 4.5-radius dot gets a 24px hit, not the 34 the old rule gave');
+  assert.equal(hitRadius(4, 0.25, 16) * 0.25, 16, 'zoomed out, the hit stays 16 screen px');
+  assert.equal(hitRadius(4.5, 4, 16, 6), 6, 'a neighbour cap still applies');
+  assert.equal(hitRadius(13, 4, 16), 13, 'a large dot at zoom 4 keeps a hit as big as the dot itself, not the 6 the cap alone gives');
+  assert.equal(hitRadius(13, 4, 16, 5), 5, 'a neighbour closer than the dot still wins over the dot floor');
+});
+
+t('taps: a cluster label tap is 46px tall when clear, and falls back to the label height when a mark is in the way', () => {
+  const tap = () => ({ a: {}, setAttribute(n, v) { this.a[n] = v; } });
+  const label = (lx, ly, t) => ({ lx, ly, name: { getBBox: () => ({ x: -50, y: -7, width: 100, height: 14 }) }, tap: t });
+  const run = (nodes) => { const t = tap(), st = { k: 1, tapPx: 46, layout: { nodes }, clusterEls: new Map([['c', label(0, 0, t)]]) }; placeTaps(st); return t.a.height; };
+  assert.equal(run([{ id: 'far', x: 500, y: 0, r: 4.5 }]), 46, 'no mark near: the tap is the full 46px');
+  assert.equal(run([{ id: 'under', x: 0, y: 10, r: 4.5 }]), 14, 'a mark 10px below the label line: the tap is the 14px label height, never zero');
+  assert.equal(run([{ id: 'on', x: 0, y: 0, r: 4.5 }]), 14, 'a mark on the label line: the tap keeps the label height');
 });
 
 console.log(`ok ${n} tests`);

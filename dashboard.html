@@ -852,6 +852,14 @@ $('#aText').addEventListener('input', () => { // a valid value clears the invali
 $('#aText').addEventListener('keydown', (e) => { // one-line prompt: Enter submits
   if (askOneLine && e.key === 'Enter' && !e.isComposing) { e.preventDefault(); $('#askForm').requestSubmit(); }
 });
+$('#askDlg').addEventListener('keydown', (e) => { // Tab stays inside the dialog, as drawer.js wire() does for the sheet
+  if (e.key !== 'Tab') return;
+  const d = $('#askDlg'), f = [...d.querySelectorAll('textarea,input:not([disabled]),button:not([disabled])')].filter((x) => x.offsetParent !== null || x === document.activeElement);
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && (document.activeElement === first || !d.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && (document.activeElement === last || !d.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+});
 function ask(o = {}) { // resolves to the trimmed text, '' when optional and empty, or null when cancelled
   const d = $('#askDlg'), form = $('#askForm'), t = $('#aText'), err = $('#aErr'), go = $('#aGo');
   askMin = o.minLength ?? (o.required ? 3 : 0); askOneLine = !!o.oneLine;

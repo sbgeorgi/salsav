@@ -72,6 +72,7 @@
 .gx-node.is-new { animation: gx-in 420ms var(--ease) backwards; animation-delay: var(--d, 0ms); transition: none; }
 @keyframes gx-in { from { opacity: 0; } to { opacity: 1; } }
 .gx-node .gx-hit { fill: transparent; }
+.gx-label .gx-tap { fill: transparent; stroke: none; }
 .gx-node .gx-dot { fill: var(--bc, var(--ink-2)); stroke: var(--surface); stroke-width: 1.5; }
 .gx-node.is-screened .gx-dot { fill: var(--surface); stroke: var(--bc, var(--ink-2)); stroke-width: 1.5; }
 .gx-node.is-candidate .gx-dot { fill: var(--surface); stroke: var(--bc, var(--ink-2)); stroke-width: 1.5; stroke-dasharray: 2 2; }
@@ -155,8 +156,8 @@
 .gx-rs { display: inline-flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
 .gx-more { margin-top: 4px; min-height: 32px; }
 
-/* the segmented control and the chips use the 44px target on touch */
-@media (pointer: coarse) {
+/* the segmented control and the chips use the 44px target on touch and on phones (same condition as the shared rule in dashboard.css) */
+@media (pointer: coarse), (max-width: 760px) {
   .gx-chip, .gx-zbtn, .gx-cl summary, .gx-rn, .gx-kwmore, .gx-more, .gx-moref > summary { min-height: 44px; }
   .gx-zbtn { min-width: 44px; }
   .gx-label { min-height: 0; }

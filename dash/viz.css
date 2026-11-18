@@ -61,13 +61,17 @@
 .viz-ring-arc.viz-t-long_shot { stroke: var(--muted); }
 
 /* interactive marks: callers attach handlers to [data-id]; keyboard focus shows a ring */
-.viz [data-id]:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.viz [data-id]:focus-visible:not(.viz-mark) { outline: 2px solid var(--ring); outline-offset: 2px; }
 .viz-row:hover .viz-fill, .viz-seg:hover .viz-fill { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   .viz-fill, .viz-mark, .viz-ring-arc { transition: none; }
 }
 .viz-hit { fill: transparent; }
+/* scatter mark: the focus ring goes on the drawn shape, not on the group's bounding box (which includes the transparent .viz-tap) */
+.viz-tap { fill: transparent; stroke: none; cursor: pointer; }
+.dash .viz-mark:focus { outline: none; }
+.viz-mark:focus-visible > :is(circle, rect, path):not(.viz-tap) { stroke: var(--ring); stroke-width: 2px; }
 
 /* deadline horizon (dash/horizon.js), on the Radar page and in Insights */
 .hz { width: 100%; }
@@ -81,5 +85,8 @@
 .hz .dot.dq { fill: var(--surface); stroke: var(--c, var(--primary)); stroke-width: 1.6; }
 .hz .dot.uv { fill: var(--surface); stroke: var(--c, var(--primary)); stroke-width: 1.6; stroke-dasharray: 2.4 1.6; }
 .hz .dot:hover { stroke: var(--ink); stroke-width: 1.5; }
+.viz.hz .dot:focus { outline: none; }
+.hz .dot:focus-visible { stroke: var(--ring); stroke-width: 2.4px; }
+.hz .hz-tap { fill: transparent; stroke: none; cursor: pointer; }
 .hz-empty { color: var(--muted); font-size: var(--t-sm); margin: 0; padding: var(--sp-3) 0; }
 @media (prefers-reduced-motion: reduce) { .hz .dot { transition: none; } }

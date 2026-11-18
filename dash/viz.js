@@ -114,19 +114,31 @@ export function scatter(points, { w = 360, h = 220, x = 'days', y = 'fit', r = '
   body += `<text class="viz-t viz-sm viz-muted" x="${L + pw}" y="${h - 1}" text-anchor="end">${esc(xLabel)}</text><text class="viz-t viz-sm viz-muted" x="${L + 4}" y="${T + 7}">${esc(yLabel)}</text>`;
   const keys = [...new Set(P.map((p) => p.bucket))];
   const order = P.map((p, i) => i).sort((a, b) => num(P[b][y]) - num(P[a][y]));
-  const top = new Set(), placed = [];
+  const top = new Set(), placed = [], lbox = new Map();
   // Label the highest-fit points, skipping any whose label box would overlap one already placed.
   for (const i of order) {
     if (top.size >= labelTop) break;
     const px = X(P[i][x]), py = Y(P[i][y]), wd = clip(P[i].name ?? P[i].id, 14).length * 5.5 + 10, right = px > L + pw * 0.7;
     const box = [right ? px - wd : px, right ? px : px + wd, py];
     if (placed.some((q) => Math.abs(q[2] - box[2]) < 12 && q[0] < box[1] && box[0] < q[1])) continue;
-    placed.push(box); top.add(i);
+    placed.push(box); top.add(i); lbox.set(i, box);
   }
+  // Pointer target under each mark: 24px (44px at phone or coarse; 2px spare, since the svg can render a fraction small), shortened so it never reaches a neighbouring mark or label.
+  const tapPx = typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches ? 46 : 26;
+  const at = P.map((p) => [X(p[x]), Y(p[y])]), rr = ra.map((v) => r2(3 + 4 * Math.sqrt(v / rmax)) * 1.5 + 1);
+  const tapR = (i) => {
+    let cap = Infinity;
+    at.forEach((q, j) => {
+      if (j === i) return;
+      cap = Math.min(cap, Math.hypot(at[i][0] - q[0], at[i][1] - q[1]) - rr[j]);
+      if (lbox.has(j)) { const [x1, x2, ly] = lbox.get(j); cap = Math.min(cap, Math.hypot(at[i][0] - (x1 + x2) / 2, at[i][1] - ly) - Math.hypot((x2 - x1) / 2, 8)); }
+    });
+    return Math.max(0, Math.min(tapPx / 2, cap));
+  };
   P.forEach((p, i) => {
     const rad = r2(3 + 4 * Math.sqrt(ra[i] / rmax)), px = X(p[x]), py = Y(p[y]), right = px > L + pw * 0.7;
     const tip = `${p.name ?? p.id}: fit ${r2(num(p[y]))}, ${r2(num(p[x]))} days${ra[i] ? ', up to ' + usd(ra[i]) : ''}`;
-    body += `<g class="viz-mark ${bucketCls(p.bucket, keys.indexOf(p.bucket))}" data-id="${esc(p.id)}"${p.lane ? ` data-lane="${esc(p.lane)}"` : ''}><title>${esc(tip)}</title>${mark(Math.max(0, BUCKETS.indexOf(p.bucket)) % 6, px, py, rad)}` +
+    body += `<g class="viz-mark ${bucketCls(p.bucket, keys.indexOf(p.bucket))}" data-id="${esc(p.id)}"${p.lane ? ` data-lane="${esc(p.lane)}"` : ''}><title>${esc(tip)}</title><circle class="viz-tap" cx="${px}" cy="${py}" r="${r2(tapR(i))}" aria-hidden="true"/>${mark(Math.max(0, BUCKETS.indexOf(p.bucket)) % 6, px, py, rad)}` +
       (top.has(i) ? `<text class="viz-t viz-sm viz-halo" x="${r2(right ? px - rad - 3 : px + rad + 3)}" y="${py}" text-anchor="${right ? 'end' : 'start'}" dominant-baseline="central">${esc(clip(p.name ?? p.id, 14))}</text>` : '') + '</g>';
   });
   const label = P.length ? `Scatter of ${P.length} funders, ${yLabel} against ${xLabel}. Highest fit ${r2(num(P[order[0]][y]))}` : 'Scatter: no dated funders yet';
