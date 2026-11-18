@@ -1,0 +1,28 @@
+LIVE SNAPSHOT (read-only, captured 2026-11-17 by the SQL track through execute_sql SELECTs on pg_constraint, pg_trigger, pg_proc)
+Used by the rollback to restore original constraint text. Not executed by any migration.
+
+== constraints (pg_get_constraintdef) ==
+grants.funders  funders_rejected_reason  CHECK (((status <> 'rejected'::text) OR ((reject_reason IS NOT NULL) AND (btrim(reject_reason) <> ''::text))))
+grants.funders  funders_status_check     CHECK ((status = ANY (ARRAY['candidate'::text, 'vetted'::text, 'rejected'::text])))
+grants.funders  funders_vetted_fit       CHECK (((status <> 'vetted'::text) OR (category = 'aggregator'::text) OR ((fit_inputs IS NOT NULL) AND (fit_score >= 40))))
+grants.funders  funders_vetted_scope     CHECK (((status <> 'vetted'::text) OR ((vetted_at IS NOT NULL) AND (vet_note IS NOT NULL) AND (btrim(vet_note) <> ''::text) AND (fit_score IS NOT NULL) AND (COALESCE(array_length(fit_reasons, 1), 0) > 0) AND (ua_eligibility <> 'unlikely'::text) AND ((award_max_usd IS NULL) OR (award_max_usd >= 200000)))))
+grants.opportunities opportunities_vet_status_check  CHECK ((vet_status = ANY (ARRAY['candidate'::text, 'vetted'::text, 'rejected'::text])))
+grants.vet_events    vet_events_kind_check   CHECK ((kind = ANY (ARRAY['registered'::text, 'rescored'::text, 'verified'::text, 'updated'::text, 'demoted'::text, 'promoted'::text])))
+
+== triggers (pg_get_triggerdef, non-internal) ==
+grants.funders  funders_fit_derive  CREATE TRIGGER funders_fit_derive BEFORE INSERT OR UPDATE OF fit_inputs, evidence, ua_eligibility, award_max_usd, eligibility_note, award_note, last_text ON grants.funders FOR EACH ROW EXECUTE FUNCTION grants.funders_fit_derive()
+grants.funders  funders_touch       CREATE TRIGGER funders_touch BEFORE UPDATE ON grants.funders FOR EACH ROW EXECUTE FUNCTION grants.touch_updated_at()
+(no triggers on grants.opportunities or grants.vet_events before 023)
+
+== function ACLs (proacl) ==
+public.grants_feed()                 {=X/postgres,postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}  secdef=true
+public.grants_set_state(text,uuid,jsonb)  same ACL  secdef=true
+public.grants_team_notes(text)            same ACL  secdef=true
+grants.check_pass(text)              {postgres=X/postgres}  secdef=true
+grants.claim_sources(uuid,integer,integer,integer,integer)  {postgres=X/postgres}  secdef=false
+grants.collection_state(uuid)        {postgres=X/postgres}  secdef=false
+grants.discovery_brief()             {postgres=X/postgres}  secdef=false
+grants.touch_updated_at()            {postgres=X/postgres}  secdef=false
+
+== not captured in this pass ==
+grants.v_funders view text (already in the summary as transcription, not re-read); grants.claim_sources and grants.touch_updated_at bodies (not re-read this pass). grants_feed body is NOT saved: the read was blocked by the boundary guard.

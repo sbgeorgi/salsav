@@ -174,3 +174,18 @@ evidence: reflect R20261112T163201-747f15c5
 situation: reflect patch
 lesson: Candidates now appear on the radar at once (migration 021), so the old rule that they stay hidden is wrong and would mislead future runs.
 evidence: reflect R20261112T163201-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The horizon now plots unverified calls as dashed dots, and the lane still reads only confirmed dates. Agents deciding whether to confirm a call need to know that confirming is what moves the funder's lane.
+evidence: reflect R20261112T171701-747f15c5
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The run had subagents vet 30 candidate calls, and the lead then had to reject 27 of them itself because reject_opportunity is not in sql-api-funcs.txt. The batch select (28 rejects returned in one call) worked and is not written down in the skill.
+evidence: reflect R20261112T175609-b66d1ede
+
+## 2026-11-12 revise
+situation: reflect patch
+lesson: The main agent's first full Read of discovery-task.md was blocked by main-dump-guard and had to be redone in 50-line chunks. The skill's pitfalls list does not mention the cap, so the next run would hit it again.
+evidence: reflect R20261112T175609-b66d1ede

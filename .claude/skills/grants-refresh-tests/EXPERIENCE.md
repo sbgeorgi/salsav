@@ -29,3 +29,8 @@ evidence: reflect R20261112T153644-747f15c5
 situation: reflect patch
 lesson: A worker deploying v10 sent partial file sets twice and was denied by the boundary-guard stamp hook; the full 19-file single call then succeeded. This is a repeatable deploy pitfall for this edge function and the skill already covers the gate and deploy steps.
 evidence: reflect R20261112T162038-747f15c5
+
+## 2026-11-16 revise
+situation: reflect patch
+lesson: A parallel session was fixing the same crawler fault; the local engine change was built and then reverted, wasting a full test-and-gate cycle. Checking concurrent run state first avoids that.
+evidence: reflect R20261116T154858-a7207545

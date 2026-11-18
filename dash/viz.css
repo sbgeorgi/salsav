@@ -31,8 +31,8 @@
 .viz-s0 { --c: var(--primary); }
 .viz-s1 { --c: var(--terra); }
 .viz-s2 { --c: var(--warn-fg); }
-.viz-s3 { --c: var(--b-us_federal); }
-.viz-s4 { --c: var(--b-foundation_ngo); }
+.viz-s3 { --c: color-mix(in srgb, var(--ink) 62%, var(--surface)); } /* ordinal series (fit tiers, award bands, lenses): neutral ink ramp, never a bucket hue */
+.viz-s4 { --c: color-mix(in srgb, var(--ink) 40%, var(--surface)); }
 .viz-s5 { --c: var(--muted); }
 /* funnel: one hue, deepening with each stage */
 .viz-f0 { --c: color-mix(in srgb, var(--primary) 40%, var(--surface)); }

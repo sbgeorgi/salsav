@@ -1,5 +1,6 @@
 /* Method view. Tokens only (dashboard.css). */
 .method { max-width: 1040px; }
+.method [hidden] { display: none !important; } /* a .btn display rule must not show a hidden "Show all" */
 .mjump { display: flex; flex-wrap: wrap; gap: .3rem .35rem; margin-bottom: var(--sp-5); }
 .mjump button { min-height: 32px; padding: 0 .75rem; border: var(--hair); border-radius: var(--r-pill); background: transparent; cursor: pointer; font-size: var(--t-sm); color: var(--ink-2); transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
 .mjump button:hover { border-color: var(--primary); background: var(--accent-soft); }
@@ -59,20 +60,27 @@
 .mtop li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 1rem; align-items: baseline; padding: .5rem 0; border-bottom: var(--hair-soft); }
 .mtop .big { font-size: 1.4rem; grid-column: 2; grid-row: 1; } .mtop small { grid-column: 1; color: var(--muted); font-size: var(--t-xs); }
 
-/* 4. screened */
-.mscreen { border: var(--hair); border-radius: var(--radius); background: var(--surface); padding: 0 1rem; }
-.mscreen summary { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .7rem; min-height: 52px; cursor: pointer; font-weight: 600; list-style: none; }
-.mscreen summary::-webkit-details-marker { display: none; }
-.mscreen summary::before { content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); transition: transform var(--dur) var(--ease); margin-right: .2rem; }
-.mscreen[open] summary::before { transform: rotate(45deg); }
-.mscreen summary .sub { font-weight: 400; }
-.mscreen[open] { padding-bottom: 1rem; }
-.mscreen .field { margin-bottom: .4rem; } .mscreen > .sub { margin-bottom: .5rem; }
+/* 4. screened: summary with criterion counts, a link to Database, and a short list that follows the search */
+.mscr-sum { display: grid; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+.mscr-big { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .7rem; margin: 0; }
+.mscr-big .big { font-size: 2.2rem; line-height: 1; }
+.mcrit { list-style: none; margin: 0; padding: 0; display: grid; max-width: 42rem; }
+.mcrit-r { display: grid; grid-template-columns: minmax(9rem, 14rem) minmax(0, 1fr) 3.5rem; gap: .2rem .8rem; align-items: center; padding: .4rem 0; border-top: var(--hair-soft); font-size: var(--t-sm); }
+.mcrit-r .pbar { display: block; width: auto; height: 6px; margin: 0; }
+.mcrit-r b { text-align: right; font-variant-numeric: tabular-nums lining-nums; }
+.mrule { max-width: var(--measure); margin: var(--sp-3) 0; padding-left: .9rem; border-left: 2px solid var(--rule-strong); }
+.mrule h3 { font-size: var(--t-sm); margin-bottom: .2rem; }
+.mrule p { font-size: var(--t-sm); color: var(--ink-2); }
+.mrow { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .8rem; margin: var(--sp-3) 0; }
+.mcount { margin: 0 0 .4rem; }
+.mscr-list { margin-top: var(--sp-3); }
 .mscr, .mnext ol { list-style: none; margin: 0; padding: 0; }
-.mscr li, .mnext li { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.6fr) auto; gap: .2rem 1.2rem; padding: .65rem 0; border-top: var(--hair-soft); align-items: start; }
-.mscr p, .mnext p { font-size: var(--t-sm); color: var(--ink-2); }
-.mscr .row, .mnext .row { justify-content: flex-end; flex-wrap: wrap; }
+.mscr-i, .mnext li { display: grid; gap: .3rem; padding: .7rem 0; border-top: var(--hair-soft); }
+.mscr-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .6rem; }
+.mscr-i p, .mnext p { font-size: var(--t-sm); color: var(--ink-2); max-width: var(--measure); }
+.mscr-i .row, .mnext .row { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; }
 .mscr .mnone { display: block; }
+.mretry { display: grid; justify-items: start; gap: var(--sp-2); }
 
 /* 5. queue, 6. runs */
 .mcov .pts, .mruns .pts { width: 6rem; }
@@ -90,7 +98,6 @@
   .mflow li::before { left: .85rem; right: auto; top: 1.7rem; bottom: calc(-1 * var(--sp-3)); width: 1px; height: auto; }
   .mflow li:last-child::before { display: none; }
   .mtiers, .mtot { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .mscr li, .mnext li { grid-template-columns: 1fr; } .mscr .row, .mnext .row { justify-content: flex-start; }
 }
 @media (max-width: 760px) {
   .msec h2, .mnum { font-size: var(--t-lg); }
@@ -102,14 +109,15 @@
   .mcov td[data-l], .mruns td[data-l] { display: inline-block; margin-right: 1rem; } .mcov td[data-l]::before, .mruns td[data-l]::before { content: attr(data-l) " "; color: var(--muted); font-size: 11.5px; }
   .mtop li { grid-template-columns: 1fr; } .mtop .big { grid-column: 1; grid-row: auto; }
   .mex { padding: .8rem; }
-  .mscreen summary { min-height: 48px; }
+  .mcrit-r { grid-template-columns: minmax(0, 1fr) auto; } .mcrit-r .pbar { grid-column: 1 / -1; grid-row: 2; }
 }
-@media (max-width: 760px) { .mtop .rl, .mex .rl { box-sizing: border-box; min-height: 44px; padding-block: 12px; margin-block: -12px; } }
+@media (max-width: 760px) { .mtop .rl, .mex .rl, .mscr-h .rl { box-sizing: border-box; min-height: 44px; padding-block: 12px; margin-block: -12px; } .mrow .btn, .mretry .btn { min-height: 44px; } }
 .mnum { font-variant-numeric: tabular-nums lining-nums; }
 
 /* 7. how calls are collected */
 .mcol-modes { margin: 0 0 var(--sp-4); padding: 0; list-style: none; display: grid; gap: .3rem; max-width: var(--measure); } .mcol-modes b { margin-right: .4rem; }
 .mcol-tot { font-weight: 600; margin-bottom: var(--sp-3); }
+.mwrap { max-width: 100%; overflow-x: auto; } /* the source table keeps its width on tablets and scrolls inside its section */
 .mcol td, .mcol th { overflow-wrap: break-word; } .mcol tbody th { width: 12rem; } .mcol thead th { white-space: normal; } .mcol td:empty { display: none; } .mcol .pts { width: 4.5rem; }
 .cstat { display: inline-flex; align-items: center; gap: .4rem; }
 .cdot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
@@ -118,3 +126,4 @@
   .mcol td[data-l] { display: block; } .mcol td[data-l]::before { content: attr(data-l) ": "; color: var(--muted); font-size: 11.5px; }
   .mcol .pts { text-align: left; }
 }
+@media (prefers-reduced-motion: reduce) { .mjump button { transition: none; } }

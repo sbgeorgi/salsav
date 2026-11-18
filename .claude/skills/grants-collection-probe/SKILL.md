@@ -13,12 +13,17 @@ Steps:
 - Deploy the engine version that reports per-funder opps, open and text_len before probing, so the probe shows counts.
 - Group funders by host (grants.gov and EU F&T each as one group), batches of at most 5 html funders (API/feed-only batches up to 15), at most 50 ids per call: on v10+ a dry run fetches every page in full, and 10 html pages in one invocation hit "CPU Time exceeded" even alone (2026-11-12).
 - Fire one batch at a time and wait for its result before the next: concurrent probe requests land in one edge worker and a single "CPU Time exceeded" kills all of them (HTTP 546 WORKER_RESOURCE_LIMIT, 2026-11-12).
+- Crawl health is separate from probes: a shard killed by the edge worker (HTTP 546) writes no error and leaves consecutive_failures at 0, so check vetted funders overdue by shard % 8 and refresh_runs stuck in running.
+- Cron kicks one shard every 3 minutes, never all 8 at once (022_staggered_refresh.sql); self-chained hops land on the same aged worker, so do not rely on them.
 - Call probe_refresh with the batch array, then read probe_result with the returned request id; it reports pending until pg_net finishes.
 - Count a funder as returning: calls and cycle modes need at least 1 opportunity; page mode needs text_len of at least 300.
 - A calls funder with opps 0 but raw > 0 is a working watch whose filter matched nothing yet (the call is not posted); raw 0 means the channel itself listed nothing: test it with the filter removed before calling it broken.
 - A result missing from body.results was cut by the run budget: re-probe those ids alone.
+- A generic title word in an rss filter ("initiative") passes funder press releases as calls: require call wording (call for, request for, applications open) and read the production sample titles before marking verified.
+- A json_api probe whose raw reads exactly 100 is capped: count the source's full items and check the target's index before trusting the filter (EPRI: 147 pages, raw 100, target at index 12).
 Pitfalls:
-- A local adapter_check ok true runs on the operator's PC, not the datacenter: a new config counts as collectable only after a production probe agrees with it (discovery-task.md COLLECTION e). The 2026-11-12 pass-2 run marked 4 funders verified on local checks alone; the later probe matched (FEMSA 1, NextEnergy 0, Mosaic 0, NADBank cycle text_len 3006) but nothing had proven it.
+- Clear stale running refresh_runs only through the listed grants functions: a direct UPDATE breaks the discovery task's HARD SAFETY RULES (2026-11-16).
+- A local adapter_check ok true runs on the operator's PC, not the datacenter: mark a config verified only after a production probe agrees with it (discovery-task.md COLLECTION e).
 - Saved execute_sql output is a JSON wrapper with a result string: parse the outer JSON, then the inner array; do not regex it.
 - A dry run writes only the run record, so it cannot change snapshots, leases or deadlines.
 - In execute_sql, remove a key from a jsonb value with a typed literal, as in (r#>'{body,stats}') - 'hosts'::text; a bare literal fails with an operator-not-unique error.

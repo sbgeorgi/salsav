@@ -26,15 +26,17 @@
 .ins-zone { fill: var(--amber-soft); stroke: var(--amber); stroke-width: 1; stroke-dasharray: 3 3; pointer-events: none; }
 .ins-zone-t { fill: var(--amber); font-size: 10px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; pointer-events: none; }
 .ins-legend { list-style: none; display: flex; flex-wrap: wrap; gap: .25rem 1rem; padding: 0; margin: var(--sp-2) 0 0; font-size: var(--t-xs); color: var(--ink-2); }
-.ins-legend .gl { font-weight: 700; margin-right: .3rem; }
+.ins-legend .gl { font-weight: 700; color: var(--bc); margin-right: .3rem; }
 .ins-undated { border-left: var(--hair); padding-left: var(--sp-4); max-height: 24rem; overflow-y: auto; }
 .ins-undated h3 { font-size: var(--t-sm); margin-bottom: var(--sp-2); }
 .ins-lane { margin-bottom: var(--sp-3); }
-.ins-lane h4 { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.ins-lane h4 { margin: 0 0 2px; } /* the lane colour comes from the shared .lchip (dash/ui.css), as on the Radar */
 .ins-lane ul { list-style: none; margin: 0; padding: 0; }
 .ins-link { display: flex; align-items: center; gap: .45rem; width: 100%; min-height: 30px; padding: 0 .2rem; border: 0; border-radius: var(--r-xs); background: transparent; text-align: left; cursor: pointer; color: var(--ink); font-size: var(--t-sm); }
 .ins-link:hover { background: var(--surface-2); }
-.ins-link .mk, .ins-cov .mk { flex: none; width: 8px; height: 8px; border-radius: 2px; }
+.ins-link .bdot { flex: none; }
+.cov-r .ins-link { min-height: 24px; width: auto; padding: 0; cursor: default; }
+.cov-r .ins-link:hover { background: transparent; }
 .ins-link .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ins-link .sc { font-variant-numeric: tabular-nums lining-nums; color: var(--muted); font-size: var(--t-xs); }
 
@@ -59,6 +61,36 @@
 .ins-tier .viz-row[data-id="long_shot"] .viz-fill { --c: var(--muted); }
 .ins-band .viz-fill { --c: var(--primary); }
 
+/* evaluated funders: criterion bars, stat row, actions */
+.ins-crit { margin-top: var(--sp-2); }
+.ins-stats--row { grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: 0 var(--sp-5); }
+.ins-stats--row .ins-stat { flex-direction: column; align-items: flex-start; gap: 0; }
+.ins-actions { display: flex; flex-wrap: wrap; gap: .5rem; padding-top: var(--sp-2); }
+.ins-lock { display: grid; justify-items: start; gap: var(--sp-3); padding: var(--sp-3) 0 0; border-top: var(--hair-soft); }
+.ins-lock .sub { max-width: var(--measure); }
+
+/* team view: three short lists */
+.ins-three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5) var(--sp-6); align-items: start; }
+.ins-three > * { min-width: 0; }
+.ins-people, .ins-moves, .ins-owners { list-style: none; margin: 0; padding: 0; display: grid; }
+.ins-people li, .ins-moves li, .ins-owners li { display: grid; align-items: center; gap: .3rem .7rem; padding: .55rem 0; border-top: var(--hair-soft); }
+.ins-people li { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+.ins-moves li { grid-template-columns: auto minmax(0, 1fr) 2.5rem; }
+.ins-moves .val { text-align: right; }
+.ins-owners li { grid-template-columns: auto minmax(0, 1fr) auto; }
+.ins-pbody, .ins-obody { min-width: 0; display: grid; gap: .2rem; }
+.ins-ptop { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; font-size: var(--t-sm); min-width: 0; }
+.ins-ptop b, .ins-obody b { overflow-wrap: anywhere; font-size: var(--t-sm); }
+.ins-pbody .sub, .ins-obody .sub { font-size: var(--t-xs); }
+.ins-ototal { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--accent); min-width: 2ch; text-align: right; }
+
+/* scope and section tags (follow search) */
+.ins-scope { max-width: var(--measure); margin: 0; padding: .55rem .8rem; border-left: 2px solid var(--primary); background: var(--surface); color: var(--ink-2); font-size: var(--t-sm); line-height: 1.45; }
+.ins-tag { margin: .2rem 0 .4rem; }
+
+/* lens bars have no funder bucket, so they keep one neutral colour */
+.ins-lens .viz-fill { --c: var(--primary); }
+
 /* data confidence */
 .ins-m { display: grid; gap: 2px; padding: .35rem 0; border-top: var(--hair-soft); }
 .ins-m .lab { font-size: var(--t-sm); }
@@ -76,13 +108,15 @@
 .ins-trend .sp { margin-top: var(--sp-2); min-height: 34px; }
 
 @media (max-width: 1100px) { .ins-sec { grid-template-columns: 1fr; } .ins-head { position: static; } .ins-take { font-size: 1.3rem; } }
+@media (max-width: 900px) { .ins-three { grid-template-columns: 1fr; } }
 @media (max-width: 760px) {
   .ins { gap: var(--sp-5); }
-  .ins-two, .ins-split, .ins-trends { grid-template-columns: 1fr; }
+  .ins-two, .ins-split, .ins-trends, .ins-three { grid-template-columns: 1fr; }
+  .ins-stats--row { grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); column-gap: var(--sp-4); }
   .ins-undated { border-left: 0; border-top: var(--hair); padding: var(--sp-3) 0 0; max-height: 18rem; }
   .ins-r, .cov-r { grid-template-columns: minmax(0, 1fr) auto; }
   .ins-r .bar, .cov-r .bar { grid-column: 1 / -1; grid-row: 2; }
   .cov-r .facts { grid-column: 1 / -1; grid-row: 3; }
 }
 @media (prefers-reduced-motion: reduce) { .bar i, .ins-jump button { transition: none; } }
-@media (max-width: 760px) { .ins-link { min-height: 44px; } .ins-jump button { min-height: 44px; min-width: 44px; } }
+@media (max-width: 760px) { .ins-link { min-height: 44px; } .ins-jump button { min-height: 44px; min-width: 44px; } .ins-actions .btn, .ins-lock .btn { min-height: 44px; } }

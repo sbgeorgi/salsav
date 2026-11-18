@@ -1,7 +1,7 @@
 // node dash/viz.test.mjs  (no dependencies)
 import assert from 'node:assert/strict';
 import { fitBar, ring, spark, hbars, scatter, funnel, meter, stackedBars, esc } from './viz.js';
-import { horizonLayout, unverifiedPoints, EMPTY } from './horizon.js';
+import { horizon, horizonLayout, unverifiedPoints, EMPTY } from './horizon.js';
 import { readFileSync } from 'node:fs';
 
 let n = 0;
@@ -207,6 +207,28 @@ t('horizon: unverified calls of listed funders become their own points, skipping
 
 t('horizon.js carries no colour literals', () => {
   assert.ok(!/#[0-9a-f]{3,8}\b|rgb\(|hsl\(/i.test(readFileSync(new URL('./horizon.js', import.meta.url), 'utf8')));
+});
+
+t('horizon svg: no bare text nodes at phone or desktop width (skipped month labels must not append "null")', () => {
+  // Minimal DOM stand-in: append() turns a non-node into a text node, as the browser does.
+  class FakeText { constructor(s) { this.text = s; } }
+  class FakeEl {
+    constructor(tag) { this.tag = tag; this.kids = []; }
+    append(...xs) { for (const x of xs) this.kids.push(x instanceof FakeEl || x instanceof FakeText ? x : new FakeText(String(x))); }
+    setAttribute() {}
+    addEventListener() {}
+  }
+  const realDocument = globalThis.document;
+  globalThis.document = { createElementNS: (_, tag) => new FakeEl(tag), createElement: (tag) => new FakeEl(tag), createTextNode: (s) => new FakeText(s) };
+  try {
+    const rows = [3, 40, 90, 200, 330].map((d, i) => ({ id: 'h' + i, name: 'H' + i, bucket: 'tracker', _days: d }));
+    for (const w of [360, 1024]) {
+      const svg = horizon(rows, { w, now: new Date('2026-11-17T12:00:00Z') });
+      assert.equal(svg.tag, 'svg');
+      assert.deepEqual(svg.kids.filter((k) => k instanceof FakeText).map((k) => k.text), [], `bare text under svg at ${w}px`);
+      assert.ok(svg.kids.some((k) => k.tag === 'text'), `no month label at ${w}px`);
+    }
+  } finally { globalThis.document = realDocument; }
 });
 
 console.log(`\n${n} tests, all ok`);

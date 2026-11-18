@@ -4,8 +4,11 @@ export const BUCKETS = {
   us_federal: 'US federal', intl_dev: 'International development', state_regional: 'State & regional',
   private_sector: 'Private sector', foundation_ngo: 'Foundations & NGOs', tracker: 'Trackers',
 };
-export const UA = { eligible: 'Direct', eligible_with_partner: 'Needs partner', invitation_only: 'Invitation only', unknown: 'Unknown' };
+export const UA = { eligible: 'Direct', eligible_with_partner: 'Needs partner', invitation_only: 'Invitation only', unlikely: 'Unlikely', unknown: 'Unknown' };
 export const STATES = ['new', 'reviewing', 'applying', 'submitted', 'awarded', 'declined', 'skip'];
+export const STATE_LABELS = { new: 'Not started', reviewing: 'Reviewing', applying: 'Applying', submitted: 'Submitted', awarded: 'Awarded', declined: 'Declined', skip: 'Skipped' };
+/* a funder the team has moved past "new" (and not skipped) stays visible even after its deadline window closes */
+export const isProgressed = (s) => !!s && s !== 'new' && s !== 'skip';
 export const LANES = { apply_now: 'Apply now', rolling: 'Rolling', prepare: 'Prepare', cultivate: 'Cultivate', watch: 'Watch' };
 // How the crawler collects a source (feed: funder.collection.mode / .health), in plain words.
 export const COLLECT_MODES = { calls: 'Calls collected automatically', cycle: 'Deadline read automatically', page: 'Page watched for changes', none: 'Not monitored' };
@@ -104,6 +107,32 @@ export function lane(f, now = new Date(), minDays = 14) {
   if (f.cycle === 'rolling' || f.cycle === 'open_ended') return 'rolling';
   return f.cycle === 'annual_recurring' ? 'prepare' : 'watch';
 }
+/* one label for a funder with no fit score yet (a team-promoted funder before the discovery run scores it) */
+export const UNSCORED = 'Not scored yet';
+/* the direction each Radar sort key runs: name and deadline ascending, the rest descending */
+export const SORT_DIR = { name: 'asc', deadline: 'asc', fit: 'desc', amount: 'desc', changed: 'desc' };
+export const LOCKED_MSG = 'Too many wrong passcodes. Wait a few minutes.';
+/* copy for a passcode failure: a wrong passcode is 28000, a lockout is P0001 'locked'; null for anything else */
+/* 28000 reads two ways: a wrong passcode typed in the unlock dialog, or a passcode that stopped working mid-edit (the viewer is locked out) */
+export const PASS_WRONG = 'That passcode is not right.';
+export const PASS_LOST = 'Passcode no longer valid. Unlock again to keep editing.';
+export function authMsg(e) {
+  if (e?.code === '28000') return PASS_WRONG;
+  if (e?.code === 'P0001' && /locked/.test(e.message || '')) return LOCKED_MSG;
+  return null;
+}
+/* the team event a successful write adds to history: the changed keys with their old values; null when nothing changed (the server logs none) */
+export function changeEvent(funderId, patch, prev = {}, actor = '', at = new Date().toISOString()) {
+  const payload = {}, from = {};
+  for (const k of Object.keys(patch || {})) {
+    if ((prev[k] ?? null) === (patch[k] ?? null)) continue;
+    if (k === 'notes') payload.notes_changed = true;
+    else { payload[k] = patch[k]; from[k] = prev[k] ?? null; }
+  }
+  if (!Object.keys(payload).length) return null;
+  if (Object.keys(from).length) payload.from = from;
+  return { funder_id: funderId, at, actor, kind: 'update', payload };
+}
 export function fitTier(score, rubric) {
   if (score == null || !Number.isFinite(+score)) return null;
   const tiers = [...(rubric?.tiers?.length ? rubric.tiers : DEFAULT_TIERS)].sort((a, b) => b.min - a.min);
@@ -143,7 +172,8 @@ export function recommend(rows, now = new Date(), n = 5) {
   const out = [];
   for (const r of rows) {
     const ln = r._lane || lane(r, now), st = deadlineState(r, now), dq = r._dq ?? (st === 'expired' || st === 'too_soon'), ts = r.team?.state || 'new';
-    if (!['apply_now', 'rolling', 'prepare'].includes(ln) || dq || (ts !== 'new' && ts !== 'reviewing')) continue;
+    // a funder the team promoted and the agent has not scored yet (fit_score null) is never a pick: the score is what the pick is judged on
+    if (!['apply_now', 'rolling', 'prepare'].includes(ln) || dq || (ts !== 'new' && ts !== 'reviewing') || r.fit_score == null) continue;
     const days = daysLeft(r.deadline, now), tier = r._tier || fitTier(r.fit_score), ev = r._evid || evidenceLevel(r);
     out.push({
       row: r, score: recScore(r, days, ln), days,
@@ -164,7 +194,7 @@ export function normalize(feed, now = new Date(), team = {}) {
   for (const c of changes) (by.get(c.funder_id) || by.set(c.funder_id, []).get(c.funder_id)).push(c);
   const week = now.getTime() - 7 * 864e5;
   return (feed?.funders || []).map((f) => {
-    const t = { state: f.team?.state || 'new', owner: f.team?.owner || '', ask_usd: f.team?.ask_usd ?? null, notes: '', ...(team[f.id] || {}) };
+    const t = { state: 'new', owner: '', ask_usd: null, notes: '', ...(team[f.id] || {}) }; // team fields come from the team map only (the public feed does not carry them)
     const days = daysLeft(f.deadline, now);
     const state = deadlineState(f, now, minDays);
     const ch = by.get(f.id) || [];
@@ -173,10 +203,10 @@ export function normalize(feed, now = new Date(), team = {}) {
     const changedAt = Math.max(Date.parse(f.last_changed_at || '') || 0, ...ch.filter((c) => c.kind !== 'initial').map((c) => Date.parse(c.at) || 0));
     return {
       ...f, team: t, _days: days, _state: state, _dq: state === 'expired' || state === 'too_soon',
-      _skip: t.state === 'skip', _lane: lane(f, now, minDays), _tier: fitTier(f.fit_score, feed?.rubric), _evid: evidenceLevel(f), _band: amountBand(f), _geo: geoGroups(f), _new: isNew, _changedAt: changedAt, _changes: ch,
+      _skip: t.state === 'skip', _prog: isProgressed(t.state), _status: f.status || 'vetted', _human: f.human || null, _lane: lane(f, now, minDays), _tier: fitTier(f.fit_score, feed?.rubric), _evid: evidenceLevel(f), _band: amountBand(f), _geo: geoGroups(f), _new: isNew, _changedAt: changedAt, _changes: ch,
       _unverified: f.award_max_usd == null || f.amount_flag === 'unverified',
       _manual: f.fetchability === 'bot_protected' || f.fetchability === 'blocked' || (f.consecutive_failures || 0) > 0,
-      _hay: [f.name, f.program, (f.themes || []).join(' '), f.notes, f.eligibility_note, t.notes, t.owner].join(' ').toLowerCase(),
+      _hay: [f.name, f.program, (f.themes || []).join(' '), (f.geography || []).join(' '), BUCKETS[f.bucket], f.notes, f.eligibility_note, t.notes, t.owner].join(' ').toLowerCase(),
     };
   });
 }
@@ -188,7 +218,7 @@ export const defaultFilters = () => ({
 });
 const has = (arr, v) => !arr.length || arr.includes(v);
 export function matches(r, F, ctx = {}) {
-  if (r._dq && !F.dq) return false;
+  if (isDisqualified(r) && !F.dq) return false;
   if (r._skip && !F.skip && !F.team.includes('skip')) return false;
   if (F.q) for (const w of F.q.toLowerCase().split(/\s+/).filter(Boolean)) if (!r._hay.includes(w)) return false;
   if (!has(F.bucket, r.bucket) || !has(F.ua, r.ua_eligibility) || !has(F.band, r._band) || !has(F.team, r.team.state)) return false;
@@ -210,6 +240,13 @@ export function matches(r, F, ctx = {}) {
   return true;
 }
 export const applyFilters = (rows, F, ctx) => rows.filter((r) => matches(r, F, ctx));
+/* a funder the 14-day rule hides; a funder the team progressed stays on the Radar with a flag instead */
+export function isDisqualified(r) { return !!r._dq && !r._prog; }
+/* the word on the flag of a progressed funder: "Closed" or "Under 14 days" */
+export function closedWord(r, minDays = 14) { return r._state === 'expired' ? 'Closed' : r._state === 'too_soon' ? `Under ${minDays} days` : ''; }
+/* Radar paging: the first `limit` rows and how many the page leaves out */
+export const PAGE = 60;
+export function pageOf(list, limit = PAGE) { const n = Math.max(0, Math.floor(limit)); return { rows: list.slice(0, n), more: Math.max(0, list.length - n) }; }
 
 export const SORTS = { deadline: 'Soonest deadline', fit: 'Fit score', amount: 'Award size', changed: 'Recently changed', recommended: 'Recommended', name: 'Name' };
 export function sortRows(rows, key = 'deadline') {
@@ -303,7 +340,7 @@ export function insights(rows, feed, now = new Date()) {
 
 /* ---- URL hash codec (never contains the passcode) ---- */
 const ARR = ['bucket', 'ua', 'geo', 'themes', 'band', 'partner', 'team', 'tier'];
-const VIEWS = ['table', 'cards', 'timeline', 'board', 'insights', 'method'];
+const VIEWS = ['table', 'cards', 'timeline', 'board', 'database', 'galaxy', 'insights', 'method'];
 export function encodeHash(F, view = 'table', sort = 'deadline') {
   const d = defaultFilters(), p = new URLSearchParams();
   for (const k of Object.keys(d)) {
@@ -333,7 +370,7 @@ export const PRESETS = {
 /* ---- CSV (quoted, formula-injection safe) ---- */
 export function csvCell(v) {
   let s = v == null ? '' : Array.isArray(v) ? v.join('; ') : String(v);
-  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+  if (typeof v !== 'number' && /^(\s*[=+\-@]|[\t\r])/.test(s)) s = `'${s}`; // numbers pass through: a negative day count stays -3
   return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 export const CSV_COLS = [
@@ -350,6 +387,37 @@ export const CSV_COLS = [
 ];
 export const toCsv = (rows) =>
   '﻿' + [CSV_COLS.map((c) => csvCell(c[0])).join(','), ...rows.map((r) => CSV_COLS.map((c) => csvCell(c[1](r))).join(','))].join('\r\n');
+
+/* ---- global search: one list in a fixed group order; ranks prefix (0) < word start (1) < substring (2) ---- */
+const SUGGEST_GROUPS = ['funder', 'screened', 'lead', 'call', 'owner', 'theme', 'category'];
+const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : '');
+const rankOf = (text, q) => {
+  const s = String(text || '').toLowerCase();
+  return s.startsWith(q) ? 0 : s.split(/[^a-z0-9]+/).some((w) => w.startsWith(q)) ? 1 : s.includes(q) ? 2 : -1;
+};
+export function suggest(q, { rows = [], registry = null, limit = 8 } = {}) {
+  const needle = String(q || '').trim().toLowerCase();
+  if (!needle) return [];
+  const funders = registry?.funders || [], leads = registry?.leads || [], calls = registry?.calls || [], all = [...(rows || []), ...funders];
+  const nameOf = (id) => all.find((f) => f.id === id)?.name || '';
+  const groups = Object.fromEntries(SUGGEST_GROUPS.map((g) => [g, []]));
+  const add = (type, text, item) => { const k = rankOf(text, needle); if (k >= 0) groups[type].push({ ...item, type, _rank: k }); };
+  const seen = new Set();
+  for (const f of [...(rows || []), ...funders.filter((x) => (x.status || 'vetted') === 'vetted')]) {
+    if (seen.has(f.id)) continue;
+    seen.add(f.id);
+    add('funder', f.name, { id: f.id, label: f.name, sub: f.program || '' });
+  }
+  for (const f of funders) if ((f.status || 'vetted') !== 'vetted') add('screened', f.name, { id: f.id, label: f.name, sub: f.reject_reason || cap(f.status) });
+  for (const l of leads) add('lead', l.org, { id: l.id, label: l.org, sub: l.program_hint || '' });
+  for (const c of calls) add('call', c.title, { id: c.funder_id, value: c.id, label: c.title, sub: nameOf(c.funder_id) });
+  const owners = [...new Set((rows || []).map((r) => r.team?.owner).filter(Boolean))];
+  for (const o of owners) add('owner', o, { value: o, label: o, sub: 'Owner' });
+  const themes = [...new Set(all.flatMap((f) => f.themes || []))];
+  for (const th of themes) add('theme', th, { value: th, label: th, sub: 'Theme' });
+  for (const [key, label] of Object.entries(BUCKETS)) add('category', label, { value: key, label, sub: 'Bucket' });
+  return SUGGEST_GROUPS.flatMap((g) => groups[g].sort((a, b) => a._rank - b._rank).slice(0, limit).map(({ _rank, ...x }) => x));
+}
 
 /* ---- safety ---- */
 export function safeUrl(u) {

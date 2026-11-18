@@ -1,0 +1,113 @@
+/* dash/ui.css: shared chips, avatars, lanes, flags, activity, notes and menus.
+   Colours come only from tokens in dashboard.css (:root and html[data-theme="dark"]). */
+
+/* bucket dot and chip: .b-<bucket> sets --bc; the Radar filter sets --c inline and keeps working */
+.b-us_federal { --bc: var(--b-us_federal); }
+.b-intl_dev { --bc: var(--b-intl_dev); }
+.b-state_regional { --bc: var(--b-state_regional); }
+.b-private_sector { --bc: var(--b-private_sector); }
+.b-foundation_ngo { --bc: var(--b-foundation_ngo); }
+.b-tracker { --bc: var(--b-tracker); }
+.bdot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--bc, var(--muted)); flex: none; vertical-align: middle; }
+.bchip { --c: var(--bc, var(--muted)); display: inline-flex; align-items: center; gap: .45rem; min-height: 30px; padding: 0 .65rem; border-radius: var(--r-pill); border: var(--hair); background: transparent; cursor: pointer; font-size: var(--t-sm); transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
+.bchip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--muted)); }
+.bchip b { font-variant-numeric: tabular-nums; font-weight: 600; }
+.bchip:hover { border-color: var(--c, var(--rule-strong)); }
+.bchip[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 0 0 1px var(--c); background: color-mix(in srgb, var(--c) 14%, var(--bg)); font-weight: 600; }
+.bchip--static { cursor: default; }
+.bchip--static:hover { border-color: var(--line); }
+.bchip--uv { --c: var(--muted); margin-left: auto; border-style: dashed; color: var(--muted); }
+.bchip--uv::before { width: 9px; height: 9px; box-sizing: border-box; background: transparent; border: 1.6px dashed var(--muted); }
+.bchip--uv[aria-pressed="true"] { color: var(--ink); }
+
+/* pipeline state */
+.schip { display: inline-flex; align-items: center; min-height: 24px; padding: 0 .5rem; border-radius: var(--r-pill); border: var(--hair-soft); font-size: 11.5px; font-weight: 600; white-space: nowrap; color: var(--muted); background: transparent; }
+.schip.s-new { background: var(--surface-2); border-color: transparent; }
+.schip.s-reviewing { color: var(--warn-fg); background: var(--warn-bg); border-color: transparent; }
+.schip.s-applying { color: var(--primary); background: var(--accent-soft); border-color: transparent; }
+.schip.s-submitted { color: var(--b-us_federal); }
+.schip.s-awarded { color: var(--ok-fg); background: var(--ok-bg); border-color: transparent; }
+.schip.s-declined { color: var(--bad-fg); background: var(--bad-bg); border-color: transparent; }
+.schip.s-skip { text-decoration: line-through; }
+
+/* registry status */
+.rchip { display: inline-flex; align-items: center; min-height: 24px; padding: 0 .5rem; border-radius: var(--r-pill); border: var(--hair-soft); font-size: 11.5px; font-weight: 600; white-space: nowrap; color: var(--ink-2); background: var(--surface-2); }
+.rchip.r-vetted { color: var(--ok-fg); background: var(--ok-bg); border-color: transparent; }
+.rchip.r-rejected { color: var(--bad-fg); background: var(--bad-bg); border-color: transparent; }
+.rchip.r-candidate { color: var(--warn-fg); background: var(--warn-bg); border-color: transparent; }
+.rchip.r-queue { color: var(--ink); background: var(--surface-2); border: 1px dashed var(--ink-2); } /* agent queue: neutral, so it never reads as the Apply lane */
+
+/* lanes: one colour set for the table and the drawer */
+.l-apply_now { --lc: var(--l-apply); }
+.l-rolling { --lc: var(--l-rolling); }
+.l-prepare { --lc: var(--l-prepare); }
+.l-cultivate { --lc: var(--l-cultivate); }
+.l-watch { --lc: var(--l-watch); }
+.lchip { display: inline-flex; align-items: center; min-height: 24px; padding: 0 .5rem; border-radius: var(--r-pill); font-size: 11.5px; font-weight: 600; white-space: nowrap; color: var(--lc, var(--muted)); background: color-mix(in srgb, var(--lc, var(--muted)) 12%, var(--surface)); }
+
+/* avatars: a hue per person (av-0..7), a dashed empty slot for nobody */
+.av { --av-bg: var(--surface-2); display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; font: 600 11px/1 var(--font); letter-spacing: .02em; color: var(--av-ink); background: var(--av-bg); user-select: none; }
+.av--sm { width: 22px; height: 22px; font-size: 9.5px; }
+.av--md { width: 28px; height: 28px; }
+.av--lg { width: 40px; height: 40px; font-size: 14px; }
+.av-0 { --av-bg: var(--av-0); } .av-1 { --av-bg: var(--av-1); } .av-2 { --av-bg: var(--av-2); } .av-3 { --av-bg: var(--av-3); }
+.av-4 { --av-bg: var(--av-4); } .av-5 { --av-bg: var(--av-5); } .av-6 { --av-bg: var(--av-6); } .av-7 { --av-bg: var(--av-7); }
+.av--none { --av-bg: transparent; color: var(--muted); border: 1px dashed var(--muted); }
+
+/* flags: one per failed criterion or pipeline fact */
+.gates { display: inline-flex; flex-wrap: wrap; gap: .3rem; }
+.flag { display: inline-flex; align-items: center; min-height: 20px; padding: 0 .45rem; border-radius: var(--r-xs); font-size: 11.5px; font-weight: 600; white-space: nowrap; color: var(--ink-2); background: var(--surface-2); }
+.flag--bad { color: var(--bad-fg); background: var(--bad-bg); }
+.flag--warn { color: var(--warn-fg); background: var(--warn-bg); }
+.flag--ok { color: var(--ok-fg); background: var(--ok-bg); }
+.flag--pipe { color: var(--primary); background: var(--accent-soft); }
+.flag--muted { color: var(--muted); background: transparent; border: var(--hair-soft); }
+.flag--promoted { color: var(--ink-2); background: transparent; border: var(--hair-soft); }
+
+/* note count, owner and lane marker */
+.nbadge { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 .35rem; border-radius: var(--r-pill); font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink-2); background: var(--surface-2); }
+.owner { display: inline-flex; align-items: center; gap: .4rem; min-width: 0; max-width: 100%; font-size: var(--t-sm); color: var(--ink-2); }
+.owner-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.owner--none .owner-name { color: var(--muted); }
+.ldot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--lc, var(--muted)); flex: none; vertical-align: middle; }
+
+/* panels, empty states */
+.panel { background: var(--surface); border: var(--hair); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1rem; }
+.empty { color: var(--muted); padding: 1.6rem 0; text-align: center; font-size: var(--t-sm); }
+
+/* activity overview and drawer history */
+.act { display: grid; grid-template-columns: auto 1fr; gap: .6rem; align-items: start; padding: .55rem 0; border-bottom: var(--hair-soft); list-style: none; }
+.act p { margin: 0; font-size: var(--t-sm); color: var(--ink-2); overflow-wrap: anywhere; }
+.act b { color: var(--ink); font-weight: 600; }
+.act-detail { color: var(--muted); }
+.act time { display: block; }
+
+/* notes */
+.notes { display: grid; gap: .7rem; }
+.note-compose { display: grid; gap: .4rem; }
+.note-compose textarea { width: 100%; box-sizing: border-box; min-height: 44px; resize: vertical; font: inherit; color: var(--ink); background: var(--surface); border: var(--hair); border-radius: var(--radius-sm); padding: .5rem .6rem; }
+.note-compose textarea:focus-visible { outline: var(--focus); outline-offset: 2px; }
+.note-actions { display: flex; justify-content: flex-end; }
+.note-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+.note { display: grid; grid-template-columns: auto 1fr; gap: .55rem; align-items: start; }
+.note-meta { margin: 0; font-size: var(--t-sm); }
+.note-meta b { font-weight: 600; }
+.note-text { margin: .15rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink-2); font-size: var(--t-sm); }
+
+/* popover menu (identity, row actions); not the Saved menu, which keeps .menu */
+.umenu-wrap { position: relative; display: inline-block; }
+.umenu { position: absolute; z-index: 45; right: 0; top: calc(100% + 6px); min-width: 200px; margin: 0; padding: .3rem; list-style: none; background: var(--surface); border: var(--hair); border-radius: var(--radius-sm); box-shadow: var(--shadow); }
+.umenu[hidden] { display: none; }
+.umenu-item { all: unset; box-sizing: border-box; display: block; width: 100%; min-height: 32px; padding: 0 .65rem; border-radius: var(--r-xs); cursor: pointer; color: var(--ink); font-size: var(--t-sm); line-height: 32px; white-space: nowrap; }
+.umenu-item:hover, .umenu-item:focus-visible { background: var(--accent-soft); outline: var(--focus); outline-offset: -2px; }
+.umenu-item.is-danger { color: var(--bad-fg); }
+
+/* the ask dialog's confirm button when the action removes something (.btn is ink by default) */
+.btn.btn--danger { color: var(--bad-fg) !important; border-color: var(--bad-fg); }
+
+@media (max-width: 760px) {
+  .umenu-item { min-height: 44px; line-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bchip { transition: none; }
+}

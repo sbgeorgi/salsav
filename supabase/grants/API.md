@@ -168,3 +168,33 @@ discovery_brief keys: today, gates, rubric, theme_vocab, coverage, targets, reve
 
 # F. Repo vs live
 No substantive difference found for the 10 functions. Repo `010_radar_v2.sql` defines register_source with untyped string literals and then patches the live function in block `008c2` (types them `text '...'`), so the live body is the patched one; `011_collection.sql` replaces discovery_brief (adds collection_gaps) and metrics_now (adds collection) via text patching, so no single repo file shows the final body. Source of truth is the live definition.
+
+## Human overrides (migration 023, authored, not applied)
+
+The lead's dashboard writes go through these RPCs. Writes need the passcode (`grants.check_pass`). A wrong passcode RETURNS `{"error":"bad passcode","code":"28000"}` instead of raising, so the failure row that `check_pass` writes commits and the lockout can count it. The lockout raises `locked` (P0001) after 40 failures in 10 minutes (`005_hardening`). Bad input raises 22023 with a plain-English message.
+
+| RPC | Access | Arguments | Returns |
+|---|---|---|---|
+| `public.grants_registry(p_pass text default null)` | read; passcode optional | optional passcode | `generated_at`, `access` ('team' or 'public'), `thresholds` {fit_min, award_min_usd}, `counts`, `funders[]` (every funder row, any status), `leads[]` (targets), `calls[]` (every opportunity). Without a valid passcode, `human.by`, `human.note` and the lead `note` are withheld. |
+| `public.grants_funder(p_id uuid, p_pass text default null)` | read; passcode optional | funder id, optional passcode | `{access, funder, opportunities[], vetting[]}`; `funder` = registry row plus the v_funders columns and `collection` (team, or listed funders only); `team.owner` and `team.ask_usd` are team only; null when unknown. `vetting[].actor` is team only. |
+| `public.grants_set_funder(p_pass, p_funder, p_patch)` | write | patch `{action: promote or demote or release, reason, actor}` | `{id, status, human, queue}` |
+| `public.grants_set_call(p_pass, p_opp, p_patch)` | write | patch `{action: demote or restore, reason, actor}` | `{id, funder_id, vet_status, human}` |
+| `public.grants_set_lead(p_pass, p_target, p_patch)` | write | patch `{action: queue or dismiss, reason, actor}` | `{id, status, note}` |
+| `public.grants_note(p_pass, p_funder, p_patch)` | write | patch `{body, actor, opportunity_id?}` to add, or `{remove: note_id, actor}` | the note row, or `{removed}` |
+| `public.grants_set_state(p_pass, p_funder, p_patch)` | write, same signature | unchanged keys; writes only changed keys; no event on a no-op | the team_state row |
+| `public.grants_team_notes(p_pass)` | read | none | `{team, events (latest 500), notes (live notes, latest 2000)}` |
+
+Semantics:
+- `promote`: the funder becomes listed (status vetted), queued for the agent (`agent_queue` pending) and locked, so automated runs cannot undo it.
+- `demote`: the funder becomes rejected with the reason and locked; automated runs cannot list it again.
+- `release`: clears the lock. It fails with 22023 when a listed funder has no scored fit that passes the gates.
+- Calls: `demote` and `restore` lock a call's vet status the same way.
+- Notes are soft-deleted (`deleted_at`).
+- The `discovery_brief()` keys `promoted` (queue pending) and `backfill` (rejected, never scored, unlocked) are the agent's worklists.
+- Listing guard: a call written as `vetted` under a funder that is not listed is stored as `candidate`. A team-promoted call is exempt. A funder that leaves `vetted` (demote or automated reject) moves its vetted, non-promoted calls to `candidate` (not `rejected`, so a later re-vet through the normal conflict path still works). `restore` needs the funder listed (22023 otherwise).
+- A lock change must agree with the status it sets: `promoted` needs `vetted`, `demoted` needs `rejected` (22023 otherwise). Automated changes that disagree with a lock are reverted by the trigger. When a listed funder fails a gate on re-check, the vet event is `updated` with `changes.gate` and the note `Gate failed on re-check: ...`.
+- Lead `queue` and `dismiss` write `team_events` kinds `lead_queue` and `lead_dismiss` (payload `target_id`, `org`, `reason`, `from_status`). `team_events.funder_id` is nullable for these rows.
+- Notes: `remove` must be digits (22023) and must name a live note on this funder. `opportunity_id` must be a uuid (22023) and belong to the funder. Design limit: any passcode holder can remove any note; actor names are self-asserted.
+- `grants_set_state`: a bad passcode returns the error object; a no-op returns the row with no write and no event; a first touch writes one event; a blank actor falls back to `team`.
+- Anonymous reads: without a passcode, team names (`human.by`, vetting `actor`), human notes and lead notes are withheld. Still public: reject reasons, vet notes, fit breakdown, vetting notes and changes, call titles and descriptions, lead `why` and `source`, and for listed funders the v_funders columns. The contract pins anonymous reads; lead confirmation pending (`.claude/runs/dashboard-v3/sql-notes.md`, Review round rows 2 and 15).
+- Deviations from the contract: team event kinds `lead_queue` and `lead_dismiss` are new; a first-touch `grants_set_state` writes an event; a no-op writes nothing, so `updated_at` does not move; `reverify_source` is a fourth replaced function; `funders_unlist_cascade` and `opportunities_a_listed_guard` are added triggers; a wrong passcode on a read returns `access: 'public'` instead of erroring; `grants_registry` and `grants_funder` are VOLATILE, so the front end must POST them.
