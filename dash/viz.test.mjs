@@ -124,6 +124,14 @@ t('scatter: a mark per point with data-id, labelled top points, number in label'
   assert.match(s, />One</);
   assert.match(s, /viz-hollow/, 'tracker uses a distinct shape');
 });
+t('scatter: yMin lifts the axis floor, ticks every 10, and a mark at the floor sits on the x axis', () => {
+  const s = wellFormed(scatter(PTS.slice(0, 2), { h: 300, yMin: 40, rScale: 2 }));
+  for (const v of [40, 50, 60, 70, 80, 90, 100]) assert.match(s, new RegExp(`>${v}</text>`));
+  assert.doesNotMatch(s, /text-anchor="end" dominant-baseline="central">0</, "no 0 tick on the lifted y axis");
+  const base = wellFormed(scatter(PTS, { h: 300 }));
+  assert.match(base, />25</, 'default axis still runs 0 to 100 in quarters');
+  assert.match(wellFormed(scatter([{ id: 'low', name: 'L', days: 5, fit: 10, bucket: 'tracker' }], { h: 300, yMin: 40 })), /cy="276"/, 'below the floor clamps to the axis');
+});
 t('scatter: empty, undated, extreme, escaping', () => {
   assert.match(wellFormed(scatter([])), /no dated funders yet/);
   assert.match(wellFormed(scatter([{ id: 'u', fit: 50, bucket: 'tracker' }])), /no dated funders yet/);

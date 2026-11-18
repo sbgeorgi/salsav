@@ -121,19 +121,22 @@ export function render(root, app) {
   const dated = I.scatter.filter((p) => p.days >= 0 && p.days <= 365), outside = I.scatter.length - dated.length;
   const hot = dated.filter((p) => p.fit >= 60 && p.days <= 90);
   const mapTake = dated.length || I.undated.length ? (hot.length ? `${plural(hot.length, 'strong-fit funder closes', 'strong-fit funders close')} within 90 days.` : 'No strong-fit funder closes within 90 days.') : 'No scored funders yet.';
+  const yMin = Math.max(0, Math.min(50, Math.floor((Math.min(...dated.map((p) => p.fit), 100) - 8) / 10) * 10)); // lift the axis floor to the lowest fit, so marks spread instead of crowding the top half
   const mapHost = chart(el('div', { class: 'ins-map' }), (w) => {
     if (!dated.length) return empty('No funder has a scored fit and a deadline in the next 12 months.');
-    const h = Math.round(Math.min(420, Math.max(240, w * 0.48))), s = parse(V.scatter(dated, { w, h, xMax: 365, yMax: 100, xLabel: 'Days to deadline', yLabel: 'Fit score', labelTop: w < 500 ? 2 : w < 760 ? 4 : 6, labelLen: w < 500 ? 14 : w < 760 ? 20 : 34 }));
-    const L = 34, T = 8, pw = w - L - 10, ph = h - T - 24, zw = pw * 90 / 365, zh = ph * 0.4; // mirrors the plot box inside viz.scatter
+    // Hero chart: as tall as the first screen allows (top of the plot to its x labels stays above the fold), never squeezed into a short box.
+    const room = innerHeight - (mapHost.getBoundingClientRect().top + scrollY) - 20;
+    const h = Math.round(w < 560 ? w * 0.9 : Math.min(w * 0.62, Math.max(340, room))); mapHost.closest('.ins-sec')?.style.setProperty('--ins-mh', h + 'px'); // the side list scrolls inside the chart's height
+    const s = parse(V.scatter(dated, { w, h, xMax: 365, yMax: 100, yMin, rScale: w < 760 ? 1 : 1.4, xLabel: 'Days to deadline', yLabel: 'Fit score', labelTop: w < 500 ? 2 : w < 760 ? 4 : w < 1000 ? 7 : 10, labelLen: w < 500 ? 14 : w < 760 ? 20 : 34 }));
+    const L = 34, T = 8, pw = w - L - 10, ph = h - T - 24, zw = pw * 90 / 365, zh = ph * 40 / (100 - yMin); // mirrors the plot box inside viz.scatter
     s.querySelector('title').after(sv('rect', { class: 'ins-zone', x: L, y: T, width: zw, height: zh }), ...(zw > 80 ? [sv('text', { class: 'ins-zone-t', x: L + zw - 4, y: T + 12, 'text-anchor': 'end' }, 'Act now')] : []));
     [...s.querySelectorAll('text')].find((t) => t.textContent === 'Fit score')?.remove(); // the caption names the axes; the label collided with top marks
     [...s.querySelectorAll('text')].find((t) => t.textContent === 'Days to deadline')?.setAttribute('y', h + 12); // clear of the 365 tick label
     return wire(s, '.viz-mark', app.openDrawer);
   });
-  const legend = el('ul', { class: 'ins-legend', 'aria-label': 'Funder buckets' }, Object.keys(D.BUCKETS).filter((b) => dated.some((p) => p.bucket === b)).map((b) => el('li', {}, el('span', { class: `gl b-${b}`, 'aria-hidden': 'true', text: GLYPH[b] }), blabel(b))),
-    el('li', { class: 'sub', text: 'Bigger mark = larger award. Shaded: fit 60+ closing within 90 days.' }));
+  const legend = el('ul', { class: 'ins-legend', 'aria-label': 'Funder buckets' }, Object.keys(D.BUCKETS).filter((b) => dated.some((p) => p.bucket === b)).map((b) => el('li', {}, el('span', { class: `gl b-${b}`, 'aria-hidden': 'true', text: GLYPH[b] }), blabel(b))));
   // The marks above are 8-26px and carry their names only in svg titles, so the dated funders also get a list of 44px-on-phone rows (the same .ins-link rows as the lanes).
-  const datedList = el('div', { class: 'ins-dated-wrap' }, sub(`Dated funders (${dated.length})`, 'Soonest first. The same funders as the marks above.'),
+  const datedList = el('div', { class: 'ins-dated-wrap' }, sub(`Dated funders (${dated.length})`, `Soonest first. The same funders as the marks above${outside ? `; ${outside} more closes after the next 12 months` : ''}.`),
     el('ul', { class: 'ins-dated', 'aria-label': 'Dated funders, soonest first' }, dated.slice().sort((a, b) => a.days - b.days).map((p) => el('li', {}, el('button', { type: 'button', class: 'ins-link', title: p.name, onclick: () => app.openDrawer(p.id), 'aria-label': `${p.name}, ${p.days} days to deadline, fit ${p.fit}` },
       ui.bucketDot(p.bucket), el('span', { class: 'nm', text: p.name }), el('span', { class: 'sc', text: `${p.days} d` }), el('span', { class: 'sc', text: String(p.fit) }))))));
   const queuedIn = (id) => S.regById?.get?.(id)?.queue === 'pending'; // the agent queue lives on the registry, not the feed row
@@ -142,8 +145,8 @@ export function render(root, app) {
     lanes.length ? lanes.map(([k, l, a]) => el('div', { class: 'ins-lane' }, el('h4', {}, ui.laneChip(k, `${l} ${a.length}`)), el('ul', {}, a.map((p) => el('li', {}, el('button', { type: 'button', class: 'ins-link', title: p.name, onclick: () => app.openDrawer(p.id), 'aria-label': `${p.name}, fit ${p.fit}${queuedIn(p.id) ? ', in agent queue' : ''}` },
       ui.bucketDot(p.bucket), el('span', { class: 'nm', text: p.name }), queuedIn(p.id) ? ui.statusChip('queue') : null, el('span', { class: 'sc', text: String(p.fit) }))))))) : empty('Every scored funder has a date.'));
   const s1 = section('map', mapTake, 'Follows search',
-    el('p', { class: 'sub', text: `Height is fit score, distance from the left is days to the deadline. ${dated.length} dated${outside ? `, ${outside} outside the next 12 months` : ''}, ${I.undated.length} without a fixed date. Click a mark for details.` }),
-    el('div', { class: 'ins-split' }, el('div', {}, mapHost, dated.length ? legend : null, dated.length ? datedList : null), strip));
+    el('div', { class: 'ins-mapbar' }, el('p', { class: 'sub', text: `Height is fit score, distance from the left is days to the deadline. Bigger mark = larger award; shaded = fit 60+ closing within 90 days. Click a mark for details.` }), dated.length ? legend : null),
+    el('div', { class: 'ins-split' }, el('div', {}, mapHost), strip), dated.length ? datedList : null);
 
   /* 2. Fit */
   const scoredN = I.fitHist.reduce((a, t) => a + t.n, 0), topN = I.fitHist.filter((t) => t.tier === 'prime' || t.tier === 'strong').reduce((a, t) => a + t.n, 0);
@@ -266,11 +269,13 @@ export function render(root, app) {
   const scopeNote = el('p', { class: 'ins-scope', role: 'status', text: searching ? `Search “${qText}”: ${rows.length} of ${all.length} tracked funders${regRows ? ` and ${regRows.filter((f) => f.status === 'rejected').length} of ${(reg.funders || []).filter((f) => f.status === 'rejected').length} screened-out funders` : ''} match. Sections tagged Follows search use the matches. Coverage, source health, trends and discovery cover the whole feed.`
     : `Showing all ${all.length} tracked funders. Search narrows the sections tagged Follows search.` });
   const jump = el('nav', { class: 'ins-jump', 'aria-label': 'Jump to a section' }, SECTIONS.map(([id, l]) => el('button', { type: 'button', onclick: () => document.getElementById('ins-' + id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }), text: l })));
-  root.replaceChildren(el('div', { class: 'ins' }, el('div', { class: 'ins-top' }, scopeNote, jump), s1, s2, s3, s4, s5, s6, s7, s8, s9));
+  root.replaceChildren(el('div', { class: 'ins' }, el('div', { class: 'ins-top' }, jump, scopeNote), s1, s2, s3, s4, s5, s6, s7, s8, s9));
   const drawAll = () => draws.forEach((f) => f());
   drawAll();
   // Redraw on width change (text stays at its real size instead of shrinking with the viewBox). Disconnect once the view is gone.
-  root._insRO?.disconnect(); let last = root.clientWidth;
-  root._insRO = new ResizeObserver(() => { if (!root.querySelector('.ins')) return root._insRO.disconnect(); if (root.hidden) return; if (Math.abs(root.clientWidth - last) > 24) { last = root.clientWidth; drawAll(); } });
+  root._insRO?.disconnect(); let last = root.clientWidth, lastH = innerHeight;
+  const check = () => { if (!root.querySelector('.ins')) { root._insRO.disconnect(); removeEventListener('resize', root._insWin); return; } if (root.hidden) return; if (Math.abs(root.clientWidth - last) > 24 || Math.abs(innerHeight - lastH) > 40) { last = root.clientWidth; lastH = innerHeight; drawAll(); } };
+  removeEventListener('resize', root._insWin); root._insWin = check; addEventListener('resize', check); // the hero chart also follows the window height
+  root._insRO = new ResizeObserver(check);
   root._insRO.observe(root);
 }

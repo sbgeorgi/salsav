@@ -1,16 +1,25 @@
 /* Insights view. Tokens only (dashboard.css); chart primitives are styled by dash/viz.css. */
-.ins { display: grid; gap: var(--sp-6); padding-bottom: var(--sp-6); }
-.ins-top { display: grid; gap: var(--sp-4); }
-.ins-jump { display: flex; flex-wrap: wrap; gap: .5rem; }
-.ins-jump button { min-height: 34px; padding: 0 .9rem; border: var(--hair); border-radius: var(--r-pill); background: transparent; color: var(--ink-2); font-size: var(--t-sm); cursor: pointer; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.ins { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-5); padding-bottom: var(--sp-6); }
+/* compact page head for this view only: title and subtitle share a line */
+body[data-view="insights"] .pagehead { padding: 1rem 0 .7rem; }
+body[data-view="insights"] .pagehead .t { display: flex; flex-wrap: wrap; align-items: baseline; gap: .15rem 1rem; }
+body[data-view="insights"] .pagehead h1 { font-size: var(--t-xl); }
+body[data-view="insights"] .pagehead p { margin: 0; max-width: none; font-size: var(--t-sm); }
+/* section jump row and scope note share one line */
+.ins-top { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem var(--sp-5); }
+.ins-jump { display: flex; gap: .3rem; flex: 0 1 auto; min-width: 0; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.ins-jump::-webkit-scrollbar { display: none; }
+.ins-jump button { flex: none; min-height: 28px; padding: 0 .7rem; border: var(--hair); border-radius: var(--r-pill); background: transparent; color: var(--ink-2); font-size: var(--t-xs); cursor: pointer; white-space: nowrap; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
 .ins-jump button:hover { background: var(--surface-2); border-color: var(--rule-strong); }
 
-.ins-sec { display: grid; grid-template-columns: minmax(15rem, 17.5rem) minmax(0, 1fr); gap: var(--sp-4) var(--sp-6); border-top: 1px solid var(--rule-strong); padding-top: var(--sp-5); scroll-margin-top: calc(var(--topbar-h) + var(--fbar-h) + 1rem); }
-.ins-head { min-width: 0; align-self: start; position: sticky; top: calc(var(--topbar-h) + var(--fbar-h) + 1rem); display: grid; gap: .5rem; justify-items: start; }
+/* every section: label, heading and takeaway in one header row, content at full width below */
+.ins-sec { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); border-top: 1px solid var(--rule-strong); padding-top: var(--sp-4); scroll-margin-top: calc(var(--topbar-h) + var(--fbar-h) + .5rem); }
+.ins-head { min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .9rem; }
 .ins-head > * { margin: 0; }
+.ins-head .eyebrow { flex: none; }
 .ins-head h2 { font-family: var(--serif); font-size: var(--t-lg); line-height: 1.25; }
-.ins-take { font-family: var(--serif); font-size: 1.1rem; line-height: 1.45; color: var(--ink); font-weight: 500; text-wrap: pretty; }
-.ins-body { min-width: 0; display: grid; gap: var(--sp-5); align-content: start; }
+.ins-take { flex: 1 1 28rem; font-family: var(--serif); font-size: 1.05rem; line-height: 1.4; color: var(--ink-2); font-weight: 500; text-wrap: pretty; }
+.ins-body { min-width: 0; display: grid; gap: var(--sp-4); align-content: start; }
 .ins-body > .sub, .ins-sub .sub { line-height: 1.5; max-width: var(--measure); }
 .ins-sub { margin-bottom: var(--sp-3); display: grid; gap: 2px; }
 .ins-sub h3 { font-size: var(--t-sm); font-weight: 650; letter-spacing: .01em; }
@@ -22,21 +31,23 @@
 .ins svg [data-id] { cursor: pointer; }
 .ins svg [data-id]:focus-visible:not(.viz-mark) { outline: var(--focus); outline-offset: 2px; }
 
-/* opportunity map */
-.ins-split { display: grid; grid-template-columns: minmax(0, 1fr) clamp(16rem, 28%, 26rem); gap: var(--sp-6); align-items: start; }
+/* opportunity map: the hero. The chart takes the first screen; the undated list sits beside it at the chart's height */
+.ins-mapbar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .2rem var(--sp-5); }
+.ins-mapbar > .sub { margin: 0; flex: 1 1 32rem; min-width: 0; }
+.ins-split { display: grid; grid-template-columns: minmax(0, 1fr) clamp(17rem, 22%, 23rem); gap: var(--sp-5); align-items: start; }
 .ins-split > * { min-width: 0; }
-.ins-map svg.viz { margin-bottom: 18px; }
+.ins-map svg.viz { margin-bottom: 0; }
 .ins-zone { fill: var(--amber-soft); stroke: var(--amber); stroke-width: 1; stroke-dasharray: 3 3; pointer-events: none; }
 .ins-zone-t { fill: var(--amber); paint-order: stroke; stroke: var(--amber-soft); stroke-width: 3px; stroke-linejoin: round; font-size: 10px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; pointer-events: none; }
-.ins-legend { list-style: none; display: flex; flex-wrap: wrap; gap: .35rem 1.25rem; padding: 0; margin: var(--sp-3) 0 0; font-size: var(--t-sm); color: var(--ink-2); }
+.ins-legend { list-style: none; display: flex; flex-wrap: wrap; gap: .2rem 1.1rem; padding: 0; margin: 0; flex: 0 1 auto; font-size: var(--t-sm); color: var(--ink-2); }
 .ins-legend .gl { font-weight: 700; color: var(--bc); margin-right: .3rem; }
-.ins-undated { border-left: var(--hair); padding-left: var(--sp-5); max-height: min(70vh, calc(100vh - var(--topbar-h) - var(--fbar-h) - 2rem)); min-height: 20rem; overflow-y: auto; position: sticky; top: calc(var(--topbar-h) + var(--fbar-h) + 1rem); }
+.ins-undated { border-left: var(--hair); padding-left: var(--sp-4); max-height: var(--ins-mh, 30rem); overflow-y: auto; }
 .ins-undated h3 { font-size: var(--t-sm); margin-bottom: var(--sp-2); }
 .ins-lane { margin-bottom: var(--sp-4); }
 .ins-lane h4 { margin: 0 0 2px; } /* the lane colour comes from the shared .lchip (dash/ui.css), as on the Radar */
 .ins-lane ul { list-style: none; margin: 0; padding: 0; }
-.ins-dated-wrap { margin-top: var(--sp-5); padding-top: var(--sp-4); border-top: var(--hair-soft); }
-.ins-dated { list-style: none; margin: 0; padding: 0; max-height: 30rem; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr)); column-gap: var(--sp-6); align-content: start; }
+.ins-dated-wrap { padding-top: var(--sp-3); border-top: var(--hair-soft); }
+.ins-dated { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr)); column-gap: var(--sp-6); align-content: start; }
 .ins-link { display: flex; align-items: center; gap: .45rem; width: 100%; min-height: 32px; padding: 0 .3rem; border: 0; border-radius: var(--r-xs); background: transparent; text-align: left; cursor: pointer; color: var(--ink); font-size: var(--t-sm); }
 .ins-link:hover { background: var(--surface-2); }
 .ins-link .bdot { flex: none; }
@@ -66,7 +77,7 @@
 .cov-r .lab { width: auto; font-weight: 550; }
 
 /* the funnel keeps a readable length on wide screens */
-.ins-pipe:not(:has(.ins-empty)) { max-width: 64rem; }
+.ins-pipe:not(:has(.ins-empty)) { max-width: 72rem; }
 
 /* tiers keep their meaning in colour as well as in the label */
 .ins-tier .viz-fill { --c: var(--primary); }
@@ -100,7 +111,7 @@
 .ins-ototal { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--accent); min-width: 2ch; text-align: right; }
 
 /* scope and section tags (follow search) */
-.ins-scope { max-width: min(100%, 92ch); margin: 0; padding: .7rem 1rem; border-left: 2px solid var(--primary); background: var(--surface); color: var(--ink-2); font-size: var(--t-sm); line-height: 1.45; }
+.ins-scope { flex: 1 1 18rem; max-width: 80ch; margin: 0; padding: 0; color: var(--muted); font-size: var(--t-xs); line-height: 1.4; }
 .ins-tag { margin: .2rem 0 .4rem; }
 
 /* lens bars have no funder bucket, so they keep one neutral colour */
@@ -122,13 +133,12 @@
 .ins-trend .big { font-size: 2rem; }
 .ins-trend .sp { margin-top: var(--sp-3); min-height: 34px; }
 
-@media (max-width: 1500px) { .ins-split { grid-template-columns: minmax(0, 1fr); } .ins-undated { position: static; max-height: none; min-height: 0; border-left: 0; border-top: var(--hair); padding: var(--sp-4) 0 0; overflow: visible; column-width: 19rem; column-gap: var(--sp-6); } .ins-undated h3 { column-span: all; } .ins-lane { break-inside: avoid-column; } .ins-lane h4 { break-after: avoid; } }
-@media (max-width: 1100px) { .ins-sec { grid-template-columns: 1fr; } .ins-head { position: static; } .ins-take { font-size: 1.3rem; max-width: var(--measure); } }
+@media (max-width: 1000px) { .ins-split { grid-template-columns: minmax(0, 1fr); } .ins-undated { max-height: none; border-left: 0; border-top: var(--hair); padding: var(--sp-3) 0 0; overflow: visible; column-width: 19rem; column-gap: var(--sp-6); } .ins-undated h3 { column-span: all; } .ins-lane { break-inside: avoid-column; } .ins-lane h4 { break-after: avoid; } }
 @media (max-width: 900px) { .ins-three, .ins-two { grid-template-columns: 1fr; } }
 @media (max-width: 760px) {
-  .ins { gap: var(--sp-6); }
-  .ins-sec { padding-top: var(--sp-4); }
-  .ins-dated { grid-template-columns: 1fr; }
+  .ins-dated { grid-template-columns: 1fr; max-height: 30rem; overflow-y: auto; }
+  .ins-take { flex-basis: 100%; }
+  .ins-scope { flex-basis: 100%; }
   .ins-two, .ins-split, .ins-trends, .ins-three { grid-template-columns: 1fr; }
   .ins-stats--row { grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); column-gap: var(--sp-4); }
   .ins-undated { column-width: auto; padding: var(--sp-3) 0 0; max-height: 18rem; overflow-y: auto; }
@@ -138,3 +148,4 @@
 }
 @media (prefers-reduced-motion: reduce) { .bar i, .ins-jump button { transition: none; } }
 @media (pointer: coarse), (max-width: 760px) { .ins-link, .cov-r .ins-link { min-height: 44px; } .ins-link:has(.sc) { align-items: center; } .ins-link .sc, .ins-link .bdot { padding-top: 0; margin-top: 0; } .ins-jump button { min-height: 44px; min-width: 44px; } .ins-actions .btn, .ins-lock .btn { min-height: 44px; } }
+.ins > .ins-sec:first-of-type { border-top: 0; padding-top: 0; }

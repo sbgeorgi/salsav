@@ -23,7 +23,8 @@ const MIN_GROUP = 3; // a concept needs this many funders to stand as its own cl
 const KW_TOP = 10;
 const ROWS_FIRST = 8;
 const GOLDEN = Math.PI * (3 - Math.sqrt(5));
-const FIT_MAX = 1.35;
+const PHONE_SHRINK = 0.78;
+const FIT_MAX = 1.35, FIT_WIDE = 1.8; // a roomy (wide) canvas scales the packing up further; phone frames keep label clearance
 const R_MIN = 4.5, R_MAX = 13, LOG_LO = 4.5, LOG_HI = 7.5;
 
 const cmp = (a, b) => (String(a) < String(b) ? -1 : String(a) > String(b) ? 1 : 0);
@@ -216,7 +217,7 @@ export function galaxyLayout(items = [], { groupBy = 'concept', width = 960, hei
   const FT = 30, FB = 28, FS = 14, aw = W - 2 * FS, ah = H - FT - FB;
   const lo = (f) => Math.min(...P.map((p, i) => f(p) - R[i])), hi = (f) => Math.max(...P.map((p, i) => f(p) + R[i]));
   const bw = hi((p) => p.x) - lo((p) => p.x), bh = hi((p) => p.y) - lo((p) => p.y);
-  const sc = Math.min(aw / bw, ah / bh, FIT_MAX), mx = (lo((p) => p.x) + hi((p) => p.x)) / 2, my = (lo((p) => p.y) + hi((p) => p.y)) / 2;
+  const sc = Math.min(aw / bw, ah / bh, W >= 600 ? FIT_WIDE : FIT_MAX), mx = (lo((p) => p.x) + hi((p) => p.x)) / 2, my = (lo((p) => p.y) + hi((p) => p.y)) / 2;
   const mw = W / 2, mh = FT + ah / 2;
   P.forEach((p, i) => { p.x = mw + (p.x - mx) * sc; p.y = mh + (p.y - my) * sc; R[i] *= sc; });
   const spread = (key, mid, half) => {
@@ -225,6 +226,7 @@ export function galaxyLayout(items = [], { groupBy = 'concept', width = 960, hei
     if (f > 1) P.forEach((p) => { p[key] = mid + (p[key] - mid) * f; });
   };
   spread('x', mw, aw / 2); spread('y', mh, ah / 2);
+  if (W < 600) R.forEach((_, i) => { R[i] *= PHONE_SHRINK; }); // phone frames cannot take the evened pass: smaller halos at the same centres leave room for the labels
   // even out the free space: clusters repel each other (and keep non-overlap with a label gap) inside the frame, with a step that anneals to zero, so no
   // quadrant of the map stays empty while another is crowded
   if (n > 2 && W >= 600) { // phone frames are too tight for label clearance after this pass
@@ -310,11 +312,14 @@ export function placeLabels(cs, W, H, nodes = []) {
     const cx = c.x - w / 2, cy = c.y - LABEL_H / 2;
     // above, below, right, left of the halo, then further out and shifted up or down; the first spot with no clash wins, else the least clashing one
     const spots = [];
-    for (const g of [6, 16]) spots.push([cx, c.y - c.r - g - LABEL_H], [cx, c.y + c.r + g], [c.x + c.r + g, cy], [c.x - c.r - g - w, cy]);
+    for (const g of [6, 16, 28]) spots.push([cx, c.y - c.r - g - LABEL_H], [cx, c.y + c.r + g], [c.x + c.r + g, cy], [c.x - c.r - g - w, cy]);
+    for (const g of [4, 14]) spots.push([c.x - w, c.y - c.r - g - LABEL_H], [c.x, c.y - c.r - g - LABEL_H], [c.x - w, c.y + c.r + g], [c.x, c.y + c.r + g]); // the same rows, shifted off-centre so a wide label can slide clear of a neighbour
     for (const d of [-LABEL_H, LABEL_H]) spots.push([c.x + c.r + 6, cy + d], [c.x - c.r - 6 - w, cy + d]);
     const cands = spots.map(([x, y]) => ({ x0: clamp(x, 2, W - w - 2), y0: clamp(y, 2, H - LABEL_H - 2) }));
     // a label on another label counts 100, a node under the text 1: labels never stack if any spot is free
+    // a label that reaches into any cluster's halo counts 20: it reads as that cluster's name
     const clash = (o) => 100 * boxes.filter((b) => o.x0 < b.x1 + 2 && b.x0 < o.x0 + w + 2 && o.y0 < b.y1 + 2 && b.y0 < o.y0 + LABEL_H + 2).length
+      + 20 * cs.filter((h) => (h.x - clamp(h.x, o.x0, o.x0 + w)) ** 2 + (h.y - clamp(h.y, o.y0, o.y0 + LABEL_H)) ** 2 < (h.r + 1) ** 2).length
       + nodes.filter((p) => {
         const nx = clamp(p.x, o.x0, o.x0 + w), ny = clamp(p.y, o.y0, o.y0 + LABEL_H);
         return (p.x - nx) ** 2 + (p.y - ny) ** 2 < (p.r + 2) ** 2;
@@ -328,7 +333,9 @@ export function placeLabels(cs, W, H, nodes = []) {
 }
 
 /* ---------- filters (the state lives in app.ui_state('galaxy')) ---------- */
-export const defaultGalaxy = () => ({ groupBy: 'concept', bands: [], themes: [], types: [], ua: [], tiers: [], openOnly: false, screened: true, moreThemes: false });
+export const defaultGalaxy = () => ({ groupBy: 'concept', bands: [], themes: [], types: [], ua: [], tiers: [], openOnly: false, screened: true, moreThemes: false, filtersOpen: false });
+// every filter the whole panel holds (the closed toolbar shows this number): chips selected plus the two Show toggles moved off their default
+export const filterCount = (ui = {}) => ['bands', 'themes', 'types', 'ua', 'tiers'].reduce((n, k) => n + (ui[k]?.length || 0), 0) + (ui.openOnly ? 1 : 0) + (ui.screened === false ? 1 : 0);
 // Filters inside the closed "Fit and eligibility" details. Type, size and keywords are always visible.
 export const moreActive = (ui = {}) => (ui.tiers?.length || 0) + (ui.ua?.length || 0);
 export function galaxyFilter(items = [], f = {}) {
@@ -390,7 +397,7 @@ const uiOf = (app) => {
   const u = app.ui_state('galaxy', defaultGalaxy());
   for (const k of ['bands', 'themes', 'types', 'ua', 'tiers']) if (!Array.isArray(u[k])) u[k] = [];
   if (!GROUPS.some(([k]) => k === u.groupBy)) u.groupBy = 'concept';
-  u.openOnly = !!u.openOnly; u.screened = u.screened !== false; u.moreThemes = !!u.moreThemes;
+  u.openOnly = !!u.openOnly; u.screened = u.screened !== false; u.moreThemes = !!u.moreThemes; u.filtersOpen = !!u.filtersOpen;
   return u;
 };
 const statusText = (it) => (it.tracked ? `Tracked · ${STAGE_LABEL[it.stage] || it.stage}` : it.status === 'candidate' ? 'Candidate' : 'Screened out');
@@ -427,7 +434,10 @@ function build(root) {
   st.groupSeg = h('div', { class: 'seg gx-seg', role: 'group', 'aria-label': 'Group funders by' },
     GROUPS.map(([k, label]) => h('button', { type: 'button', 'data-group': k, 'aria-pressed': 'false', onclick: () => { uiOf(st.app).groupBy = k; update(st); } }, label)));
   st.count = h('p', { class: 'gx-count', role: 'status' });
-  const top = h('div', { class: 'gx-top' }, st.groupSeg, st.count);
+  st.ftoggle = h('button', { type: 'button', class: 'btn gx-ftoggle', 'aria-expanded': 'false', 'aria-controls': 'gx-panel', onclick: () => { const u = uiOf(st.app); u.filtersOpen = !u.filtersOpen; paintControls(st, u); } },
+    h('span', { class: 'gx-ficon', 'aria-hidden': 'true' }), h('span', { text: 'Filters' }), st.ftotal = h('b', { class: 'gx-fcount', hidden: true }));
+  st.actives = h('div', { class: 'gx-actives', role: 'group', 'aria-label': 'Active filters', hidden: true });
+  const top = h('div', { class: 'gx-top' }, st.ftoggle, st.groupSeg, st.count);
 
   const chipRow = (group, label, bucket) => {
     const cfg = CHIP[group], map = new Map();
@@ -475,7 +485,8 @@ function build(root) {
   const more = h('details', { class: 'gx-moref' },
     h('summary', {}, h('span', { text: 'Fit and eligibility' }), st.fcount),
     h('div', { class: 'gx-filters' }, fitRow, uaRow));
-  root.append(h('section', { class: 'gx', 'data-gx': '' }, top, h('div', { class: 'gx-panel' }, typeRow, sizeRow, kwRow, toggles, more), st.note, st.canvas, keyLegend(), st.alt));
+  st.panel = h('div', { class: 'gx-panel', id: 'gx-panel', hidden: true }, typeRow, sizeRow, kwRow, toggles, more);
+  root.append(h('section', { class: 'gx', 'data-gx': '' }, top, st.actives, st.panel, st.note, st.canvas, keyLegend(), st.alt));
 
   svgListeners(st);
   if (typeof ResizeObserver === 'function') {
@@ -732,6 +743,12 @@ function paintCount(st) {
 
 /* ---------- controls ---------- */
 function paintControls(st, ui) {
+  const total = filterCount(ui);
+  st.ftoggle.setAttribute('aria-expanded', String(ui.filtersOpen));
+  st.ftoggle.classList.toggle('is-active', total > 0);
+  st.ftotal.hidden = !total; st.ftotal.textContent = String(total);
+  st.ftoggle.setAttribute('aria-label', total ? `Filters, ${total} active` : 'Filters');
+  st.panel.hidden = !ui.filtersOpen;
   st.groupSeg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.group === ui.groupBy)));
   const active = moreActive(ui);
   st.fcount.hidden = !active;
@@ -751,11 +768,29 @@ function paintControls(st, ui) {
   syncKeywords(st, ui);
   st.toggles.openOnly.setAttribute('aria-pressed', String(ui.openOnly));
   st.toggles.screened.setAttribute('aria-pressed', String(ui.screened));
+  paintActives(st, ui);
+}
+
+/* removable chips for what the closed panel hides, plus Reset */
+function paintActives(st, ui) {
+  const list = [];
+  for (const g of ['type', 'size', 'fit', 'ua']) for (const k of ui[CHIP[g].ui]) list.push([`${g}:${k}`, CHIP[g].label(k), () => toggleFilter(st, g, k)]);
+  for (const k of ui.themes) list.push([`kw:${k}`, st.kwLabels?.get(k) || k, () => toggleFilter(st, 'kw', k)]);
+  if (ui.openOnly) list.push(['openOnly', 'Open calls only', () => { ui.openOnly = false; update(st); }]);
+  if (!ui.screened) list.push(['screened', 'Screened out hidden', () => { ui.screened = true; update(st); }]);
+  st.actives.hidden = !list.length;
+  st.root.firstElementChild?.classList.toggle('has-act', !!list.length);
+  const sig = list.map((a) => a[0] + a[1]).join('|');
+  if (sig === st.actSig) return;
+  st.actSig = sig;
+  st.actives.replaceChildren(...list.map(([, label, fn]) => h('button', { type: 'button', class: 'gx-achip', 'aria-label': `Remove filter ${label}`, onclick: fn }, h('span', { text: label }), h('span', { class: 'gx-x', 'aria-hidden': 'true', text: '×' }))),
+    h('button', { type: 'button', class: 'linkbtn gx-reset-f', onclick: () => clearFilters(st) }, 'Reset filters'));
 }
 
 function syncKeywords(st, ui) {
   const counts = themeCounts(st.items);
   st.kwCounts = new Map(counts.map((t) => [t.key, t.n]));
+  st.kwLabels = new Map(counts.map((t) => [t.key, t.label]));
   ui.themes = ui.themes.filter((t) => st.kwCounts.has(t));
   const shown = new Set((ui.moreThemes ? counts : counts.slice(0, KW_TOP)).map((t) => t.key));
   for (const t of ui.themes) shown.add(t);

@@ -26,8 +26,14 @@ export function render(root, app) {
   const bucket = (b) => ui.bucketChip(b, S.bucketLabel[b] || D.BUCKETS[b] || String(b || 'Other'));
   const day = (ts) => D.fmtDate(String(ts || '').slice(0, 10)) || 'n/a';
   const none = (t) => el('p', { class: 'mnone', text: t });
-  const sec = (id, title, lede, ...body) => el('section', { class: 'msec', id: 'm-' + id, 'aria-labelledby': 'mh-' + id },
-    el('header', {}, el('span', { class: 'mnum', 'aria-hidden': 'true', text: String(SECS.findIndex(([k]) => k === id) + 1) }), el('h2', { id: 'mh-' + id, text: title })), lede && el('p', { class: 'mlede', text: lede }), ...body);
+  // Title and intro sit in a side rail (a left column on wide screens); everything else is the body.
+  const sec = (id, title, lede, ...body) => {
+    if (!lede && body[0]?.classList?.contains('mlede')) lede = body.shift();
+    return el('section', { class: 'msec', id: 'm-' + id, 'aria-labelledby': 'mh-' + id },
+      el('div', { class: 'mside' }, el('header', {}, el('span', { class: 'mnum', 'aria-hidden': 'true', text: String(SECS.findIndex(([k]) => k === id) + 1) }), el('h2', { id: 'mh-' + id, text: title })),
+        typeof lede === 'string' ? el('p', { class: 'mlede', text: lede }) : lede),
+      el('div', { class: 'mbody' }, ...body));
+  };
   const th = (t, cls) => el('th', { scope: 'col', class: cls, text: t });
   const retry = () => el('button', { class: 'btn btn--sm', type: 'button', onclick: () => { st.asked = false; render(root, app); } }, 'Try again');
 
@@ -70,7 +76,7 @@ export function render(root, app) {
 
   const fit = rb?.dims?.length ? [
     el('p', { class: 'mlede', text: `A funder scores up to ${total} points across ${rb.dims.length} questions. Under ${minFit} points it is not listed. The score is the plain sum of the parts, and every part follows one written rule.` }),
-    tierRow, rb.dims.map(dimBlock), example] : [el('div', { class: 'state' }, el('h2', { text: 'The scoring rules are not published yet' }), el('p', { text: 'This feed does not carry the fit scoring rules. Once the database publishes it, every rule and point value shows here.' }))];
+    tierRow, el('div', { class: 'mdims' }, rb.dims.map(dimBlock)), example] : [el('div', { class: 'state' }, el('h2', { text: 'The scoring rules are not published yet' }), el('p', { text: 'This feed does not carry the fit scoring rules. Once the database publishes it, every rule and point value shows here.' }))];
 
   /* 3. how next best moves are ranked (the weights mirror recScore in dashboard.js) */
   const W = RANK_WEIGHTS, pts = (n) => `+${n}`;
@@ -80,11 +86,13 @@ export function render(root, app) {
   const lanes = { apply_now: 'A deadline is at least ' + minDays + ' days away.', rolling: 'Open all year; apply any time.', prepare: 'Recurs every year; the next date is not set yet.', cultivate: 'By invitation, so build the relationship first.', watch: 'Not actionable yet.' };
   const rank = [
     el('p', { class: 'mlede', text: 'The Next best moves strip on the Radar suggests what to work on this week. It only considers funders that are open to us: in the Apply now, Rolling or Prepare lane, not closed or too soon, and not yet started or still being reviewed. Each gets points, and the highest total comes first. If two tie, the sooner deadline wins, then the name.' }),
+    el('div', { class: 'mpair' }, el('div', {},
     el('table', { class: 'mtbl mrank' }, el('thead', {}, el('tr', {}, th('Adds points for'), th('Points', 'pts'), th('Why'))),
       el('tbody', {}, parts.map(([a, b, c]) => el('tr', {}, el('th', { scope: 'row', text: a }), el('td', { class: 'num pts', text: b }), el('td', { text: c }))))),
     el('p', { class: 'sub', text: 'A deadline closer than ' + minDays + ' days is not suggested, and a deadline beyond 180 days gets no urgency points.' }),
+  ), el('div', {},
     el('dl', { class: 'mlanes' }, Object.entries(D.LANES).flatMap(([k, v]) => [el('dt', { text: v }), el('dd', { text: lanes[k] })])),
-    top.length ? el('div', { class: 'mtop' }, el('h3', { text: 'At the top right now' }), el('ol', {}, top.map((x) => el('li', {}, el('button', { class: 'rl', type: 'button', onclick: () => app.openDrawer(x.row.id) }, x.row.name), el('span', { class: 'big num', text: x.score }), el('small', { text: [...x.reasons, x.row.fit_score == null ? D.UNSCORED : null].filter(Boolean).join(' · ') }))))) : null];
+    top.length ? el('div', { class: 'mtop' }, el('h3', { text: 'At the top right now' }), el('ol', {}, top.map((x) => el('li', {}, el('button', { class: 'rl', type: 'button', onclick: () => app.openDrawer(x.row.id) }, x.row.name), el('span', { class: 'big num', text: x.score }), el('small', { text: [...x.reasons, x.row.fit_score == null ? D.UNSCORED : null].filter(Boolean).join(' · ') }))))) : null))];
 
   /* 4. screened out: a summary, the criterion counts when the registry loads, a link to Database, and a short list that follows the search */
   const scr = Array.isArray(feed.screened) ? feed.screened : [];
@@ -139,11 +147,12 @@ export function render(root, app) {
   drawNext();
   const queue = tg.by_bucket?.length || tg.next?.length ? [
     el('p', { class: 'mlede', text: 'Beyond open searching, we keep a list of named funders to check one by one, so every kind of funder has enough coverage.' }),
+    el('div', { class: 'mpair' },
     tg.by_bucket?.length ? el('table', { class: 'mtbl mcov' }, el('thead', {}, el('tr', {}, th('Type of funder'), th('Listed now', 'pts'), th('Waiting', 'pts'), th('Done', 'pts'), th('Ruled out', 'pts'), th('Put off', 'pts'))),
       el('tbody', {}, tg.by_bucket.map((b) => el('tr', {}, el('th', { scope: 'row' }, bucket(b.bucket)),
         el('td', { class: 'num pts', 'data-l': 'Listed now' }, String(have[b.bucket] || 0), cov[b.bucket] ? el('small', { class: 'sub', text: ` of ${cov[b.bucket]} wanted` }) : null),
         ...['pending', 'covered', 'rejected', 'deferred'].map((k) => el('td', { class: 'num pts', 'data-l': { pending: 'Waiting', covered: 'Done', rejected: 'Ruled out', deferred: 'Put off' }[k], text: b[k] ?? 0 })))))) : null,
-    tg.next?.length ? el('div', { class: 'mnext' }, el('h3', { text: 'Next ones up' }), nextCount, nextBox) : null] : [none('No named funders are queued right now.')];
+    tg.next?.length ? el('div', { class: 'mnext' }, el('h3', { text: 'Next ones up' }), nextCount, nextBox) : null)] : [none('No named funders are queued right now.')];
 
   /* 6. discovery runs: the cadence comes from the last recorded check, not from a fixed schedule */
   const dc = feed.discovery, runs = dc?.runs || [], tot = dc?.totals, lr = feed.last_run, r24 = feed.runs_24h;
@@ -173,7 +182,7 @@ export function render(root, app) {
     sec('listed', SECS[0][1], 'Nothing reaches the list on a hunch. Each funder goes through the same six steps, and any step can end it.', flow),
     sec('fit', SECS[1][1], null, ...fit),
     sec('rank', SECS[2][1], null, ...rank),
-    sec('screened', SECS[3][1], 'Read, then ruled out. Each one has a reason, and the criterion it failed is counted here.', summary, rule, dbLink, el('div', { class: 'mscr-list' }, count, list, more)),
+    sec('screened', SECS[3][1], 'Read, then ruled out. Each one has a reason, and the criterion it failed is counted here.', el('div', { class: 'mpair' }, el('div', {}, summary, rule, dbLink), el('div', { class: 'mscr-list' }, count, list, more))),
     sec('queue', SECS[4][1], null, ...queue),
     sec('runs', SECS[5][1], `Pages already on the list are re-read on a rolling schedule, so changes show up on the Radar. ${lastCheck}`, ...disc),
     sec('collection', SECS[6][1], null, ...collect)));

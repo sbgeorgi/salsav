@@ -1,11 +1,15 @@
 /* Method view. Tokens only (dashboard.css). */
-.method { max-width: 1040px; }
+.method { --mj-h: 52px; }
+body[data-view="method"] .pagehead { padding: 1rem 0 .35rem; } /* compact head: the chips and sections are the content */
+body[data-view="method"] .pagehead h1 { font-size: var(--t-xl); }
+body[data-view="method"] .pagehead p { margin-top: .3rem; }
 .method [hidden] { display: none !important; } /* a .btn display rule must not show a hidden "Show all" */
-.mjump { display: flex; flex-wrap: wrap; gap: .3rem .35rem; margin-bottom: var(--sp-5); }
+.mjump { display: flex; flex-wrap: wrap; gap: .3rem .35rem; margin-bottom: var(--sp-4); }
 .mjump button { min-height: 32px; padding: 0 .75rem; border: var(--hair); border-radius: var(--r-pill); background: transparent; cursor: pointer; font-size: var(--t-sm); color: var(--ink-2); transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
 .mjump button:hover { border-color: var(--primary); background: var(--accent-soft); }
-.msec { border-top: 1px solid var(--rule-strong); padding: 1rem 0 var(--sp-6); scroll-margin-top: calc(var(--topbar-h) + 1rem); }
-.msec > header { display: flex; align-items: baseline; gap: .8rem; margin-bottom: .6rem; }
+.msec { border-top: 1px solid var(--rule-strong); padding: 1.3rem 0 var(--sp-6); scroll-margin-top: calc(var(--topbar-h) + 1rem); }
+.mbody { min-width: 0; container-type: inline-size; }
+.mside > header { display: flex; align-items: baseline; gap: .8rem; margin-bottom: .6rem; }
 .msec h2 { font-family: var(--serif); font-size: var(--t-xl); line-height: 1.15; letter-spacing: -.01em; }
 .mnum { font-family: var(--serif); font-size: var(--t-xl); font-weight: 600; color: var(--accent); min-width: 1.2ch; font-variant-numeric: lining-nums; }
 .dash .mlede { max-width: var(--measure); color: var(--ink-2); margin-bottom: var(--sp-4); text-wrap: pretty; }
@@ -35,10 +39,11 @@
 .mtbl { width: 100%; border-collapse: collapse; }
 .mtbl th, .mtbl td { text-align: left; padding: .5rem .8rem .5rem 0; border-bottom: var(--hair-soft); vertical-align: top; font-weight: 400; }
 .mtbl thead th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; white-space: nowrap; }
-.mtbl tbody th { font-weight: 600; width: 14rem; }
+.mtbl tbody th { font-weight: 600; width: 12rem; }
+.mdim .mtbl tbody th { width: 9rem; }
 .mtbl .pts { text-align: right; padding-right: 1.2rem; white-space: nowrap; }
-.mtbl:not(.mrank):not(.mcov):not(.mruns) .pts { width: 7.5rem; }
-.pbar { display: inline-block; width: 2.6rem; height: 4px; border-radius: 2px; background: var(--surface-2); vertical-align: middle; margin-right: .5rem; overflow: hidden; }
+.mtbl:not(.mrank):not(.mcov):not(.mruns) .pts { width: 5.5rem; }
+.pbar { display: inline-block; width: 2rem; height: 4px; border-radius: 2px; background: var(--surface-2); vertical-align: middle; margin-right: .5rem; overflow: hidden; }
 .pbar i { display: block; height: 100%; background: var(--accent); }
 .mex { margin-top: var(--sp-5); padding: 1rem 1.1rem 1.1rem; background: var(--surface); border: var(--hair); border-radius: var(--radius); }
 .mex > header { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .8rem; margin-bottom: .8rem; }
@@ -52,11 +57,11 @@
 .mexl blockquote small { font-family: var(--font); font-style: normal; color: var(--muted); } .mexl blockquote small.ok { color: var(--ok-fg); }
 
 /* 3. ranking */
-.mrank tbody th { width: 17rem; }
+.mrank tbody th { width: 13rem; }
 .msec .sub { max-width: var(--measure); }
-.mlanes { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1.2rem; margin: var(--sp-4) 0; font-size: var(--t-sm); }
+.mlanes { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1.2rem; margin: 0 0 var(--sp-4); font-size: var(--t-sm); }
 .mlanes dt { font-weight: 600; } .mlanes dd { margin: 0; color: var(--ink-2); }
-.mtop { margin-top: var(--sp-4); } .mtop ol { list-style: none; margin: .4rem 0 0; padding: 0; }
+.mtop { margin-top: var(--sp-4); max-width: 34rem; } .mtop ol { list-style: none; margin: .4rem 0 0; padding: 0; }
 .mtop li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 1rem; align-items: baseline; padding: .5rem 0; border-bottom: var(--hair-soft); }
 .mtop .big { font-size: 1.4rem; grid-column: 2; grid-row: 1; } .mtop small { grid-column: 1; color: var(--muted); font-size: var(--t-xs); }
 
@@ -92,11 +97,34 @@
 .mruns tbody th small { display: block; font-weight: 400; }
 .mlens { margin-top: var(--sp-3); }
 
-@media (max-width: 900px) {
+/* Wide screens: title and intro in a rail on the left, the tables, steps and cards on the right. */
+@media (min-width: 1200px) {
+  .mjump { position: sticky; top: var(--topbar-h); z-index: 5; margin-inline: 0; padding: .45rem 0; background: var(--bg); border-bottom: var(--hair-soft); flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .mjump button { white-space: nowrap; }
+  .msec { display: grid; grid-template-columns: minmax(16rem, 21rem) minmax(0, 1fr); column-gap: clamp(2rem, 3.5vw, 4rem); align-items: start; scroll-margin-top: calc(var(--topbar-h) + var(--mj-h) + .5rem); }
+  .mside { position: sticky; top: calc(var(--topbar-h) + var(--mj-h) + 1.2rem); }
+  .dash .mside .mlede { margin-bottom: 0; }
+}
+@container (min-width: 1100px) {
+  .mdims { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--sp-6); }
+  .mexl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem var(--sp-5); }
+}
+@container (min-width: 900px) {
+  .mpair { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 0 var(--sp-6); align-items: start; }
+  .mpair > :only-child { grid-column: 1 / -1; }
+  .mpair .mscr-list { margin-top: 0; }
+}
+@container (max-width: 1050px) {
+  .mflow { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-4) var(--sp-4); }
+  .mflow li:nth-child(3n)::before { right: 0; background: linear-gradient(90deg, var(--rule-strong), transparent); }
+}
+@container (max-width: 700px) {
   .mflow { grid-template-columns: 1fr; gap: var(--sp-3) 0; }
   .mflow li { padding: 0 0 0 2.6rem; min-height: 1.7rem; }
-  .mflow li::before { left: .85rem; right: auto; top: 1.7rem; bottom: calc(-1 * var(--sp-3)); width: 1px; height: auto; }
+  .mflow li::before, .mflow li:nth-child(3n)::before { left: .85rem; right: auto; top: 1.7rem; bottom: calc(-1 * var(--sp-3)); width: 1px; height: auto; background: var(--rule-strong); }
   .mflow li:last-child::before { display: none; }
+}
+@media (max-width: 900px) {
   .mtiers, .mtot { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {

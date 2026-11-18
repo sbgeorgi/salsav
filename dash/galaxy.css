@@ -4,11 +4,34 @@
 .gx-seg { max-width: 100%; flex-wrap: wrap; }
 .gx [hidden] { display: none !important; }
 
-.gx-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-2) var(--sp-3); }
-.gx-count { margin: 0; color: var(--muted); font-size: var(--t-sm); font-variant-numeric: tabular-nums; }
+/* the shared page head, tightened for this view only so the map starts high (body[data-view] is set by the shell) */
+body[data-view="galaxy"] .pagehead { padding: .7rem 0 .5rem; }
+body[data-view="galaxy"] .pagehead .t { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--sp-4); }
+body[data-view="galaxy"] .pagehead h1 { font-size: var(--t-xl); line-height: 1.1; }
+body[data-view="galaxy"] .pagehead p { margin-top: 0; font-size: var(--t-sm); }
+
+/* one toolbar row: Filters toggle, grouping, summary (pushed right). Active filters sit on a thin row under it, only when there are any. */
+.gx { gap: var(--sp-2); }
+.gx-top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-3); }
+.gx-count { flex: 1 1 14rem; max-width: none; margin: 0; color: var(--muted); font-size: var(--t-sm); font-variant-numeric: tabular-nums; text-align: right; }
+.gx-ftoggle { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px; font-weight: 500; }
+.gx-ftoggle[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--primary); }
+.gx-ficon { width: 14px; height: 10px; flex: 0 0 auto; border-top: 2px solid currentColor; border-bottom: 2px solid currentColor; position: relative; }
+.gx-ficon::after { content: ""; position: absolute; left: 3px; right: 3px; top: 2px; height: 2px; background: currentColor; }
+.gx-ftoggle .gx-fcount { background: var(--primary); color: var(--surface); font-weight: 600; }
+.gx.has-act { --gx-off: 204px; }
+.gx-actives { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.gx-achip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 8px 0 10px;
+  border: 1px solid var(--primary); border-radius: var(--r-pill); background: var(--accent-soft); color: var(--ink);
+  font: 500 var(--t-xs)/1 var(--font); cursor: pointer;
+}
+.gx-achip:hover { background: var(--surface-2); }
+.gx-x { color: var(--muted); font-size: 15px; line-height: 1; }
+.gx-reset-f { min-height: 28px; }
 
 /* filter panel: every row is label | chips on one shared column, rows divided by a hairline */
-.gx-panel { display: grid; gap: 0; padding: var(--sp-1) var(--sp-4); border: var(--hair); border-radius: var(--radius); background: var(--surface); min-width: 0; }
+.gx-panel { margin-bottom: var(--sp-1); display: grid; gap: 0; padding: var(--sp-1) var(--sp-4); border: var(--hair); border-radius: var(--radius); background: var(--surface); min-width: 0; }
 .gx-panel > * { padding: var(--sp-3) 0; border-top: var(--hair-soft); }
 .gx-panel > :first-child { border-top: 0; }
 .gx-filters { display: grid; gap: var(--sp-3); }
@@ -47,7 +70,7 @@
 
 /* canvas: no wheel or drag capture; zoom is explicit */
 .gx-canvas {
-  position: relative; height: clamp(460px, 68vh, 720px); min-width: 0;
+  position: relative; height: clamp(420px, calc(100svh - var(--gx-off, 168px)), 980px); min-width: 0;
   border: var(--hair); border-radius: var(--radius); background: var(--surface);
   overflow: hidden; touch-action: pan-y; box-shadow: var(--shadow);
 }
@@ -164,9 +187,16 @@
 
 /* the segmented control and the chips use the 44px target on touch and on phones (same condition as the shared rule in dashboard.css) */
 @media (pointer: coarse), (max-width: 760px) {
+  .gx-ftoggle, .gx-achip, .gx-reset-f { min-height: 44px; }
   .gx-chip, .gx-zbtn, .gx-cl summary, .gx-rn, .gx-kwmore, .gx-more, .gx-moref > summary { min-height: 44px; }
   .gx-zbtn { min-width: 44px; }
   .gx-label { min-height: 0; }
+}
+
+/* the toolbar wraps to two rows below this width, so the canvas gives up a row */
+@media (max-width: 1180px) {
+  .gx { --gx-off: 216px; }
+  .gx.has-act { --gx-off: 252px; }
 }
 
 @media (max-width: 1100px) {
@@ -189,7 +219,14 @@
   .gx-fl { min-height: 0; }
   .gx-fg .gx-chips:not(.is-all) { flex: 1 1 100%; flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; padding: 3px 28px 3px 3px; scrollbar-width: thin; -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); }
   .gx-fg .gx-chips:not(.is-all) > .gx-chip { flex: 0 0 auto; white-space: nowrap; }
-  .gx-canvas { height: clamp(440px, 74vh, 640px); }
+  .gx, .gx.has-act { --gx-off: 292px; }
+  .gx.has-act { --gx-off: 330px; }
+  .gx-canvas { height: clamp(380px, calc(100svh - var(--gx-off)), 640px); }
+  /* phone toolbar: Filters + summary on one row, the grouping control a scrolling rail under it */
+  .gx-top { gap: var(--sp-2); }
+  .gx-count { flex: 1 1 0; min-width: 0; margin: 0; text-align: left; font-size: var(--t-xs); }
+  .gx .gx-seg { order: 3; flex: 1 1 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .gx-seg > button { flex: 0 0 auto; white-space: nowrap; }
   .gx-panel > * { padding: var(--sp-2) 0; }
   .gx-row { display: flex; flex-wrap: wrap; gap: 0 var(--sp-4); }
   .gx-rn { flex: 1 1 100%; }

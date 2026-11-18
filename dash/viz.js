@@ -99,17 +99,18 @@ function mark(shape, x, y, r) {
 }
 
 // Scatter. points: [{id,name,bucket,lane?,[x],[y],[r]}]; key defaults match insights().scatter (days, fit, award).
-export function scatter(points, { w = 360, h = 220, x = 'days', y = 'fit', r = 'award', xLabel = 'Days to deadline', yLabel = 'Fit score', xMax, yMax = 100, labelTop = 3, labelLen = 14 } = {}) {
+export function scatter(points, { w = 360, h = 220, x = 'days', y = 'fit', r = 'award', xLabel = 'Days to deadline', yLabel = 'Fit score', xMax, yMax = 100, yMin = 0, rScale = 1, labelTop = 3, labelLen = 14 } = {}) {
   const P = (Array.isArray(points) ? points : []).filter((p) => p && isNum(p[x]) && isNum(p[y]));
   const L = 34, B = 24, T = 8, Rm = 10, pw = w - L - Rm, ph = h - T - B;
-  const xm = num(xMax) || Math.max(30, ...P.map((p) => num(p[x]))), ym = num(yMax, 100) || 100;
-  const X = (v) => r2(L + pw * clamp(num(v) / xm, 0, 1)), Y = (v) => r2(T + ph * (1 - clamp(num(v) / ym, 0, 1)));
+  const xm = num(xMax) || Math.max(30, ...P.map((p) => num(p[x]))), ym = num(yMax, 100) || 100, y0 = clamp(num(yMin), 0, ym - 10); // y0 lifts the axis floor so a cluster of similar scores spreads out
+  const X = (v) => r2(L + pw * clamp(num(v) / xm, 0, 1)), Y = (v) => r2(T + ph * (1 - clamp((num(v) - y0) / (ym - y0), 0, 1)));
   const ra = P.map((p) => Math.max(0, num(p[r]))), rmax = Math.max(1, ...ra);
   let body = `<line class="viz-axis" x1="${L}" y1="${T}" x2="${L}" y2="${T + ph}"/><line class="viz-axis" x1="${L}" y1="${T + ph}" x2="${L + pw}" y2="${T + ph}"/>`;
+  const yTicks = y0 > 0 ? Array.from({ length: Math.floor((ym - y0) / 10) + 1 }, (_, i) => y0 + 10 * i) : [0, 1, 2, 3, 4].map((i) => (ym * i) / 4);
+  for (const yv of yTicks) body += `<line class="viz-axis" x1="${L - 3}" y1="${Y(yv)}" x2="${L}" y2="${Y(yv)}"/><text class="viz-t viz-sm viz-muted viz-num" x="${L - 6}" y="${Y(yv)}" text-anchor="end" dominant-baseline="central">${Math.round(yv)}</text>`;
   for (let i = 0; i <= 4; i++) {
-    const yv = (ym * i) / 4, xv = (xm * i) / 4;
-    body += `<line class="viz-axis" x1="${L - 3}" y1="${Y(yv)}" x2="${L}" y2="${Y(yv)}"/><text class="viz-t viz-sm viz-muted viz-num" x="${L - 6}" y="${Y(yv)}" text-anchor="end" dominant-baseline="central">${Math.round(yv)}</text>` +
-      `<line class="viz-axis" x1="${X(xv)}" y1="${T + ph}" x2="${X(xv)}" y2="${T + ph + 3}"/><text class="viz-t viz-sm viz-muted viz-num" x="${X(xv)}" y="${T + ph + 14}" text-anchor="${i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}">${Math.round(xv)}</text>`;
+    const xv = (xm * i) / 4;
+    body += `<line class="viz-axis" x1="${X(xv)}" y1="${T + ph}" x2="${X(xv)}" y2="${T + ph + 3}"/><text class="viz-t viz-sm viz-muted viz-num" x="${X(xv)}" y="${T + ph + 14}" text-anchor="${i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}">${Math.round(xv)}</text>`;
   }
   body += `<text class="viz-t viz-sm viz-muted" x="${L + pw}" y="${h - 1}" text-anchor="end">${esc(xLabel)}</text><text class="viz-t viz-sm viz-muted" x="${L + 4}" y="${T + 7}">${esc(yLabel)}</text>`;
   const keys = [...new Set(P.map((p) => p.bucket))];
@@ -126,7 +127,7 @@ export function scatter(points, { w = 360, h = 220, x = 'days', y = 'fit', r = '
   }
   // Pointer target under each mark: 24px (44px at phone or coarse; 2px spare, since the svg can render a fraction small), shortened so it never reaches a neighbouring mark or label.
   const tapPx = typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches ? 46 : 26;
-  const at = P.map((p) => [X(p[x]), Y(p[y])]), rr = ra.map((v) => r2(3 + 4 * Math.sqrt(v / rmax)) * 1.5 + 1);
+  const at = P.map((p) => [X(p[x]), Y(p[y])]), rr = ra.map((v) => r2((3 + 4 * Math.sqrt(v / rmax)) * rScale) * 1.5 + 1);
   const tapR = (i) => {
     let cap = Infinity;
     at.forEach((q, j) => {
@@ -137,7 +138,7 @@ export function scatter(points, { w = 360, h = 220, x = 'days', y = 'fit', r = '
     return Math.max(0, Math.min(tapPx / 2, cap));
   };
   P.forEach((p, i) => {
-    const rad = r2(3 + 4 * Math.sqrt(ra[i] / rmax)), px = X(p[x]), py = Y(p[y]), right = lright.get(i);
+    const rad = r2((3 + 4 * Math.sqrt(ra[i] / rmax)) * rScale), px = X(p[x]), py = Y(p[y]), right = lright.get(i);
     const tip = `${p.name ?? p.id}: fit ${r2(num(p[y]))}, ${r2(num(p[x]))} days${ra[i] ? ', up to ' + usd(ra[i]) : ''}`;
     body += `<g class="viz-mark ${bucketCls(p.bucket, keys.indexOf(p.bucket))}" data-id="${esc(p.id)}"${p.lane ? ` data-lane="${esc(p.lane)}"` : ''}><title>${esc(tip)}</title><circle class="viz-tap" cx="${px}" cy="${py}" r="${r2(tapR(i))}" aria-hidden="true"/>${mark(Math.max(0, BUCKETS.indexOf(p.bucket)) % 6, px, py, rad)}` +
       (top.has(i) ? `<text class="viz-t viz-sm viz-halo" x="${r2(right ? px - rad - 3 : px + rad + 3)}" y="${py}" text-anchor="${right ? 'end' : 'start'}" dominant-baseline="central">${esc(clip(p.name ?? p.id, labelLen))}</text>` : '') + '</g>';

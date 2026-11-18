@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { normalize } from '../dashboard.js';
-import { GROUPS, galaxyItems, galaxyLayout, galaxyFilter, groupOf, nodeRadius, themeCounts, totals, defaultGalaxy, moreActive, nodeCaps, hitRadius, placeTaps } from './galaxy.js';
+import { GROUPS, galaxyItems, galaxyLayout, galaxyFilter, groupOf, nodeRadius, themeCounts, totals, defaultGalaxy, filterCount, moreActive, nodeCaps, hitRadius, placeTaps } from './galaxy.js';
 
 const NOW = new Date('2026-11-11T20:00:00Z'); // fixed clock, same as dashboard.test.mjs
 let n = 0;
@@ -463,6 +463,12 @@ t('taps: a cluster label tap is 46px tall when clear, and falls back to the labe
   assert.equal(run([{ id: 'far', x: 500, y: 0, r: 4.5 }]), 46, 'no mark near: the tap is the full 46px');
   assert.equal(run([{ id: 'under', x: 0, y: 10, r: 4.5 }]), 14, 'a mark 10px below the label line: the tap is the 14px label height, never zero');
   assert.equal(run([{ id: 'on', x: 0, y: 0, r: 4.5 }]), 14, 'a mark on the label line: the tap keeps the label height');
+});
+
+t('filterCount counts chips and the Show toggles moved off default; filters start closed', () => {
+  assert.equal(filterCount(defaultGalaxy()), 0);
+  assert.equal(defaultGalaxy().filtersOpen, false);
+  assert.equal(filterCount({ ...defaultGalaxy(), types: ['a', 'b'], themes: ['x'], tiers: ['prime'], openOnly: true, screened: false }), 6);
 });
 
 console.log(`ok ${n} tests`);

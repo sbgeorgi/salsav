@@ -362,6 +362,7 @@ const top = () => (isRadar() ? 'radar' : S.view);
 function chrome() {
   const t = top(), [title, lede] = HEAD[t];
   $('#pgTitle').textContent = title; $('#pgLede').replaceChildren(lede());
+  document.body.dataset.view = t; // lets a view's own CSS tighten the shared page head (body[data-view="galaxy"] .pagehead)
   $('#ruleWrap').hidden = t !== 'radar'; $('#radar').hidden = t !== 'radar'; $('#viewroot').hidden = t === 'radar';
   $$('[data-nav]').forEach((b) => { if (b.dataset.nav === t) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
   const cur = $('#nav [aria-current="page"]'), n = $('#nav'); // at phone width the tab strip scrolls: bring the active tab into it
