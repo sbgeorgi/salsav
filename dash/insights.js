@@ -13,7 +13,7 @@ const GLYPH = { us_federal: '●', intl_dev: '■', state_regional: '◆', priva
 const STAGES_ACTIVE = ['reviewing', 'applying', 'submitted'];
 const sv = (t, a = {}, ...k) => { const e = document.createElementNS(NS, t); for (const [n, v] of Object.entries(a)) if (v != null && v !== false) e.setAttribute(n, v === true ? '' : v); for (const c of k.flat()) if (c != null) e.append(typeof c === 'string' ? document.createTextNode(c) : c); return e; };
 const parse = (str) => document.importNode(new DOMParser().parseFromString(str.replace('<svg ', `<svg xmlns="${NS}" `), 'image/svg+xml').documentElement, true);
-const RH = () => (typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches ? 44 : 24); // the same test as the shared 44px rule in dashboard.css: phone-sized or touch rows give chart bars a 44px tap target
+const RH = () => (typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches ? 44 : 28); // the same test as the shared 44px rule in dashboard.css: phone-sized or touch rows give chart bars a 44px tap target
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const num = (n) => new Intl.NumberFormat('en-US').format(Number(n) || 0);
 const shortDay = (iso) => { const t = Date.parse(iso || ''); return Number.isFinite(t) ? new Date(t).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }) : ''; };
@@ -123,9 +123,9 @@ export function render(root, app) {
   const mapTake = dated.length || I.undated.length ? (hot.length ? `${plural(hot.length, 'strong-fit funder closes', 'strong-fit funders close')} within 90 days.` : 'No strong-fit funder closes within 90 days.') : 'No scored funders yet.';
   const mapHost = chart(el('div', { class: 'ins-map' }), (w) => {
     if (!dated.length) return empty('No funder has a scored fit and a deadline in the next 12 months.');
-    const h = Math.round(Math.min(340, Math.max(240, w * 0.5))), s = parse(V.scatter(dated, { w, h, xMax: 365, yMax: 100, xLabel: 'Days to deadline', yLabel: 'Fit score', labelTop: w < 500 ? 2 : 4 }));
+    const h = Math.round(Math.min(420, Math.max(240, w * 0.48))), s = parse(V.scatter(dated, { w, h, xMax: 365, yMax: 100, xLabel: 'Days to deadline', yLabel: 'Fit score', labelTop: w < 500 ? 2 : w < 760 ? 4 : 6, labelLen: w < 500 ? 14 : w < 760 ? 20 : 34 }));
     const L = 34, T = 8, pw = w - L - 10, ph = h - T - 24, zw = pw * 90 / 365, zh = ph * 0.4; // mirrors the plot box inside viz.scatter
-    s.querySelector('title').after(sv('rect', { class: 'ins-zone', x: L, y: T, width: zw, height: zh }), ...(zw > 80 ? [sv('text', { class: 'ins-zone-t', x: L + zw - 4, y: T + zh - 5, 'text-anchor': 'end' }, 'Act now')] : []));
+    s.querySelector('title').after(sv('rect', { class: 'ins-zone', x: L, y: T, width: zw, height: zh }), ...(zw > 80 ? [sv('text', { class: 'ins-zone-t', x: L + zw - 4, y: T + 12, 'text-anchor': 'end' }, 'Act now')] : []));
     [...s.querySelectorAll('text')].find((t) => t.textContent === 'Fit score')?.remove(); // the caption names the axes; the label collided with top marks
     [...s.querySelectorAll('text')].find((t) => t.textContent === 'Days to deadline')?.setAttribute('y', h + 12); // clear of the 365 tick label
     return wire(s, '.viz-mark', app.openDrawer);
@@ -149,7 +149,7 @@ export function render(root, app) {
   const scoredN = I.fitHist.reduce((a, t) => a + t.n, 0), topN = I.fitHist.filter((t) => t.tier === 'prime' || t.tier === 'strong').reduce((a, t) => a + t.n, 0);
   const itemized = live.filter((r) => r.fit_breakdown).length, anat = I.anatomy, weak = itemized ? [...anat].sort((a, b) => a.avg / (a.max || 1) - b.avg / (b.max || 1))[0] : null;
   const fitTake = !scoredN ? 'No funder has a fit score yet.' : `${topN} of ${scoredN} scored funders are prime or strong.${weak ? ` The weakest part is ${weak.label.toLowerCase()}, averaging ${weak.avg} of ${weak.max}.` : ' Scores are not itemized yet, so only the tier spread is shown.'}`;
-  const tierHost = chart(el('div', { class: 'ins-tier' }), (w) => scoredN ? wire(parse(V.hbars(I.fitHist.map((t) => ({ id: t.tier, label: t.label, value: t.n })), { w, rowH: RH(), labelW: 84, valueW: 32 })), '.viz-row', (k) => pick('tier', k)) : empty('Nothing to count yet.'));
+  const tierHost = chart(el('div', { class: 'ins-tier' }), (w) => scoredN ? wire(parse(V.hbars(I.fitHist.map((t) => ({ id: t.tier, label: t.label, value: t.n })), { w, rowH: Math.max(RH(), 36), labelW: 90, valueW: 32 })), '.viz-row', (k) => pick('tier', k)) : empty('Nothing to count yet.'));
   const anatBox = el('div', { class: 'ins-rows' }, anat.length && itemized ? anat.map((d) => el('div', { class: 'ins-r' + (weak && d.key === weak.key ? ' weak' : '') }, el('span', { class: 'lab', text: d.label }), bar(d.max ? d.avg / d.max * 100 : 0),
     el('span', { class: 'val num' }, `${d.avg} of ${d.max}`, weak && d.key === weak.key ? el('em', { text: ' weakest' }) : null))) : empty('Appears once funders are scored on the six parts of the fit score.'));
   const s2 = section('fit', fitTake, 'Follows search',
@@ -159,7 +159,7 @@ export function render(root, app) {
   const gaps = I.coverage.filter((c) => c.vetted < c.min).sort((a, b) => (b.min - b.vetted) - (a.min - a.vetted));
   const covTake = !I.coverage.length ? 'This feed sets no coverage targets.' : gaps.length ? `${blabel(gaps[0].bucket)} is the biggest gap: ${gaps[0].vetted} of ${gaps[0].min} vetted, ${gaps[0].pending ? plural(gaps[0].pending, 'target', 'targets') + ' queued' : 'no targets queued'}. ${gaps.length > 1 ? `${gaps.length} of ${I.coverage.length} buckets are short.` : 'Every other bucket has reached its target.'}` : 'Every bucket has reached its vetted target.';
   const s3 = section('cov', covTake, 'Whole feed',
-    el('div', { class: 'ins-rows ins-cov' }, I.coverage.length ? I.coverage.map((c) => { const top = Math.max(c.min, c.vetted), short = c.min - c.vetted;
+    el('div', { class: 'ins-rows ins-rows--2 ins-cov' }, I.coverage.length ? I.coverage.map((c) => { const top = Math.max(c.min, c.vetted), short = c.min - c.vetted;
       return el('div', { class: 'cov-r' + (short > 0 ? ' short' : '') }, el('button', { type: 'button', class: 'ins-link lab', onclick: () => pick('bucket', c.bucket) }, ui.bucketDot(c.bucket), blabel(c.bucket)),
         el('span', { class: 'bar', 'aria-hidden': 'true' }, el('i', { style: `width:${c.vetted / top * 100}%` }), el('b', { style: `left:${c.min / top * 100}%` })),
         el('span', { class: 'val num' }, `${c.vetted} of ${c.min}`, el('em', { text: short > 0 ? ` ${short} short` : ' target met' })),
@@ -181,7 +181,7 @@ export function render(root, app) {
   const evalBody = crit ? [
     el('div', { class: 'ins-stats ins-stats--row' }, stat(tracked, 'tracked'), stat(screenedN, 'screened out', false), stat(candidates ?? '–', 'candidates waiting')),
     sub('Screened out, by criterion', 'Share of the screened-out funders that failed each criterion.'),
-    el('div', { class: 'ins-rows ins-crit' }, critRows.map(([l, n]) => el('div', { class: 'ins-r' }, el('span', { class: 'lab', text: l }), bar(screenedN ? n / screenedN * 100 : 0), el('span', { class: 'val num', text: `${n} of ${screenedN}` })))),
+    el('div', { class: 'ins-rows ins-rows--2 ins-crit' }, critRows.map(([l, n]) => el('div', { class: 'ins-r' }, el('span', { class: 'lab', text: l }), bar(screenedN ? n / screenedN * 100 : 0), el('span', { class: 'val num', text: `${n} of ${screenedN}` })))),
     el('p', { class: 'sub', text: 'One funder can fail more than one criterion, so the rows can add up to more than the screened total.' }),
   ] : [
     el('div', { class: 'ins-stats ins-stats--row' }, stat(tracked, 'tracked'), stat(scrFeed.length, 'screened out in the feed')),
@@ -247,8 +247,7 @@ export function render(root, app) {
   const s8 = section('conf', confTake, 'Facts follow search',
     el('div', { class: 'ins-two' },
       el('div', {}, sub('Facts known', 'Share of live funders where each fact is on file.'), chart(el('div', { class: 'ins-meters' }), (w) => live.length ? I.quality.map((q) => el('div', { class: 'ins-m' }, el('span', { class: 'lab', text: q.label }), parse(V.meter(q.pct, { w: Math.max(120, w), label: q.label })))) : empty('No live funders.'))),
-      el('div', {}, sub('Source health', 'Whole feed, always. A manual check means a blocked page or repeated fetch failures.'), H.total ? el('div', { class: 'ins-stats' }, stat(H.checked24h, `of ${H.total} checked in the last 24 hours`), stat(H.failing, 'failing their last check', H.failing > 0), stat(H.manual, 'need a manual check', H.manual > 0)) : empty('No sources yet.'))),
-    el('div', { class: 'ins-trends' }, collBlock));
+      el('div', {}, sub('Source health', 'Whole feed, always. A manual check means a blocked page or repeated fetch failures.'), H.total ? el('div', { class: 'ins-stats' }, stat(H.checked24h, `of ${H.total} checked in the last 24 hours`), stat(H.failing, 'failing their last check', H.failing > 0), stat(H.manual, 'need a manual check', H.manual > 0)) : empty('No sources yet.'), collBlock)));
 
   /* 9. Trends and discovery (always the whole feed) */
   const T = I.trend, n = T.days.length, d = I.discovery, runs = [...(d?.runs || [])].sort((a, b) => (b.started_at || '').localeCompare(a.started_at || '')).slice(0, 6), lens = [...(d?.by_lens || [])].filter((l) => l.examined > 0).map((l) => ({ ...l, y: l.vetted / l.examined * 100 })).sort((a, b) => b.y - a.y).slice(0, 8);
@@ -267,7 +266,7 @@ export function render(root, app) {
   const scopeNote = el('p', { class: 'ins-scope', role: 'status', text: searching ? `Search “${qText}”: ${rows.length} of ${all.length} tracked funders${regRows ? ` and ${regRows.filter((f) => f.status === 'rejected').length} of ${(reg.funders || []).filter((f) => f.status === 'rejected').length} screened-out funders` : ''} match. Sections tagged Follows search use the matches. Coverage, source health, trends and discovery cover the whole feed.`
     : `Showing all ${all.length} tracked funders. Search narrows the sections tagged Follows search.` });
   const jump = el('nav', { class: 'ins-jump', 'aria-label': 'Jump to a section' }, SECTIONS.map(([id, l]) => el('button', { type: 'button', onclick: () => document.getElementById('ins-' + id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }), text: l })));
-  root.replaceChildren(el('div', { class: 'ins' }, scopeNote, jump, s1, s2, s3, s4, s5, s6, s7, s8, s9));
+  root.replaceChildren(el('div', { class: 'ins' }, el('div', { class: 'ins-top' }, scopeNote, jump), s1, s2, s3, s4, s5, s6, s7, s8, s9));
   const drawAll = () => draws.forEach((f) => f());
   drawAll();
   // Redraw on width change (text stays at its real size instead of shrinking with the viewBox). Disconnect once the view is gone.

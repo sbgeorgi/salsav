@@ -461,16 +461,17 @@ function renderKpis() {
   ];
   $('#kpis').replaceChildren(...T.map((t) => el('button', { class: 'kpi' + (t.hot ? ' hot' : ''), type: 'button', 'aria-pressed': t.on === undefined ? null : String(!!t.on), onclick: t.act || (() => setFilters(t.on ? t.clear : t.patch)) },
     el('span', { class: 'l', text: t.l }), el('span', { class: 'n num', text: t.n }), el('small', { text: t.sub }),
-    el('span', { class: 'sp' }, t.sp && S.scope === 'all' && svgEl(spark(t.sp, { w: 120, h: 28, label: `${t.l}, last ${t.sp.length} days` }))))));
+    el('span', { class: 'sp' }, t.sp && S.scope === 'all' && svgEl(spark(t.sp, { w: 200, h: 40, label: `${t.l}, last ${t.sp.length} days` }))))));
   S.kpi = k;
   $('#ovSum').textContent = `${num(k.applyNow)} to apply now, ${num(k.closing30)} closing in 30 days, ${D.money(p.usd)} in play${S.scope === 'filtered' ? ', counted from current filters' : ''}`;
 }
+const hzScale = (cw) => (cw >= 1100 ? 1.25 : cw >= 800 ? 1.12 : 1); // the chart is drawn narrower and scaled up with the box, so wide screens get taller dots, labels and rows
 function renderHorizon() {
   if ($('#ovBody').hidden) return; // drawn when the overview opens, at its real width
   const box = $('#horizon'), md = S.feed.min_days ?? 14;
   const uv = S.uv ? unverifiedPoints(S.list, S.feed.opportunities, S.now) : [];
   box.hidden = false; $('#hzNote').textContent = `Shaded band: closes before the ${md}-day cutoff, too soon to prepare.${uv.length ? ' Dashed dots: unverified calls, checked on the next discovery pass.' : ''} Select a dot for details.`;
-  $('#hzBody').replaceChildren(horizon([...S.list, ...uv], { w: Math.max(280, Math.floor($('#hzBody').clientWidth || box.clientWidth || 600)), now: S.now, minDays: md, onOpen: openDrawer }));
+  $('#hzBody').replaceChildren(horizon([...S.list, ...uv], { w: Math.max(280, Math.floor(($('#hzBody').clientWidth || box.clientWidth || 600) / hzScale($('#hzBody').clientWidth || box.clientWidth || 600))), now: S.now, minDays: md, onOpen: openDrawer }));
 }
 function renderPicks() {
   const host = $('#picks'), picks = S.feed ? D.recommend(S.rows, S.now, 5) : [];
@@ -479,7 +480,7 @@ function renderPicks() {
   if (!picks.length) return host.replaceChildren(head, el('p', { class: 'pempty', text: 'Nothing to suggest right now. Open or recurring funders that nobody owns yet will show up here.' }));
   host.replaceChildren(head, el('ol', { class: 'plist' }, picks.map((p, i) => { const r = p.row;
     return el('li', {}, el('button', { class: 'pick', type: 'button', onclick: () => openDrawer(r.id) },
-      el('span', { class: 'pn' }, el('i', { class: 'num', text: i + 1 }), UI.bucketDot(r.bucket), el('b', { text: r.name })),
+      el('span', { class: 'pn' }, el('i', { class: 'num', text: i + 1 }), UI.bucketDot(r.bucket), el('b', { text: r.name, title: r.name })),
       el('span', { class: 'pf' }, el('span', { class: 'big num', text: r.fit_score ?? '\u2013' }), el('small', { text: r.fit_score == null ? D.UNSCORED : r.fit_breakdown ? r._tier?.label || '' : 'Not itemized yet' })),
       el('span', { class: 'pb' }, svgEl(fitBar(dimsOf(r), { w: 200, h: 6, total: r.fit_score }))),
       el('ul', { class: 'why' }, p.reasons.filter((x) => !/^Fit \d/.test(x)).slice(0, 3).map((x) => el('li', { text: x }))))); })));
@@ -609,7 +610,7 @@ function dot(p, y, R) {
 const monthStarts = (d0, d1) => { const out = [], t0 = D.dayNum(D.todayISO(S.now)); const d = new Date(t0 * 864e5); let y = d.getUTCFullYear(), m = d.getUTCMonth(); for (let i = 0; i < 14; i++, m++) { const n = Date.UTC(y, m, 1) / 864e5 - t0; if (n >= d0 && n <= d1) out.push([n, new Date(Date.UTC(y, m, 1))]); } return out; };
 const mlabel = (dt) => dt.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short' }) + (dt.getUTCMonth() === 0 ? ` '${String(dt.getUTCFullYear()).slice(2)}` : '');
 function timelineView(shown = S.list) {
-  const W = Math.max(320, ($('#list').clientWidth || 900) - 8), LW = W < 600 ? 84 : 140, PL = LW + 8, d1 = 366;
+  const tlScale = ($('#list').clientWidth || 900) >= 1100 ? 1.2 : 1, W = Math.max(320, Math.floor((($('#list').clientWidth || 900) - 8) / tlScale)), LW = W < 600 ? 84 : 140, PL = LW + 8, d1 = 366;
   const t0 = D.dayNum(D.todayISO(S.now)), dm = new Date(t0 * 864e5), d0 = -(dm.getUTCDate() - 1);
   const xs = (d) => PL + ((d - d0) / (d1 - d0)) * (W - PL - 8);
   const dated = shown.filter((r) => r._days != null && r._days >= d0 && r._days <= d1);

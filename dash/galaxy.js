@@ -23,6 +23,7 @@ const MIN_GROUP = 3; // a concept needs this many funders to stand as its own cl
 const KW_TOP = 10;
 const ROWS_FIRST = 8;
 const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+const FIT_MAX = 1.35;
 const R_MIN = 4.5, R_MAX = 13, LOG_LO = 4.5, LOG_HI = 7.5;
 
 const cmp = (a, b) => (String(a) < String(b) ? -1 : String(a) > String(b) ? 1 : 0);
@@ -176,17 +177,14 @@ export function galaxyLayout(items = [], { groupBy = 'concept', width = 960, hei
 
   // cluster radius from its size; if the total area would crowd the canvas, shrink all clusters evenly
   let R = clusters.map((c) => 20 + 11 * Math.sqrt(c.n));
-  const used = R.reduce((s, r) => s + Math.PI * r * r, 0), budget = 0.5 * W * H;
+  const used = R.reduce((s, r) => s + Math.PI * r * r, 0), budget = 0.42 * W * H;
   if (used > budget) { const k = Math.sqrt(budget / used); R = R.map((r) => Math.max(16, r * k)); }
   const rMax = Math.max(...R);
-  const cx = W / 2, cy = (MT + H - MB) / 2;
+  const cx = W / 2, cy = H / 2;
+  const asp = Math.min(3, Math.max(1, W / H));
+  // the packing is relaxed without a frame (a compact blob); the fit step below scales and spreads it into the frame
   const meanR = R.reduce((s, r) => s + r, 0) / n, step = 2 * meanR + GAP;
   const P = clusters.map((_, i) => (i === 0 ? { x: cx, y: cy } : { x: cx + step * Math.sqrt(i) * Math.cos(i * GOLDEN), y: cy + step * Math.sqrt(i) * Math.sin(i * GOLDEN) }));
-  const place = (i) => {
-    const r = R[i], x0 = ML + r, x1 = W - MR - r, y0 = MT + r, y1 = H - MB - r;
-    P[i].x = x0 <= x1 ? clamp(P[i].x, x0, x1) : cx;
-    P[i].y = y0 <= y1 ? clamp(P[i].y, y0, y1) : cy;
-  };
   const pairs = [];
   for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) pairs.push([i, j, linkMap.get(pairKey(clusters[i].key, clusters[j].key))?.w || 0]);
   // one relaxation step: push overlapping clusters apart (mass = area); with attract, linked clusters pull together and all drift to the centre (large ones more)
@@ -206,14 +204,51 @@ export function galaxyLayout(items = [], { groupBy = 'concept', width = 960, hei
         a.x += ux * f; a.y += uy * f; b.x -= ux * f; b.y -= uy * f;
       }
     }
-    for (let i = 0; i < n; i++) {
-      if (attract) { const g = 0.02 * (R[i] / rMax); P[i].x += (cx - P[i].x) * g; P[i].y += (cy - P[i].y) * g; }
-      place(i);
-    }
+    // gravity is stronger on the short axis, so the blob settles as an ellipse that matches the frame instead of a disc that the fit step must stretch
+    if (attract) for (let i = 0; i < n; i++) { const g = 0.02 * (R[i] / rMax); P[i].x += (cx - P[i].x) * g; P[i].y += (cy - P[i].y) * g * asp; }
     return worst;
   };
   for (let t = 0; t < 260; t++) relax(true);
   for (let t = 0; t < 600; t++) if (relax(false) <= 0.2) break;
+
+  // fit to the frame: scale the packing (up to FIT_MAX) into the margins, centre it, then spread the centres along each axis as far as the margins allow
+  // (spreading only widens gaps, so nothing overlaps). Room is kept for labels above and below.
+  const FT = 30, FB = 28, FS = 14, aw = W - 2 * FS, ah = H - FT - FB;
+  const lo = (f) => Math.min(...P.map((p, i) => f(p) - R[i])), hi = (f) => Math.max(...P.map((p, i) => f(p) + R[i]));
+  const bw = hi((p) => p.x) - lo((p) => p.x), bh = hi((p) => p.y) - lo((p) => p.y);
+  const sc = Math.min(aw / bw, ah / bh, FIT_MAX), mx = (lo((p) => p.x) + hi((p) => p.x)) / 2, my = (lo((p) => p.y) + hi((p) => p.y)) / 2;
+  const mw = W / 2, mh = FT + ah / 2;
+  P.forEach((p, i) => { p.x = mw + (p.x - mx) * sc; p.y = mh + (p.y - my) * sc; R[i] *= sc; });
+  const spread = (key, mid, half) => {
+    let f = 4;
+    P.forEach((p, i) => { const d = Math.abs(p[key] - mid); if (d > 1e-6) f = Math.min(f, (half - R[i]) / d); });
+    if (f > 1) P.forEach((p) => { p[key] = mid + (p[key] - mid) * f; });
+  };
+  spread('x', mw, aw / 2); spread('y', mh, ah / 2);
+  // even out the free space: clusters repel each other (and keep non-overlap with a label gap) inside the frame, with a step that anneals to zero, so no
+  // quadrant of the map stays empty while another is crowded
+  if (n > 2 && W >= 600) { // phone frames are too tight for label clearance after this pass
+    const clampIn = (p, r) => { p.x = Math.min(W - FS - r, Math.max(FS + r, p.x)); p.y = Math.min(FT + ah - r, Math.max(FT + r, p.y)); };
+    const T = 120, keep = P.map((p) => ({ x: p.x, y: p.y }));
+    for (let t = 0; t < T; t++) {
+      const dx = P.map(() => 0), dy = P.map(() => 0);
+      for (const [i, j] of pairs) {
+        let ex = P[j].x - P[i].x, ey = P[j].y - P[i].y;
+        const d = Math.max(1, Math.hypot(ex, ey)); ex /= d; ey /= d;
+        const fi = R[j] / d, fj = R[i] / d; // the larger neighbour pushes harder
+        dx[i] -= ex * fi; dy[i] -= ey * fi; dx[j] += ex * fj; dy[j] += ey * fj;
+      }
+      P.forEach((p, i) => { dx[i] += (mw - p.x) / W * 1.2; dy[i] += (mh - p.y) / ah * 1.2; }); // a light pull to the middle keeps clusters off the frame edge
+      const mag = Math.max(1e-9, ...P.map((_, i) => Math.hypot(dx[i], dy[i]))), st = 10 * (1 - t / T) / mag;
+      P.forEach((p, i) => { p.x += dx[i] * st; p.y += dy[i] * st; clampIn(p, R[i]); });
+      for (let k = 0; k < 6; k++) for (const [i, j] of pairs) {
+        const ex = P[j].x - P[i].x, ey = P[j].y - P[i].y, d = Math.hypot(ex, ey) || 1e-9, over = R[i] + R[j] + GAP + 14 - d;
+        if (over > 0) { const ux = ex / d || 1, uy = ey / d, mi = R[i] * R[i], mj = R[j] * R[j]; P[i].x -= ux * over * mj / (mi + mj); P[i].y -= uy * over * mj / (mi + mj); P[j].x += ux * over * mi / (mi + mj); P[j].y += uy * over * mi / (mi + mj); clampIn(P[i], R[i]); clampIn(P[j], R[j]); }
+      }
+    }
+    // a frame too small to hold the evened layout with its label gaps keeps the packed one
+    if (pairs.some(([i, j]) => Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y) < R[i] + R[j] + GAP - 0.5)) P.forEach((p, i) => { p.x = keep[i].x; p.y = keep[i].y; });
+  }
 
   // nodes: largest award at the centre of its cluster, spiral outwards, then a short overlap pass inside the cluster
   const outNodes = [];
@@ -413,7 +448,7 @@ function build(root) {
   const uaRow = chipRow('ua', 'Eligibility');
   const toggle = (label, prop) => h('button', { type: 'button', class: 'gx-chip gx-toggle', 'aria-pressed': 'false', onclick: () => { const u = uiOf(st.app); u[prop] = !u[prop]; update(st); } }, h('span', { text: label }));
   st.toggles = { openOnly: toggle('Open calls only', 'openOnly'), screened: toggle('Include screened out', 'screened') };
-  const toggles = h('div', { class: 'gx-fg', role: 'group', 'aria-label': 'Show' }, st.toggles.openOnly, st.toggles.screened);
+  const toggles = h('div', { class: 'gx-fg', role: 'group', 'aria-label': 'Show' }, h('span', { class: 'gx-fl', 'aria-hidden': 'true', text: 'Show' }), h('div', { class: 'gx-chips' }, st.toggles.openOnly, st.toggles.screened));
   st.kw = h('div', { class: 'gx-chips' });
   st.kwMore = h('button', { type: 'button', class: 'linkbtn gx-kwmore', hidden: true, onclick: () => { const u = uiOf(st.app); u.moreThemes = !u.moreThemes; update(st); } });
   st.kwCount = h('span', { class: 'gx-fcount', hidden: true }); // selected keywords, so a selection past the phone rail's edge still shows
@@ -437,12 +472,10 @@ function build(root) {
   st.alt = h('div', { class: 'gx-alt' });
 
   st.fcount = h('span', { class: 'gx-fcount', hidden: true });
-  const line = h('div', { class: 'gx-line' }, typeRow, toggles); // one row on desktop, wraps on phone
-  const quick = h('div', { class: 'gx-quick' }, sizeRow, kwRow); // the visible quick filters
   const more = h('details', { class: 'gx-moref' },
     h('summary', {}, h('span', { text: 'Fit and eligibility' }), st.fcount),
     h('div', { class: 'gx-filters' }, fitRow, uaRow));
-  root.append(h('section', { class: 'gx', 'data-gx': '' }, top, line, quick, more, st.note, st.canvas, keyLegend(), st.alt));
+  root.append(h('section', { class: 'gx', 'data-gx': '' }, top, h('div', { class: 'gx-panel' }, typeRow, sizeRow, kwRow, toggles, more), st.note, st.canvas, keyLegend(), st.alt));
 
   svgListeners(st);
   if (typeof ResizeObserver === 'function') {
@@ -923,11 +956,12 @@ function renderList(st) {
     return det;
   });
   st.alt.replaceChildren(h('h2', { class: 'gx-h', text: 'The same funders as text' }),
+    blocks.length ? h('div', { class: 'gx-thead', 'aria-hidden': 'true' }, ...['Funder', 'Type', 'Award', 'Fit', 'Status'].map((t) => h('span', { text: t }))) : null,
     ...(blocks.length ? blocks : [h('p', { class: 'sub', text: 'No funders match these filters.' })]));
 }
 function rowEl(st, it) {
   const li = h('li', { class: 'gx-row' },
-    h('button', { type: 'button', class: 'linkbtn gx-rn', onclick: () => st.app.openDrawer(it.id) }, it.name),
+    h('button', { type: 'button', class: 'linkbtn gx-rn', title: it.name, onclick: () => st.app.openDrawer(it.id) }, it.name),
     h('span', { class: 'gx-rt' }, bucketDot(it.bucket), h('span', { text: BUCKETS[it.bucket] })),
     h('span', { class: 'gx-ra', text: amountRange(it) }),
     h('span', { class: 'gx-rf', text: it.fit_score != null ? `Fit ${it.fit_score} · ${it.tierLabel}` : UNSCORED }),

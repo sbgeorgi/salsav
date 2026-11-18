@@ -99,7 +99,7 @@ function mark(shape, x, y, r) {
 }
 
 // Scatter. points: [{id,name,bucket,lane?,[x],[y],[r]}]; key defaults match insights().scatter (days, fit, award).
-export function scatter(points, { w = 360, h = 220, x = 'days', y = 'fit', r = 'award', xLabel = 'Days to deadline', yLabel = 'Fit score', xMax, yMax = 100, labelTop = 3 } = {}) {
+export function scatter(points, { w = 360, h = 220, x = 'days', y = 'fit', r = 'award', xLabel = 'Days to deadline', yLabel = 'Fit score', xMax, yMax = 100, labelTop = 3, labelLen = 14 } = {}) {
   const P = (Array.isArray(points) ? points : []).filter((p) => p && isNum(p[x]) && isNum(p[y]));
   const L = 34, B = 24, T = 8, Rm = 10, pw = w - L - Rm, ph = h - T - B;
   const xm = num(xMax) || Math.max(30, ...P.map((p) => num(p[x]))), ym = num(yMax, 100) || 100;
@@ -114,14 +114,15 @@ export function scatter(points, { w = 360, h = 220, x = 'days', y = 'fit', r = '
   body += `<text class="viz-t viz-sm viz-muted" x="${L + pw}" y="${h - 1}" text-anchor="end">${esc(xLabel)}</text><text class="viz-t viz-sm viz-muted" x="${L + 4}" y="${T + 7}">${esc(yLabel)}</text>`;
   const keys = [...new Set(P.map((p) => p.bucket))];
   const order = P.map((p, i) => i).sort((a, b) => num(P[b][y]) - num(P[a][y]));
-  const top = new Set(), placed = [], lbox = new Map();
+  const top = new Set(), placed = [], lbox = new Map(), lright = new Map();
   // Label the highest-fit points, skipping any whose label box would overlap one already placed.
   for (const i of order) {
     if (top.size >= labelTop) break;
-    const px = X(P[i][x]), py = Y(P[i][y]), wd = clip(P[i].name ?? P[i].id, 14).length * 5.5 + 10, right = px > L + pw * 0.7;
+    const px = X(P[i][x]), py = Y(P[i][y]), wd = clip(P[i].name ?? P[i].id, labelLen).length * 5.5 + 10, right = px > L + pw * 0.7 || px + wd > L + pw + Rm;
     const box = [right ? px - wd : px, right ? px : px + wd, py];
     if (placed.some((q) => Math.abs(q[2] - box[2]) < 12 && q[0] < box[1] && box[0] < q[1])) continue;
-    placed.push(box); top.add(i); lbox.set(i, box);
+    if (P.some((q, j) => j !== i && Math.abs(Y(q[y]) - py) < 9 && X(q[x]) > box[0] - 4 && X(q[x]) < box[1] + 4)) continue; // never print a label over another mark
+    placed.push(box); top.add(i); lbox.set(i, box); lright.set(i, right);
   }
   // Pointer target under each mark: 24px (44px at phone or coarse; 2px spare, since the svg can render a fraction small), shortened so it never reaches a neighbouring mark or label.
   const tapPx = typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches ? 46 : 26;
@@ -136,10 +137,10 @@ export function scatter(points, { w = 360, h = 220, x = 'days', y = 'fit', r = '
     return Math.max(0, Math.min(tapPx / 2, cap));
   };
   P.forEach((p, i) => {
-    const rad = r2(3 + 4 * Math.sqrt(ra[i] / rmax)), px = X(p[x]), py = Y(p[y]), right = px > L + pw * 0.7;
+    const rad = r2(3 + 4 * Math.sqrt(ra[i] / rmax)), px = X(p[x]), py = Y(p[y]), right = lright.get(i);
     const tip = `${p.name ?? p.id}: fit ${r2(num(p[y]))}, ${r2(num(p[x]))} days${ra[i] ? ', up to ' + usd(ra[i]) : ''}`;
     body += `<g class="viz-mark ${bucketCls(p.bucket, keys.indexOf(p.bucket))}" data-id="${esc(p.id)}"${p.lane ? ` data-lane="${esc(p.lane)}"` : ''}><title>${esc(tip)}</title><circle class="viz-tap" cx="${px}" cy="${py}" r="${r2(tapR(i))}" aria-hidden="true"/>${mark(Math.max(0, BUCKETS.indexOf(p.bucket)) % 6, px, py, rad)}` +
-      (top.has(i) ? `<text class="viz-t viz-sm viz-halo" x="${r2(right ? px - rad - 3 : px + rad + 3)}" y="${py}" text-anchor="${right ? 'end' : 'start'}" dominant-baseline="central">${esc(clip(p.name ?? p.id, 14))}</text>` : '') + '</g>';
+      (top.has(i) ? `<text class="viz-t viz-sm viz-halo" x="${r2(right ? px - rad - 3 : px + rad + 3)}" y="${py}" text-anchor="${right ? 'end' : 'start'}" dominant-baseline="central">${esc(clip(p.name ?? p.id, labelLen))}</text>` : '') + '</g>';
   });
   const label = P.length ? `Scatter of ${P.length} funders, ${yLabel} against ${xLabel}. Highest fit ${r2(num(P[order[0]][y]))}` : 'Scatter: no dated funders yet';
   return svg(w, h, label, body, 'viz-scatter');

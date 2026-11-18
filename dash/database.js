@@ -392,9 +392,12 @@ function paint(root, app, U) {
   const bandSel = el('select', { 'data-k': 'band', 'aria-label': 'Funding size', onchange: (e) => filt({ band: e.target.value }) },
     el('option', { value: '', text: 'Any size' }), D.BANDS.map(([k, l]) => el('option', { value: k, text: l })));
   bandSel.value = U.band;
+  const frow = (label, ...kids) => el('div', { class: 'db-frow db-frow--l' }, el('span', { class: 'db-lbl', text: label }), el('div', { class: 'db-fitems' }, kids.flat()));
   const filters = el('div', { class: 'db-filters' },
-    el('div', { class: 'db-frow' }, el('span', { class: 'db-lbl', text: 'Status' }), statusSeg, el('span', { class: 'db-lbl', text: 'Category' }), bucketChips),
-    el('div', { class: 'db-frow' }, el('span', { class: 'db-lbl', text: 'Failed' }), critChips,
+    frow('Status', statusSeg),
+    frow('Category', bucketChips),
+    frow('Failed', critChips),
+    frow('More',
       el('label', { class: 'field db-sel' }, el('span', { class: 'db-lbl', text: 'Type' }), orgSel),
       el('label', { class: 'field db-sel' }, el('span', { class: 'db-lbl', text: 'Size' }), bandSel),
       el('button', { class: 'fchip', type: 'button', 'data-k': 'human', 'aria-pressed': U.human, onclick: () => filt({ human: !U.human }) }, 'Human decisions'),
@@ -509,7 +512,7 @@ function paint(root, app, U) {
         'aria-expanded': String(open), onclick: () => put({ open: toggleIn(U.open, r.id) }) },
         el('span', { class: 'db-nm-line' }, ico('chev'), el('span', { class: 'db-nm', text: r.name })),
         el('span', { class: 'db-pg' }, el('span', { class: 'db-bk' }, bucketDot(r.bucket), D.BUCKETS[r.bucket] || ''),
-          r.program ? el('span', { text: r.program }) : null,
+          r.program ? el('span', { class: 'db-prog', title: r.program, text: r.program }) : null,
           unlocked && r.notes ? el('span', { text: `${r.notes} ${r.notes === 1 ? 'note' : 'notes'}` }) : null,
           el('span', { class: 'db-eval-inline', text: `Evaluated ${r.evaluated ? D.fmtDate(r.evaluated) : 'not recorded'}` })))),
       el('td', { class: 'c-status', 'data-label': 'Status' }, statusChip(r.status), r.queue === 'pending' ? statusChip('queue') : null, el('span', { class: 'db-pipe-inline' }, r.pipeline ? stateChip(r.pipeline) : null)),
@@ -554,7 +557,7 @@ function paint(root, app, U) {
   const callResult = el('div', { class: 'db-result' }, el('p', { class: 'sub', 'aria-live': 'polite', text: `${callList.length} of ${scoped.length} calls` }));
   const callItem = (c) => {
     const u = D.safeUrl(c.url), act = callAction(c), restore = act === 'restore';
-    return el('li', { class: 'db-item' },
+    return el('li', { class: 'db-item db-item--call' },
       el('div', { class: 'db-item-main' },
         el('p', { class: 'db-item-t' }, u ? el('a', { href: u, target: '_blank', rel: 'noopener noreferrer', text: c.title || 'Untitled call' }) : el('span', { text: c.title || 'Untitled call' })),
         el('p', { class: 'sub db-line' }, el('button', { class: 'linkbtn', type: 'button', 'data-k': 'cf-' + c.id, onclick: () => app.openDrawer(c.funder_id) }, app.funderName(c.funder_id) || 'Unknown funder'),
