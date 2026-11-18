@@ -70,7 +70,7 @@ body[data-view="galaxy"] .pagehead p { margin-top: 0; font-size: var(--t-sm); }
 
 /* canvas: no wheel or drag capture; zoom is explicit */
 .gx-canvas {
-  position: relative; height: clamp(420px, calc(100svh - var(--gx-off, 168px)), 980px); min-width: 0;
+  position: relative; height: clamp(420px, calc(100svh - var(--gx-off, 168px) - var(--gx-gap, 40px)), 980px); /* --gx-gap: breathing room under the map's bottom edge */ min-width: 0;
   border: var(--hair); border-radius: var(--radius); background: var(--surface);
   overflow: hidden; touch-action: pan-y; box-shadow: var(--shadow);
 }
@@ -221,7 +221,7 @@ body[data-view="galaxy"] .pagehead p { margin-top: 0; font-size: var(--t-sm); }
   .gx-fg .gx-chips:not(.is-all) > .gx-chip { flex: 0 0 auto; white-space: nowrap; }
   .gx, .gx.has-act { --gx-off: 292px; }
   .gx.has-act { --gx-off: 330px; }
-  .gx-canvas { height: clamp(380px, calc(100svh - var(--gx-off)), 640px); }
+  .gx-canvas { --gx-gap: 24px; height: clamp(380px, calc(100svh - var(--gx-off) - var(--gx-gap)), 640px); }
   /* phone toolbar: Filters + summary on one row, the grouping control a scrolling rail under it */
   .gx-top { gap: var(--sp-2); }
   .gx-count { flex: 1 1 0; min-width: 0; margin: 0; text-align: left; font-size: var(--t-xs); }

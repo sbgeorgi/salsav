@@ -125,7 +125,7 @@ export function render(root, app) {
   const mapHost = chart(el('div', { class: 'ins-map' }), (w) => {
     if (!dated.length) return empty('No funder has a scored fit and a deadline in the next 12 months.');
     // Hero chart: as tall as the first screen allows (top of the plot to its x labels stays above the fold), never squeezed into a short box.
-    const room = innerHeight - (mapHost.getBoundingClientRect().top + scrollY) - 20;
+    const room = innerHeight - (mapHost.getBoundingClientRect().top + scrollY) - (innerWidth < 760 ? 44 : 64); // x labels (~24px) plus breathing room above the window's bottom edge
     const h = Math.round(w < 560 ? w * 0.9 : Math.min(w * 0.62, Math.max(340, room))); mapHost.closest('.ins-sec')?.style.setProperty('--ins-mh', h + 'px'); // the side list scrolls inside the chart's height
     const s = parse(V.scatter(dated, { w, h, xMax: 365, yMax: 100, yMin, rScale: w < 760 ? 1 : 1.4, xLabel: 'Days to deadline', yLabel: 'Fit score', labelTop: w < 500 ? 2 : w < 760 ? 4 : w < 1000 ? 7 : 10, labelLen: w < 500 ? 14 : w < 760 ? 20 : 34 }));
     const L = 34, T = 8, pw = w - L - 10, ph = h - T - 24, zw = pw * 90 / 365, zh = ph * 40 / (100 - yMin); // mirrors the plot box inside viz.scatter
