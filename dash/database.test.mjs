@@ -374,4 +374,10 @@ t('buildRows: an aggregator (category or its vet note) is flagged for the Databa
   assert.equal(c.aggregator, false);
 });
 
+t('dbFilterCount counts every active filter once, and each bucket', () => {
+  assert.equal(DB.dbFilterCount({}), 0);
+  assert.equal(DB.dbFilterCount({ status: 'all', buckets: [], criterion: '', org: '', band: '', human: false, queue: false, openCalls: false }), 0);
+  assert.equal(DB.dbFilterCount({ status: 'vetted', buckets: ['a', 'b'], criterion: 'ua', org: 'x', band: '1m5m', human: true, queue: true, openCalls: true }), 9);
+});
+
 console.log(`ok ${n} tests`);

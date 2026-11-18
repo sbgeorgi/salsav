@@ -143,6 +143,8 @@ export function sortRows(rows, sort = {}) {
     return cmp(a.name.toLowerCase(), b.name.toLowerCase());
   });
 }
+/* how many filters are on: the Filters badge (search words are the shell's, not counted) */
+export const dbFilterCount = (F = {}) => (F.status && F.status !== 'all' ? 1 : 0) + (F.buckets?.length || 0) + ['criterion', 'org', 'band', 'human', 'queue', 'openCalls'].filter((k) => F[k]).length;
 export const defaultSort = (F = {}) => ({ key: 'evaluated', dir: 'desc', judgmentFirst: F.status === 'rejected' });
 /* a header click: the same column flips, a new column starts in its natural direction */
 export function nextSort(cur, key) {
@@ -278,7 +280,7 @@ function exportFile(app, kind, funders) {
 /* ---- view ---- */
 let seq = 0;
 const DEFAULTS = () => ({ tab: 'funders', status: 'all', buckets: [], criterion: '', org: '', band: '', human: false, queue: false,
-  openCalls: false, sort: null, limit: PAGE, open: [], queueOpen: false, callState: 'all', callFunder: '', callLimit: PAGE });
+  openCalls: false, sort: null, limit: PAGE, open: [], queueOpen: false, filtersOpen: false, callState: 'all', callFunder: '', callLimit: PAGE });
 
 export async function render(root, app) {
   const mine = ++seq;
@@ -321,7 +323,7 @@ function paint(root, app, U) {
   const shown = list.slice(0, U.limit);
   const sum = summarize(rows, reg);
   const queued = agentQueue(reg.funders || []);
-  const hasFilter = U.status !== 'all' || U.buckets.length > 0 || !!U.criterion || !!U.org || !!U.band || U.human || U.queue || U.openCalls;
+  const nFilters = dbFilterCount(F), hasFilter = nFilters > 0;
   const put = (patch) => { Object.assign(U, patch); paint(root, app, U); };
   const filt = (patch) => put({ ...patch, limit: PAGE });
   const callFilt = (patch) => put({ ...patch, callLimit: PAGE });
@@ -402,9 +404,26 @@ function paint(root, app, U) {
       el('label', { class: 'field db-sel' }, el('span', { class: 'db-lbl', text: 'Size' }), bandSel),
       el('button', { class: 'fchip', type: 'button', 'data-k': 'human', 'aria-pressed': U.human, onclick: () => filt({ human: !U.human }) }, 'Human decisions'),
       el('button', { class: 'fchip', type: 'button', 'data-k': 'opencalls', 'aria-pressed': U.openCalls, onclick: () => filt({ openCalls: !U.openCalls }) }, 'Has open calls')));
-  const result = el('div', { class: 'db-result' }, el('p', { class: 'sub', 'aria-live': 'polite', text: `${list.length} of ${rows.length} funders` }),
-    hasFilter ? el('button', { class: 'linkbtn', type: 'button', 'data-k': 'clear', onclick: clearAll }, 'Clear filters') : null,
-    exportBtn.parentElement);
+  filters.id = 'db-filters';
+  filters.hidden = !U.filtersOpen;
+  /* the closed panel's state as removable chips: [data-k, label, undo] */
+  const actives = [];
+  if (U.status !== 'all') actives.push(['status', `Status: ${STATUS_LABEL[U.status] || U.status}`, () => filt({ status: 'all' })]);
+  for (const k of U.buckets) actives.push(['bk-' + k, `Category: ${D.BUCKETS[k] || k}`, () => filt({ buckets: toggleIn(U.buckets, k) })]);
+  if (U.criterion) actives.push(['crit', `Failed: ${CRITERIA.find((c) => c.key === U.criterion)?.label || U.criterion}`, () => filt({ criterion: '' })]);
+  if (U.org) actives.push(['org', `Type: ${orgLabel(U.org)}`, () => filt({ org: '' })]);
+  if (U.band) actives.push(['band', `Size: ${D.BANDS.find(([k]) => k === U.band)?.[1] || U.band}`, () => filt({ band: '' })]);
+  if (U.human) actives.push(['human', 'Human decisions', () => filt({ human: false })]);
+  if (U.queue) actives.push(['queue', 'In agent queue', () => filt({ queue: false })]);
+  if (U.openCalls) actives.push(['opencalls', 'Has open calls', () => filt({ openCalls: false })]);
+  const ftoggle = el('button', { class: 'btn db-ftoggle', type: 'button', 'data-k': 'ftoggle', 'aria-expanded': !!U.filtersOpen, 'aria-controls': 'db-filters',
+    'aria-label': nFilters ? `Filters, ${nFilters} active` : 'Filters', onclick: () => put({ filtersOpen: !U.filtersOpen }) },
+  el('span', { class: 'db-ficon', 'aria-hidden': 'true' }), el('span', { text: 'Filters' }), nFilters ? el('b', { class: 'db-fcount', text: String(nFilters) }) : null);
+  const activeRow = actives.length ? el('div', { class: 'db-actives', role: 'group', 'aria-label': 'Active filters' },
+    actives.map(([k, label, undo]) => el('button', { class: 'db-achip', type: 'button', 'data-k': 'x-' + k, 'aria-label': `Remove filter ${label}`, onclick: undo },
+      el('span', { text: label }), el('span', { class: 'db-x', 'aria-hidden': 'true', text: '×' }))),
+    el('button', { class: 'linkbtn db-reset-f', type: 'button', 'data-k': 'clear', onclick: clearAll }, 'Reset filters')) : null;
+  const count = el('p', { class: 'sub db-count', 'aria-live': 'polite', text: `${list.length} of ${rows.length} funders` });
 
   /* one row: the funder's category colour is the left rule (--bc from the bucket class) */
   const COLS = [
@@ -600,8 +619,15 @@ function paint(root, app, U) {
 
   const body = U.tab === 'calls' ? [callsIntro, callChips, callScope, callResult, callsBody]
     : U.tab === 'leads' ? [el('p', { class: 'sub db-intro', text: 'Leads are funders the discovery agent found outside the list. Queue one to have the agent check it at its next run; dismiss it to drop it.' }), leadsBody]
-      : [filters, result, table, more];
+      : [filters, table, more];
 
-  root.replaceChildren(el('div', { class: 'db' }, lockNote, strip, queueBar, tabs, el('section', { id: 'db-panel', class: 'db-panel', 'aria-label': 'Database' }, body.flat())));
-  if (focusKey) root.querySelector(`[data-k="${CSS.escape(focusKey)}"]`)?.focus({ preventScroll: true });
+  /* one toolbar row: tabs, Filters toggle, count and Export on the right (Funders only); active chips under it */
+  const bar = el('div', { class: 'db-toolbar' }, tabs, U.tab === 'funders' ? [ftoggle, count, exportBtn.parentElement] : null);
+  root.replaceChildren(el('div', { class: 'db' }, el('div', { class: 'db-meta' }, lockNote, queueBar), strip, bar, U.tab === 'funders' ? activeRow : null, el('section', { id: 'db-panel', class: 'db-panel', 'aria-label': 'Database' }, body.flat())));
+  if (focusKey) {
+    /* a removed chip / Reset filters is gone after the repaint: land on the next chip, else the Filters toggle */
+    const gone = /^x-|^clear$/.test(focusKey);
+    const t = root.querySelector(`[data-k="${CSS.escape(focusKey)}"]`) || (gone ? root.querySelector('.db-achip') || root.querySelector('[data-k="ftoggle"]') : null);
+    t?.focus({ preventScroll: true });
+  }
 }
