@@ -68,11 +68,13 @@ body[data-view="galaxy"] .pagehead p { margin-top: 0; font-size: var(--t-sm); }
   color: var(--ink-2); font-size: var(--t-sm); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline;
 }
 
-/* canvas: no wheel or drag capture; zoom is explicit */
+/* canvas: no wheel or drag capture; zoom is explicit. Drawn as a night sky in both themes: dashboard.css gives .gx-canvas the dark tokens,
+   and color is set here so the controls inside inherit the night ink instead of the page's */
 .gx-canvas {
   position: relative; height: clamp(420px, calc(100svh - var(--gx-off, 168px) - var(--gx-gap, 40px)), 980px); /* --gx-gap: breathing room under the map's bottom edge */ min-width: 0;
-  border: var(--hair); border-radius: var(--radius); background: var(--surface);
-  overflow: hidden; touch-action: pan-y; box-shadow: var(--shadow);
+  color: var(--ink); border: var(--hair); border-radius: var(--radius-lg);
+  background: radial-gradient(60rem 26rem at 88% -9rem, color-mix(in srgb, var(--sun) 14%, transparent), transparent 70%), radial-gradient(120% 100% at 50% 0%, color-mix(in srgb, var(--primary) 9%, var(--surface)), var(--bg) 78%);
+  overflow: hidden; touch-action: pan-y; box-shadow: 0 28px 56px -34px color-mix(in srgb, var(--bg) 75%, transparent), var(--edge);
 }
 .gx-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; }
 .gx-bg { fill: url(#gx-dots); }
@@ -103,7 +105,7 @@ body[data-view="galaxy"] .pagehead p { margin-top: 0; font-size: var(--t-sm); }
 .gx-node.is-candidate .gx-dot { fill: var(--surface); stroke: var(--bc, var(--ink-2)); stroke-width: 1.5; stroke-dasharray: 2 2; }
 .gx-node.is-screened, .gx-node.is-candidate { opacity: .78; }
 .gx-node .gx-ring { fill: none; stroke: var(--line); stroke-width: 1.25; }
-.gx-ring.ring-prime { stroke: var(--primary); stroke-width: 2; }
+.gx-ring.ring-prime { stroke: var(--primary); stroke-width: 2; filter: drop-shadow(0 0 5px color-mix(in srgb, var(--primary) 75%, transparent)); } /* prime fits glow */
 .gx-ring.ring-strong { stroke: var(--primary); stroke-opacity: .7; }
 .gx-ring.ring-possible { stroke: var(--muted); stroke-dasharray: 2 2; }
 .gx-ring.ring-long_shot, .gx-ring.ring-none { stroke: none; }
@@ -148,7 +150,7 @@ body[data-view="galaxy"] .pagehead p { margin-top: 0; font-size: var(--t-sm); }
 .gx-empty p { margin: 0; }
 
 /* key: the same shapes as the map */
-.gx-key { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-5); margin-top: var(--sp-1); padding: var(--sp-2) var(--sp-4); border: var(--hair-soft); border-radius: var(--radius-sm); color: var(--muted); font-size: var(--t-xs); }
+.gx-key { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-5); margin-top: var(--sp-2); padding: var(--sp-2) var(--sp-4); background: var(--surface); border: var(--hair); border-radius: var(--radius); box-shadow: var(--shadow-1), var(--edge); color: var(--muted); font-size: var(--t-xs); }
 .gx-kitem { display: inline-flex; align-items: center; gap: var(--sp-2); }
 .gx-kg { width: 32px; height: 24px; overflow: visible; flex: 0 0 auto; }
 .gx-key .gx-dot { fill: var(--ink-2); stroke: none; }
@@ -162,7 +164,7 @@ body[data-view="galaxy"] .pagehead p { margin-top: 0; font-size: var(--t-sm); }
 /* text alternative: same funders, grouped, as an aligned table-like grid. Columns: name | type | award | fit | status */
 .gx-alt { --gx-cols: minmax(0, 3.2fr) minmax(8.5rem, 1.1fr) minmax(6.5rem, .7fr) minmax(7.5rem, .8fr) 7.5rem; display: grid; gap: 0; min-width: 0; }
 .gx .gx-h { margin: var(--sp-5) 0 var(--sp-3); font: 600 var(--t-md)/1.3 var(--serif); }
-.gx-thead { display: grid; grid-template-columns: var(--gx-cols); gap: var(--sp-4); padding: 0 var(--sp-3) var(--sp-2); color: var(--muted); font-size: var(--t-xs); font-weight: 600; letter-spacing: .02em; text-transform: uppercase; }
+.gx-thead { display: grid; grid-template-columns: var(--gx-cols); gap: var(--sp-4); padding: 0 var(--sp-3) var(--sp-2); color: var(--muted); font-size: var(--t-xs); font-weight: 550; }
 .gx-thead > :last-child { text-align: right; }
 .gx-cl { border-top: var(--hair); padding: 0 0 var(--sp-2); min-width: 0; }
 .gx-cl summary {

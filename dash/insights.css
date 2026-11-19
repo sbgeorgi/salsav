@@ -17,8 +17,8 @@ body[data-view="insights"] .pagehead p { margin: 0; max-width: none; font-size: 
 .ins-head { min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .9rem; }
 .ins-head > * { margin: 0; }
 .ins-head .eyebrow { flex: none; }
-.ins-head h2 { font-family: var(--serif); font-size: var(--t-lg); line-height: 1.25; }
-.ins-take { flex: 1 1 28rem; font-family: var(--serif); font-size: 1.05rem; line-height: 1.4; color: var(--ink-2); font-weight: 500; text-wrap: pretty; }
+.ins-head h2 { font-family: var(--display); font-size: var(--t-lg); font-weight: 650; line-height: 1.25; letter-spacing: -.018em; }
+.ins-take { flex: 1 1 28rem; font-size: var(--t-md); line-height: 1.4; color: var(--ink-2); font-weight: 450; text-wrap: pretty; }
 .ins-body { min-width: 0; display: grid; gap: var(--sp-4); align-content: start; }
 .ins-body > .sub, .ins-sub .sub { line-height: 1.5; max-width: var(--measure); }
 .ins-sub { margin-bottom: var(--sp-3); display: grid; gap: 2px; }
@@ -38,7 +38,7 @@ body[data-view="insights"] .pagehead p { margin: 0; max-width: none; font-size: 
 .ins-split > * { min-width: 0; }
 .ins-map svg.viz { margin-bottom: 0; }
 .ins-zone { fill: var(--amber-soft); stroke: var(--amber); stroke-width: 1; stroke-dasharray: 3 3; pointer-events: none; }
-.ins-zone-t { fill: var(--amber); paint-order: stroke; stroke: var(--amber-soft); stroke-width: 3px; stroke-linejoin: round; font-size: 10px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; pointer-events: none; }
+.ins-zone-t { fill: var(--amber); paint-order: stroke; stroke: var(--amber-soft); stroke-width: 3px; stroke-linejoin: round; font-size: 11px; font-weight: 650; pointer-events: none; }
 .ins-legend { list-style: none; display: flex; flex-wrap: wrap; gap: .2rem 1.1rem; padding: 0; margin: 0; flex: 0 1 auto; font-size: var(--t-sm); color: var(--ink-2); }
 .ins-legend .gl { font-weight: 700; color: var(--bc); margin-right: .3rem; }
 .ins-undated { border-left: var(--hair); padding-left: var(--sp-4); max-height: var(--ins-mh, 30rem); overflow-y: auto; }

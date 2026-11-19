@@ -15,17 +15,17 @@ body[data-view="database"] .pagehead p { max-width: none; margin-top: 0; font-si
 .db-meta { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .db-meta > * { flex: 1 1 26rem; min-width: 0; }
 .db-meta > .db-lock { flex-grow: 2; }
-.db-lock { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-1) var(--sp-3); min-height: 40px; padding: 4px var(--sp-4); border: var(--hair); border-radius: var(--radius); }
+.db-lock { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-1) var(--sp-3); min-height: 40px; padding: 4px var(--sp-2) 4px var(--sp-4); background: var(--surface); border: var(--hair); border-radius: var(--radius); box-shadow: var(--shadow-1), var(--edge); }
 .db-lock p { flex: 1 1 14rem; min-width: 0; margin: 0; color: var(--muted); font-size: var(--t-xs); }
 .db-lock .btn { flex: none; min-height: 28px; }
 
 /* summary strip: each count is a filter */
-.db-strip { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: var(--hair); border-bottom: var(--hair); }
+.db-strip { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); background: var(--surface); border: var(--hair); border-radius: var(--radius); box-shadow: var(--shadow-1), var(--edge); overflow: hidden; }
 .db-stat { all: unset; box-sizing: border-box; display: flex; align-items: baseline; gap: var(--sp-2); min-width: 0; padding: var(--sp-2) var(--sp-4); border-right: var(--hair-soft); cursor: pointer; }
 .db-stat:last-child { border-right: 0; }
-.db-stat:hover { background: var(--surface-2); }
+.db-stat:hover { background: color-mix(in srgb, var(--primary) 5%, transparent); }
 .db-stat:focus-visible { outline: var(--focus); outline-offset: -2px; }
-.db-stat[aria-pressed="true"] { box-shadow: inset 0 -2px 0 var(--primary); }
+.db-stat[aria-pressed="true"] { background: var(--sunline) left bottom / 100% 3px no-repeat, var(--accent-soft); }
 .db-stat .big { font-size: var(--t-lg); line-height: 1.15; }
 .db-stat .l { color: var(--muted); font-size: var(--t-xs); }
 
@@ -61,9 +61,10 @@ body[data-view="database"] .pagehead p { max-width: none; margin-top: 0; font-si
 .db-tabs { justify-self: start; }
 .db-cn { display: inline-block; min-width: 1.5em; margin-left: .3em; padding: 0 .3em; border-radius: var(--r-pill); background: var(--surface-2); font-size: var(--t-xs); text-align: center; }
 button[aria-pressed="true"] > .db-cn { background: var(--primary-ink); color: var(--primary); }
+.db-tabs button[aria-pressed="true"] > .db-cn { background: var(--accent-soft); } /* the pressed tab is a raised thumb, not a filled chip */
 
 /* filters */
-.db-filters { display: grid; gap: var(--sp-3); padding: var(--sp-4) var(--sp-5); border: var(--hair); border-radius: var(--radius); }
+.db-filters { display: grid; gap: var(--sp-3); padding: var(--sp-4) var(--sp-5); background: var(--surface); border: var(--hair); border-radius: var(--radius); box-shadow: var(--shadow-1), var(--edge); }
 .db-frow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-3); }
 .db-frow--l { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); align-items: start; gap: var(--sp-2) var(--sp-4); }
 .db-frow--l > .db-lbl { padding-top: .45rem; }
@@ -80,9 +81,11 @@ button[aria-pressed="true"] > .db-cn { background: var(--primary-ink); color: va
 
 /* funder table */
 .db-wrap { min-width: 0; }
+/* desktop: the table is one panel. overflow: clip rounds the corners without becoming a scroll box, so the header still sticks to the page */
+@media (min-width: 901px) { .db-wrap:has(> .db-table) { background: var(--surface); border: var(--hair); border-radius: var(--radius-lg); box-shadow: var(--shadow-1), var(--edge); overflow: clip; } .db-table tbody tr:last-child > td { border-bottom: 0; } }
 .db-table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
 .db-table th, .db-table td { padding: 10px var(--sp-3); text-align: left; vertical-align: top; border-bottom: var(--hair-soft); }
-.db-table thead th { position: sticky; top: var(--topbar-h, 0px); z-index: 1; padding-block: var(--sp-2); vertical-align: middle; background: var(--bg); border-bottom: var(--hair); color: var(--muted); font-size: var(--t-xs); font-weight: 600; white-space: nowrap; }
+.db-table thead th { position: sticky; top: var(--topbar-h, 0px); z-index: 1; padding-block: var(--sp-2); vertical-align: middle; background: color-mix(in srgb, var(--surface-2) 45%, var(--surface)); border-bottom: var(--hair); color: var(--muted); font-size: var(--t-xs); font-weight: 550; white-space: nowrap; }
 .db-table thead .c-name { width: 19%; }
 .db-table thead .c-status { width: 8%; }
 .db-table thead .c-fit { width: 6%; }
@@ -117,8 +120,8 @@ button[aria-pressed="true"] > .db-cn { background: var(--primary-ink); color: va
 .db-table th[aria-sort="ascending"] .db-sort::after { border-bottom: 5px solid currentColor; opacity: 1; }
 .db-table th[aria-sort="descending"] .db-sort::after { border-top: 5px solid currentColor; opacity: 1; }
 .db-row td:first-child { box-shadow: inset 3px 0 0 var(--bc, transparent); }
-.db-row.is-open td { background: var(--surface-2); border-bottom-color: transparent; }
-.db-row:hover td { background: color-mix(in srgb, var(--surface-2) 60%, transparent); }
+.db-row.is-open td { background: color-mix(in srgb, var(--surface-2) 55%, var(--surface)); border-bottom-color: transparent; }
+.db-row:hover td { background: color-mix(in srgb, var(--primary) 4%, transparent); }
 
 .db-tog { all: unset; display: grid; gap: 6px; min-width: 0; max-width: 100%; cursor: pointer; }
 .db-tog:focus-visible { outline: var(--focus); outline-offset: 2px; border-radius: var(--radius-sm); }
@@ -144,7 +147,7 @@ button[aria-pressed="true"] > .db-cn { background: var(--primary-ink); color: va
 .db-reason.sub { color: var(--muted); }
 
 /* expanded row */
-.db-table tr.db-detail > td { padding: 0 var(--sp-5) var(--sp-5); background: var(--surface-2); border-bottom: var(--hair-soft); }
+.db-table tr.db-detail > td { padding: 0 var(--sp-5) var(--sp-5); background: color-mix(in srgb, var(--surface-2) 55%, var(--surface)); border-bottom: var(--hair-soft); }
 .db-open { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-6); padding-top: var(--sp-4); }
 .db-col { display: grid; gap: var(--sp-4); align-content: start; min-width: 0; }
 .db-section { display: grid; gap: var(--sp-2); min-width: 0; }

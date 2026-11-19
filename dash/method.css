@@ -10,7 +10,7 @@ body[data-view="method"] .pagehead p { margin-top: .3rem; }
 .msec { border-top: 1px solid var(--rule-strong); padding: 1.3rem 0 var(--sp-6); scroll-margin-top: calc(var(--topbar-h) + 1rem); }
 .mbody { min-width: 0; container-type: inline-size; }
 .mside > header { display: flex; align-items: baseline; gap: .8rem; margin-bottom: .6rem; }
-.msec h2 { font-family: var(--serif); font-size: var(--t-xl); line-height: 1.15; letter-spacing: -.01em; }
+.msec h2 { font-family: var(--display); font-size: var(--t-xl); font-weight: 650; line-height: 1.12; letter-spacing: -.024em; }
 .mnum { font-family: var(--serif); font-size: var(--t-xl); font-weight: 600; color: var(--accent); min-width: 1.2ch; font-variant-numeric: lining-nums; }
 .dash .mlede { max-width: var(--measure); color: var(--ink-2); margin-bottom: var(--sp-4); text-wrap: pretty; }
 .mnone { color: var(--muted); font-size: var(--t-sm); padding: .8rem 0; }
@@ -33,12 +33,12 @@ body[data-view="method"] .pagehead p { margin-top: .3rem; }
 .mtier--possible { border-top-color: var(--ochre); } .mtier--long_shot { border-top-style: dashed; }
 .mdim { padding: .9rem 0 var(--sp-4); border-top: var(--hair); }
 .mdim header { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .9rem; }
-.mdim h3 { font-family: var(--serif); font-size: var(--t-lg); }
+.mdim h3 { font-family: var(--display); font-size: var(--t-lg); font-weight: 650; letter-spacing: -.018em; }
 .mdim .mmax { font-family: var(--serif); font-weight: 600; color: var(--accent); }
 .dash .mdim > .sub { margin: .2rem 0 .5rem; font-size: var(--t-sm); }
 .mtbl { width: 100%; border-collapse: collapse; }
 .mtbl th, .mtbl td { text-align: left; padding: .5rem .8rem .5rem 0; border-bottom: var(--hair-soft); vertical-align: top; font-weight: 400; }
-.mtbl thead th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.mtbl thead th { font-size: var(--t-xs); color: var(--muted); font-weight: 550; white-space: nowrap; }
 .mtbl tbody th { font-weight: 600; width: 12rem; }
 .mdim .mtbl tbody th { width: 9rem; }
 .mtbl .pts { text-align: right; padding-right: 1.2rem; white-space: nowrap; }
@@ -53,7 +53,7 @@ body[data-view="method"] .pagehead p { margin-top: .3rem; }
 .mexh { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .8rem; }
 .mexh .num { font-family: var(--serif); font-weight: 600; color: var(--accent); }
 .mexl p { font-size: var(--t-sm); margin-top: .2rem; }
-.mexl blockquote { margin: .35rem 0 0; padding: .1rem 0 .1rem .8rem; border-left: 2px solid var(--rule-strong); color: var(--ink-2); font-family: var(--serif); font-size: var(--t-sm); font-style: italic; overflow-wrap: anywhere; }
+.mexl blockquote { margin: .35rem 0 0; padding: .1rem 0 .1rem .8rem; border-left: 2px solid var(--rule-strong); color: var(--ink-2); font-size: var(--t-sm); overflow-wrap: anywhere; }
 .mexl blockquote small { font-family: var(--font); font-style: normal; color: var(--muted); } .mexl blockquote small.ok { color: var(--ok-fg); }
 
 /* 3. ranking */

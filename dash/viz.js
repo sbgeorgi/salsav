@@ -53,7 +53,8 @@ export function ring(score, { size = 64, label = 'Fit', max = 100, tier = '' } =
   return svg(size, size, aria, body, 'viz-ring');
 }
 
-// Sparkline. values: numbers (non-numeric entries are skipped).
+let gid = 0; // gradient ids are shared by the whole document, so every sparkline gets its own
+// Sparkline with a fading area under the line. values: numbers (non-numeric entries are skipped).
 export function spark(values, { w = 120, h = 28, label = 'Trend' } = {}) {
   const v = (Array.isArray(values) ? values : []).filter(isNum).map(Number);
   const pad = 3;
@@ -61,7 +62,9 @@ export function spark(values, { w = 120, h = 28, label = 'Trend' } = {}) {
   const lo = Math.min(...v), hi = Math.max(...v), span = hi - lo || 1, last = v.length - 1;
   const X = (i) => r2(v.length === 1 ? w - pad : pad + ((w - 2 * pad) * i) / last);
   const Y = (y) => r2(hi === lo ? h / 2 : h - pad - ((h - 2 * pad) * (y - lo)) / span);
-  const body = (v.length > 1 ? `<polyline class="viz-line" fill="none" points="${v.map((y, i) => `${X(i)},${Y(y)}`).join(' ')}"/>` : '') +
+  const pts = v.map((y, i) => `${X(i)},${Y(y)}`).join(' '), g = `vzg${++gid}`;
+  const body = (v.length > 1 ? `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop class="viz-g viz-g0" offset="0"/><stop class="viz-g viz-g1" offset="1"/></linearGradient></defs>` +
+    `<polygon class="viz-area" fill="url(#${g})" points="${pts} ${X(last)},${h} ${X(0)},${h}"/><polyline class="viz-line" fill="none" points="${pts}"/>` : '') +
     `<circle class="viz-dot" cx="${X(last)}" cy="${Y(v[last])}" r="2.5"/>`;
   return svg(w, h, `${label}: ${v.length} points, from ${r2(v[0])} to ${r2(v[last])}, low ${r2(lo)}, high ${r2(hi)}`, body, 'viz-spark');
 }

@@ -96,7 +96,7 @@
 
 /* popover menu (identity, row actions); not the Saved menu, which keeps .menu */
 .umenu-wrap { position: relative; display: inline-block; }
-.umenu { position: absolute; z-index: 45; right: 0; top: calc(100% + 6px); min-width: 200px; margin: 0; padding: .3rem; list-style: none; background: var(--surface); border: var(--hair); border-radius: var(--radius-sm); box-shadow: var(--shadow); }
+.umenu { position: absolute; z-index: 45; right: 0; top: calc(100% + 6px); min-width: 200px; margin: 0; padding: .3rem; list-style: none; background: var(--surface); border: var(--hair); border-radius: 12px; box-shadow: var(--shadow); }
 .umenu[hidden] { display: none; }
 .umenu-item { all: unset; box-sizing: border-box; display: block; width: 100%; min-height: 32px; padding: 0 .65rem; border-radius: var(--r-xs); cursor: pointer; color: var(--ink); font-size: var(--t-sm); line-height: 32px; white-space: nowrap; }
 .umenu-item:hover, .umenu-item:focus-visible { background: var(--accent-soft); outline: var(--focus); outline-offset: -2px; }

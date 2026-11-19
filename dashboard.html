@@ -9,7 +9,7 @@
 <link rel="icon" href="static/salsa-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Geist:wght@400..700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="dashboard.css">
 <link rel="stylesheet" href="dash/viz.css">
 <link rel="stylesheet" href="dash/ui.css">
@@ -464,7 +464,7 @@ function renderKpis() {
     el('span', { class: 'l', text: t.l }), el('span', { class: 'n num', text: t.n }), el('small', { text: t.sub }),
     el('span', { class: 'sp' }, t.sp && S.scope === 'all' && svgEl(spark(t.sp, { w: 200, h: 40, label: `${t.l}, last ${t.sp.length} days` }))))));
   S.kpi = k;
-  $('#ovSum').textContent = `${num(k.applyNow)} to apply now, ${num(k.closing30)} closing in 30 days, ${D.money(p.usd)} in play${S.scope === 'filtered' ? ', counted from current filters' : ''}`;
+  $('#ovSum').replaceChildren(el('b', { class: 'num', text: num(k.applyNow) }), ' to apply now, ', el('b', { class: 'num', text: num(k.closing30) }), ' closing in 30 days, ', el('b', { class: 'num', text: D.money(p.usd) }), ` in play${S.scope === 'filtered' ? ', counted from current filters' : ''}`);
 }
 const hzScale = (cw) => (cw >= 1100 ? 1.25 : cw >= 800 ? 1.12 : 1); // the chart is drawn narrower and scaled up with the box, so wide screens get taller dots, labels and rows
 function renderHorizon() {

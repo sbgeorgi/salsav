@@ -6,10 +6,10 @@
 .bannounce { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* summary: one strip, three cells split by hairlines; each cell reads "106 | not started / Recommended first" */
-.bstats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: var(--surface); border: var(--hair-soft); border-radius: var(--radius); }
+.bstats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: var(--surface); border: var(--hair); border-radius: var(--radius); box-shadow: var(--shadow-1), var(--edge); }
 .bstat { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; column-gap: var(--sp-3); align-content: center; min-width: 0; padding: var(--sp-3) var(--sp-5); }
 .bstat + .bstat { border-left: var(--hair-soft); }
-.bstat-n { grid-row: 1 / 3; align-self: center; min-width: 1.6ch; font-family: var(--serif); font-size: var(--t-xl); font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums lining-nums; color: var(--ink); }
+.bstat-n { grid-row: 1 / 3; align-self: center; min-width: 1.6ch; font-family: var(--display); font-size: var(--t-xl); font-weight: 650; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums lining-nums; color: var(--ink); }
 .bstat-l { align-self: end; font-size: var(--t-sm); font-weight: 600; line-height: 1.3; color: var(--ink-2); }
 .bstat-s { font-size: var(--t-xs); line-height: 1.3; color: var(--muted); overflow-wrap: anywhere; }
 
@@ -50,9 +50,9 @@
 .bmore { justify-self: start; }
 
 /* card: category colour on the left edge, name and program clamp to two lines */
-.bcard { position: relative; container-type: inline-size; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; gap: var(--sp-2); min-width: 0; padding: var(--sp-3); background: var(--surface); border: var(--hair); border-left: 3px solid var(--bc, var(--muted)); border-radius: var(--radius-sm); box-shadow: 0 1px 0 var(--line-soft); transition: border-color var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+.bcard { position: relative; container-type: inline-size; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; gap: var(--sp-2); min-width: 0; padding: var(--sp-3); background: var(--surface); border: var(--hair); border-left: 3px solid var(--bc, var(--muted)); border-radius: 12px; box-shadow: var(--shadow-1), var(--edge); transition: border-color var(--dur) var(--ease), box-shadow var(--dur-slow) var(--ease), opacity var(--dur) var(--ease); }
 .bcard > *, .bcard > .rl, .bcard > .bnotes { grid-column: 1 / -1; min-width: 0; } /* .rl and .bnotes reset themselves with all: unset, so they are named */
-.bcard:hover { border-color: var(--rule-strong); border-left-color: var(--bc, var(--muted)); }
+.bcard:hover { border-color: var(--rule-strong); border-left-color: var(--bc, var(--muted)); box-shadow: var(--shadow-2), var(--edge); }
 .bcard.is-dragging { opacity: .4; }
 .bcard.is-closed .rl { color: var(--muted); }
 .bcard-top { display: grid; grid-auto-flow: column; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 2px var(--sp-2); min-width: 0; font-size: var(--t-xs); }
@@ -108,7 +108,7 @@
 .bghost b { font-size: var(--t-sm); color: var(--ink); overflow-wrap: anywhere; }
 
 /* activity: a disclosure below the board on narrow screens, always open below the board on wide ones */
-.bact { display: grid; gap: var(--sp-3); min-width: 0; padding: var(--sp-4) var(--sp-5); background: var(--surface); border: var(--hair); border-radius: var(--radius); }
+.bact { display: grid; gap: var(--sp-3); min-width: 0; padding: var(--sp-4) var(--sp-5); background: var(--surface); border: var(--hair); border-radius: var(--radius); box-shadow: var(--shadow-1), var(--edge); }
 .bact-head { display: flex; align-items: center; gap: var(--sp-2); min-width: 0; }
 .bact-head h2 { font-size: var(--t-md); }
 .bact-n { font-size: var(--t-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -116,9 +116,9 @@
 .bact-body { min-width: 0; }
 .bact-grid { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: var(--sp-5); align-items: start; }
 .bact-tools { display: grid; gap: var(--sp-3); align-content: start; min-width: 0; }
-.bact-tools .seg { display: flex; flex-wrap: wrap; gap: var(--sp-1); border: 0; overflow: visible; background: transparent; }
+.bact-tools .seg { display: flex; flex-wrap: wrap; gap: var(--sp-1); padding: 0; border: 0; overflow: visible; background: transparent; }
 .bact-tools .seg button { min-height: 32px; border: var(--hair); border-radius: var(--r-pill); padding: 0 .6rem; font-size: var(--t-xs); color: var(--ink-2); }
-.bact-tools .seg button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.bact-tools .seg button[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); box-shadow: none; }
 .bact-tools .bfield { min-width: 0; }
 .bact-main { min-width: 0; display: grid; gap: var(--sp-3); }
 @media (min-width: 1101px) { /* a long feed reads in columns instead of one 1300px line */

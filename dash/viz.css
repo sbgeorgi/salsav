@@ -8,7 +8,7 @@
 .viz-muted { fill: var(--muted); }
 .viz-strong { font-weight: 600; }
 .viz-num { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1; }
-.viz-big { font-family: var(--serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif); font-weight: 600; letter-spacing: 0; }
+.viz-big { font-family: var(--display, var(--font)); font-weight: 650; letter-spacing: -.02em; }
 .viz-on { fill: var(--primary-ink); font-weight: 600; }
 .viz-halo { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
 
@@ -20,6 +20,7 @@
 .viz-ring-track { fill: none; stroke: var(--surface-2); }
 .viz-line { stroke: var(--primary); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
 .viz-dot { fill: var(--primary); }
+.viz-g { stop-color: var(--primary); } .viz-g0 { stop-opacity: .24; } .viz-g1 { stop-opacity: 0; } /* the fade under a sparkline */
 
 /* hues */
 .viz-b-us_federal { --c: var(--b-us_federal); }
