@@ -163,9 +163,14 @@ t('recommend(): exclusions and reasons', () => {
   assert.ok(!rec[1].reasons.includes('Nobody owns it yet')); // Dryland has an owner
   assert.deepEqual(D.recommend([], NOW), []);
 });
-t('normalize: team fields come only from the team map, a feed row carrying its own team object is ignored', () => {
-  const R = D.normalize({ funders: [{ ...row({ id: 'leak' }), team: { state: 'applying', owner: 'Ana', notes: 'private' } }] }, NOW, {});
-  assert.equal(R[0].team.state, 'new'); assert.equal(R[0].team.owner, ''); assert.equal(R[0].team.notes, '');
+t('normalize: a locked viewer gets state, owner and ask from the feed row but never notes, and the team map wins', () => {
+  const f = { ...row({ id: 'pub' }), team: { state: 'reviewing', owner: 'Ana', ask_usd: 5e4, notes: 'private' } };
+  const [a] = D.normalize({ funders: [f] }, NOW, {});
+  assert.equal(a.team.state, 'reviewing'); assert.equal(a.team.owner, 'Ana'); assert.equal(a.team.ask_usd, 5e4); assert.equal(a.team.notes, '');
+  const [b] = D.normalize({ funders: [f] }, NOW, { pub: { state: 'applying', owner: '', notes: 'n' } });
+  assert.equal(b.team.state, 'applying'); assert.equal(b.team.owner, ''); assert.equal(b.team.ask_usd, 5e4); assert.equal(b.team.notes, 'n');
+  const [c] = D.normalize({ funders: [row({ id: 'bare', team: undefined })] }, NOW, {});
+  assert.deepEqual(c.team, { state: 'new', owner: '', ask_usd: null, notes: '' });
 });
 
 t('normalize adds _lane, _tier, _evid and team.ask_usd', () => {

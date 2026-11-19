@@ -194,7 +194,8 @@ export function normalize(feed, now = new Date(), team = {}) {
   for (const c of changes) (by.get(c.funder_id) || by.set(c.funder_id, []).get(c.funder_id)).push(c);
   const week = now.getTime() - 7 * 864e5;
   return (feed?.funders || []).map((f) => {
-    const t = { state: 'new', owner: '', ask_usd: null, notes: '', ...(team[f.id] || {}) }; // team fields come from the team map only (the public feed does not carry them)
+    // the public feed carries state, owner and ask for every listed funder, so a locked viewer sees the team's status; notes come only from the team map (passcode)
+    const t = { state: f.team?.state || 'new', owner: f.team?.owner || '', ask_usd: f.team?.ask_usd ?? null, notes: '', ...(team[f.id] || {}) };
     const days = daysLeft(f.deadline, now);
     const state = deadlineState(f, now, minDays);
     const ch = by.get(f.id) || [];
