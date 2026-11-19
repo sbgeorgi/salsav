@@ -8,7 +8,7 @@
 .viz-muted { fill: var(--muted); }
 .viz-strong { font-weight: 600; }
 .viz-num { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1; }
-.viz-big { font-family: var(--serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif); font-weight: 600; letter-spacing: 0; }
+.viz-big { font-family: var(--display, var(--font)); font-weight: 650; letter-spacing: -.02em; }
 .viz-on { fill: var(--primary-ink); font-weight: 600; }
 .viz-halo { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
 
@@ -20,6 +20,7 @@
 .viz-ring-track { fill: none; stroke: var(--surface-2); }
 .viz-line { stroke: var(--primary); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
 .viz-dot { fill: var(--primary); }
+.viz-g { stop-color: var(--primary); } .viz-g0 { stop-opacity: .24; } .viz-g1 { stop-opacity: 0; } /* the fade under a sparkline */
 
 /* hues */
 .viz-b-us_federal { --c: var(--b-us_federal); }
@@ -31,8 +32,8 @@
 .viz-s0 { --c: var(--primary); }
 .viz-s1 { --c: var(--terra); }
 .viz-s2 { --c: var(--warn-fg); }
-.viz-s3 { --c: var(--b-us_federal); }
-.viz-s4 { --c: var(--b-foundation_ngo); }
+.viz-s3 { --c: color-mix(in srgb, var(--ink) 62%, var(--surface)); } /* ordinal series (fit tiers, award bands, lenses): neutral ink ramp, never a bucket hue */
+.viz-s4 { --c: color-mix(in srgb, var(--ink) 40%, var(--surface)); }
 .viz-s5 { --c: var(--muted); }
 /* funnel: one hue, deepening with each stage */
 .viz-f0 { --c: color-mix(in srgb, var(--primary) 40%, var(--surface)); }
@@ -61,13 +62,17 @@
 .viz-ring-arc.viz-t-long_shot { stroke: var(--muted); }
 
 /* interactive marks: callers attach handlers to [data-id]; keyboard focus shows a ring */
-.viz [data-id]:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.viz [data-id]:focus-visible:not(.viz-mark) { outline: 2px solid var(--ring); outline-offset: 2px; }
 .viz-row:hover .viz-fill, .viz-seg:hover .viz-fill { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   .viz-fill, .viz-mark, .viz-ring-arc { transition: none; }
 }
 .viz-hit { fill: transparent; }
+/* scatter mark: the focus ring goes on the drawn shape, not on the group's bounding box (which includes the transparent .viz-tap) */
+.viz-tap { fill: transparent; stroke: none; cursor: pointer; }
+.dash .viz-mark:focus { outline: none; }
+.viz-mark:focus-visible > :is(circle, rect, path):not(.viz-tap) { stroke: var(--ring); stroke-width: 2px; }
 
 /* deadline horizon (dash/horizon.js), on the Radar page and in Insights */
 .hz { width: 100%; }
@@ -81,5 +86,8 @@
 .hz .dot.dq { fill: var(--surface); stroke: var(--c, var(--primary)); stroke-width: 1.6; }
 .hz .dot.uv { fill: var(--surface); stroke: var(--c, var(--primary)); stroke-width: 1.6; stroke-dasharray: 2.4 1.6; }
 .hz .dot:hover { stroke: var(--ink); stroke-width: 1.5; }
+.viz.hz .dot:focus { outline: none; }
+.hz .dot:focus-visible { stroke: var(--ring); stroke-width: 2.4px; }
+.hz .hz-tap { fill: transparent; stroke: none; cursor: pointer; }
 .hz-empty { color: var(--muted); font-size: var(--t-sm); margin: 0; padding: var(--sp-3) 0; }
 @media (prefers-reduced-motion: reduce) { .hz .dot { transition: none; } }

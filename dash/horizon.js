@@ -34,13 +34,20 @@ export function horizon(rows, { w = 600, now = new Date(), minDays = 14, onOpen 
   const next = items.find((r) => r._days >= 0), nu = items.filter((r) => r._uv).length, nf = items.length - nu;
   const svg = sv('svg', { class: 'viz hz', viewBox: `0 0 ${w} ${H}`, width: w, role: 'group', 'aria-label': `Deadlines over the next 12 months: ${nf} ${nf === 1 ? 'funder' : 'funders'}${nu ? `, ${nu} unverified ${nu === 1 ? 'call' : 'calls'}` : ''}${next ? `, first ${next.name}, ${countdown(next._days)}` : ''}.` });
   svg.append(sv('rect', { class: 'cut', x: xs(0), y: 14, width: xs(minDays) - xs(0), height: ay - 14 }), sv('line', { class: 'axis', x1: P, x2: w - P, y1: ay, y2: ay }));
-  monthStarts(now).forEach(([d, dt], i) => svg.append(sv('line', { class: 'axis', x1: xs(d), x2: xs(d), y1: ay, y2: ay + 5 }), i % (w < 600 ? 3 : 1) === 0 && xs(d) + 24 < w ? sv('text', { x: xs(d) + 2, y: ay + 18 }, dt.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short' }) + (dt.getUTCMonth() === 0 ? ` '${String(dt.getUTCFullYear()).slice(2)}` : '')) : null));
+  monthStarts(now).forEach(([d, dt], i) => svg.append(sv('line', { class: 'axis', x1: xs(d), x2: xs(d), y1: ay, y2: ay + 5 }), ...(i % (w < 600 ? 3 : 1) === 0 && xs(d) + 24 < w ? [sv('text', { x: xs(d) + 2, y: ay + 18 }, dt.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short' }) + (dt.getUTCMonth() === 0 ? ` '${String(dt.getUTCFullYear()).slice(2)}` : ''))] : [])));
   svg.append(sv('line', { class: 'today', x1: xs(0), x2: xs(0), y1: 14, y2: ay }), sv('text', { class: 'ink', x: xs(0) + 4, y: 10 }, 'Today', sv('tspan', { class: 'mu' }, `  ${minDays}-day cutoff`)));
-  for (const p of pts) {
+  // Pointer target under each dot: 24px, 44px at phone or coarse, shortened so it never reaches another dot. The dot keeps the only focus stop.
+  // Dots this close (phone, dense rows) keep a smaller target; the radar table row for the same funder is the equivalent control.
+  const tapR = (typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches ? 46 : 26) / 2;
+  const at = pts.map((p) => [p.x, ay - 8 - p.n * STEP]);
+  pts.forEach((p, i) => {
     const r = p.r, when = r.deadline ? `${fmtDate(r.deadline)}, ${countdown(r._days)}` : countdown(r._days), what = r._uv ? `${r.name}, unverified call: ${r.title}` : r.name;
-    const c = sv('circle', { class: 'dot' + (r._uv ? ' uv' : r._dq ? ' dq' : ''), cx: p.x, cy: ay - 8 - p.n * STEP, r: 4.6, style: `--c:var(--b-${r.bucket in BUCKETS ? r.bucket : 'tracker'})`, 'data-id': r.id, tabindex: 0, role: 'button', 'aria-label': `${what}, ${when}. Press Enter for details.` }, sv('title', {}, `${what}\n${when}`));
+    const cap = at.reduce((c, q, j) => (j === i ? c : Math.min(c, Math.hypot(at[i][0] - q[0], at[i][1] - q[1]) - 4.6 - 1.5)), Infinity);
+    const tap = sv('circle', { class: 'hz-tap', cx: at[i][0], cy: at[i][1], r: Math.max(0, Math.min(tapR, cap)), 'aria-hidden': 'true' });
+    const c = sv('circle', { class: 'dot' + (r._uv ? ' uv' : r._dq ? ' dq' : ''), cx: p.x, cy: at[i][1], r: 4.6, style: `--c:var(--b-${r.bucket in BUCKETS ? r.bucket : 'tracker'})`, 'data-id': r.id, tabindex: 0, role: 'button', 'aria-label': `${what}, ${when}. Press Enter for details.` }, sv('title', {}, `${what}\n${when}`));
+    tap.addEventListener('click', () => onOpen(r.id));
     c.addEventListener('click', () => onOpen(r.id)); c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(r.id); } });
-    svg.append(c);
-  }
+    svg.append(tap, c);
+  });
   return svg;
 }

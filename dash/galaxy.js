@@ -1,0 +1,1006 @@
+/* Galaxy view: a calm map of the funder landscape (tracked, screened out, candidates).
+   The model, grouping, filter and layout are pure (no DOM at import) and covered by dash/galaxy.test.mjs.
+   The view builds SVG with createElementNS and text nodes only; funder text never reaches innerHTML. */
+import { BUCKETS, BANDS, GEOS, UA, UNSCORED, STATE_LABELS, amountBand, amountRange, geoGroups, fitTier, isProgressed, collectionOf, daysLeft, countdown, fmtDate, money } from '../dashboard.js';
+import { bucketDot, statusChip, stateChip } from './ui.js';
+
+/* ---------- constants ---------- */
+export const GROUPS = [['concept', 'Concept'], ['type', 'Organization type'], ['size', 'Funding size'], ['region', 'Region'], ['stage', 'Pipeline stage']];
+export { nodeRadius as galaxyRadius, groupOf as galaxyKey };
+export const TIERS = [['prime', 'Prime fit'], ['strong', 'Strong fit'], ['possible', 'Possible'], ['long_shot', 'Long shot'], ['none', UNSCORED]];
+export const STAGE_LABEL = { ...STATE_LABELS, candidate: 'Candidate', screened: 'Screened out' };
+const BAND_LABEL = Object.fromEntries(BANDS);
+const TIER_LABEL = Object.fromEntries(TIERS);
+const GEO_ORDER = ['sw', 'us', 'intl', 'global'];
+const UA_KEYS = ['eligible', 'eligible_with_partner', 'invitation_only', 'unlikely', 'unknown'];
+const OTHER = 'c:other';
+// generic research, partnership and programme words: they describe how a funder works, not what it funds, so they never
+// name a cluster or link two clusters (on live data "research" and "international partnerships" pulled unrelated funders in)
+const GENERIC = new Set(['research', 'agricultural research', 'innovation', 'international partnerships', 'partnerships', 'programs', 'youth programming', 'summer programs', 'funding', 'equity & inclusion']);
+const topics = (it) => (it.themes || []).filter((t) => !GENERIC.has(t));
+const MAX_CONCEPTS = 8;
+const MIN_GROUP = 3; // a concept needs this many funders to stand as its own cluster once the map is crowded
+const KW_TOP = 10;
+const ROWS_FIRST = 8;
+const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+const PHONE_SHRINK = 0.78;
+const FIT_MAX = 1.35, FIT_WIDE = 1.8; // a roomy (wide) canvas scales the packing up further; phone frames keep label clearance
+const R_MIN = 4.5, R_MAX = 13, LOG_LO = 4.5, LOG_HI = 7.5;
+
+const cmp = (a, b) => (String(a) < String(b) ? -1 : String(a) > String(b) ? 1 : 0);
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+const r2 = (v) => Math.round(v * 100) / 100;
+const arr = (v) => (Array.isArray(v) ? v : []);
+const bucketOf = (b) => (b && Object.prototype.hasOwnProperty.call(BUCKETS, b) ? b : 'tracker');
+const themeKey = (t) => String(t || '').trim().replace(/\s+/g, ' ').toLowerCase();
+const awardOf = (it) => (it.award_max_usd == null || !Number.isFinite(+it.award_max_usd) ? -1 : +it.award_max_usd);
+const byAward = (a, b) => awardOf(b) - awardOf(a) || cmp(a.id, b.id);
+const pairKey = (a, b) => (a < b ? `${a}\n${b}` : `${b}\n${a}`);
+export const capLabel = (s) => { const t = String(s || '').trim(); return t ? t.charAt(0).toUpperCase() + t.slice(1) : ''; };
+
+/* node radius: log scale of the published maximum award, floor for unknown amounts */
+export function nodeRadius(award) {
+  if (award == null || !Number.isFinite(+award) || +award <= 0) return R_MIN;
+  const t = clamp((Math.log10(+award) - LOG_LO) / (LOG_HI - LOG_LO), 0, 1);
+  return r2(R_MIN + (R_MAX - R_MIN) * t);
+}
+
+/* ---------- model: one item per funder, tracked (feed rows) or screened/candidate (registry) ---------- */
+function toItem(f, tracked, rubric) {
+  const themes = [...new Set(arr(f.themes).map(themeKey).filter(Boolean))];
+  const gs = geoGroups({ geography: arr(f.geography) });
+  const geos = GEO_ORDER.filter((g) => gs.has(g));
+  const tier = fitTier(f.fit_score, rubric);
+  const status = tracked ? 'vetted' : f.status === 'candidate' ? 'candidate' : 'rejected';
+  const teamState = f.team?.state ?? f.team_state ?? null;
+  const stage = tracked ? (teamState || 'new') : status === 'candidate' ? 'candidate' : 'screened';
+  const calls = Number(f.calls_open ?? collectionOf(f).open_calls ?? 0);
+  const deadline = f.next_deadline ?? f.deadline ?? null;
+  const name = String(f.name || 'Unnamed funder');
+  const bucket = bucketOf(f.bucket);
+  const ua = f.ua_eligibility || 'unknown';
+  const hay = [name, f.program, themes.join(' '), arr(f.geography).join(' '), BUCKETS[bucket], STAGE_LABEL[stage], UA[ua]].filter(Boolean).join(' ').toLowerCase();
+  return {
+    id: f.id, name, program: String(f.program || ''), bucket, status, tracked: !!tracked, stage,
+    inPipeline: !!tracked && isProgressed(teamState), themes, geos, geography: arr(f.geography).map(String),
+    award_min_usd: f.award_min_usd ?? null, award_max_usd: f.award_max_usd ?? null, band: amountBand(f),
+    fit_score: f.fit_score ?? null, tier: tier ? tier.key : 'none', tierLabel: tier ? tier.label : UNSCORED,
+    ua_eligibility: ua, open_calls: calls > 0, deadline, cycle: f.cycle || null, hay,
+    queued: (f.queue ?? f._queue) === 'pending', // a promoted funder waiting for the discovery agent (registry queue, or the shell's _queue on a tracked row)
+  };
+}
+
+/* rows: normalized feed rows (tracked). registry: grants_registry() (screened, candidates, and any vetted id the feed lacks). */
+export function galaxyItems(rows = [], registry = null, { rubric = null } = {}) {
+  const out = [], seen = new Set();
+  const add = (f, tracked) => {
+    if (!f || f.id == null || seen.has(f.id)) return;
+    seen.add(f.id); out.push(toItem(f, tracked, rubric));
+  };
+  for (const r of rows || []) add(r, true);
+  for (const f of registry?.funders || []) add(f, f.status === 'vetted');
+  return out;
+}
+
+/* ---------- grouping: the key and label of an item for one group-by mode ---------- */
+export function groupOf(it, mode) {
+  if (mode === 'type') return { key: `t:${it.bucket}`, label: BUCKETS[it.bucket] || 'Trackers', also: [] };
+  if (mode === 'size') return { key: `s:${it.band}`, label: BAND_LABEL[it.band] || 'Unverified', also: [] };
+  if (mode === 'region') {
+    const g = GEO_ORDER.find((k) => it.geos.includes(k));
+    return g ? { key: `r:${g}`, label: GEOS[g], also: [] } : { key: 'r:none', label: 'Region not stated', also: [] };
+  }
+  if (mode === 'stage') return { key: `p:${it.stage}`, label: STAGE_LABEL[it.stage] || capLabel(it.stage), also: [] };
+  const [first, ...rest] = topics(it);
+  if (!first) return { key: 'c:none', label: 'Unthemed', also: [] };
+  return { key: `c:${first}`, label: capLabel(first), also: rest.map((t) => `c:${t}`) };
+}
+
+/* ---------- layout: deterministic, pure. Clusters are packed and relaxed; nodes sit in their cluster by a sunflower spiral. ---------- */
+export function galaxyLayout(items = [], { groupBy = 'concept', width = 960, height = 600 } = {}) {
+  const W = Math.max(160, Number(width) || 960), H = Math.max(160, Number(height) || 600);
+  const MT = 34, MB = 14, ML = 14, MR = 14, GAP = 22; // GAP: room between halos for their labels
+  const list = (items || []).filter((it) => it && it.id != null).sort((a, b) => cmp(a.id, b.id));
+  const keyed = list.map((it) => ({ it, g: groupOf(it, groupBy) }));
+  // many concepts: a concept needs MIN_GROUP funders to stand as its own cluster. A funder joins a named concept only through
+  // its own themes, primary first (its primary theme if named, else its first named secondary theme). Keyword chains are not
+  // followed: a funder that links to a cluster only through a third funder's theme is not placed by that link.
+  const counts = new Map(), labelOf = new Map();
+  for (const { g } of keyed) { counts.set(g.key, (counts.get(g.key) || 0) + 1); labelOf.set(g.key, g.label); }
+  const crowded = groupBy === 'concept' && counts.size > MAX_CONCEPTS;
+  const named = (k) => counts.get(k) >= MIN_GROUP && k !== 'c:none';
+  const home = (k) => (!crowded || named(k) ? k : null); // null: not a named concept of its own
+  const keyOf = (g) => home(g.key) || g.also.find(named) || null;
+  // first pass: a funder that a named concept reaches through its own themes keeps that cluster. Second pass: a funder no named concept reaches
+  // joins the concept one of its themes spells out (byName), else the cluster whose members share the most themes with it (tie:
+  // the cluster where its organisation class is most common). A shared funder name or programme word is not a topic, so a funder
+  // that shares no theme stays in Other.
+  const seeds = new Map(), unplaced = [];
+  for (const { it, g } of keyed) {
+    const k = keyOf(g);
+    if (k) { if (!seeds.has(k)) seeds.set(k, []); seeds.get(k).push(it); } else unplaced.push(it);
+  }
+  const profile = new Map([...seeds].sort(([a], [b]) => cmp(a, b)).map(([k, members]) => [k, {
+    themes: new Set(members.flatMap(topics)),
+    stems: (String(labelOf.get(k) || '').toLowerCase().match(/[a-z]{4,}/g) || []).map((w) => w.slice(0, 6)),
+    bucket: members.reduce((c, m) => c.set(m.bucket, (c.get(m.bucket) || 0) + 1), new Map()),
+  }]));
+  // a theme that spells out a concept's name ("water conservation" for Water) places the funder there, themes in order. A theme
+  // that names three or more concepts is a list of everything (an aggregator), not a topic.
+  // shortcut: word-start match on the concept label, move to a theme vocabulary in the data if labels gain ambiguous words
+  const byName = (it) => {
+    for (const t of topics(it)) {
+      const ws = t.match(/[a-z]{4,}/g) || [];
+      const hits = [...profile].map(([k, p]) => [k, p.stems.filter((s) => ws.some((w) => w.startsWith(s))).length, p.bucket.get(it.bucket) || 0]).filter((h) => h[1]);
+      if (!hits.length || hits.length > 2) continue;
+      return hits.sort((a, b) => b[1] - a[1] || b[2] - a[2])[0][0]; // stable sort over key-sorted profile: equal hits keep key order
+    }
+    return null;
+  };
+  const bestFor = (it) => {
+    let best = OTHER, score = 0, cls = 0;
+    for (const [k, p] of profile) {
+      const th = topics(it).filter((t) => p.themes.has(t)).length;
+      if (!th) continue; // no shared theme: name and programme words join nothing
+      const c = p.bucket.get(it.bucket) || 0;
+      if (th > score || (th === score && c > cls)) { best = k; score = th; cls = c; }
+    }
+    return best;
+  };
+
+  const byKey = new Map();
+  const put = (k, it) => {
+    if (!byKey.has(k)) byKey.set(k, { key: k, label: k === OTHER ? 'Other concepts' : labelOf.get(k), items: [] });
+    byKey.get(k).items.push(it);
+  };
+  for (const [k, members] of seeds) for (const it of members) put(k, it);
+  for (const it of unplaced) put(byName(it) || bestFor(it), it);
+  const clusters = [...byKey.values()].map((c) => ({
+    key: c.key, label: c.label, items: c.items.slice().sort(byAward), n: c.items.length,
+    total: c.items.reduce((s, it) => s + Math.max(0, +it.award_max_usd || 0), 0),
+  })).sort((a, b) => b.n - a.n || b.total - a.total || cmp(a.key, b.key));
+  const n = clusters.length;
+  if (!n) return { width: W, height: H, clusters: [], nodes: [], links: [] };
+
+  // related clusters: items that carry a second concept link their clusters
+  const index = new Map(clusters.map((c, i) => [c.key, i]));
+  const alsoOf = new Map(), linkMap = new Map();
+  for (const { it, g } of keyed) {
+    const a = keyOf(g), out = [];
+    for (const raw of g.also) { const k = home(raw); if (k !== a && index.has(k) && !out.includes(k)) out.push(k); }
+    alsoOf.set(it.id, out);
+    for (const b of out) {
+      const p = pairKey(a, b);
+      const e = linkMap.get(p) || { a: a < b ? a : b, b: a < b ? b : a, w: 0 };
+      e.w += 1; linkMap.set(p, e);
+    }
+  }
+
+  // cluster radius from its size; if the total area would crowd the canvas, shrink all clusters evenly
+  let R = clusters.map((c) => 20 + 11 * Math.sqrt(c.n));
+  const used = R.reduce((s, r) => s + Math.PI * r * r, 0), budget = 0.42 * W * H;
+  if (used > budget) { const k = Math.sqrt(budget / used); R = R.map((r) => Math.max(16, r * k)); }
+  const rMax = Math.max(...R);
+  const cx = W / 2, cy = H / 2;
+  const asp = Math.min(3, Math.max(1, W / H));
+  // the packing is relaxed without a frame (a compact blob); the fit step below scales and spreads it into the frame
+  const meanR = R.reduce((s, r) => s + r, 0) / n, step = 2 * meanR + GAP;
+  const P = clusters.map((_, i) => (i === 0 ? { x: cx, y: cy } : { x: cx + step * Math.sqrt(i) * Math.cos(i * GOLDEN), y: cy + step * Math.sqrt(i) * Math.sin(i * GOLDEN) }));
+  const pairs = [];
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) pairs.push([i, j, linkMap.get(pairKey(clusters[i].key, clusters[j].key))?.w || 0]);
+  // one relaxation step: push overlapping clusters apart (mass = area); with attract, linked clusters pull together and all drift to the centre (large ones more)
+  const relax = (attract) => {
+    let worst = 0;
+    for (const [i, j, w] of pairs) {
+      const a = P[i], b = P[j];
+      let dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+      if (d < 1e-9) { dx = 1; dy = 0; d = 1; }
+      const ux = dx / d, uy = dy / d, min = R[i] + R[j] + GAP;
+      if (d < min) {
+        const over = min - d; worst = Math.max(worst, over);
+        const mi = R[i] * R[i], mj = R[j] * R[j], si = over * mj / (mi + mj), sj = over * mi / (mi + mj);
+        a.x -= ux * si; a.y -= uy * si; b.x += ux * sj; b.y += uy * sj;
+      } else if (attract && w) {
+        const f = Math.min(0.2, 0.03 * w) * (d - min) * 0.5;
+        a.x += ux * f; a.y += uy * f; b.x -= ux * f; b.y -= uy * f;
+      }
+    }
+    // gravity is stronger on the short axis, so the blob settles as an ellipse that matches the frame instead of a disc that the fit step must stretch
+    if (attract) for (let i = 0; i < n; i++) { const g = 0.02 * (R[i] / rMax); P[i].x += (cx - P[i].x) * g; P[i].y += (cy - P[i].y) * g * asp; }
+    return worst;
+  };
+  for (let t = 0; t < 260; t++) relax(true);
+  for (let t = 0; t < 600; t++) if (relax(false) <= 0.2) break;
+
+  // fit to the frame: scale the packing (up to FIT_MAX) into the margins, centre it, then spread the centres along each axis as far as the margins allow
+  // (spreading only widens gaps, so nothing overlaps). Room is kept for labels above and below.
+  const FT = 30, FB = 28, FS = 14, aw = W - 2 * FS, ah = H - FT - FB;
+  const lo = (f) => Math.min(...P.map((p, i) => f(p) - R[i])), hi = (f) => Math.max(...P.map((p, i) => f(p) + R[i]));
+  const bw = hi((p) => p.x) - lo((p) => p.x), bh = hi((p) => p.y) - lo((p) => p.y);
+  const sc = Math.min(aw / bw, ah / bh, W >= 600 ? FIT_WIDE : FIT_MAX), mx = (lo((p) => p.x) + hi((p) => p.x)) / 2, my = (lo((p) => p.y) + hi((p) => p.y)) / 2;
+  const mw = W / 2, mh = FT + ah / 2;
+  P.forEach((p, i) => { p.x = mw + (p.x - mx) * sc; p.y = mh + (p.y - my) * sc; R[i] *= sc; });
+  const spread = (key, mid, half) => {
+    let f = 4;
+    P.forEach((p, i) => { const d = Math.abs(p[key] - mid); if (d > 1e-6) f = Math.min(f, (half - R[i]) / d); });
+    if (f > 1) P.forEach((p) => { p[key] = mid + (p[key] - mid) * f; });
+  };
+  spread('x', mw, aw / 2); spread('y', mh, ah / 2);
+  if (W < 600) R.forEach((_, i) => { R[i] *= PHONE_SHRINK; }); // phone frames cannot take the evened pass: smaller halos at the same centres leave room for the labels
+  // even out the free space: clusters repel each other (and keep non-overlap with a label gap) inside the frame, with a step that anneals to zero, so no
+  // quadrant of the map stays empty while another is crowded
+  if (n > 2 && W >= 600) { // phone frames are too tight for label clearance after this pass
+    const clampIn = (p, r) => { p.x = Math.min(W - FS - r, Math.max(FS + r, p.x)); p.y = Math.min(FT + ah - r, Math.max(FT + r, p.y)); };
+    const T = 120, keep = P.map((p) => ({ x: p.x, y: p.y }));
+    for (let t = 0; t < T; t++) {
+      const dx = P.map(() => 0), dy = P.map(() => 0);
+      for (const [i, j] of pairs) {
+        let ex = P[j].x - P[i].x, ey = P[j].y - P[i].y;
+        const d = Math.max(1, Math.hypot(ex, ey)); ex /= d; ey /= d;
+        const fi = R[j] / d, fj = R[i] / d; // the larger neighbour pushes harder
+        dx[i] -= ex * fi; dy[i] -= ey * fi; dx[j] += ex * fj; dy[j] += ey * fj;
+      }
+      P.forEach((p, i) => { dx[i] += (mw - p.x) / W * 1.2; dy[i] += (mh - p.y) / ah * 1.2; }); // a light pull to the middle keeps clusters off the frame edge
+      const mag = Math.max(1e-9, ...P.map((_, i) => Math.hypot(dx[i], dy[i]))), st = 10 * (1 - t / T) / mag;
+      P.forEach((p, i) => { p.x += dx[i] * st; p.y += dy[i] * st; clampIn(p, R[i]); });
+      for (let k = 0; k < 6; k++) for (const [i, j] of pairs) {
+        const ex = P[j].x - P[i].x, ey = P[j].y - P[i].y, d = Math.hypot(ex, ey) || 1e-9, over = R[i] + R[j] + GAP + 14 - d;
+        if (over > 0) { const ux = ex / d || 1, uy = ey / d, mi = R[i] * R[i], mj = R[j] * R[j]; P[i].x -= ux * over * mj / (mi + mj); P[i].y -= uy * over * mj / (mi + mj); P[j].x += ux * over * mi / (mi + mj); P[j].y += uy * over * mi / (mi + mj); clampIn(P[i], R[i]); clampIn(P[j], R[j]); }
+      }
+    }
+    // a frame too small to hold the evened layout with its label gaps keeps the packed one
+    if (pairs.some(([i, j]) => Math.hypot(P[i].x - P[j].x, P[i].y - P[j].y) < R[i] + R[j] + GAP - 0.5)) P.forEach((p, i) => { p.x = keep[i].x; p.y = keep[i].y; });
+  }
+
+  // nodes: largest award at the centre of its cluster, spiral outwards, then a short overlap pass inside the cluster
+  const outNodes = [];
+  clusters.forEach((c, i) => {
+    const m = c.items.length, Rc = R[i];
+    // a very large group: its nodes shrink together so they cover at most half the cluster disc (relative sizes kept)
+    const rad0 = c.items.map((it) => nodeRadius(it.award_max_usd));
+    const S2 = rad0.reduce((s, r) => s + r * r, 0), cap = 0.5 * Rc * Rc;
+    const rad = S2 > cap ? rad0.map((r) => Math.max(2.5, r2(r * Math.sqrt(cap / S2)))) : rad0;
+    const rmax = Math.max(0, ...rad);
+    const s = m > 1 ? Math.max(0, Rc - rmax - 6) / Math.sqrt(m - 1) : 0;
+    const loc = c.items.map((_, k) => ({ x: s * Math.sqrt(k) * Math.cos(k * GOLDEN), y: s * Math.sqrt(k) * Math.sin(k * GOLDEN) }));
+    const reach = 2 * rmax + 3; // nodes farther apart in x than this cannot overlap, so sweep by x instead of all pairs
+    const ord = loc.map((_, k) => k);
+    for (let t = 0; t < 60; t++) {
+      let worst = 0;
+      ord.sort((a, b) => loc[a].x - loc[b].x || a - b); // nearly sorted from the last pass, so this is cheap
+      for (let u = 0; u < m; u++) for (let v = u + 1; v < m && loc[ord[v]].x - loc[ord[u]].x < reach; v++) {
+        const p = ord[u], q = ord[v];
+        let dx = loc[q].x - loc[p].x, dy = loc[q].y - loc[p].y, d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 1e-9) { dx = 1; dy = 0; d = 1; }
+        const over = rad[p] + rad[q] + 3 - d;
+        if (over > 0) {
+          worst = Math.max(worst, over);
+          const ox = (dx / d) * over / 2, oy = (dy / d) * over / 2;
+          loc[p].x -= ox; loc[p].y -= oy; loc[q].x += ox; loc[q].y += oy;
+        }
+      }
+      for (let k = 0; k < m; k++) {
+        const lim = Math.max(0, Rc - rad[k] - 4), dd = Math.sqrt(loc[k].x * loc[k].x + loc[k].y * loc[k].y);
+        if (dd > lim) { const f = dd > 0 ? lim / dd : 0; loc[k].x *= f; loc[k].y *= f; }
+      }
+      if (worst < 0.2) break;
+    }
+    c.items.forEach((it, k) => outNodes.push({ id: it.id, x: r2(P[i].x + loc[k].x), y: r2(P[i].y + loc[k].y), r: rad[k], cluster: c.key, also: alsoOf.get(it.id) || [] }));
+  });
+
+  const cl = clusters.map((c, i) => ({
+    key: c.key, label: c.label, name: `${trimName(c.label)} · ${c.n}`,
+    meta: `${c.n} ${c.n === 1 ? 'funder' : 'funders'}${c.total ? ` · ${money(c.total)}` : ''}`,
+    x: r2(P[i].x), y: r2(P[i].y), r: r2(R[i]), count: c.n, total_usd: c.total,
+  }));
+  placeLabels(cl, W, H, outNodes);
+  return {
+    width: W, height: H,
+    clusters: cl,
+    nodes: outNodes,
+    links: [...linkMap.values()].sort((p, q) => cmp(p.a, q.a) || cmp(p.b, q.b)),
+  };
+}
+
+/* cluster labels: above the halo, or below it when that spot is taken. Greedy in cluster order (largest first); sets lx, ly (top-left of the block, lx is the centre). */
+const LABEL_H = 18; // one line: name and count
+const trimName = (s) => (s.length > 26 ? `${s.slice(0, 25)}…` : s);
+export function placeLabels(cs, W, H, nodes = []) {
+  const boxes = [];
+  for (const c of cs) {
+    const w = Math.ceil(c.name.length * 7.4) + 8;
+    const cx = c.x - w / 2, cy = c.y - LABEL_H / 2;
+    // above, below, right, left of the halo, then further out and shifted up or down; the first spot with no clash wins, else the least clashing one
+    const spots = [];
+    for (const g of [6, 16, 28]) spots.push([cx, c.y - c.r - g - LABEL_H], [cx, c.y + c.r + g], [c.x + c.r + g, cy], [c.x - c.r - g - w, cy]);
+    for (const g of [4, 14]) spots.push([c.x - w, c.y - c.r - g - LABEL_H], [c.x, c.y - c.r - g - LABEL_H], [c.x - w, c.y + c.r + g], [c.x, c.y + c.r + g]); // the same rows, shifted off-centre so a wide label can slide clear of a neighbour
+    for (const d of [-LABEL_H, LABEL_H]) spots.push([c.x + c.r + 6, cy + d], [c.x - c.r - 6 - w, cy + d]);
+    const cands = spots.map(([x, y]) => ({ x0: clamp(x, 2, W - w - 2), y0: clamp(y, 2, H - LABEL_H - 2) }));
+    // a label on another label counts 100, a node under the text 1: labels never stack if any spot is free
+    // a label that reaches into any cluster's halo counts 20: it reads as that cluster's name
+    const clash = (o) => 100 * boxes.filter((b) => o.x0 < b.x1 + 2 && b.x0 < o.x0 + w + 2 && o.y0 < b.y1 + 2 && b.y0 < o.y0 + LABEL_H + 2).length
+      + 20 * cs.filter((h) => (h.x - clamp(h.x, o.x0, o.x0 + w)) ** 2 + (h.y - clamp(h.y, o.y0, o.y0 + LABEL_H)) ** 2 < (h.r + 1) ** 2).length
+      + nodes.filter((p) => {
+        const nx = clamp(p.x, o.x0, o.x0 + w), ny = clamp(p.y, o.y0, o.y0 + LABEL_H);
+        return (p.x - nx) ** 2 + (p.y - ny) ** 2 < (p.r + 2) ** 2;
+      }).length;
+    let best = cands[0], bestN = Infinity;
+    for (const o of cands) { const n = clash(o); if (n < bestN) { best = o; bestN = n; if (!n) break; } }
+    c.lx = r2(best.x0 + w / 2); c.ly = r2(best.y0);
+    boxes.push({ x0: best.x0, x1: best.x0 + w, y0: best.y0, y1: best.y0 + LABEL_H });
+  }
+  return cs;
+}
+
+/* ---------- filters (the state lives in app.ui_state('galaxy')) ---------- */
+export const defaultGalaxy = () => ({ groupBy: 'concept', bands: [], themes: [], types: [], ua: [], tiers: [], openOnly: false, screened: true, moreThemes: false, filtersOpen: false });
+// every filter the whole panel holds (the closed toolbar shows this number): chips selected plus the two Show toggles moved off their default
+export const filterCount = (ui = {}) => ['bands', 'themes', 'types', 'ua', 'tiers'].reduce((n, k) => n + (ui[k]?.length || 0), 0) + (ui.openOnly ? 1 : 0) + (ui.screened === false ? 1 : 0);
+// Filters inside the closed "Fit and eligibility" details. Type, size and keywords are always visible.
+export const moreActive = (ui = {}) => (ui.tiers?.length || 0) + (ui.ua?.length || 0);
+export function galaxyFilter(items = [], f = {}) {
+  const F = { ...defaultGalaxy(), ...f };
+  return (items || []).filter((it) => {
+    if (!F.screened && it.status === 'rejected') return false;
+    if (F.bands.length && !F.bands.includes(it.band)) return false;
+    if (F.types.length && !F.types.includes(it.bucket)) return false;
+    if (F.ua.length && !F.ua.includes(it.ua_eligibility)) return false;
+    if (F.tiers.length && !F.tiers.includes(it.tier)) return false;
+    if (F.themes.length && !it.themes.some((t) => F.themes.includes(t))) return false;
+    if (F.openOnly && !it.open_calls) return false;
+    return true;
+  });
+}
+export function themeCounts(items = []) {
+  const m = new Map();
+  for (const it of items) for (const t of it.themes) m.set(t, (m.get(t) || 0) + 1);
+  return [...m].map(([key, n]) => ({ key, label: capLabel(key), n })).sort((a, b) => b.n - a.n || cmp(a.key, b.key));
+}
+export function totals(items = []) {
+  return { n: items.length, award: items.reduce((s, it) => s + Math.max(0, +it.award_max_usd || 0), 0) };
+}
+
+/* =====================================================================
+   View (browser only). render(root, app) is idempotent; onQuery updates search classes only.
+   ===================================================================== */
+const NS = 'http://www.w3.org/2000/svg';
+const STATE = new WeakMap();
+const CHIP = {
+  type: { ui: 'types', keys: () => Object.keys(BUCKETS), of: (it) => [it.bucket], label: (k) => BUCKETS[k] || k, bucket: true },
+  size: { ui: 'bands', keys: () => BANDS.map(([k]) => k), of: (it) => [it.band], label: (k) => BAND_LABEL[k] || k },
+  fit: { ui: 'tiers', keys: () => TIERS.map(([k]) => k), of: (it) => [it.tier], label: (k) => TIER_LABEL[k] || k },
+  ua: { ui: 'ua', keys: () => UA_KEYS, of: (it) => [it.ua_eligibility], label: (k) => UA[k] || k },
+};
+
+function h(t, a = {}, ...kids) {
+  const e = document.createElement(t);
+  for (const [k, v] of Object.entries(a)) {
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = String(v);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : String(v));
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) e.append(c);
+  return e;
+}
+function sv(t, a = {}, ...kids) {
+  const e = document.createElementNS(NS, t);
+  for (const [k, v] of Object.entries(a)) {
+    if (v == null || v === false) continue;
+    if (k === 'text') e.textContent = String(v); else e.setAttribute(k, String(v));
+  }
+  for (const c of kids.flat()) if (c != null) e.append(c);
+  return e;
+}
+const uiOf = (app) => {
+  const u = app.ui_state('galaxy', defaultGalaxy());
+  for (const k of ['bands', 'themes', 'types', 'ua', 'tiers']) if (!Array.isArray(u[k])) u[k] = [];
+  if (!GROUPS.some(([k]) => k === u.groupBy)) u.groupBy = 'concept';
+  u.openOnly = !!u.openOnly; u.screened = u.screened !== false; u.moreThemes = !!u.moreThemes; u.filtersOpen = !!u.filtersOpen;
+  return u;
+};
+const statusText = (it) => (it.tracked ? `Tracked · ${STAGE_LABEL[it.stage] || it.stage}` : it.status === 'candidate' ? 'Candidate' : 'Screened out');
+
+export function render(root, app) {
+  let st = STATE.get(root);
+  if (!st || !root.querySelector('.gx')) { st = build(root); STATE.set(root, st); }
+  st.app = app;
+  if (!app.reg() && st.regState === 'ready') st.regState = 'idle'; // the shell dropped the cached registry (lock or unlock): load it again
+  if (!app.reg() && st.regState === 'idle') loadRegistry(st, false);
+  update(st);
+}
+export function onQuery(root, app) {
+  const st = STATE.get(root);
+  if (!st || !root.querySelector('.gx') || !st.layout) return render(root, app);
+  st.app = app;
+  applySearch(st);
+}
+
+/* ---------- build: the static skeleton; everything dynamic is updated in place ---------- */
+function build(root) {
+  const old = STATE.get(root);
+  if (old?.ro) old.ro.disconnect();
+  root.replaceChildren();
+  // same condition as the 44px floor in galaxy.css, so phone widths get the large targets with a fine pointer too
+  const small = typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches;
+  const st = {
+    root, app: null, src: {}, items: [], byId: new Map(), filtered: [], hits: null,
+    regState: 'idle', regPromise: null, layout: null, nodeLayout: new Map(), clusterLayout: new Map(),
+    nodeEls: new Map(), clusterEls: new Map(), rowEls: new Map(), chipEls: new Map(), kwSig: '', kwCounts: new Map(),
+    openCl: new Set(), seenCl: new Set(), more: new Set(), hover: null, focused: null, focusId: null, iso: null,
+    k: 1, tx: 0, ty: 0, canvasW: 0, canvasH: 0, raf: 0, hitPx: small ? 22 : 16, tapPx: small ? 46 : 26, ro: null, // taps: 2px spare, since the svg can render a fraction smaller than its viewBox
+  };
+  st.groupSeg = h('div', { class: 'seg gx-seg', role: 'group', 'aria-label': 'Group funders by' },
+    GROUPS.map(([k, label]) => h('button', { type: 'button', 'data-group': k, 'aria-pressed': 'false', onclick: () => { uiOf(st.app).groupBy = k; update(st); } }, label)));
+  st.count = h('p', { class: 'gx-count', role: 'status' });
+  st.ftoggle = h('button', { type: 'button', class: 'btn gx-ftoggle', 'aria-expanded': 'false', 'aria-controls': 'gx-panel', onclick: () => { const u = uiOf(st.app); u.filtersOpen = !u.filtersOpen; paintControls(st, u); } },
+    h('span', { class: 'gx-ficon', 'aria-hidden': 'true' }), h('span', { text: 'Filters' }), st.ftotal = h('b', { class: 'gx-fcount', hidden: true }));
+  st.actives = h('div', { class: 'gx-actives', role: 'group', 'aria-label': 'Active filters', hidden: true });
+  const top = h('div', { class: 'gx-top' }, st.ftoggle, st.groupSeg, st.count);
+
+  const chipRow = (group, label, bucket) => {
+    const cfg = CHIP[group], map = new Map();
+    st.chipEls.set(group, map);
+    return h('div', { class: `gx-fg${bucket ? ' gx-legend' : ''}`, role: 'group', 'aria-label': label },
+      h('span', { class: 'gx-fl', 'aria-hidden': 'true', text: label }),
+      h('div', { class: 'gx-chips' }, cfg.keys().map((k) => {
+        const n = h('b', { class: 'gx-n', text: '0' });
+        const btn = h('button', { type: 'button', class: `gx-chip${cfg.bucket ? ` b-${k}` : ''}`, 'aria-pressed': 'false', 'data-key': k, onclick: () => toggleFilter(st, group, k) },
+          cfg.bucket ? bucketDot(k) : null, h('span', { text: cfg.label(k) }), n);
+        map.set(k, { el: btn, n });
+        return btn;
+      })));
+  };
+  const typeRow = chipRow('type', 'Organization type', true);
+  const sizeRow = chipRow('size', 'Funding size');
+  const fitRow = chipRow('fit', 'Fit');
+  const uaRow = chipRow('ua', 'Eligibility');
+  const toggle = (label, prop) => h('button', { type: 'button', class: 'gx-chip gx-toggle', 'aria-pressed': 'false', onclick: () => { const u = uiOf(st.app); u[prop] = !u[prop]; update(st); } }, h('span', { text: label }));
+  st.toggles = { openOnly: toggle('Open calls only', 'openOnly'), screened: toggle('Include screened out', 'screened') };
+  const toggles = h('div', { class: 'gx-fg', role: 'group', 'aria-label': 'Show' }, h('span', { class: 'gx-fl', 'aria-hidden': 'true', text: 'Show' }), h('div', { class: 'gx-chips' }, st.toggles.openOnly, st.toggles.screened));
+  st.kw = h('div', { class: 'gx-chips' });
+  st.kwMore = h('button', { type: 'button', class: 'linkbtn gx-kwmore', hidden: true, onclick: () => { const u = uiOf(st.app); u.moreThemes = !u.moreThemes; update(st); } });
+  st.kwCount = h('span', { class: 'gx-fcount', hidden: true }); // selected keywords, so a selection past the phone rail's edge still shows
+  const kwRow = h('div', { class: 'gx-fg gx-kwrow', role: 'group', 'aria-label': 'Keywords' }, h('span', { class: 'gx-fl', 'aria-hidden': 'true' }, h('span', { text: 'Keywords' }), st.kwCount), st.kw, st.kwMore);
+  st.note = h('div', { class: 'gx-note', role: 'status', hidden: true });
+
+  st.svg = sv('svg', { class: 'gx-svg', role: 'group', 'aria-label': 'Funder map. The list below holds the same funders as text.' });
+  st.svg.append(sv('defs', {}, sv('pattern', { id: 'gx-dots', width: 22, height: 22, patternUnits: 'userSpaceOnUse' }, sv('circle', { class: 'gx-dot-bg', cx: 1, cy: 1, r: 0.9 }))));
+  st.svg.append(sv('rect', { class: 'gx-bg', x: 0, y: 0, width: '100%', height: '100%', fill: 'url(#gx-dots)' }));
+  st.world = sv('g', { class: 'gx-world' });
+  st.layers = { orbit: sv('g', { class: 'gx-orbits' }), halo: sv('g', { class: 'gx-halos' }), links: sv('g', { class: 'gx-links' }), nodes: sv('g', { class: 'gx-nodes' }), labels: sv('g', { class: 'gx-labels' }) };
+  st.world.append(st.layers.orbit, st.layers.halo, st.layers.links, st.layers.nodes, st.layers.labels);
+  st.svg.append(st.world);
+  st.card = h('div', { class: 'gx-card', 'aria-hidden': 'true', hidden: true });
+  st.reset = h('button', { type: 'button', class: 'btn btn--sm gx-reset', hidden: true, onclick: () => resetView(st) }, 'Show all groups');
+  const zoomOut = h('button', { type: 'button', class: 'gx-zbtn', 'aria-label': 'Zoom out', title: 'Zoom out', onclick: () => zoomBy(st, 1 / 1.3) }, '−');
+  const zoomIn = h('button', { type: 'button', class: 'gx-zbtn', 'aria-label': 'Zoom in', title: 'Zoom in', onclick: () => zoomBy(st, 1.3) }, '+');
+  const tools = h('div', { class: 'gx-tools' }, st.reset, h('div', { class: 'gx-zoom', role: 'group', 'aria-label': 'Zoom' }, zoomOut, zoomIn));
+  st.empty = h('div', { class: 'gx-empty', hidden: true });
+  st.canvas = h('div', { class: 'gx-canvas' }, st.svg, st.card, tools, st.empty);
+  st.alt = h('div', { class: 'gx-alt' });
+
+  st.fcount = h('span', { class: 'gx-fcount', hidden: true });
+  const more = h('details', { class: 'gx-moref' },
+    h('summary', {}, h('span', { text: 'Fit and eligibility' }), st.fcount),
+    h('div', { class: 'gx-filters' }, fitRow, uaRow));
+  st.panel = h('div', { class: 'gx-panel', id: 'gx-panel', hidden: true }, typeRow, sizeRow, kwRow, toggles, more);
+  root.append(h('section', { class: 'gx', 'data-gx': '' }, top, st.actives, st.panel, st.note, st.canvas, keyLegend(), st.alt));
+
+  svgListeners(st);
+  if (typeof ResizeObserver === 'function') {
+    st.ro = new ResizeObserver(() => { if (st.raf) return; st.raf = requestAnimationFrame(() => { st.raf = 0; relayout(st); }); });
+    st.ro.observe(st.canvas);
+  }
+  return st;
+}
+
+function keyLegend() {
+  const item = (label, ...kids) => h('span', { class: 'gx-kitem' }, sv('svg', { class: 'gx-kg', viewBox: '-16 -12 32 24', 'aria-hidden': 'true' }, ...kids), h('span', { text: label }));
+  const node = (cls, ...kids) => sv('g', { class: `gx-node ${cls}` }, ...kids);
+  return h('div', { class: 'gx-key', 'aria-label': 'How to read the map' },
+    item('Tracked', node('', sv('circle', { class: 'gx-dot', r: 6 }))),
+    item('Screened out', node('is-screened', sv('circle', { class: 'gx-dot', r: 6 }))),
+    item('Candidate', node('is-candidate', sv('circle', { class: 'gx-dot', r: 6 }))),
+    item('In pipeline', node('is-pipe', sv('circle', { class: 'gx-dot', r: 5 }), sv('path', { class: 'gx-pipe', d: 'M7,-10 L10,-7 L7,-4 L4,-7 Z' }))),
+    item('Prime fit', node('', sv('circle', { class: 'gx-dot', r: 5 }), sv('circle', { class: 'gx-ring ring-prime', r: 9 }))),
+    item('Strong fit', node('', sv('circle', { class: 'gx-dot', r: 5 }), sv('circle', { class: 'gx-ring ring-strong', r: 9 }))),
+    item('Size: published award, log scale (smallest if none)', node('', sv('circle', { class: 'gx-dot', cx: -10, r: R_MIN }), sv('circle', { class: 'gx-dot', cx: 0, r: 8 }), sv('circle', { class: 'gx-dot', cx: 10, r: R_MAX - 2 }))));
+}
+
+/* ---------- state plumbing ---------- */
+function loadRegistry(st, force) {
+  if (st.regPromise) return;
+  st.regState = 'loading';
+  st.regPromise = Promise.resolve().then(() => st.app.loadRegistry(force)).then(
+    () => { st.regState = st.app.reg() ? 'ready' : 'failed'; },
+    () => { st.regState = 'failed'; },
+  ).then(() => {
+    st.regPromise = null;
+    if (STATE.get(st.root) === st && st.app) update(st);
+  });
+  update(st);
+}
+function toggleFilter(st, group, key) {
+  const list = uiOf(st.app)[group === 'kw' ? 'themes' : CHIP[group].ui];
+  const i = list.indexOf(key);
+  if (i >= 0) list.splice(i, 1); else list.push(key);
+  update(st);
+}
+function clearFilters(st) {
+  const u = uiOf(st.app);
+  Object.assign(u, { bands: [], themes: [], types: [], ua: [], tiers: [], openOnly: false, screened: true });
+  update(st);
+}
+
+function update(st) {
+  const app = st.app;
+  if (!app) return;
+  const ui = uiOf(app);
+  const reg = app.reg();
+  if (st.src.rows !== app.S.rows || st.src.reg !== (reg || null) || st.src.rub !== app.rubric()) {
+    st.src = { rows: app.S.rows, reg: reg || null, rub: app.rubric() };
+    st.items = galaxyItems(app.S.rows, reg, { rubric: app.rubric() });
+    st.byId = new Map(st.items.map((it) => [it.id, it]));
+  }
+  if (reg) st.regState = 'ready';
+  st.filtered = galaxyFilter(st.items, ui);
+  paintControls(st, ui);
+  paintNote(st);
+  const w = st.canvas.clientWidth, hgt = st.canvas.clientHeight;
+  if (w >= 40 && hgt >= 40) layoutAndDraw(st, ui, w, hgt);
+  renderList(st);
+  applySearch(st);
+  const none = !st.filtered.length;
+  st.empty.hidden = !none;
+  if (none) {
+    st.empty.replaceChildren(
+      h('p', { text: st.items.length ? 'No funders match these filters.' : 'No funders to map yet.' }),
+      st.items.length ? h('button', { type: 'button', class: 'btn btn--sm', onclick: () => clearFilters(st) }, 'Clear filters') : null);
+  }
+}
+
+function relayout(st) {
+  if (!st.app || !st.canvas.isConnected) { if (st.ro) st.ro.disconnect(); return; }
+  const w = st.canvas.clientWidth, hgt = st.canvas.clientHeight;
+  if (w < 40 || hgt < 40 || (w === st.canvasW && hgt === st.canvasH)) return;
+  layoutAndDraw(st, uiOf(st.app), w, hgt);
+  applySearch(st);
+}
+
+function layoutAndDraw(st, ui, w, hgt) {
+  st.layout = galaxyLayout(st.filtered, { groupBy: ui.groupBy, width: w, height: hgt });
+  st.canvasW = w; st.canvasH = hgt;
+  st.nodeLayout = new Map(st.layout.nodes.map((n) => [n.id, n]));
+  st.hitCap = nodeCaps(st.layout.nodes);
+  st.clusterLayout = new Map(st.layout.clusters.map((c) => [c.key, c]));
+  if (st.iso && !st.clusterLayout.has(st.iso)) { st.iso = null; st.k = 1; st.tx = 0; st.ty = 0; }
+  if (st.iso) focusView(st, st.iso);
+  drawMap(st);
+  applyTransform(st);
+  refreshSel(st);
+}
+
+/* ---------- drawing ---------- */
+function drawMap(st) {
+  const L = st.layout;
+  st.svg.setAttribute('viewBox', `0 0 ${L.width} ${L.height}`);
+  st.svg.setAttribute('width', L.width); st.svg.setAttribute('height', L.height);
+  if (!st.orbits) {
+    st.orbits = [sv('circle', { class: 'gx-orbit', 'data-f': 0.34 }), sv('circle', { class: 'gx-orbit', 'data-f': 0.6 })];
+    st.layers.orbit.append(...st.orbits);
+  }
+  const m = Math.min(L.width, L.height);
+  for (const o of st.orbits) { o.setAttribute('cx', L.width / 2); o.setAttribute('cy', L.height / 2); o.setAttribute('r', r2(m * Number(o.dataset.f))); }
+
+  const keepC = new Set();
+  for (const c of L.clusters) {
+    keepC.add(c.key);
+    let e = st.clusterEls.get(c.key);
+    if (!e) { e = makeCluster(st, c.key); st.clusterEls.set(c.key, e); }
+    e.halo.style.transform = `translate(${c.x}px, ${c.y}px)`;
+    e.circle.setAttribute('r', c.r);
+    e.at = `translate(${c.lx}px, ${c.ly}px)`;
+    e.name.textContent = c.name;
+    e.label.setAttribute('aria-label', `${c.label}: ${c.meta}. Focus this group`);
+    e.lx = c.lx; e.ly = c.ly;
+  }
+  for (const [key, e] of st.clusterEls) if (!keepC.has(key)) { e.halo.remove(); e.label.remove(); st.clusterEls.delete(key); }
+
+  const keepN = new Set();
+  L.nodes.forEach((n, idx) => {
+    keepN.add(n.id);
+    const it = st.byId.get(n.id);
+    if (!it) return;
+    let e = st.nodeEls.get(n.id);
+    if (!e) {
+      e = makeNode(st, it);
+      e.g.style.setProperty('--d', `${Math.min(idx, 40) * 14}ms`);
+      st.nodeEls.set(n.id, e);
+      st.layers.nodes.append(e.g);
+    }
+    e.g.style.transform = `translate(${n.x}px, ${n.y}px)`;
+    e.ring.setAttribute('class', `gx-ring ring-${it.tier}`);
+    e.ring.setAttribute('r', r2(n.r + 4.5));
+    e.dot.setAttribute('r', n.r);
+    e.focus.setAttribute('r', r2(n.r + 7));
+    const pc = r2(n.r * 0.7 + 3), s = 3.4;
+    e.pipe.setAttribute('d', `M${pc},${r2(-pc - s)} L${r2(pc + s)},${-pc} L${pc},${r2(-pc + s)} L${r2(pc - s)},${-pc} Z`);
+    e.g.classList.toggle('is-pipe', it.inPipeline);
+    e.g.setAttribute('aria-label', nodeLabel(st, it));
+  });
+  for (const [id, e] of st.nodeEls) {
+    if (keepN.has(id)) continue;
+    e.g.remove(); st.nodeEls.delete(id);
+    if (st.focused === id) st.focused = null;
+    if (st.hover === id) st.hover = null;
+  }
+  if (st.focusId == null || !st.nodeLayout.has(st.focusId)) st.focusId = L.nodes[0]?.id ?? null;
+  for (const [id, e] of st.nodeEls) e.g.setAttribute('tabindex', id === st.focusId ? '0' : '-1');
+}
+
+function nodeLabel(st, it) {
+  const fit = it.fit_score != null ? `fit ${it.fit_score}, ${it.tierLabel}` : UNSCORED.toLowerCase();
+  const award = it.award_max_usd != null || it.award_min_usd != null ? amountRange(it) : 'no published amount';
+  return `${it.name}. ${BUCKETS[it.bucket]}. ${award}. ${fit}. ${statusText(it)}${it.queued ? '. In agent queue' : ''}.`;
+}
+
+function makeCluster(st, key) {
+  const circle = sv('circle', { class: 'gx-halo', r: 0 });
+  const halo = sv('g', { class: 'gx-cluster', 'data-key': key }, circle);
+  const name = sv('text', { class: 'gx-lname', 'text-anchor': 'middle', y: 13 });
+  const tap = sv('rect', { class: 'gx-tap', 'aria-hidden': 'true' });
+  const label = sv('g', { class: 'gx-label', role: 'button', tabindex: '0', 'data-key': key }, tap, name);
+  label.addEventListener('click', () => isolate(st, key));
+  label.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); isolate(st, key); } });
+  st.layers.halo.append(halo);
+  st.layers.labels.append(label);
+  return { halo, circle, label, name, tap };
+}
+
+function makeNode(st, it) {
+  const hit = sv('circle', { class: 'gx-hit', r: 10 });
+  const ring = sv('circle', { class: 'gx-ring' });
+  const dot = sv('circle', { class: 'gx-dot', r: 5 });
+  const pipe = sv('path', { class: 'gx-pipe', d: 'M0,0' });
+  const focus = sv('circle', { class: 'gx-focus', r: 10 });
+  const g = sv('g', { class: `gx-node b-${it.bucket}${it.status === 'rejected' ? ' is-screened' : ''}${it.status === 'candidate' ? ' is-candidate' : ''}`, role: 'button', tabindex: '-1', 'data-id': it.id }, hit, ring, dot, pipe, focus);
+  g.classList.add('is-new');
+  g.addEventListener('animationend', () => g.classList.remove('is-new'), { once: true });
+  g.addEventListener('pointerenter', () => { st.hover = it.id; refreshSel(st); });
+  g.addEventListener('pointerleave', () => { if (st.hover === it.id) st.hover = null; refreshSel(st); });
+  g.addEventListener('focus', () => { st.focused = it.id; st.focusId = it.id; refreshSel(st); });
+  g.addEventListener('blur', () => { if (st.focused === it.id) st.focused = null; refreshSel(st); });
+  g.addEventListener('click', () => { st.app.openDrawer(it.id); });
+  g.addEventListener('keydown', (ev) => nodeKey(st, it.id, ev));
+  return { g, hit, ring, dot, pipe, focus, id: it.id };
+}
+
+function svgListeners(st) {
+  // nothing global: each node and cluster label handles its own events
+  st.svg.addEventListener('pointerleave', () => { st.hover = null; refreshSel(st); });
+}
+
+/* ---------- selection: the card, and faint links from a node to the other concepts it carries ---------- */
+function refreshSel(st) {
+  const id = st.hover ?? st.focused ?? null;
+  const n = id != null ? st.nodeLayout.get(id) : null;
+  const it = n ? st.byId.get(id) : null;
+  st.layers.links.replaceChildren();
+  if (!it) { st.card.hidden = true; return; }
+  if (n.also?.length) {
+    for (const k of n.also) {
+      const c = st.clusterLayout.get(k);
+      if (!c) continue;
+      st.layers.links.append(sv('line', { class: 'gx-link', x1: n.x, y1: n.y, x2: c.x, y2: c.y }), sv('circle', { class: 'gx-sat', cx: c.x, cy: c.y, r: 4 }));
+    }
+  }
+  const now = st.app.S.now || new Date();
+  const dl = it.deadline ? fmtDate(it.deadline) : '';
+  const cd = it.deadline ? countdown(daysLeft(it.deadline, now)) : '';
+  st.card.replaceChildren(
+    h('p', { class: 'gx-card-name', text: it.name }),
+    it.program ? h('p', { class: 'gx-card-sub', text: it.program }) : null,
+    h('dl', { class: 'gx-dl' },
+      h('dt', { text: 'Type' }), h('dd', { text: BUCKETS[it.bucket] }),
+      h('dt', { text: 'Award' }), h('dd', { text: amountRange(it) }),
+      h('dt', { text: 'Fit' }), h('dd', { text: it.fit_score != null ? `${it.fit_score} · ${it.tierLabel}` : UNSCORED }),
+      h('dt', { text: 'Deadline' }), h('dd', { text: dl ? (cd ? `${dl} · ${cd}` : dl) : (it.cycle ? 'Rolling or no fixed date' : 'None listed') }),
+      h('dt', { text: 'Status' }), h('dd', {}, statusText(it), it.queued ? statusChip('queue') : null)));
+  st.card.hidden = false;
+  const cw = st.card.offsetWidth, ch = st.card.offsetHeight, cwid = st.canvas.clientWidth;
+  const px = st.tx + n.x * st.k, py = st.ty + n.y * st.k, pr = n.r * st.k;
+  const left = clamp(px - cw / 2, 8, cwid - cw - 8);
+  let top = py - pr - 12 - ch;
+  if (top < 8) top = py + pr + 12;
+  st.card.style.left = `${Math.round(left)}px`;
+  st.card.style.top = `${Math.round(top)}px`;
+}
+
+/* ---------- search: dims the rest, never rebuilds the layout ---------- */
+function applySearch(st) {
+  const app = st.app;
+  const active = app.q().length > 0;
+  let hits = 0;
+  for (const [id, e] of st.nodeEls) {
+    const hit = active && app.matchQ(st.byId.get(id)?.hay || '');
+    if (hit) hits++;
+    e.g.classList.toggle('is-hit', hit);
+    e.g.classList.toggle('is-dim', active && !hit);
+  }
+  for (const [id, li] of st.rowEls) li.classList.toggle('is-dim', active && !app.matchQ(st.byId.get(id)?.hay || ''));
+  st.hits = active ? hits : null;
+  paintCount(st);
+}
+
+function paintCount(st) {
+  const t = totals(st.filtered);
+  const parts = [`${t.n} of ${st.items.length} funders`, t.award ? `${money(t.award)} in published awards` : 'no published awards in view'];
+  if (st.hits != null) parts.push(`${st.hits} match "${String(st.app.S.F?.q || '').trim()}"`);
+  st.count.textContent = parts.join(' · ');
+}
+
+/* ---------- controls ---------- */
+function paintControls(st, ui) {
+  const total = filterCount(ui);
+  st.ftoggle.setAttribute('aria-expanded', String(ui.filtersOpen));
+  st.ftoggle.classList.toggle('is-active', total > 0);
+  st.ftotal.hidden = !total; st.ftotal.textContent = String(total);
+  st.ftoggle.setAttribute('aria-label', total ? `Filters, ${total} active` : 'Filters');
+  st.panel.hidden = !ui.filtersOpen;
+  st.groupSeg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.group === ui.groupBy)));
+  const active = moreActive(ui);
+  st.fcount.hidden = !active;
+  st.fcount.textContent = `${active} active`;
+  const tally = new Map();
+  for (const it of st.items) for (const g of ['type', 'size', 'fit', 'ua']) {
+    const m = tally.get(g) || new Map(); tally.set(g, m);
+    for (const k of CHIP[g].of(it)) m.set(k, (m.get(k) || 0) + 1);
+  }
+  for (const g of ['type', 'size', 'fit', 'ua']) {
+    const sel = ui[CHIP[g].ui];
+    for (const [k, c] of st.chipEls.get(g) || []) {
+      c.el.setAttribute('aria-pressed', String(sel.includes(k)));
+      c.n.textContent = String(tally.get(g)?.get(k) || 0);
+    }
+  }
+  syncKeywords(st, ui);
+  st.toggles.openOnly.setAttribute('aria-pressed', String(ui.openOnly));
+  st.toggles.screened.setAttribute('aria-pressed', String(ui.screened));
+  paintActives(st, ui);
+}
+
+/* removable chips for what the closed panel hides, plus Reset */
+function paintActives(st, ui) {
+  const list = [];
+  for (const g of ['type', 'size', 'fit', 'ua']) for (const k of ui[CHIP[g].ui]) list.push([`${g}:${k}`, CHIP[g].label(k), () => toggleFilter(st, g, k)]);
+  for (const k of ui.themes) list.push([`kw:${k}`, st.kwLabels?.get(k) || k, () => toggleFilter(st, 'kw', k)]);
+  if (ui.openOnly) list.push(['openOnly', 'Open calls only', () => { ui.openOnly = false; update(st); }]);
+  if (!ui.screened) list.push(['screened', 'Screened out hidden', () => { ui.screened = true; update(st); }]);
+  st.actives.hidden = !list.length;
+  st.root.firstElementChild?.classList.toggle('has-act', !!list.length);
+  const sig = list.map((a) => a[0] + a[1]).join('|');
+  if (sig === st.actSig) return;
+  st.actSig = sig;
+  st.actives.replaceChildren(...list.map(([, label, fn]) => h('button', { type: 'button', class: 'gx-achip', 'aria-label': `Remove filter ${label}`, onclick: fn }, h('span', { text: label }), h('span', { class: 'gx-x', 'aria-hidden': 'true', text: '×' }))),
+    h('button', { type: 'button', class: 'linkbtn gx-reset-f', onclick: () => clearFilters(st) }, 'Reset filters'));
+}
+
+function syncKeywords(st, ui) {
+  const counts = themeCounts(st.items);
+  st.kwCounts = new Map(counts.map((t) => [t.key, t.n]));
+  st.kwLabels = new Map(counts.map((t) => [t.key, t.label]));
+  ui.themes = ui.themes.filter((t) => st.kwCounts.has(t));
+  const shown = new Set((ui.moreThemes ? counts : counts.slice(0, KW_TOP)).map((t) => t.key));
+  for (const t of ui.themes) shown.add(t);
+  const list = counts.filter((t) => shown.has(t.key));
+  const sig = list.map((t) => t.key).join('|');
+  if (sig !== st.kwSig) {
+    st.kwSig = sig;
+    st.chipEls.set('kw', new Map());
+    st.kw.replaceChildren(...list.map((t) => {
+      const n = h('b', { class: 'gx-n', text: String(t.n) });
+      const btn = h('button', { type: 'button', class: 'gx-chip', 'aria-pressed': 'false', 'data-key': t.key, onclick: () => toggleFilter(st, 'kw', t.key) }, h('span', { text: t.label }), n);
+      st.chipEls.get('kw').set(t.key, { el: btn, n });
+      return btn;
+    }));
+  }
+  for (const [k, c] of st.chipEls.get('kw') || []) c.el.setAttribute('aria-pressed', String(ui.themes.includes(k)));
+  st.kwMore.hidden = counts.length <= KW_TOP;
+  st.kwMore.textContent = ui.moreThemes ? 'Fewer keywords' : `All ${counts.length} keywords`;
+  st.kwMore.setAttribute('aria-expanded', String(!!ui.moreThemes));
+  st.kw.classList.toggle('is-all', !!ui.moreThemes); // on phones the short keyword list is a scrolling rail; the full list wraps
+  st.kwCount.hidden = !ui.themes.length;
+  st.kwCount.textContent = `${ui.themes.length} active`;
+}
+
+function paintNote(st) {
+  const s = st.regState;
+  st.note.hidden = s !== 'loading' && s !== 'failed';
+  st.note.replaceChildren();
+  if (s === 'loading') st.note.append(h('span', { text: 'Loading screened-out and candidate funders.' }));
+  if (s === 'failed') st.note.append(
+    h('span', { text: 'Screened-out and candidate funders could not be loaded. Showing tracked funders only. ' }),
+    h('button', { type: 'button', class: 'linkbtn', onclick: () => loadRegistry(st, true) }, 'Try again'));
+}
+
+/* ---------- zoom and isolate ---------- */
+function focusView(st, key) {
+  const c = st.clusterLayout.get(key);
+  if (!c) return;
+  const W = st.layout.width, H = st.layout.height;
+  st.k = clamp((0.42 * Math.min(W, H)) / c.r, 1, 3.6);
+  st.tx = W / 2 - c.x * st.k;
+  st.ty = H / 2 - c.y * st.k;
+}
+function isolate(st, key) {
+  if (st.iso === key) { resetView(st); return; }
+  if (!st.clusterLayout.has(key)) return;
+  st.iso = key;
+  st.hover = null;
+  focusView(st, key);
+  applyTransform(st);
+  refreshSel(st);
+}
+function zoomBy(st, f) {
+  if (!st.layout) return;
+  const W = st.layout.width, H = st.layout.height;
+  const nk = clamp(st.k * f, 0.8, 3.6), r = nk / st.k;
+  st.tx = W / 2 - (W / 2 - st.tx) * r;
+  st.ty = H / 2 - (H / 2 - st.ty) * r;
+  st.k = nk;
+  applyTransform(st);
+  refreshSel(st);
+}
+function resetView(st) {
+  st.iso = null; st.k = 1; st.tx = 0; st.ty = 0;
+  applyTransform(st);
+  refreshSel(st);
+}
+function applyTransform(st) {
+  if (!st.layout) return;
+  st.world.style.transform = `translate(${r2(st.tx)}px, ${r2(st.ty)}px) scale(${r2(st.k)})`;
+  for (const [id, e] of st.nodeEls) {
+    const n = st.nodeLayout.get(id);
+    if (!n) continue;
+    e.hit.setAttribute('r', hitRadius(n.r, st.k, st.hitPx, st.hitCap.get(id)));
+    e.g.classList.toggle('is-away', !!st.iso && n.cluster !== st.iso);
+  }
+  for (const [key, e] of st.clusterEls) {
+    const away = !!st.iso && key !== st.iso;
+    e.halo.classList.toggle('is-away', away);
+    e.label.classList.toggle('is-away', away);
+    // labels keep their screen size when the map zooms
+    e.label.style.transform = `${e.at} scale(${r2(1 / st.k)})`;
+  }
+  placeTaps(st);
+  st.reset.hidden = !(st.iso || Math.abs(st.k - 1) > 0.01 || st.tx || st.ty);
+}
+
+// Node hit radius in world units, for a node drawn at radius r. The halo is 4 world units past the dot and at least hitPx screen px,
+// but never more than 1.5 x hitPx screen px: a lone node (no neighbour cap) used to keep growing as the map was zoomed in, until
+// its hit covered cluster label taps. The hit is never smaller than the drawn dot, unless a neighbour's ring is closer (cap wins).
+export function hitRadius(r, k, hitPx, cap = Infinity) {
+  const z = Math.max(Number(k) || 1, 1e-6);
+  return r2(Math.max(0, Math.min(Math.max(r, Math.min(Math.max(r + 4, hitPx / z), (1.5 * hitPx) / z)), cap)));
+}
+
+// A node's hit circle stops short of every other node's ring (drawn at r + 4.5), so it never covers a neighbour.
+export function nodeCaps(nodes) {
+  return new Map(nodes.map((a) => [a.id, nodes.reduce((c, b) => (b === a ? c : Math.min(c, Math.hypot(a.x - b.x, a.y - b.y) - b.r - 5.5)), Infinity)]));
+}
+
+// Cluster label hit boxes: st.tapPx screen px tall, shortened where a node ring or another label's text would be covered.
+// Label-local units are screen px (the label is scaled by 1 / k inside the zoomed world).
+export function placeTaps(st) {
+  const k = st.k, els = [...st.clusterEls.values()], boxes = els.map((e) => e.name.getBBox());
+  els.forEach((e, i) => {
+    const b = boxes[i], x1 = b.x - 4, x2 = b.x + b.width + 4, cy = b.y + b.height / 2;
+    let allow = Infinity;
+    for (const n of st.layout.nodes) {
+      const dx = k * (n.x - e.lx), dy = k * (n.y - e.ly), R = k * (n.r + 4.5);
+      if (dx > x1 - R && dx < x2 + R) allow = Math.min(allow, Math.abs(dy - cy) - R);
+    }
+    els.forEach((o, j) => {
+      if (o === e) return;
+      const ob = boxes[j], ox1 = k * (o.lx - e.lx) + ob.x, oy1 = k * (o.ly - e.ly) + ob.y;
+      if (ox1 + ob.width > x1 && ox1 < x2) {
+        if (oy1 >= cy) allow = Math.min(allow, oy1 - cy);
+        else allow = Math.min(allow, cy - (oy1 + ob.height));
+      }
+    });
+    const H = Math.max(b.height, Math.min(st.tapPx, 2 * allow));
+    e.tap.setAttribute('x', r2(x1)); e.tap.setAttribute('width', r2(x2 - x1));
+    e.tap.setAttribute('y', r2(cy - H / 2)); e.tap.setAttribute('height', r2(H));
+  });
+}
+
+/* ---------- keyboard: arrows move between nodes, Enter opens the drawer ---------- */
+function nodeKey(st, id, ev) {
+  const k = ev.key;
+  if (k === 'Enter' || k === ' ') { ev.preventDefault(); st.app.openDrawer(id); return; }
+  if (k === 'Escape') {
+    ev.preventDefault();
+    if (st.iso || st.k !== 1) resetView(st); else st.nodeEls.get(id)?.g.blur();
+    return;
+  }
+  if (k === 'Home' || k === 'End') {
+    ev.preventDefault();
+    const ns = st.layout?.nodes || [];
+    focusNode(st, (k === 'Home' ? ns[0] : ns[ns.length - 1])?.id);
+    return;
+  }
+  if (/^Arrow(Up|Down|Left|Right)$/.test(k)) {
+    ev.preventDefault();
+    moveFocus(st, id, k);
+  }
+}
+function moveFocus(st, fromId, key) {
+  const cur = st.nodeLayout.get(fromId);
+  if (!cur) return;
+  let best = null, score = Infinity;
+  for (const n of st.layout.nodes) {
+    if (n.id === fromId) continue;
+    const dx = n.x - cur.x, dy = n.y - cur.y;
+    const along = key === 'ArrowRight' ? dx : key === 'ArrowLeft' ? -dx : key === 'ArrowDown' ? dy : -dy;
+    const across = key === 'ArrowRight' || key === 'ArrowLeft' ? dy : dx;
+    if (along <= 0) continue;
+    const s = along + 2 * Math.abs(across);
+    if (s < score) { score = s; best = n; }
+  }
+  if (best) focusNode(st, best.id);
+}
+function focusNode(st, id) {
+  if (id == null) return;
+  st.focusId = id;
+  for (const [nid, e] of st.nodeEls) e.g.setAttribute('tabindex', nid === id ? '0' : '-1');
+  st.nodeEls.get(id)?.g.focus({ preventScroll: true });
+  panToNode(st, id);
+}
+// zoomed in and the focused node is off-screen: centre the map on it, so arrow keys never land out of view
+function panToNode(st, id) {
+  const n = st.nodeLayout.get(id);
+  if (!n || st.k <= 1) return;
+  const x = st.tx + n.x * st.k, y = st.ty + n.y * st.k, m = 40;
+  if (x >= m && x <= st.canvasW - m && y >= m && y <= st.canvasH - m) return;
+  st.tx = st.canvasW / 2 - n.x * st.k;
+  st.ty = st.canvasH / 2 - n.y * st.k;
+  applyTransform(st);
+}
+
+/* ---------- text alternative: the same funders per group, with progressive disclosure ---------- */
+function renderList(st) {
+  const L = st.layout;
+  st.rowEls = new Map();
+  if (!L) { st.alt.replaceChildren(); return; }
+  const byCl = new Map();
+  for (const n of L.nodes) (byCl.get(n.cluster) || byCl.set(n.cluster, []).get(n.cluster)).push(n);
+  const blocks = L.clusters.map((c) => {
+    if (!st.seenCl.has(c.key)) { st.seenCl.add(c.key); if (c.count <= 5) st.openCl.add(c.key); }
+    const items = (byCl.get(c.key) || []).map((n) => st.byId.get(n.id)).filter(Boolean);
+    const expanded = st.more.has(c.key);
+    const shown = expanded ? items : items.slice(0, ROWS_FIRST);
+    const det = h('details', { class: 'gx-cl', open: st.openCl.has(c.key) },
+      h('summary', {}, h('span', { class: 'gx-cl-name', text: c.label }),
+        h('span', { class: 'gx-cl-meta', text: `${c.count} · ${c.total_usd ? money(c.total_usd) : 'no published awards'}` })),
+      h('ul', { class: 'gx-rows' }, shown.map((it) => rowEl(st, it))),
+      items.length > ROWS_FIRST ? h('button', { type: 'button', class: 'linkbtn gx-more', onclick: () => { if (expanded) st.more.delete(c.key); else st.more.add(c.key); renderList(st); applySearch(st); } },
+        expanded ? 'Show fewer' : `Show ${items.length - ROWS_FIRST} more`) : null);
+    det.addEventListener('toggle', () => { if (det.open) st.openCl.add(c.key); else st.openCl.delete(c.key); });
+    return det;
+  });
+  st.alt.replaceChildren(h('h2', { class: 'gx-h', text: 'The same funders as text' }),
+    blocks.length ? h('div', { class: 'gx-thead', 'aria-hidden': 'true' }, ...['Funder', 'Type', 'Award', 'Fit', 'Status'].map((t) => h('span', { text: t }))) : null,
+    ...(blocks.length ? blocks : [h('p', { class: 'sub', text: 'No funders match these filters.' })]));
+}
+function rowEl(st, it) {
+  const li = h('li', { class: 'gx-row' },
+    h('button', { type: 'button', class: 'linkbtn gx-rn', title: it.name, onclick: () => st.app.openDrawer(it.id) }, it.name),
+    h('span', { class: 'gx-rt' }, bucketDot(it.bucket), h('span', { text: BUCKETS[it.bucket] })),
+    h('span', { class: 'gx-ra', text: amountRange(it) }),
+    h('span', { class: 'gx-rf', text: it.fit_score != null ? `Fit ${it.fit_score} · ${it.tierLabel}` : UNSCORED }),
+    h('span', { class: 'gx-rs' }, statusChip(it.status), it.queued ? statusChip('queue') : null, it.tracked && it.stage !== 'new' ? stateChip(it.stage, STAGE_LABEL[it.stage]) : null));
+  st.rowEls.set(it.id, li);
+  return li;
+}
