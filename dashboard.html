@@ -263,6 +263,8 @@ async function saveTeam(id, patch) {
   try {
     const res = await rpc('grants_set_state', { p_pass: S.pass, p_funder: r.id, p_patch: { ...patch, actor: S.me || r.team.owner || undefined } });
     S.team[r.id] = { ...(S.team[r.id] || {}), state: res.state, owner: res.owner || '', notes: res.notes ?? r.team.notes, ...('ask_usd' in res ? { ask_usd: res.ask_usd } : 'ask_usd' in patch ? { ask_usd: patch.ask_usd } : {}) };
+    const pub = S.feed?.funders?.find((f) => f.id === r.id), cur = S.team[r.id]; // the feed row holds what a locked viewer sees: keep it current, or locking would show the status from page load
+    if (pub) pub.team = { ...pub.team, state: cur.state, owner: cur.owner, ...('ask_usd' in cur ? { ask_usd: cur.ask_usd } : {}) };
     const ev = D.changeEvent(r.id, patch, prev, S.me || prev.owner || ''); // history and Pipeline activity update without a reload
     if (ev) S.events.unshift(ev);
     if (!('notes' in patch) && isRadar()) { compute(); renderKpis(); renderPicks(); }
