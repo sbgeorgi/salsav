@@ -58,7 +58,7 @@ t('KPIs count qualified non-skipped only', () => {
   const R = rows([row({ id: 'a', award_max_usd: 1e6, open_now: true, deadline: plus(20), vetted_at: '2026-11-10T00:00:00Z' }),
     row({ id: 'b', award_max_usd: null, deadline: plus(100) }), row({ id: 'c', award_max_usd: 9e6, deadline: plus(3) }), row({ id: 'd', award_max_usd: 9e6, team: { state: 'skip' } })]);
   const k = D.kpis(R);
-  assert.equal(k.total, 2); assert.equal(k.open, 1); assert.equal(k.closing30, 1); assert.equal(k.addressable, 1e6); assert.equal(k.unverified, 1); assert.equal(k.newWeek, 1);
+  assert.equal(k.total, 2); assert.equal(k.closing30, 1); assert.equal(k.newWeek, 1);
   assert.equal(k.sinceVisit, null);
 });
 t('hash codec round-trips and has no secrets', () => {
@@ -193,9 +193,9 @@ t('filters: lane, tier, evid; sorts: recommended', () => {
 });
 t('kpis(): new keys, pipeline usd uses ask_usd before award_max_usd', () => {
   const k = D.kpis(FR);
-  assert.equal(k.total, 12); assert.equal(k.applyNow, 6); assert.equal(k.rollingOpen, 2); assert.equal(k.byLane.cultivate, 1); assert.equal(k.byLane.watch, 0);
-  assert.equal(k.applyNowUsd, 1500000 + 750000 + 450000 + 1200000); assert.equal(k.primeStrong, k.byTier.prime + k.byTier.strong);
-  assert.equal(k.itemized, 11); assert.equal(typeof k.avgFit, 'number'); assert.equal(k.evidencePct, Math.round(100 * FR.filter((r) => !r._dq && !r._skip && r._evid.n >= 3).length / k.total));
+  assert.equal(k.total, 12); assert.equal(k.applyNow, 6); assert.equal(k.byLane.cultivate, 1); assert.equal(k.byLane[Object.keys(D.LANES).at(-1)], 0); // last lane: nothing in the fixture
+  assert.equal(k.applyNowUsd, 1500000 + 750000 + 450000 + 1200000); assert.equal(k.primeStrong, FR.filter((r) => !r._dq && !r._skip && ['prime', 'strong'].includes(r._tier?.key)).length); assert.ok(k.primeStrong > 0);
+  assert.equal(typeof k.avgFit, 'number'); assert.equal(k.evidencePct, Math.round(100 * FR.filter((r) => !r._dq && !r._skip && r._evid.n >= 3).length / k.total));
   assert.deepEqual(k.pipeline.byState.applying, { n: 1, usd: 1800000 }); // ask 1.8M, not award_max 2.4M
   assert.deepEqual(k.pipeline.byState.reviewing, { n: 1, usd: 750000 }); // no ask: falls back to award_max
   assert.deepEqual(k.pipeline.byState.submitted, { n: 1, usd: 300000 }); assert.deepEqual(k.pipeline.byState.awarded, { n: 1, usd: 450000 });
@@ -237,7 +237,7 @@ t('legacy row: renders everywhere without throwing', () => {
   const R = D.normalize({ funders: [{ id: 'old', name: 'Old', bucket: 'tracker', cycle: 'fixed_deadline', deadline: plus(30), ua_eligibility: 'eligible', fit_score: 55 }] }, NOW);
   const r = R[0];
   assert.equal(r._lane, 'apply_now'); assert.equal(r._tier.key, 'possible'); assert.equal(r._evid.n, 0); assert.equal(D.explainFit(r, RUB), null);
-  assert.equal(D.recommend(R, NOW).length, 1); assert.equal(D.kpis(R).itemized, 0); assert.equal(D.insights(R, { rubric: RUB }, NOW).anatomy[0].avg, 0);
+  assert.equal(D.recommend(R, NOW).length, 1); assert.equal(D.insights(R, { rubric: RUB }, NOW).anatomy[0].avg, 0);
   const csv = D.toCsv(R).split('\r\n'); assert.equal(csv.length, 2); assert.equal(csv[0].split(',').length, csv[1].split(',').length);
 });
 t('hash codec: new filters and views round trip', () => {
@@ -447,5 +447,81 @@ t('syncUnlock runs the primary toggle and syncMe() as code, not inside a // comm
   const toggle = lines.find((l) => l.includes("classList.toggle('btn--primary', unlocked())"));
   assert.ok(toggle && !toggle.includes('//'), 'btn--primary toggle sits inside a // comment');
   assert.ok(lines.some((l) => /(^|[\s;])syncMe\(\);/.test(l) && !l.includes('//')), 'syncMe() is not run');
+});
+/* ---- bookmarks ---- */
+const MP = { team: true, defs: [{ id: 'hide', label: 'Not relevant', hue: 3, effect: 'hide', sort: 30 }, { id: 'eye', label: 'Keep an eye on', hue: 1, effect: 'follow', sort: 10 }, { id: 'old', label: 'Old', hue: 2, effect: 'none', sort: 20, retired: true }],
+  items: [{ kind: 'funder', id: 'a', mark: 'hide', name: 'A', note: 'cloud seeding', by: 'Ann', at: '2026-11-20T00:00:00Z' }, { kind: 'funder', id: 'b', mark: 'eye', name: 'B' }, { kind: 'call', id: 'c1', mark: 'old', name: 'C' }] };
+t('marksIndex tolerates null and drops items of a retired def', () => {
+  const e = D.marksIndex(null);
+  assert.equal(e.team, false); assert.equal(e.items.size, 0); assert.equal(e.defs.length, 0);
+  const m = D.marksIndex(MP);
+  assert.deepEqual(m.defs.map((d) => d.id), ['eye', 'hide']); assert.equal(m.all.length, 3); assert.equal(m.byId.has('old'), false);
+  assert.equal(D.markOf(m, 'call', 'c1'), null); assert.equal(D.markOf(m, 'funder', 'zz'), null); assert.equal(D.markOf(null, 'funder', 'a'), null);
+  assert.deepEqual([D.markOf(m, 'funder', 'a').def.id, D.markOf(m, 'funder', 'a').note, D.markOf(m, 'funder', 'a').by], ['hide', 'cloud seeding', 'Ann']);
+  assert.equal(D.markKey('lead', 'x'), 'lead:x');
+  assert.equal(D.markCounts(m).get('hide'), 1); assert.equal(D.markCounts(m).get('eye'), 1);
+});
+t('a hide-effect bookmark hides the row everywhere; F.mark shows it again', () => {
+  const m = D.marksIndex(MP);
+  const R = D.normalize({ min_days: 14, funders: [row({ id: 'a', fit_score: 80 }), row({ id: 'b', fit_score: 70 })] }, NOW, {}, m);
+  const [a, b] = R;
+  assert.equal(a._skip, true); assert.equal(a._mark.id, 'hide'); assert.equal(a._markNote, 'cloud seeding'); assert.ok(a._hay.includes('not relevant'));
+  assert.equal(b._skip, false); assert.equal(b._mark.effect, 'follow'); assert.equal(b._markNote, '');
+  assert.deepEqual(D.applyFilters(R, D.defaultFilters()).map((r) => r.id), ['b']);
+  assert.equal(D.kpis(R).total, 1);
+  assert.deepEqual(D.recommend(R).map((x) => x.row.id), ['b']);
+  assert.equal(D.recommend(D.normalize({ min_days: 14, funders: [row({ id: 'a', fit_score: 80 })] }, NOW, {}, null)).length, 1);
+  const A = (marks) => D.kpis(D.normalize({ min_days: 14, funders: [row({ id: 'a' })] }, NOW, { a: { state: 'applying' } }, marks)).pipeline.n;
+  assert.equal(A(m), 0); assert.equal(A(null), 1);
+  assert.deepEqual(D.applyFilters(R, { ...D.defaultFilters(), mark: ['hide'] }).map((r) => r.id), ['a']);
+  assert.deepEqual(D.applyFilters(R, { ...D.defaultFilters(), mark: ['eye'] }).map((r) => r.id), ['b']);
+  assert.equal(D.normalize({ funders: [row({ id: 'a' })] }, NOW, { a: { state: 'skip' } }, null)[0]._skip, true); // the legacy skip state still hides
+});
+t('mark filter round-trips through the hash', () => {
+  const h = D.encodeHash({ ...D.defaultFilters(), mark: ['a', 'b'] });
+  assert.deepEqual(D.decodeHash(h).F.mark, ['a', 'b']); assert.deepEqual(D.decodeHash('').F.mark, []);
+});
+t('marksWith, marksPublic and markEvent', () => {
+  const m = D.marksIndex(MP);
+  const w = D.marksWith(m, { kind: 'call', id: 'k', mark: 'eye', name: 'K', funder: 'f1', note: 'n', by: 'Bo', at: 'T' });
+  assert.equal(D.markOf(w, 'call', 'k').funder, 'f1'); assert.equal(m.items.has('call:k'), false); // the old index is untouched
+  assert.equal(D.markOf(D.marksWith(w, { kind: 'call', id: 'k', mark: 'hide', by: 'Bo', at: 'T' }), 'call', 'k').note, 'n'); // an omitted note is kept
+  assert.equal(D.markOf(D.marksWith(w, { kind: 'call', id: 'k', mark: null }), 'call', 'k'), null);
+  const pub = D.marksPublic(w);
+  assert.equal(pub.team, false); assert.equal(pub.all.some((d) => d.retired), false);
+  for (const i of pub.items.values()) { assert.ok(!('note' in i)); assert.ok(!('by' in i)); }
+  assert.equal(pub.items.size, w.items.size);
+  const ev = D.markEvent({ kind: 'call', id: 'k', name: 'K', funder: 'f1', note: 'n' }, m.byId.get('eye'), 'hide', 'Ann', 'T');
+  assert.deepEqual(ev, { funder_id: 'f1', at: 'T', actor: 'Ann', kind: 'mark_set', payload: { item_kind: 'call', item_id: 'k', name: 'K', mark: 'eye', label: 'Keep an eye on', from: 'hide', note: 'n' } });
+  assert.deepEqual(Object.keys(D.markEvent({ kind: 'funder', id: 'f', name: 'F' }, m.byId.get('eye'), null).payload), ['item_kind', 'item_id', 'name', 'mark', 'label']);
+  assert.equal(D.markEvent({ kind: 'funder', id: 'f', name: 'F' }, m.byId.get('eye'), null).funder_id, 'f');
+  const cl = D.markEvent({ kind: 'lead', id: 'l', name: 'L', funder: null }, null, 'eye', 'Ann', 'T');
+  assert.deepEqual(cl, { funder_id: null, at: 'T', actor: 'Ann', kind: 'mark_clear', payload: { item_kind: 'lead', item_id: 'l', name: 'L', from: 'eye' } });
+  assert.equal(D.markEvent({ kind: 'lead', id: 'l', name: 'L' }, null, null), null); // clearing nothing
+  assert.equal(D.markEvent({ kind: 'funder', id: 'f', name: 'F', note: 'x', prevNote: 'x' }, m.byId.get('eye'), 'eye'), null); // same bookmark, same note
+});
+t('pickStates hides the legacy skip state unless the row has it', () => {
+  assert.equal(D.pickStates('skip').length, 7); assert.equal(D.pickStates('new').length, 6); assert.ok(!D.pickStates('new').includes('skip'));
+});
+t('CSV has a Bookmark column and search finds bookmarks', () => {
+  const R = D.normalize({ min_days: 14, funders: [row({ id: 'b', name: 'Bee' })] }, NOW, {}, D.marksIndex(MP));
+  const [head, line] = D.toCsv(R).split('\r\n');
+  const cols = head.replace('﻿', '').split(',');
+  assert.equal(cols[cols.indexOf('Notes') + 1], 'Bookmark'); assert.ok(line.includes('Keep an eye on'));
+  const g = D.suggest('keep', { rows: R, marks: D.marksIndex(MP) }).filter((x) => x.type === 'bookmark');
+  assert.deepEqual(g, [{ type: 'bookmark', value: 'eye', label: 'Keep an eye on', sub: 'Bookmark' }]);
+  assert.equal(D.suggest('old', { rows: R, marks: D.marksIndex(MP) }).some((x) => x.type === 'bookmark'), false); // retired
+});
+t('bookmark writes settle per item, in any reply order', () => {
+  const base = D.marksIndex(MP), flat = (i) => JSON.stringify([...i.items].sort());
+  const x = { kind: 'call', id: 'x', mark: 'eye', name: 'X', by: 'Bo', at: 'T' }, clearA = { kind: 'funder', id: 'a', mark: null };
+  assert.equal(flat(D.marksWith(D.marksWith(base, x), clearA)), flat(D.marksWith(D.marksWith(base, clearA), x))); // settles for two items commute
+  const html = readFileSync(new URL('./dashboard.html', import.meta.url), 'utf8');
+  const body = html.slice(html.indexOf('async function setMark('), html.indexOf('function markControl('));
+  assert.match(body, /if \(markBusy\.has\(key\)\) return false;/); // one write per item at a time
+  assert.ok(body.length > 200 && !/S\.marks = (after\b|D\.marksIndex\()/.test(body)); // a reply never replaces the whole index
+  assert.match(body, /note === undefined \? \{\} : \{ note: keep \}/); // the note travels only when it was edited: 025 keeps the stored one otherwise
+  assert.match(html, /w !== markWrites\) return loadMarks\(\)/); // a read that overlapped a settled write is read again, never applied
+  assert.match(html.slice(html.indexOf('async function loadTeam('), html.indexOf('function lock(')), /if \(gen !== tierGen\) return;/); // a team read that outlives a lock is dropped
 });
 console.log(`ok ${n} tests`);

@@ -178,7 +178,7 @@ export function meter(pct, { w = 160, h = 8, label = 'Progress' } = {}) {
 }
 
 // Stacked bars. series: [{id,label,parts:[{key,label?,value}]}]. Counts print inside wide segments; a legend names every part.
-export function stackedBars(series, { w = 360, rowH = 26, labelW = 96, totalW = 30, legend = true, normalize = false } = {}) {
+export function stackedBars(series, { w = 360, rowH = 26, labelW = 96, totalW = 30, legend = true } = {}) {
   const S = (Array.isArray(series) ? series : []).map((s, i) => ({
     id: s?.id ?? s?.label ?? i, label: s?.label ?? s?.id ?? '',
     parts: (Array.isArray(s?.parts) ? s.parts : []).map((p) => ({ key: p?.key ?? '', label: p?.label ?? p?.key ?? '', value: Math.max(0, num(p?.value)) })),
@@ -198,7 +198,7 @@ export function stackedBars(series, { w = 360, rowH = 26, labelW = 96, totalW = 
   }
   const label = 'Stacked bars: ' + S.map((s) => `${s.label} ${tot(s)} (${s.parts.filter((p) => p.value).map((p) => `${p.label} ${p.value}`).join(', ')})`).join('; ');
   const body = S.map((s, i) => {
-    const y = i * rowH + 5, t = tot(s), scale = normalize ? (t ? bw / t : 0) : bw / m;
+    const y = i * rowH + 5, t = tot(s), scale = bw / m;
     let x0 = labelW;
     const segs = s.parts.filter((p) => p.value > 0).map((p) => {
       const sw = r2(Math.max(1, p.value * scale)), ki = keys.findIndex(([k]) => k === p.key);

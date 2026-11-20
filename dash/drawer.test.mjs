@@ -191,3 +191,27 @@ t('bannerEl: the team decision line is written before the automated reason', () 
 });
 
 console.log(`${n} tests passed`);
+t('historyItems: a mark_set team event is one row that names the label; mark_clear and a call name read plainly', () => {
+  const ev = (kind, payload) => ({ kind, at: '2026-11-20T09:00:00Z', actor: 'Ana', payload });
+  const rows = historyItems({ team: [ev('mark_set', { item_kind: 'funder', label: 'Priority', note: 'Ask in May' })] }, {});
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].head, 'Bookmarked as Priority');
+  assert.equal(rows[0].note, 'Ask in May');
+  assert.equal(rows[0].diff, '');
+  assert.equal(teamChange(ev('mark_set', { item_kind: 'call', name: 'Spring call', label: 'Priority' })).head, 'Bookmarked as Priority: Spring call');
+  assert.equal(teamChange(ev('mark_clear', { item_kind: 'funder', name: 'X' })).head, 'Removed the bookmark');
+  assert.equal(teamChange(ev('mark_clear', { item_kind: 'lead', name: 'Acme' })).head, 'Removed the bookmark: Acme');
+});
+t('drawer: the teamStrip select uses pickStates, and no section invite is left (cuts 1 and 10)', () => {
+  const src = readFileSync(new URL('./drawer.js', import.meta.url), 'utf8');
+  assert.match(src, /D\.pickStates\(state\)/);
+  assert.doesNotMatch(src, /D\.STATES/);
+  assert.doesNotMatch(src, /class: 'invite'/);
+  assert.match(src, /app\.markControl\('funder'.*label: true/);
+  assert.match(src, /app\.markControl\('call'.*label: 'set'/);
+});
+t('drawer: nav buttons exist only for sections that are rendered (locked viewers have no Notes or Team)', () => {
+  const src = readFileSync(new URL('./drawer.js', import.meta.url), 'utf8');
+  assert.match(src, /navBar\(d, app, body\)/);
+  assert.match(src, /SECTIONS\.filter\(\(\[id\]\) => id === 'ov' \|\| body\.querySelector\('#' \+ id\)\)/);
+});

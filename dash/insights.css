@@ -76,9 +76,6 @@ body[data-view="insights"] .pagehead p { margin: 0; max-width: none; font-size: 
 .cov-r .facts { grid-column: 2 / -1; }
 .cov-r .lab { width: auto; font-weight: 550; }
 
-/* the funnel keeps a readable length on wide screens */
-.ins-pipe:not(:has(.ins-empty)) { max-width: 72rem; }
-
 /* tiers keep their meaning in colour as well as in the label */
 .ins-tier .viz-fill { --c: var(--primary); }
 .ins-tier .viz-row[data-id="strong"] .viz-fill { --c: color-mix(in srgb, var(--primary) 62%, var(--surface)); }

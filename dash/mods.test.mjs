@@ -2,8 +2,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { teamActivity, screenedCriteria, loadRegistryOnce } from './insights.js';
-import { RANK_WEIGHTS } from './method.js';
 import * as D from '../dashboard.js';
+const { RANK_WEIGHTS } = D;
 
 const NOW = new Date('2026-11-17T12:00:00Z'); // fixed clock
 const DAY = 864e5;
@@ -90,11 +90,11 @@ function callArgs(src, open) {
   if (cur.trim()) out.push(cur.trim());
   return out;
 }
-t('insights.js, method.js and horizon.js never pass a bare null into after, before, append or prepend (it would print as the text "null")', () => {
+t('the shell and the dash modules never pass a bare null into after, before, append, prepend or replaceChildren (it would print as the text "null")', () => {
   let calls = 0;
-  for (const p of ['dash/insights.js', 'dash/method.js', 'dash/horizon.js']) {
+  for (const p of ['dashboard.html', ...['board', 'database', 'drawer', 'galaxy', 'horizon', 'insights', 'method', 'ui'].map((m) => `dash/${m}.js`)]) {
     const src = readFileSync(new URL(p, ROOT), 'utf8');
-    for (const m of src.matchAll(/\.(after|before|append|prepend)\(/g)) {
+    for (const m of src.matchAll(/\.(after|before|append|prepend|replaceChildren)\(/g)) {
       calls++;
       const bare = callArgs(src, m.index + m[0].length - 1).filter((a) => /^null$/.test(a) || /[?:|&]\s*null$/.test(a));
       assert.deepEqual(bare, [], `${p} at ${m.index}: ${m[0]}`);
@@ -179,6 +179,17 @@ t('teamActivity: lead events with no funder, null actors and missing payloads ne
   assert.equal(TA.automated, 1);
   assert.deepEqual(TA.people.map((p) => [p.name, p.actions]), [['Ana', 2], ['Ben', 1]]);
   assert.deepEqual(TA.moves, [{ state: 'reviewing', n: 1 }]);
+});
+
+t('Method has the Bookmarks and the agent section; RANK_WEIGHTS and sv come from one place', () => {
+  const m = readFileSync('dash/method.js', 'utf8'), ins = readFileSync('dash/insights.js', 'utf8');
+  assert.match(m, /\['marks', 'Bookmarks and the agent'\]/);
+  for (const w of ['MARK_EFFECTS', 'D.markCounts(S.marks)', 'app.manageMarks()', 'Manage bookmarks']) assert.ok(m.includes(w), w);
+  assert.doesNotMatch(m, /export const RANK_WEIGHTS/);
+  assert.match(m, /import \{ RANK_WEIGHTS \} from '\.\.\/dashboard\.js'/);
+  assert.match(ins, /import \{ sv \} from '\.\/ui\.js'/);
+  assert.doesNotMatch(ins, /const sv =/);
+  assert.doesNotMatch(readFileSync('dash/method.css', 'utf8'), /\.cstat|\.cdot/);
 });
 
 console.log(`mods.test.mjs: ${n} tests passed`);

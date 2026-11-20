@@ -15,6 +15,7 @@ Result values are in `result`. Always read `status`, `notes`, `reject_reason` of
 - `failing` listed funders with consecutive_failures >= 3 {id, name, url, fetchability, consecutive_failures, last_ok_at}.
 - `collection_gaps` up to 15 {id, name, program, url, bucket, cycle, mode, health, note, verified_at, fetchability, consecutive_failures}: listed funders whose collection health is not ok, or mode page/none with verified_at null or older than 120 days. Fix with set_collection.
 - `metrics` = metrics_now() (section 10). `last_runs` last 3 discovery_runs {run_label, started_at, finished_at, summary, stats}. `last_refresh` {finished_at, status, planned, fetched, changed, errors} of the last finished crawler run.
+- `marks` = marks_brief(), the team's bookmarks (see the Bookmarks section after Human overrides).
 Live counts seen via table reads (2026-11-12): funders vetted 35, rejected 87, candidate 1; targets pending: us_federal 15, foundation_ngo 14, private_sector 14, intl_dev 8, state_regional 3; opportunities: 4 open/candidate, none vetted.
 
 ## 2. grants.check_known(p jsonb) returns jsonb  (read-only, STABLE)
@@ -150,7 +151,7 @@ bucket (generated from category): us_federal -> us_federal; intl_dev_multilatera
 amount_flag: null award unverified; >= min_award ok; else low.
 
 # D. Reading the keys
-discovery_brief keys: today, gates, rubric, theme_vocab, coverage, targets, reverify, failing, collection_gaps, metrics, last_runs, last_refresh (section 1). Run order that follows from it: log start, close `reverify` items via reverify_source, work `targets` and coverage gaps via register_source, fix `collection_gaps` via set_collection, add calls via upsert_opportunity, log finish.
+discovery_brief keys: today, gates, rubric, theme_vocab, coverage, targets, reverify, failing, collection_gaps, metrics, last_runs, last_refresh, marks (section 1). Run order that follows from it: log start, close `reverify` items via reverify_source, work `targets` and coverage gaps via register_source, fix `collection_gaps` via set_collection, add calls via upsert_opportunity, log finish.
 
 # E. Allowed values (live check constraints)
 - category: foundation, us_federal, intl_dev_multilateral, bilateral_dev, state_regional, corporate, research_collab, prize_challenge, aggregator.
@@ -169,7 +170,7 @@ discovery_brief keys: today, gates, rubric, theme_vocab, coverage, targets, reve
 # F. Repo vs live
 No substantive difference found for the 10 functions. Repo `010_radar_v2.sql` defines register_source with untyped string literals and then patches the live function in block `008c2` (types them `text '...'`), so the live body is the patched one; `011_collection.sql` replaces discovery_brief (adds collection_gaps) and metrics_now (adds collection) via text patching, so no single repo file shows the final body. Source of truth is the live definition.
 
-## Human overrides (migration 023, authored, not applied)
+## Human overrides (migration 023, live as 20261118013547)
 
 The lead's dashboard writes go through these RPCs. Writes need the passcode (`grants.check_pass`). A wrong passcode RETURNS `{"error":"bad passcode","code":"28000"}` instead of raising, so the failure row that `check_pass` writes commits and the lockout can count it. The lockout raises `locked` (P0001) after 40 failures in 10 minutes (`005_hardening`). Bad input raises 22023 with a plain-English message.
 
@@ -198,3 +199,41 @@ Semantics:
 - `grants_set_state`: a bad passcode returns the error object; a no-op returns the row with no write and no event; a first touch writes one event; a blank actor falls back to `team`.
 - Anonymous reads: without a passcode, team names (`human.by`, vetting `actor`), human notes and lead notes are withheld. Still public: reject reasons, vet notes, fit breakdown, vetting notes and changes, call titles and descriptions, lead `why` and `source`, and for listed funders the v_funders columns. The contract pins anonymous reads; lead confirmation pending (`.claude/runs/dashboard-v3/sql-notes.md`, Review round rows 2 and 15).
 - Deviations from the contract: team event kinds `lead_queue` and `lead_dismiss` are new; a first-touch `grants_set_state` writes an event; a no-op writes nothing, so `updated_at` does not move; `reverify_source` is a fourth replaced function; `funders_unlist_cascade` and `opportunities_a_listed_guard` are added triggers; a wrong passcode on a read returns `access: 'public'` instead of erroring; `grants_registry` and `grants_funder` are VOLATILE, so the front end must POST them.
+
+## Bookmarks (migration 024, live as 20261120170311)
+
+Team bookmarks mark a funder, a call or a lead. One bookmark per item, chosen from a set of definitions the team edits. A definition has:
+- `id`: a slug.
+- `label`: 1 to 32 characters.
+- `hue`: 0 to 7, the dashboard's 8 avatar colour slots.
+- `effect`: `none` (a plain label), `follow` (the discovery agent re-checks the item every run) or `hide` (hidden from default lists; the agent stops proposing similar items).
+
+Starter set: `keep-an-eye` "Keep an eye on" (follow), `shortlist` "Shortlist" (none), `not-relevant` "Not relevant" (hide). At most 12 active definitions.
+
+Tables (RLS on, no policies, no grants: reachable only through the functions):
+- `grants.marks`: the definitions. A retired definition keeps its row with `retired_at` set.
+- `grants.item_marks`: one row per item, primary key `(kind, item_id)`. `kind` is `funder`, `call` or `lead`. A cleared bookmark keeps its row with `mark_id` null.
+
+| RPC | Access | Arguments | Returns |
+|---|---|---|---|
+| `public.grants_marks(p_pass text default null)` | read; passcode optional | optional passcode | `{team, defs[], items[]}`. `defs` = `{id, label, hue, effect, sort, retired}`; `items` = `{kind, id, mark, at, name, funder?, note?, by?}`. Without a valid passcode, `team` is false, retired definitions are left out, and `note` and `by` are left out. Items whose definition is retired are left out for everyone. |
+| `public.grants_mark(p_pass text, p_patch jsonb)` | write | passcode and patch (below) | The same payload with `team` true. A wrong passcode returns the 403 `pass_denied` body; it never raises for that. |
+
+Patch, by `p_patch.action` (`actor` is required on every action):
+- `set` `{kind, id, mark, note?, actor}`: bookmark a funder, call or lead (`id` is its uuid). `note` is up to 280 characters. A patch with no `note` key keeps the stored note; send `note: ""` to clear it (025). The dashboard sends `note` only when the note itself is edited, so a tab with an old or public index cannot erase a teammate's note.
+- `clear` `{kind, id, actor}`: remove the bookmark, keeping the row.
+- `define` `{mark?, label, hue, effect, actor}`: with `mark`, edits that definition; without it, creates one whose id is a slug of the label (a number is added if the slug is taken). `hue` and `effect` default to 0 and `none`.
+- `retire` / `restore` `{mark, actor}`: retiring hides the definition and every item that carries it. Bookmarks are kept, so restore brings them back.
+
+Bad input raises SQLSTATE 22023 with one of these messages: `actor is required`, `unknown kind`, `unknown item`, `unknown bookmark`, `label is required`, `unknown effect`, `unknown hue`, `a bookmark with that name already exists` (label match ignores case), `at most 12 bookmarks`, `unknown action`.
+
+Team events, written by `set` and `clear`, returned by the `events` list of `grants_team_notes`:
+- `mark_set`: payload `item_kind`, `item_id`, `name`, `mark`, `label`, `from` (the bookmark it replaced), `note`.
+- `mark_clear`: payload `item_kind`, `item_id`, `name`, `from`.
+- A `set` that changes nothing, or a `clear` on an item with no bookmark, writes no event.
+
+Agent side:
+- `grants.discovery_brief()` has a new key `marks` = `grants.marks_brief()` = `{ignore: [...], follow: [...]}`. `ignore` holds the hide-effect items (newest 60); `follow` holds the follow-effect items (newest 40). Each entry: `{kind, funder_id?, org, program?, url?, status?, label, note?, by, on}`.
+- `grants.marks_brief()` and `grants.marks_payload(boolean)` are read-only and listed in `.claude/sql-api-funcs.txt`. The agent never writes bookmarks.
+
+Rollback: `024_bookmarks-rollback.sql`, run in the Supabase dashboard SQL editor (the SQL connector declines it). Step 1 puts `grants.discovery_brief()` back to its pre-024 definition (removes `marks`). Step 2 drops the RPCs, the helper functions and both tables, which deletes every bookmark and definition.

@@ -87,8 +87,6 @@ dialog.drawer::backdrop { background: var(--scrim); -webkit-backdrop-filter: blu
 
 /* quick notes and the working summary */
 .drawer .qnotes { margin-top: .875rem; padding-top: 0; border-top: 0; }
-.drawer .invite { display: grid; justify-items: start; gap: .5rem; padding: .75rem .875rem; border: var(--hair-soft); border-radius: var(--radius-sm); }
-.drawer .invite p { margin: 0; }
 .drawer .field { display: grid; gap: .375rem; }
 .drawer .field-l { font-size: var(--t-sm); font-weight: 600; color: var(--ink-2); }
 .drawer #tNotes { width: 100%; min-height: 7.5rem; box-sizing: border-box; padding: .625rem .75rem; font: inherit; font-size: var(--t-sm); line-height: 1.55; color: var(--ink); background: var(--bg); border: var(--hair); border-radius: var(--radius-sm); resize: vertical; }
@@ -169,6 +167,8 @@ dialog.drawer::backdrop { background: var(--scrim); -webkit-backdrop-filter: blu
 .drawer .call-o { margin: 0; font-size: var(--t-xs); }
 .drawer .call--off .call-t { color: var(--ink-2); }
 .drawer .call .btn { flex: none; min-height: 36px; }
+.drawer .call-act { display: flex; align-items: center; gap: .375rem; flex: none; }
+.drawer .mk-note { margin-top: .375rem; overflow-wrap: anywhere; }
 .drawer .cdemoted { margin-top: .75rem; }
 .drawer .cdemoted > summary { display: flex; align-items: center; min-height: 36px; cursor: pointer; font-size: var(--t-sm); color: var(--ink-2); }
 .drawer .cdemoted > summary:focus-visible { outline: var(--focus); outline-offset: 2px; }
@@ -218,6 +218,6 @@ dialog.drawer::backdrop { background: var(--scrim); -webkit-backdrop-filter: blu
 @media (pointer: coarse), (max-width: 760px) {
   .drawer .dhead .btn, .drawer .dnav-b, .drawer .dact .btn, .drawer .dban-a .btn, .drawer .call .btn,
   .drawer .tf, .drawer .tin, .drawer .tstate, .drawer .dfoot .btn, .drawer .qsrc, .drawer .dfit,
-  .drawer .cdemoted > summary, .drawer .docs a, .drawer .invite .btn { min-height: 44px; }
+  .drawer .cdemoted > summary, .drawer .docs a { min-height: 44px; }
   .drawer .call-t a { display: inline-flex; align-items: center; min-height: 44px; }
 }

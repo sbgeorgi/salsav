@@ -2,6 +2,8 @@
 // Feed text goes through el() text nodes only. Jump links are buttons, not #anchors: the shell owns location.hash.
 // Search: the screened-out list and the next-up list follow app.q(); onQuery redraws only those two lists.
 import { fitBar } from './viz.js';
+import { RANK_WEIGHTS } from '../dashboard.js';
+import { MARK_EFFECTS } from './ui.js';
 import { COLLECT_SAYS, collectionOf, coverageRows, collectionTotals, totalsSentence, statusEl } from './drawer.js';
 import { screenedCriteria, loadRegistryOnce } from './insights.js';
 
@@ -9,12 +11,10 @@ const NS = 'http://www.w3.org/2000/svg';
 // viz.js returns an SVG string and escapes every data string it gets; parse it as SVG, never as HTML (no innerHTML).
 const svgEl = (s) => document.importNode(new DOMParser().parseFromString(s.replace('<svg ', `<svg xmlns="${NS}" `), 'image/svg+xml').documentElement, true);
 const LIST_CAP = 5;
-// Points added on top of the fit score for next best moves. Mirrors recScore in dashboard.js; the parity test in dash/mods.test.mjs
-// runs D.recommend() on fixed rows and fails if these numbers and the scoring drift apart.
-export const RANK_WEIGHTS = { soon45: 12, sweet90: 15, late180: 8, rolling: 4, prepare: 2, ua: 5, facts: 3 };
+// RANK_WEIGHTS (dashboard.js) are the points recScore adds for next best moves; the parity test in dash/mods.test.mjs runs D.recommend() on fixed rows.
 const num = (n) => new Intl.NumberFormat('en-US').format(Number(n) || 0);
 const pl = (n, one, many) => `${num(n)} ${Number(n) === 1 ? one : many}`;
-const SECS = [['listed', 'How a source gets listed'], ['fit', 'How fit is scored'], ['rank', 'How next best moves are ranked'], ['screened', 'Screened out'], ['queue', 'Queued for vetting'], ['runs', 'Discovery runs'], ['collection', 'How calls are collected']];
+const SECS = [['listed', 'How a source gets listed'], ['fit', 'How fit is scored'], ['rank', 'How next best moves are ranked'], ['screened', 'Screened out'], ['queue', 'Queued for vetting'], ['runs', 'Discovery runs'], ['collection', 'How calls are collected'], ['marks', 'Bookmarks and the agent']];
 
 export function render(root, app) {
   const { S, D, el, ico, ui } = app, feed = S.feed || {}, rb = app.rubric();
@@ -132,7 +132,7 @@ export function render(root, app) {
   drawScr();
 
   /* 5. queued for vetting */
-  const tg = feed.targets || {}, have = {}, cov = feed.coverage_min || {};
+  const tg = feed.targets || {}, have = {};
   for (const r of S.rows) have[r.bucket] = (have[r.bucket] || 0) + 1;
   const nextCount = el('p', { class: 'sub mcount', role: 'status' }), nextBox = el('div', { class: 'mnext-box' });
   function drawNext() {
@@ -148,9 +148,9 @@ export function render(root, app) {
   const queue = tg.by_bucket?.length || tg.next?.length ? [
     el('p', { class: 'mlede', text: 'Beyond open searching, we keep a list of named funders to check one by one, so every kind of funder has enough coverage.' }),
     el('div', { class: 'mpair' },
-    tg.by_bucket?.length ? el('table', { class: 'mtbl mcov' }, el('thead', {}, el('tr', {}, th('Type of funder'), th('Listed now', 'pts'), th('Waiting', 'pts'), th('Done', 'pts'), th('Ruled out', 'pts'), th('Put off', 'pts'))),
+    tg.by_bucket?.length ? el('table', { class: 'mtbl mcov' }, el('thead', {}, el('tr', {}, th('Type of funder'), th('Tracked now', 'pts'), th('Waiting', 'pts'), th('Done', 'pts'), th('Ruled out', 'pts'), th('Put off', 'pts'))),
       el('tbody', {}, tg.by_bucket.map((b) => el('tr', {}, el('th', { scope: 'row' }, bucket(b.bucket)),
-        el('td', { class: 'num pts', 'data-l': 'Listed now' }, String(have[b.bucket] || 0), cov[b.bucket] ? el('small', { class: 'sub', text: ` of ${cov[b.bucket]} wanted` }) : null),
+        el('td', { class: 'num pts', 'data-l': 'Tracked now', text: String(have[b.bucket] || 0) }),
         ...['pending', 'covered', 'rejected', 'deferred'].map((k) => el('td', { class: 'num pts', 'data-l': { pending: 'Waiting', covered: 'Done', rejected: 'Ruled out', deferred: 'Put off' }[k], text: b[k] ?? 0 })))))) : null,
     tg.next?.length ? el('div', { class: 'mnext' }, el('h3', { text: 'Next ones up' }), nextCount, nextBox) : null)] : [none('No named funders are queued right now.')];
 
@@ -160,10 +160,10 @@ export function render(root, app) {
   const lastCheck = lastStamp ? `The last check ${D.relTime(lastStamp, S.now)} read ${pl(lr.fetched, 'page', 'pages')}; ${num(lr.changed)} changed.` : 'No check has been recorded yet.';
   const disc = [
     r24 ? el('p', { class: 'sub', text: `In the last 24 hours: ${pl(r24.runs, 'check', 'checks')}, ${pl(r24.fetched, 'page', 'pages')} read, ${num(r24.changed)} changed, ${pl(r24.errors, 'error', 'errors')}.` }) : null,
-    tot ? el('div', { class: 'mtot' }, [['Examined', tot.examined], ['Listed', tot.vetted], ['Screened out', tot.rejected], ['Waiting on a check', tot.candidate]].map(([l, n]) => el('div', {}, el('span', { class: 'big num', text: n ?? 0 }), el('span', { class: 'sub', text: l })))) : null,
-    runs.length ? el('table', { class: 'mtbl mruns' }, el('thead', {}, el('tr', {}, th('Run'), th('Examined', 'pts'), th('Listed', 'pts'), th('Screened out', 'pts'), th('Duplicates', 'pts'), th('What happened'))),
+    tot ? el('div', { class: 'mtot' }, [['Examined', tot.examined], ['Tracked', tot.vetted], ['Screened out', tot.rejected], ['Waiting on a check', tot.candidate]].map(([l, n]) => el('div', {}, el('span', { class: 'big num', text: n ?? 0 }), el('span', { class: 'sub', text: l })))) : null,
+    runs.length ? el('table', { class: 'mtbl mruns' }, el('thead', {}, el('tr', {}, th('Run'), th('Examined', 'pts'), th('Tracked', 'pts'), th('Screened out', 'pts'), th('Duplicates', 'pts'), th('What happened'))),
       el('tbody', {}, runs.map((r) => el('tr', {}, el('th', { scope: 'row' }, el('span', { class: 'num', text: day(r.started_at) }), el('small', { class: 'sub', text: r.run_label })),
-        ...['examined', 'vetted', 'rejected', 'duplicate'].map((k, i) => el('td', { class: 'num pts', 'data-l': ['Examined', 'Listed', 'Screened out', 'Duplicates'][i], text: r[k] ?? 0 })), el('td', { text: r.summary || 'No summary recorded' }))))) : none('No discovery runs are recorded yet.'),
+        ...['examined', 'vetted', 'rejected', 'duplicate'].map((k, i) => el('td', { class: 'num pts', 'data-l': ['Examined', 'Tracked', 'Screened out', 'Duplicates'][i], text: r[k] ?? 0 })), el('td', { text: r.summary || 'No summary recorded' }))))) : none('No discovery runs are recorded yet.'),
     dc?.by_lens?.length ? el('p', { class: 'sub mlens' }, 'By search lens: ', dc.by_lens.map((l) => `${l.lens} (${l.examined} examined, ${l.vetted} listed)`).join('; ')) : null];
 
   /* 7. how calls are collected */
@@ -176,6 +176,17 @@ export function render(root, app) {
         el('td', { 'data-l': 'How', text: D.COLLECT_MODES[c.mode] || c.mode }), el('td', { 'data-l': 'Via', text: c.source || '' }), el('td', { 'data-l': 'Status' }, statusEl(app, c.health)),
         el('td', { class: 'num pts', 'data-l': 'Open calls', text: c.open_calls }), el('td', { 'data-l': 'Last checked', text: D.relTime(c.checked_at, S.now) }), el('td', { 'data-l': 'Note', text: c.note || '' })); })))) : none('No sources are listed yet.')];
 
+  /* 8. bookmarks and the agent */
+  const counts = D.markCounts(S.marks), defs = S.marks?.defs || [];
+  const marks = [
+    el('p', { class: 'mlede', text: 'The team defines its own bookmarks and puts one on any funder, call or lead. A bookmark never changes the fit score. Its effect decides what the Radar shows and what the discovery agent does with the item.' }),
+    el('table', { class: 'mtbl' }, el('thead', {}, el('tr', {}, th('Effect'), th('What happens'))),
+      el('tbody', {}, [['none', 'Only the label shows. Nothing else changes.'], ['follow', 'Each run the agent opens the item’s page (up to 10 followed items, oldest check first) and looks for a new or announced call.'], ['hide', 'The funder leaves the Radar, the counts, Next best moves and the Pipeline. The agent skips it, spends no re-check effort on it, and reads the bookmark’s label and note as the reason to skip similar new leads. Find it again in the Database, or filter the Radar by this bookmark.']]
+        .map(([k, t]) => el('tr', {}, el('th', { scope: 'row', text: MARK_EFFECTS[k] }), el('td', { text: t }))))),
+    defs.length ? el('table', { class: 'mtbl' }, el('thead', {}, el('tr', {}, th('Bookmark'), th('Effect'), th('Items', 'pts'))),
+      el('tbody', {}, defs.map((d) => el('tr', {}, el('th', { scope: 'row' }, ui.markChip(d)), el('td', { 'data-l': 'Effect', text: MARK_EFFECTS[d.effect] }), el('td', { class: 'num pts', 'data-l': 'Items', text: counts.get(d.id) || 0 }))))) : none('No bookmarks are defined yet.'),
+    el('p', {}, el('button', { class: 'btn btn--sm', type: 'button', onclick: () => app.manageMarks() }, 'Manage bookmarks'))];
+
   const jump = (id) => document.getElementById('m-' + id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   root.replaceChildren(el('div', { class: 'method' },
     el('nav', { class: 'mjump', 'aria-label': 'On this page' }, SECS.map(([id, t]) => el('button', { type: 'button', onclick: () => jump(id) }, t))),
@@ -185,7 +196,8 @@ export function render(root, app) {
     sec('screened', SECS[3][1], 'Read, then ruled out. Each one has a reason, and the criterion it failed is counted here.', el('div', { class: 'mpair' }, el('div', {}, summary, rule, dbLink), el('div', { class: 'mscr-list' }, count, list, more))),
     sec('queue', SECS[4][1], null, ...queue),
     sec('runs', SECS[5][1], `Pages already on the list are re-read on a rolling schedule, so changes show up on the Radar. ${lastCheck}`, ...disc),
-    sec('collection', SECS[6][1], null, ...collect)));
+    sec('collection', SECS[6][1], null, ...collect),
+    sec('marks', SECS[7][1], null, ...marks)));
   root._mdraw = () => { drawScr(); drawNext(); };
 }
 

@@ -2,12 +2,18 @@
    (supabase/grants/023_human_overrides.sql sections 5 and 8), served from memory. load() is the only fetch and it is same origin.
    Any non-empty passcode counts as the team tier. Without one, grants_registry and grants_funder withhold team identity
    (human.by, human.note, vetting actor, lead note, call human.by/note), and an unlisted funder keeps only the registry keys.
+   Bookmarks (grants_marks, grants_mark; 024_bookmarks.sql) are held in memory and seeded in code with the three seed definitions.
    Writes change memory only; a reload restores dash/mock.json. Local verification only, never a production path. */
-const OPEN = new Set(['grants_feed', 'grants_registry', 'grants_funder']);
-const PASSED = new Set(['grants_check_pass', 'grants_team_notes', 'grants_set_state', 'grants_note', 'grants_set_funder', 'grants_set_call', 'grants_set_lead']);
-const STATES = ['new', 'reviewing', 'applying', 'submitted', 'awarded', 'declined', 'skip'];
+import { STATES } from '../dashboard.js';
+
+const OPEN = new Set(['grants_feed', 'grants_registry', 'grants_funder', 'grants_marks']);
+const PASSED = new Set(['grants_check_pass', 'grants_team_notes', 'grants_set_state', 'grants_note', 'grants_set_funder', 'grants_set_call', 'grants_set_lead', 'grants_mark']);
 const VETTING_KIND = { promote: 'promoted', demote: 'demoted', release: 'released' };
-let DB = null, seq = 5000;
+let DB = null, seq = 5000, MARKS = null;
+const SEED_MARKS = () => ({ defs: [
+  { id: 'keep-an-eye', label: 'Keep an eye on', hue: 7, effect: 'follow', sort: 10, retired: false },
+  { id: 'shortlist', label: 'Shortlist', hue: 2, effect: 'none', sort: 20, retired: false },
+  { id: 'not-relevant', label: 'Not relevant', hue: 4, effect: 'hide', sort: 30, retired: false }], items: [] });
 
 const clone = (x) => (x == null ? x : JSON.parse(JSON.stringify(x)));
 /* the live RPCs return exactly the contract keys; the JSON carries extras (registry team and deadline, note delete columns) that are dropped here */
@@ -161,11 +167,86 @@ function setLead(id, p, who) {
   return { id: l.id, status: l.status, note: l.note };
 }
 
+/* ---- bookmarks (024_bookmarks.sql human_mark / marks_payload): in memory, reset by load() ---- */
+const targetOf = (kind, id) => { // { name, funder } of a funder, call or lead, like the three selects in human_mark
+  if (kind === 'funder') { const f = find(DB.registry.funders, 'id', id); return f && { name: f.name, funder: f.id }; }
+  if (kind === 'call') { const c = find(DB.registry.calls, 'id', id); return c && { name: c.title, funder: c.funder_id }; }
+  if (kind === 'lead') { const l = find(DB.registry.leads, 'id', id); return l && { name: l.org, funder: l.funder_id ?? null }; }
+  throw fail('unknown kind', '22023');
+};
+const activeDefs = () => MARKS.defs.filter((d) => !d.retired);
+function marksPayload(team) {
+  const live = new Set(activeDefs().map((d) => d.id));
+  const defs = MARKS.defs.filter((d) => team || !d.retired).map((d) => ({ ...d })).sort((a, b) => a.sort - b.sort || a.label.localeCompare(b.label) || a.id.localeCompare(b.id));
+  const items = MARKS.items.filter((m) => m.mark && live.has(m.mark)).sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0)).map((m) => {
+    const t = targetOf(m.kind, m.id) || {}, o = { kind: m.kind, id: m.id, mark: m.mark, at: m.at, name: t.name };
+    if (m.kind !== 'funder' && t.funder != null) o.funder = t.funder;
+    if (team) { if (m.note) o.note = m.note; if (m.by) o.by = m.by; }
+    return o;
+  });
+  return clone({ team, defs, items });
+}
+function setMark(b, p) {
+  const actor = String(p.actor ?? '').trim().slice(0, 60), action = String(p.action ?? '');
+  if (!actor) throw fail('actor is required', '22023');
+  const label = String(p.label ?? '').replace(/\s+/g, ' ').trim().slice(0, 32), mark = String(p.mark ?? '').trim() || null;
+  const defOf = (id) => MARKS.defs.find((d) => d.id === id);
+  const taken = (l, except) => activeDefs().some((d) => d.label.toLowerCase() === l.toLowerCase() && d.id !== except);
+  if (action === 'set' || action === 'clear') {
+    const t = targetOf(p.kind, p.id);
+    if (!t) throw fail('unknown item', '22023');
+    const m = MARKS.items.find((x) => x.kind === p.kind && String(x.id) === String(p.id)), prev = m?.mark ?? null;
+    if (action === 'set') {
+      const d = defOf(mark);
+      if (!d || d.retired) throw fail('unknown bookmark', '22023');
+      const note = 'note' in p ? String(p.note ?? '').trim().slice(0, 280) || null : m?.note ?? null; // 025: no note key keeps the stored note
+      if (prev !== d.id || (m?.note ?? null) !== note) {
+        if (m) Object.assign(m, { mark: d.id, note, by: actor, at: stamp() });
+        else MARKS.items.push({ kind: p.kind, id: p.id, mark: d.id, note, by: actor, at: stamp() });
+        const ev = { item_kind: p.kind, item_id: p.id, name: t.name, mark: d.id, label: d.label };
+        if (prev) ev.from = prev;
+        if (note) ev.note = note;
+        logEvent(t.funder ?? null, 'mark_set', actor, ev);
+      }
+    } else if (prev) {
+      Object.assign(m, { mark: null, note: null, by: actor, at: stamp() });
+      logEvent(t.funder ?? null, 'mark_clear', actor, { item_kind: p.kind, item_id: p.id, name: t.name, from: prev });
+    }
+  } else if (action === 'define') {
+    const effect = String(p.effect || 'none'), hue = p.hue == null || p.hue === '' ? 0 : p.hue;
+    if (!label) throw fail('label is required', '22023');
+    if (!['none', 'follow', 'hide'].includes(effect)) throw fail('unknown effect', '22023');
+    if (!/^[0-7]$/.test(String(hue))) throw fail('unknown hue', '22023');
+    if (taken(label, mark)) throw fail('a bookmark with that name already exists', '22023');
+    if (!mark) {
+      if (activeDefs().length >= 12) throw fail('at most 12 bookmarks', '22023');
+      const base = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 32) || 'bookmark';
+      let id = base, n = 1;
+      while (defOf(id)) id = `${base}-${++n}`;
+      MARKS.defs.push({ id, label, hue: Number(hue), effect, sort: Math.max(0, ...MARKS.defs.map((d) => d.sort)) + 10, retired: false });
+    } else {
+      const d = defOf(mark);
+      if (!d) throw fail('unknown bookmark', '22023');
+      Object.assign(d, { label, hue: Number(hue), effect });
+    }
+  } else if (action === 'retire' || action === 'restore') {
+    const d = defOf(mark);
+    if (!d) throw fail('unknown bookmark', '22023');
+    if (action === 'restore' && d.retired) {
+      if (activeDefs().length >= 12) throw fail('at most 12 bookmarks', '22023');
+      if (taken(d.label, d.id)) throw fail('a bookmark with that name already exists', '22023');
+    }
+    d.retired = action === 'retire';
+  } else throw fail('unknown action', '22023');
+  return marksPayload(true);
+}
+
 /* ---- public surface: load once, then rpc(fn, body) like the live API ---- */
 export async function load(url) {
   const r = await fetch(url, { cache: 'no-store' });
   if (!r.ok) throw new Error(`Mock data returned ${r.status}`);
   DB = await r.json();
+  MARKS = SEED_MARKS();
   return true;
 }
 export async function rpc(fn, body = {}) {
@@ -185,5 +266,7 @@ export async function rpc(fn, body = {}) {
     case 'grants_set_funder': return setFunder(b.p_funder, p, who);
     case 'grants_set_call': return setCall(b.p_opp, p, who);
     case 'grants_set_lead': return setLead(b.p_target, p, who);
+    case 'grants_marks': return marksPayload(teamPass(b));
+    case 'grants_mark': return setMark(b, p);
   }
 }

@@ -102,12 +102,105 @@
 .umenu-item:hover, .umenu-item:focus-visible { background: var(--accent-soft); outline: var(--focus); outline-offset: -2px; }
 .umenu-item.is-danger { color: var(--bad-fg); }
 
+/* menu extras: radio rows with a glyph and hint, separators, and a viewport-placed list (placeBox sets left/top) */
+.umenu--fixed { position: fixed; right: auto; top: 0; left: 0; }
+.umenu-item--rich { display: flex; align-items: center; gap: .55rem; }
+.umenu-label { min-width: 0; }
+.umenu-hint { margin-left: auto; padding-left: .8rem; color: var(--muted); font-size: 11.5px; }
+.umenu-item[aria-checked]::after { content: ""; flex: none; width: 1em; margin-left: .5rem; }
+.umenu-item[aria-checked="true"] { font-weight: 600; }
+.umenu-item[aria-checked="true"]::after { content: "\2713"; }
+.umenu-sep { height: 1px; margin: .3rem .4rem; background: var(--line); list-style: none; }
+
+/* bookmarks: colour sits on the svg (.mk-ico), never on a button (.dash button { color: inherit }) */
+.mk-0 { --mk: var(--av-0); } .mk-1 { --mk: var(--av-1); } .mk-2 { --mk: var(--av-2); } .mk-3 { --mk: var(--av-3); }
+.mk-4 { --mk: var(--av-4); } .mk-5 { --mk: var(--av-5); } .mk-6 { --mk: var(--av-6); } .mk-7 { --mk: var(--av-7); }
+.mk-ico { display: block; flex: none; fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linejoin: round; transition: opacity var(--dur) var(--ease), stroke var(--dur) var(--ease), fill var(--dur) var(--ease); }
+.mk-ico.is-set { fill: var(--mk); stroke: var(--mk); }
+.mk-ico.is-hide { opacity: .55; }
+.mk-line { display: flex; align-items: center; gap: .4rem; min-width: 0; }
+.mk-end { margin-left: auto; }
+.mk-wrap { display: inline-flex; flex: none; vertical-align: middle; }
+.mk-btn { all: unset; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; width: 28px; height: 28px; border-radius: var(--r-xs); cursor: pointer; transition: background var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+.mk-btn:hover { background: var(--accent-soft); }
+.mk-btn:not(.is-set):hover .mk-ico { stroke: var(--ink); }
+.mk-btn:focus-visible { outline: var(--focus); outline-offset: 2px; }
+.mk-btn--label { width: auto; min-height: 30px; padding: 0 .6rem; border: var(--hair); border-radius: var(--r-pill); font-size: var(--t-sm); white-space: nowrap; }
+.mk-text { color: var(--ink); }
+.mk-btn.is-busy { opacity: .6; cursor: progress; }
+.mk-btn.is-ro { cursor: pointer; }
+/* an unset ribbon rests at 55% where a pointer can hover, and wakes on row hover, focus and touch; a set one is always full */
+@media (hover: hover) {
+  .mk-btn:not(.is-set):not(.mk-btn--label) .mk-ico { opacity: .55; }
+  :is(tr, li, .card, .bcard, .it):hover .mk-btn .mk-ico, .mk-wrap:focus-within .mk-ico, .mk-btn:hover .mk-ico { opacity: 1; }
+  .mk-ico.is-hide, :is(tr, li, .card, .bcard, .it):hover .mk-ico.is-hide { opacity: .55; }
+}
+.mk-dim { opacity: .55; }
+.mchip { display: inline-flex; align-items: center; gap: .3rem; min-height: 24px; padding: 0 .5rem; border-radius: var(--r-pill); font-size: 11.5px; font-weight: 600; white-space: nowrap; color: var(--mk); background: color-mix(in srgb, var(--mk) 12%, var(--surface)); }
+.mchip .mk-ico { opacity: 1; }
+.mk-filter { display: flex; flex-wrap: wrap; gap: .4rem; }
+.mk-fchip { display: inline-flex; align-items: center; gap: .4rem; }
+.mk-fchip b { font-variant-numeric: tabular-nums; font-weight: 600; }
+.mk-filter .mk-fchip[aria-pressed="true"] { color: var(--ink); background: color-mix(in srgb, var(--mk) 14%, var(--surface)); border-color: var(--mk); box-shadow: inset 0 0 0 1px var(--mk); }
+
+/* header popover: #marksPop (class mk-pop) holds UI.markList; the shell toggles [hidden] */
+.mk-pop { position: absolute; z-index: 45; right: 0; top: calc(100% + 6px); width: min(360px, 90vw); max-height: min(70vh, 560px); overflow: auto; padding: .4rem; background: var(--surface); border: var(--hair); border-radius: 12px; box-shadow: var(--shadow); }
+.mk-pop[hidden] { display: none; }
+.mk-list { display: grid; gap: .2rem; }
+.mk-empty { margin: 0; padding: .7rem .6rem; color: var(--muted); font-size: var(--t-sm); }
+.mk-grp { display: grid; gap: .1rem; padding: .3rem .2rem; }
+.mk-grp + .mk-grp { border-top: var(--hair-soft); }
+.mk-grp-head { display: flex; align-items: center; gap: .45rem; min-height: 28px; padding: 0 .4rem; font-size: var(--t-sm); font-weight: 600; }
+.mk-grp-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-grp-n { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+.mk-grp-head .linkbtn { margin-left: auto; flex: none; font-size: var(--t-xs); font-weight: 500; }
+.mk-items { margin: 0; padding: 0; list-style: none; }
+.mk-open { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: .5rem; width: 100%; min-height: 32px; padding: 0 .5rem 0 1.9rem; border-radius: var(--r-xs); cursor: pointer; color: var(--ink); font-size: var(--t-sm); }
+.mk-open-name { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-open:hover, .mk-open:focus-visible { background: var(--accent-soft); }
+.mk-open:focus-visible { outline: var(--focus); outline-offset: -2px; }
+.mk-more { margin: .1rem 0 0 1.9rem; justify-self: start; font-size: var(--t-xs); }
+.mk-foot { margin-top: .2rem; padding: .4rem .4rem .1rem; border-top: var(--hair-soft); }
+/* manage dialog body: dialog.modal#marksDlg holds UI.markManager */
+dialog.modal:has(.mk-mgr) { width: min(900px, calc(100vw - 2rem)); }
+.mk-mgr { display: grid; gap: .6rem; margin-top: .8rem; }
+.mk-rows { display: grid; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.mk-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .8rem; padding: .5rem .65rem; border: var(--hair); border-radius: var(--radius-sm); background: var(--surface); }
+.mk-row.is-retired { opacity: .75; }
+.mk-sws { display: flex; flex: none; gap: .4rem; padding: 4px; }
+.mk-sw { all: unset; box-sizing: border-box; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; background: var(--mk); transition: box-shadow var(--dur) var(--ease); }
+.mk-sw[aria-checked="true"] { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--mk); }
+.mk-sw:focus-visible { outline: var(--focus); outline-offset: 5px; }
+.mk-sw:disabled { opacity: .4; cursor: not-allowed; }
+dialog.modal .mk-mgr input.mk-name { flex: 1 1 9rem; width: auto; min-width: 8rem; min-height: 36px; }
+span.mk-name { flex: 1 1 9rem; min-width: 8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-eff { flex: none; min-height: 36px; padding: 0 .6rem; border: var(--hair); border-radius: var(--radius-sm); background: var(--bg); color: var(--ink); font: inherit; font-size: var(--t-sm); }
+.mk-eff:focus-visible { outline: var(--focus); outline-offset: 2px; }
+.mk-cnt { flex: none; min-width: 4.5rem; color: var(--muted); font-size: var(--t-xs); font-variant-numeric: tabular-nums; }
+.mk-cap { color: var(--ink); font-size: var(--t-sm); }
+.mk-acts { display: inline-flex; flex: none; gap: .4rem; margin-left: auto; }
+.mk-sub { margin: .3rem 0 0; font-size: var(--t-xs); font-weight: 600; color: var(--muted); letter-spacing: .02em; }
+
 /* the ask dialog's confirm button when the action removes something (.btn is ink by default) */
 .btn.btn--danger { color: var(--bad-fg) !important; border-color: var(--bad-fg); }
 
 @media (pointer: coarse), (max-width: 760px) {
   .umenu-item { min-height: 44px; line-height: 44px; }
+  .mk-btn { min-width: 44px; min-height: 44px; }
+  .mk-btn--label { min-height: 44px; }
+  .mk-btn:not(.is-set) .mk-ico { opacity: 1; }
+  .mk-pop { position: fixed; left: 8px; right: 8px; top: var(--topbar-h); width: auto; max-height: 70dvh; }
+  .mk-open { min-height: 44px; }
+  .mk-sws { flex-wrap: wrap; max-width: 100%; gap: 0; padding: 0; }
+  .mk-sw { display: grid; place-items: center; width: 44px; height: 44px; background: none; }
+  .mk-sw::before { content: ""; width: 30px; height: 30px; border-radius: 50%; background: var(--mk); }
+  .mk-sw[aria-checked="true"] { box-shadow: none; }
+  .mk-sw[aria-checked="true"]::before { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--mk); }
+  .mk-sw:focus-visible { outline-offset: -2px; }
+  .mk-grp-head .linkbtn, .mk-more { display: inline-flex; align-items: center; min-height: 44px; }
+  .mk-eff, dialog.modal .mk-mgr input.mk-name { min-height: 44px; }
+  .mk-row .btn { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bchip { transition: none; }
+  .bchip, .mk-btn, .mk-ico, .mk-sw { transition: none; }
 }

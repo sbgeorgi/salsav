@@ -13,3 +13,5 @@ grants.metrics_now
 grants.log_discovery_run
 grants.kick_refresh
 grants.resolve_promoted
+grants.marks_brief
+grants.marks_payload

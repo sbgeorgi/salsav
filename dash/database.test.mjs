@@ -30,6 +30,24 @@ t('buildRows: notes come from the injected lookup', () => {
   assert.equal(r.notes, 3);
   assert.equal(DB.buildRows(reg, { notes: () => null })[0].notes, null);
 });
+const mkIndex = (items) => D.marksIndex({ team: true, defs: [{ id: 'd1', label: 'Priority pitch', hue: 2, effect: 'follow', sort: 1 }, { id: 'd2', label: 'Parked', hue: 5, effect: 'hide', sort: 2 }], items });
+t('buildRows: a bookmark index stamps row.mark and its label is searchable; no index leaves mark null', () => {
+  const [a, b] = funders;
+  const marked = DB.buildRows(reg, { marks: mkIndex([{ kind: 'funder', id: a.id, mark: 'd1' }, { kind: 'funder', id: b.id, mark: 'd2' }]) });
+  assert.equal(marked.find((r) => r.id === a.id).mark.id, 'd1');
+  assert.equal(marked.find((r) => r.id === b.id).mark.effect, 'hide');
+  assert.equal(marked.filter((r) => r.mark).length, 2);
+  assert.ok(rows.every((r) => r.mark === null));
+  assert.deepEqual(DB.filterRows(marked, {}, ['priority', 'pitch']).map((r) => r.id), [a.id]);
+});
+t('filterRows: marks keeps only the chosen bookmarks; a hide-effect bookmark never hides a row; the Filters badge counts them', () => {
+  const [a, b] = funders;
+  const marked = DB.buildRows(reg, { marks: mkIndex([{ kind: 'funder', id: a.id, mark: 'd1' }, { kind: 'funder', id: b.id, mark: 'd2' }]) });
+  assert.deepEqual(DB.filterRows(marked, { marks: ['d1'] }).map((r) => r.id), [a.id]);
+  assert.equal(DB.filterRows(marked, { marks: ['d1', 'd2'] }).length, 2);
+  assert.equal(DB.filterRows(marked, { marks: [] }).length, marked.length);
+  assert.equal(DB.dbFilterCount({ marks: ['d1', 'd2'], status: 'all' }), 2);
+});
 t('buildRows: a judgment call is a screened-out funder whose every gate passed', () => {
   const j = rows.filter((r) => r.judgment);
   assert.ok(j.every((r) => r.status === 'rejected' && r.f.gates.pass === true));
@@ -261,6 +279,17 @@ const js = read('dash/database.js');
 const css = read('dash/database.css');
 const sharedCss = read('dashboard.css') + read('dash/ui.css');
 
+t('database.js: bookmark chip counts come from the funder rows, not D.markCounts (which also counts calls and leads)', () => {
+  assert.doesNotMatch(js, /D\.markCounts/);
+  assert.match(js, /counts: rows\.reduce\(\(m, r\) => \(r\.mark \?/);
+});
+t('database.js: bookmark controls on funder rows, calls and leads; hide-effect calls and leads are dimmed, never removed', () => {
+  assert.match(js, /app\.markControl\('funder', r\.id, r\.name, \{ label: 'set' \}\)/);
+  assert.match(js, /app\.markControl\('call', c\.id/);
+  assert.match(js, /app\.markControl\('lead', l\.id/);
+  assert.match(js, /mk-dim/);
+  assert.doesNotMatch(js, /_skip|hiddenBy/);
+});
 t('database.js builds the DOM without innerHTML or raw HTML strings', () => {
   assert.doesNotMatch(js, /innerHTML|outerHTML|insertAdjacentHTML|document\.write/);
 });

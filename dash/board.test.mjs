@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   COLS, CAP, UNASSIGNED, MINE, ownerKey, ownerOf, ownerPass, ownerGroups, searchText, pipelineRows, orderColumn, capColumn,
-  usdOf, totals, summarize, moneyLine, shortCountdown, shortAgo, dayKey, dayLabel, eventKind, personKey,
+  usdOf, totals, moneyLine, shortCountdown, shortAgo, dayKey, dayLabel, eventKind, personKey,
   activityItems, activityPeople, filterActivity, groupByDay, latestEvent, actionText, rowTarget, isScored,
 } from './board.js';
 import { BUCKETS, STATE_LABELS, fmtDate } from '../dashboard.js';
@@ -110,15 +110,8 @@ t('usdOf and moneyLine: a team ask beats the award ceiling; no amount reads as u
   assert.equal(moneyLine(row('c')), 'Amount unknown');
 });
 
-t('totals and summarize: play covers reviewing, applying and submitted; awarded and new are separate', () => {
-  const cols = {
-    new: [row('n', { award_max_usd: 10 })], reviewing: [row('r', { ask_usd: 100 })], applying: [row('a', { award_max_usd: 200 })],
-    submitted: [row('s', { ask_usd: 300 })], awarded: [row('w', { ask_usd: 400 })], declined: [row('d', { ask_usd: 999 })],
-  };
-  const s = summarize(cols);
-  assert.deepEqual(s.play, { n: 3, usd: 600 });
-  assert.deepEqual(s.awarded, { n: 1, usd: 400 });
-  assert.deepEqual(s.fresh, { n: 1, usd: 10 });
+t('totals: count and dollars, ask first then the largest award', () => {
+  assert.deepEqual(totals([row('r', { ask_usd: 100 }), row('a', { award_max_usd: 200 })]), { n: 2, usd: 300 });
   assert.deepEqual(totals([]), { n: 0, usd: 0 });
 });
 
@@ -158,6 +151,8 @@ t('eventKind: moves, owners, asks, notes and decisions; anything else is other',
   assert.equal(eventKind({ kind: 'update', payload: { ask_usd: 5 } }), 'ask');
   assert.equal(eventKind({ kind: 'update', payload: { notes_changed: true } }), 'note');
   for (const k of ['promote', 'demote', 'release', 'call_demote', 'call_restore', 'lead_queue', 'lead_dismiss']) assert.equal(eventKind({ kind: k, payload: {} }), 'decision', k);
+  assert.equal(eventKind({ kind: 'mark_set', payload: {} }), 'decision');
+  assert.equal(eventKind({ kind: 'mark_clear', payload: {} }), 'decision');
   assert.equal(eventKind({ kind: 'mystery', payload: {} }), 'other');
   assert.equal(eventKind(null), 'other');
 });
@@ -275,3 +270,12 @@ t('colour guard: no colour literals in board.css or board.js', () => {
 });
 
 console.log(`ok ${n} tests`);
+
+t('Pipeline card: Move-to lists pickStates, the bookmark control closes .bcard-top, and the summary strip is gone', () => {
+  const src = read('dash/board.js');
+  assert.equal(src.includes('D.pickStates(r.team.state)'), true, 'Move-to source');
+  assert.equal(/D\.STATES|menuLabel|Skip it|skipped/.test(src), false, 'no skip wording or raw STATES in the picker');
+  assert.equal(/app\.markControl\('funder', r\.id, r\.name\)\),\s*el\('button', \{ class: 'rl'/.test(src), true, 'control is the last child of .bcard-top, passed as an el() child');
+  assert.equal(/summarize|bstat/.test(src + read('dash/board.css')), false, 'summary strip removed');
+  assert.equal(/\$\{hidden\} hidden/.test(src), true);
+});

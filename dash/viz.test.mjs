@@ -181,7 +181,7 @@ t('stackedBars: segments carry data-id, counts, totals, legend', () => {
 t('stackedBars: empty, zero parts, extreme, escaping', () => {
   assert.match(wellFormed(stackedBars([])), /no data yet/);
   wellFormed(stackedBars([{ label: 'Z', parts: [] }]));
-  wellFormed(stackedBars([{ label: 'X', parts: [{ key: 'a', value: 1e12 }, { key: 'b', value: 1 }] }], { legend: false, normalize: true }));
+  wellFormed(stackedBars([{ label: 'X', parts: [{ key: 'a', value: 1e12 }, { key: 'b', value: 1 }] }], { legend: false }));
   hasEsc(stackedBars([{ id: BAD, label: BAD, parts: [{ key: BAD, label: BAD, value: 4 }] }]));
 });
 

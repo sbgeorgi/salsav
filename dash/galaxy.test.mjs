@@ -1,7 +1,7 @@
 // node dash/galaxy.test.mjs: galaxy model, grouping, filters and the deterministic layout (no DOM).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { normalize } from '../dashboard.js';
+import { normalize, marksIndex } from '../dashboard.js';
 import { GROUPS, galaxyItems, galaxyLayout, galaxyFilter, groupOf, nodeRadius, themeCounts, totals, defaultGalaxy, filterCount, moreActive, nodeCaps, hitRadius, placeTaps } from './galaxy.js';
 
 const NOW = new Date('2026-11-11T20:00:00Z'); // fixed clock, same as dashboard.test.mjs
@@ -429,6 +429,26 @@ t('queued: a funder waiting for the discovery agent is marked, from the registry
   assert.equal(fromRow.queued, true);
   const [done] = galaxyItems([{ id: 'q3', name: 'Done', _queue: 'done' }], null);
   assert.equal(done.queued, false);
+});
+
+t('bookmarks: galaxyItems stamps the def on a tracked and on a screened funder; without marks every mark is null', () => {
+  const tracked = items.find((i) => i.tracked), screened = items.find((i) => !i.tracked && i.status === 'rejected');
+  assert.ok(tracked && screened);
+  const marks = marksIndex({ team: true, defs: [{ id: 'd1', label: 'Call first', hue: 3, effect: 'hide', sort: 1 }], items: [{ kind: 'funder', id: tracked.id, mark: 'd1' }, { kind: 'funder', id: screened.id, mark: 'd1' }] });
+  const marked = galaxyItems(rows, registry, { rubric: MOCK.feed.rubric || null, marks });
+  const by = new Map(marked.map((i) => [i.id, i]));
+  assert.equal(by.get(tracked.id).mark.label, 'Call first');
+  assert.equal(by.get(screened.id).mark.hue, 3);
+  assert.equal(marked.filter((i) => i.mark).length, 2);
+  assert.ok(items.every((i) => i.mark === null));
+});
+
+t('bookmarks: the view draws the ribbon, the legend entry, the card control and the row chip; source cuts hold', () => {
+  const src = readFileSync(new URL('./galaxy.js', import.meta.url), 'utf8');
+  assert.ok(/class: 'gx-mk'/.test(src) && /`gx-mk mk-\$\{it\.mark\.hue\}`/.test(src));
+  assert.ok(src.includes("item('Bookmarked'") && src.includes("const mk = st.app.markChip('funder', it.id)") && src.includes("h('dd', {}, mk)") && src.includes("st.app.markChip('funder', it.id)));"));
+  assert.ok(!src.includes('markControl'), 'the inert selection card shows a read-only chip, not a menu control');
+  assert.ok(src.includes('app.S.marks') && !/^function sv\(/m.test(src) && !/galaxyRadius|^export const (TIERS|STAGE_LABEL|capLabel)/m.test(src));
 });
 
 t('totals: counts and published award sum for the visible set', () => {
