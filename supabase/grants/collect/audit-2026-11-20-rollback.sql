@@ -30,13 +30,14 @@ select grants.set_collection('00c5697a-eb43-4349-a81b-d0f8bb9ad2d2'::uuid, $j${
  "verified": true
 }$j$::jsonb);
 
--- 2aa89020
+-- 2aa89020 (restored unverified: since 027 set_collection refuses a verified page watch whose note names no
+-- blocker token, and this old note names none; it was a page watch only because the year was missing)
 select grants.set_collection('2aa89020-1edc-4ddc-bec9-e9ef304305cb'::uuid, $j${
  "adapter": "html",
  "adapter_config": {},
  "feed_url": null,
  "note": "No call rows can be made: the two concept cycles (online application October 15 to December 22, and May 1 to June 15, each with its proposal and award dates) are published on the How to Apply page without a year, and the collector never invents a year, so no deadline can be dated from plain HTTP.",
- "verified": true
+ "verified": false
 }$j$::jsonb);
 
 -- c7adf093
