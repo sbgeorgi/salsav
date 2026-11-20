@@ -1,0 +1,36 @@
+{
+  "id": "bfcb6aec-8da6-4dc8-ad5b-1300ff18bdcd",
+  "name": "California Air Resources Board",
+  "program": "CARB Research Program annual research project solicitation (FY2026-27 pre-proposals closed; recurs yearly)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://ww2.arb.ca.gov/our-work/programs/research-planning",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "item": "section.paragraph--type-call-to-action",
+      "match": "solicitation",
+      "title": "h2",
+      "link": "a.btn",
+      "detail": {
+        "max": 1,
+        "deadline_regex": "(?:due by 5pm on|due on|due) ([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+      }
+    },
+    "max_items": 5,
+    "auto_vet": false
+  },
+  "collect_note": "The Research Planning page carries a call-to-action block for each year's research solicitation (title, letter-of-interest date, link to the solicitation landing page); the crawler reads that block and hops to the landing page for the nearest future pre-proposal due date. Next year's block replaces this one at the same address.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Funding Year 2026-2027 Solicitation for Pre-Proposals Now Open",
+        "deadline": "2026-06-30",
+        "url": "https://ww2.arb.ca.gov/resources/documents/carb-fiscal-year-2026-2027-research-project-solicitation"
+      }
+    ]
+  },
+  "evidence": "2026-11-20 channels tried: official API none (Drupal; /jsonapi/node/article returns 503); feeds none (page has only hreflang alternates; CARB mail updates run through govdelivery subscription, not a feed); sitemap.xml has 2 URLs and no research hits; site JSON none; portals: the projects are mirrored on empowerinnovation.net (third-party listing, not used); research-planning/news lists no solicitations; research-planning/resources lists priorities and an unrelated EJ co-development solicitation. Best channel: HTML call-to-action block on research-planning (plain HTTP 200) plus detail hop to the landing page, which lists per-project 'Pre-proposals due by 5pm on <date>' lines.",
+  "confidence": "medium"
+}

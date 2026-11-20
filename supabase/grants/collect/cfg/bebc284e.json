@@ -1,0 +1,30 @@
+{
+  "id": "bebc284e-585c-488d-aaa0-72bf3cc9bff8",
+  "name": "AGRA (Alliance for a Green Revolution in Africa)",
+  "program": "Requests for Concept Notes (sustainable farming, climate adaptation, water-smart value chains)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://agra.org/opportunities/concept-notes/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "item": "#opportunities-list tbody tr",
+      "title": "td:nth-child(2)",
+      "link": "a.opp-view-link",
+      "date": "td:nth-child(5)",
+      "closed": "Closed"
+    },
+    "max_items": 15
+  },
+  "collect_note": "Reads AGRA's Requests for Concept Notes table (server-rendered WordPress page): one row per RFCN with title, deadline and status, linked to the call document. Rows are stored as candidates (auto_vet false) because many RFCNs are youth-jobs or market calls outside SALSAV scope; the dashboard shows only the ones confirmed on step 8.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      { "title": "REQUEST FOR CONCEPT NOTES (RFCN): Building Resilient Livelihoods Through Water-Smart Value Chains in Sub-Saharan Africa Drylands", "deadline": "2026-07-23", "url": "https://agra.org/wp-content/uploads/2026/07/Water-Smart-Value-Request-for-Concept-Notes.pdf" }
+    ]
+  },
+  "evidence": "2026-11-20: GET https://agra.org/opportunities/concept-notes/ HTTP 200, table #opportunities-list lists about 25 RFCNs with Deadline and Status columns. Channels tried: endpoint_recon found /feed/ (WordPress blog posts, no calls), /wp-json/wp/v2/opportunity (774 records mixing vacancies, procurement and RFCNs, excerpt empty and no deadline field, so rejected as a source), no calls API, no sitemap needed. HTML list chosen. Each RFCN PDF carries its own timeline; Water-Smart RFCN PDF states deadline 23/Jul/2026, matching the table.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

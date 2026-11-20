@@ -23,7 +23,7 @@
   },
   "collect_note": "Each NIFA SBIR/STTR Phase I or Phase II notice (forecasted or open) is read from Grants.gov twice a day and shown at once; the closing date is the Grants.gov date, and a university can take part only as the STTR research partner of a small business.",
   "expect": {
-    "min_items": 1,
+    "min_items": 0,
     "sample": [
       {
         "title": "Small Business Innovation Research and Small Business Technology Transfer Programs Phase II",
@@ -38,8 +38,9 @@
   "edge_case": "none",
   "harness": {
     "ok": true,
-    "count": 1,
-    "open": 1,
-    "checked": "2026-11-12"
-  }
+    "count": 0,
+    "open": 0,
+    "checked": "2026-11-20"
+  },
+  "zero_reason": "No NIFA SBIR/STTR notice is posted or forecast on 2026-11-20: Phase II USDA-NIFA-SBIR-012221 closed 2026-11-17 (https://www.grants.gov/search-results-detail/364020); Grants.gov search2 forecasted|posted for USDA-NIFA returns only AFRI, Research Facilities Act, HSI and Tribal Colleges notices. The title filter 'Small Business Innovation Research' matches the last call's title."
 }

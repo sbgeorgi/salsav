@@ -47,3 +47,10 @@ Result: 6 reverified kept; 5 backfilled (stay rejected; Minciencias 53 48, SEFA 
 Engine v11 deployed (extra_ca.ts: GlobalSign RSA OV SSL CA 2018 for uaerep.ae/rain.ae hosts). UAE probe 341: TLS error gone, now "request timed out" (0 bytes) -> unverified, note datacenter_timeout. Regression probe 343 ok (NRCS, Allen, OPEC). Run logged finished.
 ## Next step
 UAE: check whether the cron's next run still times out; if so the host likely drops datacenter traffic (no fix known). Decide whether to re-list gate-passing rejected rows (Minciencias 53, SEFA, AFD, GIZ) or correct the 3 non-funder reject reasons.
+
+## Pass 2 2026-11-20 (label discovery-2026-11-20, new RUN TARGET 5 listed)
+Health ok (0 overdue shards, 0 stuck runs, last_refresh ok). Brief: promoted 0, targets 0, bucket gaps all 0, failing/gaps = Gulbenkian (datacenter 403) + UAE (datacenter_timeout), both channels exhausted, left unverified. Candidate call: DOE SBIR FY26 Phase II (folded into DOE SBIR reverify).
+Workflow wf_91ae4a18-77a: reverify 6 (FtF Labs, Minciencias, NIFA SBIR, DOE SBIR, ABOR, CDA agrivoltaics), backfill Kresge + AZ Community Fdn (CORAF/EAC/CFL already judged non-funders this morning; Climate Funds Update, SAM.gov API, UKRI GtR are non-funders: left unscored), 6 lead finders -> vet agents, up to 3 rounds.
+Result: 7 new listed + verified in production (probes 344, 345, all kind ok, numbers equal adapter_check): CARB bfcb6aec, Belmont 06bb79fe, AGRA bebc284e, CDFA FREP 077388b0, KKL-JNF f4a81d21, NM EMNRD 4a1ec054, Wellcome 8a97aa07 (cycle). Demoted as dupes check_known missed: NYSERDA e3a4dea5 (->eb906c5c), IDRC 4af6c750 (->0fe468ef), NOAA CPO 54f1d698 (->6df99f2d); their cfg files deleted. Colorado Dept Ag demoted (final year, max 150k). NIFA SBIR cfg min_items 0 + zero_reason. DOE SBIR FY26 Phase II placeholder rejected. 13 targets queued (priority 2/3). Run logged finished.
+## Next step
+check_known misses reordered names ("NYSERDA (New York ...)" vs "New York ... (NYSERDA)"; "IDRC (...)" vs "International ... (IDRC)"): vet agents should also grep grants.funders by acronym before registering. Work the 13 queued targets next run.

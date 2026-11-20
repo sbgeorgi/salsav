@@ -1,0 +1,43 @@
+{
+  "id": "f4a81d21-f588-4a4d-85f8-c2ccc6eb1436",
+  "name": "Keren Kayemeth LeIsrael (KKL-JNF)",
+  "program": "Research and Development grants (desert ecology, sustainable desert development, food security)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://kkl-jnf.org/people-and-environment/community-development/negev/resesarch-and-development/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.kkl.org.il/about-us/tenders/call-for-proposals/",
+      "item": "div.default-content-box",
+      "match": "קול קורא",
+      "title": "h3",
+      "link": "a.full-details",
+      "skip": "\\d/2[0-4]\\b"
+    },
+    "date_order": "dmy",
+    "filter": {
+      "any": [
+        "מחקר",
+        "מדען"
+      ],
+      "fields": "title"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "KKL publishes every public call for proposals on one Hebrew listing page (server-rendered, one block per call with title, publication date and a submission deadline); the crawler reads that page and keeps only calls whose title names research or the Chief Scientist unit, so education and heritage calls are dropped. Calls wait as hidden candidates for review. Deadlines are written as dotted day.month.year dates (6.1.2027), which the engine does not read, so a call is stored with no deadline until the engine supports that format.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "קול קורא מס' קק/1026/26 למתן מענקים למחקרים מלווי פיילוט עבור יחידת המדען הראשי 2026",
+        "deadline": null,
+        "url": "https://www.kkl.org.il/about-us/tenders/call-for-proposals/call-for-1026-26/"
+      }
+    ]
+  },
+  "evidence": "2026-11-20: endpoint_recon on the listing (HTTP 200, 8921 chars, no feed, no JSON endpoint, sitemap-he.xml and kkl-jnf.org/sitemap.xml have no call entries, headless Chrome down); the listing is plain server-rendered HTML. Call 1026/26 page (call-for-1026-26) states 'מועד אחרון להגשת בקשות : עד יום ד', 6.1.2027 עד השעה 14:00', matching the listing. Past research call 3002/20 (listed, 'קול קורא למימון מחקרים או למלגות שיישומם מותנה בתרומה') matches the title filter. Engine limit: extract.ts reads slash dates and month names only, so the dotted deadline (6.1.2027) gives null in adapter_check; stored with none, never guessed. skip regex drops pre-2025 numbered calls (3002/20, no deadline) that would otherwise read as open.",
+  "edge_risk": "none",
+  "confidence": "low"
+}

@@ -1,0 +1,32 @@
+{
+  "id": "077388b0-b608-4181-ab56-6b52da42bd94",
+  "name": "California Department of Food and Agriculture (CDFA), Inspection Services Division",
+  "program": "Fertilizer Research and Education Program (FREP) Competitive Grant Program",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.cdfa.ca.gov/is/ffldrs/frep/CompetitiveGrantProgram.html",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "list": {
+      "match": "Request[_ ]for[_ ](Pre-)?Proposals?\\.pdf",
+      "skip": "TASC|Template",
+      "title": "a",
+      "link": "a"
+    }
+  },
+  "collect_note": "Reads the FREP Grant Program page twice a day for the annual 'Request for Pre-Proposal' link (one item per round, replaced each November); the pre-proposal due date is only inside the RFP PDF, so the call is stored without a deadline.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "2026 Request for Pre-Proposal",
+        "deadline": null,
+        "url": "https://www.cdfa.ca.gov/is/ffldrs/frep/pdfs/2026_FREP_Request_for_Pre-Proposals.pdf"
+      }
+    ]
+  },
+  "evidence": "Channels tried 2026-11-20: page GET HTTP 200 static HTML; endpoint_recon --no-chrome found no feed, JSON endpoint or sitemap entries (sitemap.xml 31 bytes); California Grants Portal CKAN datastore (data.ca.gov datastore_search, resource 111c8c88-21f6-453c-ae2c-b4785a0624f5) lists past FREP rounds (latest closed 2026-04-27) but not yet the November 2026 round, so it finds no current call today; cdfa.ca.gov/grants/ directory lists FREP with 'No upcoming events'; RFP and timeline PDFs are not read by the engine (pre-proposals due 2026-12-14 per the PDF).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

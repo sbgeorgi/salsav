@@ -1,0 +1,30 @@
+{
+  "id": "4a1ec054-5916-4bc1-94a7-a1926820c295",
+  "name": "New Mexico Energy, Minerals and Natural Resources Department (EMNRD), Energy Conservation and Management Division",
+  "program": "Electric Grid Modernization Grant Program (Type 1 research, Type 2 and 3 pilots)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.emnrd.nm.gov/ecmd/grid-modernization/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.emnrd.nm.gov/ecmd/about-us/requests-for-proposals-applications/",
+      "match": "grid-?mod\\S*nofo",
+      "detail": 1
+    },
+    "max_items": 5,
+    "auto_vet": false
+  },
+  "collect_note": "The division's Requests for Proposals page (WordPress, plain HTTP) shows a NOFO block with a Download NOFO (PDF) link for each open round; the crawler keeps the link whose address contains grid-mod and nofo (the same page also carries other programs' NOFOs, such as Solar for New Mexico, which are skipped) and calls wait as hidden candidates. Nothing is open today, so zero items is expected.",
+  "zero_reason": {
+    "quote": "No active RFPs are available at this time.",
+    "url": "https://www.emnrd.nm.gov/ecmd/about-us/requests-for-proposals-applications/"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-20: endpoint_recon (no chrome) on the program page: html_ok, WordPress, /ecmd/feed/ and comments feed return 0 items, sitemaps list no call pages, no JSON endpoints. The RFP page /ecmd/about-us/requests-for-proposals-applications/ returns 200 and now reads 'No active RFPs are available at this time.'; the Wayback copy of 2026-06-15 shows the open round as a 'NOTICE OF FUNDING OPPORTUNITY' text block (deadline August 15, 2026) plus a 'Download NOFO (PDF)' anchor to /ecmd/grid-mod-nofo-fy27-final-6-1-26-clean/, which the match pattern selects; the same Wayback page also listed a separate Solar for New Mexico NOFO, which the pattern does not select. The program page is the second fetch for text.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

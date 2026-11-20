@@ -1,0 +1,29 @@
+{
+  "id": "8a97aa07-fc93-4ca9-80a8-2865cabd1d82",
+  "name": "Wellcome Trust",
+  "program": "Climate Impacts Awards (annual)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://wellcome.org/research-funding/schemes/climate-impacts-awards-unlocking-urgent-climate-action-making-health-2",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "Wellcome Climate Impacts Awards",
+      "deadline_regex": "by\\s+15[:.]00\\s+[A-Z]+\\s+on\\s+(\\d{1,2}\\s+[A-Z][a-z]+\\s+\\d{4})"
+    }
+  },
+  "collect_note": "Reads the Climate Impacts Awards scheme page twice a day for the labelled 'by 15:00 BST on <date>' submission deadline and creates one call per cycle only while that date is in the future; the 2026 round (8 April 2026) is closed, so no call is open until Wellcome posts the next date.",
+  "zero_reason": {
+    "quote": "Your application must be submitted by 15.00 BST on 8 April 2026 on the deadline day.",
+    "url": "https://wellcome.org/research-funding/schemes/climate-impacts-awards-unlocking-urgent-climate-action-making-health-2",
+    "filter_test": "deadline_regex matches the last known round's own line 'submitted by 15:00 BST on 8 April 2026' (date 2026-04-08, past, so no item)"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Channels tried 2026-11-20. endpoint_recon (--chrome down, plain only): verdict html_ok, no feed, no API; __NEXT_DATA__ on the scheme page holds only in-page nav links. Funder-wide listing https://wellcome.org/research-funding/schemes is client-rendered from a __NEXT_DATA__ JSON blob (10 schemes, Climate Impacts Awards has scheme_status Open, scheme_accepting_applications 'Closed to applications', frequency Annual, scheme_closes_for_applications empty, scheme_opens_for_applications '20 January 2026'); no anchors in the plain HTML so the html list adapter cannot read it, and the only JSON route is /_next/data/<buildId>/research-funding/schemes.json (HTTP 200 locally) whose buildId changes with every deploy, so it is not stable. /api/search-listing/funding-schemes, /feed and /research-funding/funding-opportunities return 404; sitemap.xml returns a 302/550-byte index with no scheme hits. The scheme page is plain HTML (about 80k chars), states the annual frequency and the labelled 2026 deadline; its 'Upcoming application stage' block is JavaScript-rendered ('Calculating next key date') so the next round date is unknown today.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

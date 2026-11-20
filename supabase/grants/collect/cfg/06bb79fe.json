@@ -1,0 +1,34 @@
+{
+  "id": "06bb79fe-6683-463d-9e9f-e675cd1c01ba",
+  "name": "Belmont Forum",
+  "program": "Collaborative Research Actions (NSF funds US participants)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://belmontforum.org",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://belmontforum.org/open-opportunities/",
+      "item": "main a.e-con-full[href]",
+      "skip": "leadership program|photo competition",
+      "title": ".elementor-heading-title",
+      "date_label": true
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Belmont Forum lists each call for proposals as a card on its Open Opportunities page (server-rendered HTML); the run keeps the cards that are research calls (not the Advancing Leadership Program) with the deadline printed on the card. Calls wait as hidden candidates for review, since each call names its own funding agencies and NSF is not in every one.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Ocean 2 CRA – Towards the Ocean We Want: Biodiversity and Ecosystem Sustainability for Nature and Human Well-being",
+        "deadline": "2026-08-27",
+        "url": "https://belmontforum.org/archives/open-opportunity/ocean-2/"
+      }
+    ]
+  },
+  "evidence": "2026-11-20: endpoint_recon verdict rss (https://belmontforum.org/feed/ is a news feed, not calls); WordPress REST has post types open_opportunity (1 item, Ocean 2, no content or deadline fields exposed, acf empty), _future_opportunity (Biodiversity 3, Polar: scoping pages with no call or deadline, so not collected) and previous_opportunity (archive); sitemap.xml and sitemap.rss list no call section; /opportunities/ and /funding 404; no Grants.gov or portal listing (applications run in BFgo, login). Chosen channel: HTML cards on /open-opportunities/, each with 'Deadline <date>' text.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}
