@@ -3,7 +3,7 @@
 // screened out or only a candidate (banner), why the score is what it is, the facts, the calls, the team's working summary,
 // and one timeline of what changed. Feed text goes through el()/textContent; links through app.link (D.safeUrl).
 import { ring, fitBar } from './viz.js';
-import { STATUS_LABEL } from './ui.js';
+import { STATUS_LABEL, describeEvent } from './ui.js';
 
 const svgEl = (s) => { const t = document.createElement('template'); t.innerHTML = s; return t.content.firstElementChild; }; // viz escapes every string it receives
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
@@ -55,6 +55,10 @@ export function teamChange(ev, { label = (s) => s, money = String, statusLabel =
     case 'call_restore': return { head: `Restored a call: ${p.title || 'untitled'}`, diff: '', note: '' };
     case 'lead_queue': return { head: 'Lead queued for the agent', diff: p.org || '', note: p.reason || '' };
     case 'lead_dismiss': return { head: 'Lead dismissed', diff: p.org || '', note: p.reason || '' };
+    case 'mark_set': case 'mark_clear': { // the wording lives in ui.describeEvent
+      const verb = describeEvent(ev).verb;
+      return { head: verb[0].toUpperCase() + verb.slice(1) + (p.item_kind && p.item_kind !== 'funder' && p.name ? `: ${p.name}` : ''), diff: '', note: p.note || '' };
+    }
     default: return { head: String(ev?.kind || 'Changed'), diff: '', note: '' };
   }
 }
@@ -201,7 +205,7 @@ export function renderDrawer(d, r, app) {
     el('div', { class: 'dhead' }, el('span', { class: 'eyebrow', text: i >= 0 ? `Funder ${i + 1} of ${L.length}` : 'Funder details' }),
       el('span', { class: 'dstat', role: 'status', 'aria-live': 'polite' }),
       el('button', { class: 'btn btn--ghost btn--sm', type: 'button', 'aria-label': 'Close details', onclick: () => d.close() }, ico('x'))),
-    navBar(d, app),
+    navBar(d, app, body),
     body,
     el('div', { class: 'dfoot' },
       el('button', { class: 'btn btn--sm', type: 'button', disabled: i <= 0, onclick: () => step(d, -1), 'aria-label': 'Previous funder' }, ico('chev'), 'Previous', el('kbd', { text: 'k', 'aria-hidden': 'true' })),
@@ -213,14 +217,14 @@ export function renderDrawer(d, r, app) {
 }
 
 /* ---------- sticky section nav (outside the scroller, so it stays put) ---------- */
-function navBar(d, app) {
+function navBar(d, app, body) {
   const { el } = app, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const go = (id) => {
     const body = d.querySelector('.dbody'); if (!body) return;
     if (id === 'ov') return body.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     body.querySelector('#' + id)?.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
   };
-  return el('nav', { class: 'dnav', 'aria-label': 'Sections of this funder' }, SECTIONS.map(([id, label]) => el('button', { type: 'button', class: 'dnav-b', 'data-nav': id, onclick: () => go(id) }, label)));
+  return el('nav', { class: 'dnav', 'aria-label': 'Sections of this funder' }, SECTIONS.filter(([id]) => id === 'ov' || body.querySelector('#' + id)).map(([id, label]) => el('button', { type: 'button', class: 'dnav-b', 'data-nav': id, onclick: () => go(id) }, label)));
 }
 function trackSections(d, body) {
   const mark2 = () => {
@@ -244,7 +248,7 @@ function repaint(d, r, app, names) {
   if (!d.open || d.dataset.id !== r.id) return;
   if (names.includes('team')) d._flush?.(); // the working summary may hold unsent text
   const act = document.activeElement, key = act && d.contains(act) ? act.dataset.k || act.dataset.f || null : null;
-  for (const n of names) { const old = d.querySelector(`[data-slot="${n}"]`); if (old) old.replaceWith(SLOT[n](r, app, d)); }
+  for (const n of names) { const old = d.querySelector(`[data-slot="${n}"]`); if (old) { const nu = SLOT[n](r, app, d); if (nu) old.replaceWith(nu); else old.remove(); } }
   if (key && act && !act.isConnected) d.querySelector(`[data-k="${CSS.escape(key)}"],[data-f="${CSS.escape(key)}"]`)?.focus({ preventScroll: true });
 }
 function setStat(d, text, kind) {
@@ -315,12 +319,17 @@ function hero(r, app, d) {
   const [dMain, dSub] = dlText(rr, D), conf = CONF[rr.amount_confidence] || CONF.unknown;
   const soon = rr._state === 'ok' && rr._days < 30;
   const fitDims = (rr.fit_breakdown?.dims || []).map((x) => ({ ...x, label: app.rubric()?.dims?.find((y) => y.key === x.key)?.label || x.key }));
+  const markEnd = app.markControl('funder', rr.id, rr.name, { label: true }); // null-safe: el() drops it
+  markEnd?.classList.add('mk-end');
+  const markNote = app.unlocked() && app.markOf('funder', rr.id)?.note;
   return el('header', { class: 'dhero b-' + rr.bucket, id: 'ov' },
     el('div', { class: 'dchips' },
       ui.bucketChip(rr.bucket, S.bucketLabel[rr.bucket] || rr.bucket),
       rr._lane && ui.laneChip(rr._lane, D.LANES[rr._lane]),
       !isTracked(rr) && ui.statusChip(rr._status),
-      flags),
+      flags,
+      markEnd),
+    markNote && el('p', { class: 'tnote mk-note', text: markNote }),
     el('h2', { id: 'dTitle', tabindex: '-1', text: rr.name }),
     rr.program && el('p', { class: 'dprog', text: rr.program }),
     tagRow(rr, el),
@@ -360,7 +369,7 @@ function teamStrip(r, app, d) {
   const t = rr.team || {}, state = t.state || 'new', owner = t.owner || '', me = app.me(), ro = !app.unlocked();
   const stateCell = el('div', { class: 'tcell' }, cap(el, 'Status'), ro ? ui.stateChip(state, S.stateLabel[state]) :
     el('select', { class: `schip s-${state} tstate`, 'data-k': 'state', 'aria-label': 'Pipeline status', onchange: (e) => commit(d, r, app, { state: e.target.value }) },
-      D.STATES.map((s) => el('option', { value: s, selected: s === state, text: S.stateLabel[s] || s }))));
+      D.pickStates(state).map((s) => el('option', { value: s, selected: s === state, text: S.stateLabel[s] || s }))));
   const ownerCell = el('div', { class: 'tcell tcell--owner' }, cap(el, 'Owner'),
     el('div', { class: 'tperson' }, ui.avatar(owner, { size: 'md', title: owner || 'Unassigned' }),
       ro ? el('span', { class: 'tname', text: owner || 'No owner yet' })
@@ -386,12 +395,9 @@ function lastLine(app, r, ro) {
 
 /* quick notes: short attributed notes, shared with the team. The draft survives a re-render */
 function notesBlock(r, app) {
-  const { S, el, ico, ui } = app;
+  const { S, el, ui } = app;
   const head = el('h3', { id: 'qn-h', text: 'Quick notes' });
-  if (!app.unlocked()) drafts.clear(); // locked: unsent team note text is not kept in memory
-  if (!app.unlocked()) return el('section', { id: 'qnotes', class: 'sec qnotes', 'aria-labelledby': 'qn-h' }, head,
-    el('div', { class: 'invite' }, el('p', { class: 'sub', text: 'Quick notes are shared with the team. Unlock editing to read them and add your own.' }),
-      el('button', { class: 'btn btn--sm btn--primary', type: 'button', onclick: () => app.requireUnlock() }, ico('lock'), 'Unlock editing')));
+  if (!app.unlocked()) { drafts.clear(); return null; } // locked: unsent team note text is not kept in memory, and the section has nothing to show (the header button unlocks)
   const onAdd = async (body) => { drafts.set(r.id, ''); const ok = await app.addNote(r.id, body); if (!ok) drafts.set(r.id, body); return ok; };
   const thread = ui.noteThread({ notes: app.notesFor(r.id).filter((n) => !n.opportunity_id), me: app.me(), canWrite: true, onAdd,
     onRemove: (n) => app.removeNote(n), now: S.now, placeholder: 'Quick note, for example "Called the program officer"' });
@@ -477,7 +483,7 @@ function callsSection(r, app, d) {
   });
   const row = (o) => {
     const u = D.safeUrl(o.url) || D.safeUrl(o.apply_url), days = D.daysLeft(o.deadline, S.now), seen = o.first_seen_at && D.fmtDate(String(o.first_seen_at).slice(0, 10));
-    return el('li', { class: 'call' },
+    return el('li', { class: 'call' + (app.markOf('call', o.id)?.def.effect === 'hide' ? ' mk-dim' : '') },
       el('div', { class: 'call-main' },
         el('div', { class: 'call-t' }, u ? el('a', { href: u, target: '_blank', rel: 'noopener noreferrer', text: o.title || 'Untitled call' }) : el('b', { text: o.title || 'Untitled call' }),
           o.status === 'forecasted' && el('span', { class: 'chip chip--line', text: 'Forecast' }),
@@ -487,7 +493,8 @@ function callsSection(r, app, d) {
         el('div', { class: 'sub num' }, o.deadline ? `${D.fmtDate(o.deadline)} · ${D.countdown(days)}` : o.deadline_text || 'No date', (o.award_min_usd != null || o.award_max_usd != null) && ` · ${D.amountRange(o)}`),
         o.description && el('p', { class: 'call-d', text: o.description }),
         el('p', { class: 'sub call-o', text: [callOrigin(o), seen && `First seen ${seen}`].filter(Boolean).join(' · ') })),
-      unlocked && el('button', { class: 'btn btn--sm', type: 'button', 'data-k': 'demote-' + o.id, onclick: () => callAction(rr, app, o, 'demote') }, 'Demote'));
+      el('div', { class: 'call-act' }, app.markControl('call', o.id, o.title || 'Untitled call', { label: 'set' }),
+        unlocked && el('button', { class: 'btn btn--sm', type: 'button', 'data-k': 'demote-' + o.id, onclick: () => callAction(rr, app, o, 'demote') }, 'Demote')));
   };
   const off = (o) => el('li', { class: 'call call--off' },
     el('div', { class: 'call-main' },
@@ -503,14 +510,12 @@ function callsSection(r, app, d) {
 
 /* ---------- 5. team: the working summary and "I'm applying". Status, owner and ask live in the strip above ---------- */
 function teamSection(r, app, d) {
-  const { el, ico } = app, rr = liveRow(app, r);
+  const { el } = app, rr = liveRow(app, r);
   d._flush = null;
   if (!isTracked(rr)) return sec(el, 'Team', 'team',
     el('p', { class: 'sub', text: 'Screened-out funders have no pipeline. Promote the funder to tracked to start one.' }),
     rr.team?.notes ? el('div', { class: 'subblock' }, el('h4', { text: 'Working summary, kept from when it was tracked' }), el('p', { class: 'prose', text: rr.team.notes })) : null);
-  if (!app.unlocked()) return sec(el, 'Team', 'team',
-    el('div', { class: 'invite' }, el('p', { class: 'sub', text: 'Unlock editing to set the status, owner and ask, and to keep a working summary.' }),
-      el('button', { class: 'btn btn--sm btn--primary', type: 'button', onclick: () => app.requireUnlock() }, ico('lock'), 'Unlock editing')));
+  if (!app.unlocked()) return null;
   const t = rr.team || {}, state = t.state || 'new', busy = ['applying', 'submitted', 'awarded'].includes(state);
   const ta = el('textarea', { id: 'tNotes', maxlength: 4000, placeholder: 'Contacts, angle, what you learned', 'aria-describedby': 'tNotesHint' });
   ta.value = t.notes || '';

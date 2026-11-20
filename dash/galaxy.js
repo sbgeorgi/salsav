@@ -1,14 +1,13 @@
 /* Galaxy view: a calm map of the funder landscape (tracked, screened out, candidates).
    The model, grouping, filter and layout are pure (no DOM at import) and covered by dash/galaxy.test.mjs.
    The view builds SVG with createElementNS and text nodes only; funder text never reaches innerHTML. */
-import { BUCKETS, BANDS, GEOS, UA, UNSCORED, STATE_LABELS, amountBand, amountRange, geoGroups, fitTier, isProgressed, collectionOf, daysLeft, countdown, fmtDate, money } from '../dashboard.js';
-import { bucketDot, statusChip, stateChip } from './ui.js';
+import { BUCKETS, BANDS, GEOS, UA, UNSCORED, STATE_LABELS, amountBand, amountRange, geoGroups, fitTier, isProgressed, markOf, collectionOf, daysLeft, countdown, fmtDate, money } from '../dashboard.js';
+import { bucketDot, statusChip, stateChip, sv, MARK_PATH } from './ui.js';
 
 /* ---------- constants ---------- */
 export const GROUPS = [['concept', 'Concept'], ['type', 'Organization type'], ['size', 'Funding size'], ['region', 'Region'], ['stage', 'Pipeline stage']];
-export { nodeRadius as galaxyRadius, groupOf as galaxyKey };
-export const TIERS = [['prime', 'Prime fit'], ['strong', 'Strong fit'], ['possible', 'Possible'], ['long_shot', 'Long shot'], ['none', UNSCORED]];
-export const STAGE_LABEL = { ...STATE_LABELS, candidate: 'Candidate', screened: 'Screened out' };
+const TIERS = [['prime', 'Prime fit'], ['strong', 'Strong fit'], ['possible', 'Possible'], ['long_shot', 'Long shot'], ['none', UNSCORED]];
+const STAGE_LABEL = { ...STATE_LABELS, candidate: 'Candidate', screened: 'Screened out' };
 const BAND_LABEL = Object.fromEntries(BANDS);
 const TIER_LABEL = Object.fromEntries(TIERS);
 const GEO_ORDER = ['sw', 'us', 'intl', 'global'];
@@ -36,7 +35,7 @@ const themeKey = (t) => String(t || '').trim().replace(/\s+/g, ' ').toLowerCase(
 const awardOf = (it) => (it.award_max_usd == null || !Number.isFinite(+it.award_max_usd) ? -1 : +it.award_max_usd);
 const byAward = (a, b) => awardOf(b) - awardOf(a) || cmp(a.id, b.id);
 const pairKey = (a, b) => (a < b ? `${a}\n${b}` : `${b}\n${a}`);
-export const capLabel = (s) => { const t = String(s || '').trim(); return t ? t.charAt(0).toUpperCase() + t.slice(1) : ''; };
+const capLabel = (s) => { const t = String(s || '').trim(); return t ? t.charAt(0).toUpperCase() + t.slice(1) : ''; };
 
 /* node radius: log scale of the published maximum award, floor for unknown amounts */
 export function nodeRadius(award) {
@@ -46,7 +45,7 @@ export function nodeRadius(award) {
 }
 
 /* ---------- model: one item per funder, tracked (feed rows) or screened/candidate (registry) ---------- */
-function toItem(f, tracked, rubric) {
+function toItem(f, tracked, rubric, marks) {
   const themes = [...new Set(arr(f.themes).map(themeKey).filter(Boolean))];
   const gs = geoGroups({ geography: arr(f.geography) });
   const geos = GEO_ORDER.filter((g) => gs.has(g));
@@ -66,16 +65,17 @@ function toItem(f, tracked, rubric) {
     award_min_usd: f.award_min_usd ?? null, award_max_usd: f.award_max_usd ?? null, band: amountBand(f),
     fit_score: f.fit_score ?? null, tier: tier ? tier.key : 'none', tierLabel: tier ? tier.label : UNSCORED,
     ua_eligibility: ua, open_calls: calls > 0, deadline, cycle: f.cycle || null, hay,
+    mark: markOf(marks, 'funder', f.id)?.def || null, // the bookmark definition (hue, label, effect) or null
     queued: (f.queue ?? f._queue) === 'pending', // a promoted funder waiting for the discovery agent (registry queue, or the shell's _queue on a tracked row)
   };
 }
 
 /* rows: normalized feed rows (tracked). registry: grants_registry() (screened, candidates, and any vetted id the feed lacks). */
-export function galaxyItems(rows = [], registry = null, { rubric = null } = {}) {
+export function galaxyItems(rows = [], registry = null, { rubric = null, marks = null } = {}) {
   const out = [], seen = new Set();
   const add = (f, tracked) => {
     if (!f || f.id == null || seen.has(f.id)) return;
-    seen.add(f.id); out.push(toItem(f, tracked, rubric));
+    seen.add(f.id); out.push(toItem(f, tracked, rubric, marks));
   };
   for (const r of rows || []) add(r, true);
   for (const f of registry?.funders || []) add(f, f.status === 'vetted');
@@ -363,7 +363,6 @@ export function totals(items = []) {
 /* =====================================================================
    View (browser only). render(root, app) is idempotent; onQuery updates search classes only.
    ===================================================================== */
-const NS = 'http://www.w3.org/2000/svg';
 const STATE = new WeakMap();
 const CHIP = {
   type: { ui: 'types', keys: () => Object.keys(BUCKETS), of: (it) => [it.bucket], label: (k) => BUCKETS[k] || k, bucket: true },
@@ -382,15 +381,6 @@ function h(t, a = {}, ...kids) {
     else e.setAttribute(k, v === true ? '' : String(v));
   }
   for (const c of kids.flat()) if (c != null && c !== false) e.append(c);
-  return e;
-}
-function sv(t, a = {}, ...kids) {
-  const e = document.createElementNS(NS, t);
-  for (const [k, v] of Object.entries(a)) {
-    if (v == null || v === false) continue;
-    if (k === 'text') e.textContent = String(v); else e.setAttribute(k, String(v));
-  }
-  for (const c of kids.flat()) if (c != null) e.append(c);
   return e;
 }
 const uiOf = (app) => {
@@ -472,7 +462,7 @@ function build(root) {
   st.layers = { orbit: sv('g', { class: 'gx-orbits' }), halo: sv('g', { class: 'gx-halos' }), links: sv('g', { class: 'gx-links' }), nodes: sv('g', { class: 'gx-nodes' }), labels: sv('g', { class: 'gx-labels' }) };
   st.world.append(st.layers.orbit, st.layers.halo, st.layers.links, st.layers.nodes, st.layers.labels);
   st.svg.append(st.world);
-  st.card = h('div', { class: 'gx-card', 'aria-hidden': 'true', hidden: true });
+  st.card = h('div', { class: 'gx-card', 'aria-hidden': 'true', inert: true, hidden: true }); // a hover readout: it shows a read-only bookmark chip; bookmarks are set in the drawer the node opens
   st.reset = h('button', { type: 'button', class: 'btn btn--sm gx-reset', hidden: true, onclick: () => resetView(st) }, 'Show all groups');
   const zoomOut = h('button', { type: 'button', class: 'gx-zbtn', 'aria-label': 'Zoom out', title: 'Zoom out', onclick: () => zoomBy(st, 1 / 1.3) }, '−');
   const zoomIn = h('button', { type: 'button', class: 'gx-zbtn', 'aria-label': 'Zoom in', title: 'Zoom in', onclick: () => zoomBy(st, 1.3) }, '+');
@@ -504,6 +494,7 @@ function keyLegend() {
     item('Screened out', node('is-screened', sv('circle', { class: 'gx-dot', r: 6 }))),
     item('Candidate', node('is-candidate', sv('circle', { class: 'gx-dot', r: 6 }))),
     item('In pipeline', node('is-pipe', sv('circle', { class: 'gx-dot', r: 5 }), sv('path', { class: 'gx-pipe', d: 'M7,-10 L10,-7 L7,-4 L4,-7 Z' }))),
+    item('Bookmarked', sv('path', { class: 'gx-mk', d: MARK_PATH, transform: 'translate(-7.2 -7.2) scale(.6)' })),
     item('Prime fit', node('', sv('circle', { class: 'gx-dot', r: 5 }), sv('circle', { class: 'gx-ring ring-prime', r: 9 }))),
     item('Strong fit', node('', sv('circle', { class: 'gx-dot', r: 5 }), sv('circle', { class: 'gx-ring ring-strong', r: 9 }))),
     item('Size: published award, log scale (smallest if none)', node('', sv('circle', { class: 'gx-dot', cx: -10, r: R_MIN }), sv('circle', { class: 'gx-dot', cx: 0, r: 8 }), sv('circle', { class: 'gx-dot', cx: 10, r: R_MAX - 2 }))));
@@ -539,9 +530,9 @@ function update(st) {
   if (!app) return;
   const ui = uiOf(app);
   const reg = app.reg();
-  if (st.src.rows !== app.S.rows || st.src.reg !== (reg || null) || st.src.rub !== app.rubric()) {
-    st.src = { rows: app.S.rows, reg: reg || null, rub: app.rubric() };
-    st.items = galaxyItems(app.S.rows, reg, { rubric: app.rubric() });
+  if (st.src.rows !== app.S.rows || st.src.reg !== (reg || null) || st.src.rub !== app.rubric() || st.src.marks !== app.S.marks) {
+    st.src = { rows: app.S.rows, reg: reg || null, rub: app.rubric(), marks: app.S.marks };
+    st.items = galaxyItems(app.S.rows, reg, { rubric: app.rubric(), marks: app.S.marks });
     st.byId = new Map(st.items.map((it) => [it.id, it]));
   }
   if (reg) st.regState = 'ready';
@@ -557,7 +548,7 @@ function update(st) {
   if (none) {
     st.empty.replaceChildren(
       h('p', { text: st.items.length ? 'No funders match these filters.' : 'No funders to map yet.' }),
-      st.items.length ? h('button', { type: 'button', class: 'btn btn--sm', onclick: () => clearFilters(st) }, 'Clear filters') : null);
+      st.items.length ? h('button', { type: 'button', class: 'btn btn--sm', onclick: () => clearFilters(st) }, 'Clear filters') : '');
   }
 }
 
@@ -628,6 +619,11 @@ function drawMap(st) {
     const pc = r2(n.r * 0.7 + 3), s = 3.4;
     e.pipe.setAttribute('d', `M${pc},${r2(-pc - s)} L${r2(pc + s)},${-pc} L${pc},${r2(-pc + s)} L${r2(pc - s)},${-pc} Z`);
     e.g.classList.toggle('is-pipe', it.inPipeline);
+    e.g.classList.toggle('has-mk', !!it.mark);
+    e.g.classList.toggle('is-mkhide', it.mark?.effect === 'hide');
+    e.mk.setAttribute('class', it.mark ? `gx-mk mk-${it.mark.hue}` : 'gx-mk');
+    // the 24-box ribbon drawn 8px tall, tucked into the dot's top edge (5px above it) so it reads on the canvas, nudged right but left of the pipe diamond
+    e.mk.setAttribute('transform', `translate(${r2(Math.max(0, n.r * 0.7 - 3.6) - 5.33)} ${r2(-n.r - 6.33)}) scale(.4444)`);
     e.g.setAttribute('aria-label', nodeLabel(st, it));
   });
   for (const [id, e] of st.nodeEls) {
@@ -643,7 +639,7 @@ function drawMap(st) {
 function nodeLabel(st, it) {
   const fit = it.fit_score != null ? `fit ${it.fit_score}, ${it.tierLabel}` : UNSCORED.toLowerCase();
   const award = it.award_max_usd != null || it.award_min_usd != null ? amountRange(it) : 'no published amount';
-  return `${it.name}. ${BUCKETS[it.bucket]}. ${award}. ${fit}. ${statusText(it)}${it.queued ? '. In agent queue' : ''}.`;
+  return `${it.name}. ${BUCKETS[it.bucket]}. ${award}. ${fit}. ${statusText(it)}${it.queued ? '. In agent queue' : ''}${it.mark ? `. Bookmarked ${it.mark.label}` : ''}.`;
 }
 
 function makeCluster(st, key) {
@@ -665,7 +661,8 @@ function makeNode(st, it) {
   const dot = sv('circle', { class: 'gx-dot', r: 5 });
   const pipe = sv('path', { class: 'gx-pipe', d: 'M0,0' });
   const focus = sv('circle', { class: 'gx-focus', r: 10 });
-  const g = sv('g', { class: `gx-node b-${it.bucket}${it.status === 'rejected' ? ' is-screened' : ''}${it.status === 'candidate' ? ' is-candidate' : ''}`, role: 'button', tabindex: '-1', 'data-id': it.id }, hit, ring, dot, pipe, focus);
+  const mk = sv('path', { class: 'gx-mk', d: MARK_PATH });
+  const g = sv('g', { class: `gx-node b-${it.bucket}${it.status === 'rejected' ? ' is-screened' : ''}${it.status === 'candidate' ? ' is-candidate' : ''}`, role: 'button', tabindex: '-1', 'data-id': it.id }, hit, ring, dot, pipe, mk, focus);
   g.classList.add('is-new');
   g.addEventListener('animationend', () => g.classList.remove('is-new'), { once: true });
   g.addEventListener('pointerenter', () => { st.hover = it.id; refreshSel(st); });
@@ -674,7 +671,7 @@ function makeNode(st, it) {
   g.addEventListener('blur', () => { if (st.focused === it.id) st.focused = null; refreshSel(st); });
   g.addEventListener('click', () => { st.app.openDrawer(it.id); });
   g.addEventListener('keydown', (ev) => nodeKey(st, it.id, ev));
-  return { g, hit, ring, dot, pipe, focus, id: it.id };
+  return { g, hit, ring, dot, pipe, mk, focus, id: it.id };
 }
 
 function svgListeners(st) {
@@ -699,15 +696,17 @@ function refreshSel(st) {
   const now = st.app.S.now || new Date();
   const dl = it.deadline ? fmtDate(it.deadline) : '';
   const cd = it.deadline ? countdown(daysLeft(it.deadline, now)) : '';
+  const mk = st.app.markChip('funder', it.id); // read-only: the card is an inert hover readout, the drawer sets bookmarks
   st.card.replaceChildren(
     h('p', { class: 'gx-card-name', text: it.name }),
-    it.program ? h('p', { class: 'gx-card-sub', text: it.program }) : null,
+    it.program ? h('p', { class: 'gx-card-sub', text: it.program }) : '',
     h('dl', { class: 'gx-dl' },
       h('dt', { text: 'Type' }), h('dd', { text: BUCKETS[it.bucket] }),
       h('dt', { text: 'Award' }), h('dd', { text: amountRange(it) }),
       h('dt', { text: 'Fit' }), h('dd', { text: it.fit_score != null ? `${it.fit_score} · ${it.tierLabel}` : UNSCORED }),
       h('dt', { text: 'Deadline' }), h('dd', { text: dl ? (cd ? `${dl} · ${cd}` : dl) : (it.cycle ? 'Rolling or no fixed date' : 'None listed') }),
-      h('dt', { text: 'Status' }), h('dd', {}, statusText(it), it.queued ? statusChip('queue') : null)));
+      h('dt', { text: 'Status' }), h('dd', {}, statusText(it), it.queued ? statusChip('queue') : null),
+      mk ? [h('dt', { text: 'Bookmark' }), h('dd', {}, mk)] : null));
   st.card.hidden = false;
   const cw = st.card.offsetWidth, ch = st.card.offsetHeight, cwid = st.canvas.clientWidth;
   const px = st.tx + n.x * st.k, py = st.ty + n.y * st.k, pr = n.r * st.k;
@@ -991,7 +990,7 @@ function renderList(st) {
     return det;
   });
   st.alt.replaceChildren(h('h2', { class: 'gx-h', text: 'The same funders as text' }),
-    blocks.length ? h('div', { class: 'gx-thead', 'aria-hidden': 'true' }, ...['Funder', 'Type', 'Award', 'Fit', 'Status'].map((t) => h('span', { text: t }))) : null,
+    blocks.length ? h('div', { class: 'gx-thead', 'aria-hidden': 'true' }, ...['Funder', 'Type', 'Award', 'Fit', 'Status'].map((t) => h('span', { text: t }))) : '',
     ...(blocks.length ? blocks : [h('p', { class: 'sub', text: 'No funders match these filters.' })]));
 }
 function rowEl(st, it) {
@@ -1000,7 +999,7 @@ function rowEl(st, it) {
     h('span', { class: 'gx-rt' }, bucketDot(it.bucket), h('span', { text: BUCKETS[it.bucket] })),
     h('span', { class: 'gx-ra', text: amountRange(it) }),
     h('span', { class: 'gx-rf', text: it.fit_score != null ? `Fit ${it.fit_score} · ${it.tierLabel}` : UNSCORED }),
-    h('span', { class: 'gx-rs' }, statusChip(it.status), it.queued ? statusChip('queue') : null, it.tracked && it.stage !== 'new' ? stateChip(it.stage, STAGE_LABEL[it.stage]) : null));
+    h('span', { class: 'gx-rs' }, statusChip(it.status), it.queued ? statusChip('queue') : null, it.tracked && it.stage !== 'new' ? stateChip(it.stage, STAGE_LABEL[it.stage]) : null, st.app.markChip('funder', it.id)));
   st.rowEls.set(it.id, li);
   return li;
 }

@@ -90,7 +90,6 @@ body[data-view="galaxy"] .pagehead p { margin-top: 0; font-size: var(--t-sm); }
 .gx-label { cursor: pointer; transition: transform 560ms var(--ease), opacity var(--dur) ease; outline: none; }
 .gx-label text { paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
 .gx-lname { font: 600 13px/1 var(--font); fill: var(--ink); }
-.gx-lmeta { font: 500 11.5px/1 var(--font); fill: var(--muted); font-variant-numeric: tabular-nums; }
 .gx-label:hover .gx-lname { text-decoration: underline; text-underline-offset: 3px; }
 .gx-label:focus-visible .gx-lname { text-decoration: underline; text-underline-offset: 3px; fill: var(--primary); }
 .gx-label.is-away { opacity: .4; }
@@ -114,6 +113,10 @@ body[data-view="galaxy"] .pagehead p { margin-top: 0; font-size: var(--t-sm); }
 .gx-focus { fill: none; stroke: none; }
 .gx-node:focus-visible .gx-focus { stroke: var(--ring); stroke-width: 2; }
 .gx-node.is-hit .gx-dot { stroke: var(--ink); stroke-width: 2; }
+.gx-node.is-mkhide { opacity: .45; }
+/* bookmark ribbon: the hue comes from .mk-N on the path; the key's copy has none and stays neutral */
+.gx-mk { fill: var(--mk, var(--ink-2)); stroke: var(--surface); stroke-width: 2.2; stroke-linejoin: round; paint-order: stroke; pointer-events: none; }
+.gx-node:not(.has-mk) .gx-mk { display: none; }
 .gx-node.is-dim { opacity: .14; }
 .gx-node.is-away { opacity: .14; }
 

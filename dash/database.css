@@ -133,6 +133,8 @@ button[aria-pressed="true"] > .db-cn { background: var(--primary-ink); color: va
 .db-pg { display: flex; flex-wrap: wrap; align-items: center; gap: 2px var(--sp-3); padding-left: 22px; color: var(--muted); font-size: var(--t-xs); line-height: 1.45; }
 .db-bk { display: inline-flex; align-items: center; gap: .35rem; }
 .db-pipe-inline { display: none; margin-top: var(--sp-1); }
+/* the funder row's bookmark control sits under the status chips */
+.db-table td.c-status .mk-wrap { display: flex; margin-top: var(--sp-1); }
 .db-ua-inline, .db-eval-inline { display: none; }
 
 .db-fit { display: grid; gap: 4px; justify-items: start; }
@@ -169,7 +171,6 @@ button[aria-pressed="true"] > .db-cn { background: var(--primary-ink); color: va
 .db-human { display: flex; align-items: flex-start; gap: var(--sp-3); font-size: var(--t-sm); }
 .db-human p { margin: 0; }
 .db-note { color: var(--ink-2); overflow-wrap: anywhere; }
-.db-acts { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .db-notes { display: grid; gap: var(--sp-2); margin: 0; padding: 0; list-style: none; font-size: var(--t-sm); }
 .db-notes p { margin: 0; }
 
@@ -253,7 +254,6 @@ button[aria-pressed="true"] > .db-cn { background: var(--primary-ink); color: va
   .db-stat:nth-child(n + 3) { border-top: var(--hair-soft); }
   .db-dim { grid-template-columns: minmax(0, 1fr) auto; }
   .db-dim .db-bar { grid-column: 1 / -1; }
-  .db-head h1 { font-size: var(--t-xl); }
   .db-filters { padding: var(--sp-3); gap: var(--sp-3); }
   .db-frow--l { grid-template-columns: minmax(0, 1fr); gap: var(--sp-1); }
   .db-frow--l > .db-lbl { padding-top: 0; }

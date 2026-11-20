@@ -3,6 +3,7 @@
 // parsed with DOMParser (never innerHTML). Feed text reaches the page only through el() text nodes or viz.js, which escapes.
 // Search: the funder sections follow app.q(); coverage, source health, trends and discovery always cover the whole feed.
 import * as V from './viz.js';
+import { sv } from './ui.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 const DAY = 864e5, WINDOW = 30;
@@ -11,7 +12,6 @@ const TITLES = { map: 'Fit against time left', fit: 'How well the funders match'
 // Marker shapes per bucket, in the order viz.js gives its scatter marks (its BUCKETS list), so this legend matches the chart.
 const GLYPH = { us_federal: '●', intl_dev: '■', state_regional: '◆', private_sector: '▲', foundation_ngo: '+', tracker: '○' };
 const STAGES_ACTIVE = ['reviewing', 'applying', 'submitted'];
-const sv = (t, a = {}, ...k) => { const e = document.createElementNS(NS, t); for (const [n, v] of Object.entries(a)) if (v != null && v !== false) e.setAttribute(n, v === true ? '' : v); for (const c of k.flat()) if (c != null) e.append(typeof c === 'string' ? document.createTextNode(c) : c); return e; };
 const parse = (str) => document.importNode(new DOMParser().parseFromString(str.replace('<svg ', `<svg xmlns="${NS}" `), 'image/svg+xml').documentElement, true);
 const RH = () => (typeof matchMedia === 'function' && matchMedia('(pointer: coarse), (max-width: 760px)').matches ? 44 : 28); // the same test as the shared 44px rule in dashboard.css: phone-sized or touch rows give chart bars a 44px tap target
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
@@ -180,29 +180,16 @@ export function render(root, app) {
   const topReason = reasons.slice().sort((a, b) => crit[b[0]] - crit[a[0]])[0];
   const evalTake = crit ? (screenedN ? `${tracked} tracked and ${screenedN} screened out.${topReason && crit[topReason[0]] ? ` The most common reason is ${topReason[1]}.` : ''}` : `${tracked} tracked, none screened out.`)
     : `${tracked} tracked and ${scrFeed.length} screened out in the Radar feed. The full list, with the criterion behind each decision, loads from the database.`;
-  const critRows = crit ? [[`Fit below ${fitMin}`, crit.fit], ['UA unlikely', crit.ua], [`Award under ${D.money(awardMin)}`, crit.award], [D.UNSCORED, crit.notScored], ['Screened out by the team', crit.team], ['No criterion recorded', crit.none]] : [];
-  const evalBody = crit ? [
-    el('div', { class: 'ins-stats ins-stats--row' }, stat(tracked, 'tracked'), stat(screenedN, 'screened out', false), stat(candidates ?? '–', 'candidates waiting')),
-    sub('Screened out, by criterion', 'Share of the screened-out funders that failed each criterion.'),
-    el('div', { class: 'ins-rows ins-rows--2 ins-crit' }, critRows.map(([l, n]) => el('div', { class: 'ins-r' }, el('span', { class: 'lab', text: l }), bar(screenedN ? n / screenedN * 100 : 0), el('span', { class: 'val num', text: `${n} of ${screenedN}` })))),
-    el('p', { class: 'sub', text: 'One funder can fail more than one criterion, so the rows can add up to more than the screened total.' }),
-  ] : [
-    el('div', { class: 'ins-stats ins-stats--row' }, stat(tracked, 'tracked'), stat(scrFeed.length, 'screened out in the feed')),
-    st.failed ? el('div', { class: 'ins-lock' }, el('p', { class: 'sub', text: 'The full list is not available yet, so the criterion breakdown is missing.' }),
-      el('button', { class: 'btn btn--sm', type: 'button', onclick: () => { st.asked = false; render(root, app); } }, 'Try again'))
-      : el('p', { class: 'sub', role: 'status', text: st.loading ? 'Loading the full list of evaluated funders.' : 'The criterion breakdown appears once the full list loads.' }),
-  ];
+  const evalBody = [el('div', { class: 'ins-stats ins-stats--row' }, stat(tracked, 'tracked'), stat(screenedN, crit ? 'screened out' : 'screened out in the feed', false), stat(candidates ?? '–', 'candidates waiting'))];
   const s4 = section('eval', evalTake, 'Follows search', ...evalBody,
-    el('div', { class: 'ins-actions' }, el('button', { class: 'btn btn--sm', type: 'button', onclick: () => app.go('database') }, 'Open Database', ico('chev'))));
+    el('div', { class: 'ins-actions' }, el('button', { class: 'btn btn--sm', type: 'button', onclick: () => app.go('method') }, 'How funders are screened', ico('chev'))));
 
   /* 5. Pipeline */
-  const askOf = (r) => r.team?.ask_usd ?? r.award_max_usd ?? 0, dec = rows.filter((r) => r.team?.state === 'declined');
-  const stages = [...I.funnel.filter((x) => x.state !== 'new').map((x) => ({ ...x, label: slabel(x.state) })), { state: 'declined', label: slabel('declined'), n: dec.length, usd: dec.reduce((a, r) => a + askOf(r), 0) }];
-  const by = Object.fromEntries(stages.map((x) => [x.state, x])), prog = STAGES_ACTIVE.reduce((a, k) => ({ n: a.n + (by[k]?.n || 0), usd: a.usd + (by[k]?.usd || 0) }), { n: 0, usd: 0 });
-  const pipeTake = stages.every((x) => !x.n) ? 'Nothing is in the pipeline yet. Move a funder to Reviewing to start.' : `${plural(prog.n, 'funder is', 'funders are')} in progress${prog.usd ? `, ${D.money(prog.usd)} at stake` : ''}; ${by.awarded?.n || 0} awarded, ${by.declined?.n || 0} declined.`;
+  const by = Object.fromEntries(I.funnel.map((x) => [x.state, x])), prog = STAGES_ACTIVE.reduce((a, k) => ({ n: a.n + (by[k]?.n || 0), usd: a.usd + (by[k]?.usd || 0) }), { n: 0, usd: 0 });
+  const declined = rows.filter((r) => r.team?.state === 'declined').length;
+  const pipeTake = I.funnel.every((x) => x.state === 'new' || !x.n) && !declined ? 'Nothing is in the pipeline yet. Move a funder to Reviewing to start.' : `${plural(prog.n, 'funder is', 'funders are')} in progress${prog.usd ? `, ${D.money(prog.usd)} at stake` : ''}; ${by.awarded?.n || 0} awarded, ${declined} declined.`;
   const s5 = section('pipe', pipeTake, 'Follows search',
-    chart(el('div', { class: 'ins-pipe' }), (w) => stages.every((x) => !x.n) ? empty('No funder has a team status beyond New.') : wire(parse(V.funnel(stages, { w, rowH: RH(), labelW: 84, valueW: 96 })), '.viz-row', (k) => pick('team', k))),
-    stages.some((x) => x.n) ? el('p', { class: 'sub', text: 'Dollars use the team ask when set, else the largest published award. Click a row to filter the Radar.' }) : null);
+    el('div', { class: 'ins-actions' }, el('button', { class: 'btn btn--sm', type: 'button', onclick: () => app.go('board') }, 'Open Pipeline', ico('chev'))));
 
   /* 6. Team activity: unlocked team members only. Follows the search through the funders each action touches. */
   const open = app.unlocked();
@@ -236,8 +223,8 @@ export function render(root, app) {
   const awardTake = live.length ? `${bigMix.label} is the largest group, ${bigMix.value} of ${live.length}. ${plural(unver.value, 'funder has', 'funders have')} no published award.` : 'No live funders yet.';
   const s7 = section('time', awardTake, 'Follows search',
     el('div', { class: 'ins-two' },
-      el('div', {}, sub('Funder mix', live.length ? `${bigMix.label} is the largest group, ${bigMix.value} of ${live.length}.` : ''), chart(el('div', {}), (w) => live.length ? wire(parse(V.hbars(mix, { w, rowH: RH(), labelW: Math.min(150, w * .45), valueW: 32 })), '.viz-row', (k) => pick('bucket', k)) : empty('No live funders.'))),
-      el('div', {}, sub('Award size', live.length ? `${plural(unver.value, 'funder has', 'funders have')} no published award.` : ''), chart(el('div', { class: 'ins-band' }), (w) => live.length ? wire(parse(V.hbars(band, { w, rowH: RH(), labelW: 96, valueW: 32 })), '.viz-row', (k) => pick('band', k)) : empty('No live funders.')))));
+      el('div', {}, sub('Funder mix'), chart(el('div', {}), (w) => live.length ? wire(parse(V.hbars(mix, { w, rowH: RH(), labelW: Math.min(150, w * .45), valueW: 32 })), '.viz-row', (k) => pick('bucket', k)) : empty('No live funders.'))),
+      el('div', {}, sub('Award size'), chart(el('div', { class: 'ins-band' }), (w) => live.length ? wire(parse(V.hbars(band, { w, rowH: RH(), labelW: 96, valueW: 32 })), '.viz-row', (k) => pick('band', k)) : empty('No live funders.')))));
 
   /* 8. Data confidence: facts follow the search, source health and collection always cover the whole feed */
   const thin = [...I.quality].sort((a, b) => a.pct - b.pct)[0], H = I.health;

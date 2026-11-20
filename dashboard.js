@@ -4,8 +4,10 @@ export const BUCKETS = {
   us_federal: 'US federal', intl_dev: 'International development', state_regional: 'State & regional',
   private_sector: 'Private sector', foundation_ngo: 'Foundations & NGOs', tracker: 'Trackers',
 };
+export const BUCKET_SHORT = { ...BUCKETS, intl_dev: 'Intl. development' };
 export const UA = { eligible: 'Direct', eligible_with_partner: 'Needs partner', invitation_only: 'Invitation only', unlikely: 'Unlikely', unknown: 'Unknown' };
 export const STATES = ['new', 'reviewing', 'applying', 'submitted', 'awarded', 'declined', 'skip'];
+export const pickStates = (cur) => (cur === 'skip' ? STATES : STATES.filter((s) => s !== 'skip')); // pickers: the legacy skip state shows only on a row that still has it
 export const STATE_LABELS = { new: 'Not started', reviewing: 'Reviewing', applying: 'Applying', submitted: 'Submitted', awarded: 'Awarded', declined: 'Declined', skip: 'Skipped' };
 /* a funder the team has moved past "new" (and not skipped) stays visible even after its deadline window closes */
 export const isProgressed = (s) => !!s && s !== 'new' && s !== 'skip';
@@ -164,13 +166,16 @@ export function evidenceLevel(f) {
   const items = EVID.map(([key, label]) => ({ key, label, ok: !!(key === 'mission' ? mq : ev[key]?.quote) && ok[key] !== false }));
   return { n: Number.isInteger(f?.facts_verified) ? f.facts_verified : items.filter((i) => i.ok).length, of: 4, items };
 }
+export const RANK_WEIGHTS = { soon45: 12, sweet90: 15, late180: 8, rolling: 4, prepare: 2, ua: 5, facts: 3 };
 function recScore(r, days, ln) {
-  const urgency = ln === 'apply_now' ? (days <= 45 ? 12 : days <= 90 ? 15 : days <= 180 ? 8 : 0) : ln === 'rolling' ? 4 : ln === 'prepare' ? 2 : 0;
-  return (r.fit_score ?? 0) + urgency + (r.ua_eligibility === 'eligible' ? 5 : 0) + ((r._evid || evidenceLevel(r)).n >= 3 ? 3 : 0);
+  const W = RANK_WEIGHTS;
+  const urgency = ln === 'apply_now' ? (days <= 45 ? W.soon45 : days <= 90 ? W.sweet90 : days <= 180 ? W.late180 : 0) : ln === 'rolling' ? W.rolling : ln === 'prepare' ? W.prepare : 0;
+  return (r.fit_score ?? 0) + urgency + (r.ua_eligibility === 'eligible' ? W.ua : 0) + ((r._evid || evidenceLevel(r)).n >= 3 ? W.facts : 0);
 }
 export function recommend(rows, now = new Date(), n = 5) {
   const out = [];
   for (const r of rows) {
+    if (hiddenBy(r.team?.state, r._mark)) continue;
     const ln = r._lane || lane(r, now), st = deadlineState(r, now), dq = r._dq ?? (st === 'expired' || st === 'too_soon'), ts = r.team?.state || 'new';
     // a funder the team promoted and the agent has not scored yet (fit_score null) is never a pick: the score is what the pick is judged on
     if (!['apply_now', 'rolling', 'prepare'].includes(ln) || dq || (ts !== 'new' && ts !== 'reviewing') || r.fit_score == null) continue;
@@ -186,8 +191,49 @@ export function recommend(rows, now = new Date(), n = 5) {
   return out.slice(0, n).map(({ days, ...x }) => x);
 }
 
+/* ---- bookmarks: team-defined labels on funders, calls and leads (the shell owns the store; this layer is pure) ---- */
+export const markKey = (kind, id) => `${kind}:${id}`;
+export const markPass = (ids, defId) => !ids?.length || ids.includes(defId);
+export const hiddenBy = (state, def) => state === 'skip' || def?.effect === 'hide';
+const byOrder = (a, b) => a.sort - b.sort || String(a.label).localeCompare(String(b.label));
+// byId holds active definitions only; all adds the retired ones. An item whose definition is retired or unknown is left out of items.
+export function marksIndex(payload) {
+  const all = (payload?.defs || []).map((d) => ({ id: d.id, label: d.label, hue: Number(d.hue) || 0, effect: ['follow', 'hide'].includes(d.effect) ? d.effect : 'none', sort: Number(d.sort) || 0, retired: !!d.retired })).sort(byOrder);
+  const defs = all.filter((d) => !d.retired), byId = new Map(defs.map((d) => [d.id, d])), items = new Map();
+  for (const i of payload?.items || []) if (i?.mark && byId.has(i.mark)) items.set(markKey(i.kind, i.id), i);
+  return { team: !!payload?.team, defs, all, byId, items };
+}
+export function markOf(index, kind, id) {
+  const i = index?.items.get(markKey(kind, id)), def = i && index.byId.get(i.mark);
+  return def ? { def, note: i.note || '', by: i.by || '', at: i.at || null, name: i.name || '', funder: i.funder || null } : null;
+}
+export function markCounts(index) {
+  const out = new Map((index?.defs || []).map((d) => [d.id, 0]));
+  for (const i of index?.items.values() || []) out.set(i.mark, (out.get(i.mark) || 0) + 1);
+  return out;
+}
+// -> a new index with one item set (mark = def id; an omitted note, name or funder keeps the item's current value) or cleared (mark = null)
+export function marksWith(index, { kind, id, mark, note, name, funder, by, at }) {
+  const key = markKey(kind, id), items = new Map(index?.items || []), cur = items.get(key);
+  if (mark) items.set(key, { kind, id, mark, at, name: name ?? cur?.name, funder: funder ?? cur?.funder, note: note === undefined ? cur?.note : note || undefined, by });
+  else items.delete(key);
+  return marksIndex({ team: index?.team, defs: index?.all, items: [...items.values()] });
+}
+export const marksPublic = (index) => marksIndex({ team: false, defs: index?.defs, items: [...(index?.items.values() || [])].map(({ note, by, ...i }) => i) });
+// -> the team event grants_mark writes (024 payload shape), or null when nothing changed; item.prevNote (optional) is the note before the edit
+export function markEvent(item, def, fromId, actor = '', at = new Date().toISOString()) {
+  const from = fromId || null, note = item.note || null;
+  const strip = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v != null));
+  const base = { item_kind: item.kind, item_id: item.id, name: item.name };
+  const funder_id = item.kind === 'funder' ? item.id : item.funder || null;
+  if (!def) return from ? { funder_id, at, actor, kind: 'mark_clear', payload: strip({ ...base, from }) } : null;
+  if (def.id === from && item.prevNote !== undefined && (item.prevNote || null) === note) return null;
+  return { funder_id, at, actor, kind: 'mark_set', payload: strip({ ...base, mark: def.id, label: def.label, from, note }) };
+}
+
 /* ---- normalise feed rows ---- */
-export function normalize(feed, now = new Date(), team = {}) {
+export function normalize(feed, now = new Date(), team = {}, marks = null) {
+  const mx = marks && (marks.items instanceof Map ? marks : marksIndex(marks));
   const minDays = feed?.min_days ?? 14;
   const changes = feed?.changes || [];
   const by = new Map();
@@ -196,6 +242,7 @@ export function normalize(feed, now = new Date(), team = {}) {
   return (feed?.funders || []).map((f) => {
     // the public feed carries state, owner and ask for every listed funder, so a locked viewer sees the team's status; notes come only from the team map (passcode)
     const t = { state: f.team?.state || 'new', owner: f.team?.owner || '', ask_usd: f.team?.ask_usd ?? null, notes: '', ...(team[f.id] || {}) };
+    const mk = mx ? markOf(mx, 'funder', f.id) : null, _mark = mk?.def || null;
     const days = daysLeft(f.deadline, now);
     const state = deadlineState(f, now, minDays);
     const ch = by.get(f.id) || [];
@@ -204,10 +251,10 @@ export function normalize(feed, now = new Date(), team = {}) {
     const changedAt = Math.max(Date.parse(f.last_changed_at || '') || 0, ...ch.filter((c) => c.kind !== 'initial').map((c) => Date.parse(c.at) || 0));
     return {
       ...f, team: t, _days: days, _state: state, _dq: state === 'expired' || state === 'too_soon',
-      _skip: t.state === 'skip', _prog: isProgressed(t.state), _status: f.status || 'vetted', _human: f.human || null, _lane: lane(f, now, minDays), _tier: fitTier(f.fit_score, feed?.rubric), _evid: evidenceLevel(f), _band: amountBand(f), _geo: geoGroups(f), _new: isNew, _changedAt: changedAt, _changes: ch,
+      _mark, _markNote: mk?.note || '', _skip: hiddenBy(t.state, _mark), _prog: isProgressed(t.state), _status: f.status || 'vetted', _human: f.human || null, _lane: lane(f, now, minDays), _tier: fitTier(f.fit_score, feed?.rubric), _evid: evidenceLevel(f), _band: amountBand(f), _geo: geoGroups(f), _new: isNew, _changedAt: changedAt, _changes: ch,
       _unverified: f.award_max_usd == null || f.amount_flag === 'unverified',
       _manual: f.fetchability === 'bot_protected' || f.fetchability === 'blocked' || (f.consecutive_failures || 0) > 0,
-      _hay: [f.name, f.program, (f.themes || []).join(' '), (f.geography || []).join(' '), BUCKETS[f.bucket], f.notes, f.eligibility_note, t.notes, t.owner].join(' ').toLowerCase(),
+      _hay: [f.name, f.program, (f.themes || []).join(' '), (f.geography || []).join(' '), BUCKETS[f.bucket], f.notes, f.eligibility_note, t.notes, t.owner, _mark?.label].join(' ').toLowerCase(),
     };
   });
 }
@@ -215,12 +262,13 @@ export function normalize(feed, now = new Date(), team = {}) {
 /* ---- filters ---- */
 export const defaultFilters = () => ({
   q: '', bucket: [], ua: [], geo: [], themes: [], window: '', band: [], fit: 0, partner: [], loi: false, cost: false,
-  team: [], changed: false, dq: false, skip: false, lane: '', tier: [], evid: false, calls: false,
+  team: [], changed: false, dq: false, skip: false, lane: '', tier: [], evid: false, calls: false, mark: [],
 });
 const has = (arr, v) => !arr.length || arr.includes(v);
 export function matches(r, F, ctx = {}) {
   if (isDisqualified(r) && !F.dq) return false;
-  if (r._skip && !F.skip && !F.team.includes('skip')) return false;
+  if (r._skip && !F.skip && !F.team.includes('skip') && !(r._mark && F.mark?.includes(r._mark.id))) return false;
+  if (!markPass(F.mark, r._mark?.id)) return false;
   if (F.q) for (const w of F.q.toLowerCase().split(/\s+/).filter(Boolean)) if (!r._hay.includes(w)) return false;
   if (!has(F.bucket, r.bucket) || !has(F.ua, r.ua_eligibility) || !has(F.band, r._band) || !has(F.team, r.team.state)) return false;
   if (F.geo.length && !F.geo.some((g) => r._geo.has(g))) return false;
@@ -266,7 +314,7 @@ const askUsd = (r) => { const a = r.team?.ask_usd; return a != null && a !== '' 
 /* in-flight pipeline counts every non-skipped row, even one whose deadline has passed (a submitted bid stays a bid) */
 function pipeline(rows) {
   const byState = Object.fromEntries(['reviewing', 'applying', 'submitted', 'awarded'].map((s) => [s, { n: 0, usd: 0 }]));
-  for (const r of rows) if (byState[r.team?.state]) { byState[r.team.state].n++; byState[r.team.state].usd += askUsd(r); }
+  for (const r of rows) if (!r._skip && byState[r.team?.state]) { byState[r.team.state].n++; byState[r.team.state].usd += askUsd(r); }
   const all = Object.values(byState);
   return { n: all.reduce((s, x) => s + x.n, 0), usd: all.reduce((s, x) => s + x.usd, 0), byState };
 }
@@ -281,28 +329,23 @@ export function collectSummary(rows) {
 /* ---- KPIs: qualified, non-skipped rows only ---- */
 export function kpis(rows, ctx = {}) {
   const q = rows.filter((r) => !r._dq && !r._skip);
-  const known = q.filter((r) => r.award_max_usd != null);
   const byBucket = {};
   for (const r of q) byBucket[r.bucket] = (byBucket[r.bucket] || 0) + 1;
   const scored = q.filter((r) => r.fit_score != null), pipe = pipeline(rows);
   return {
-    total: q.length, open: q.filter((r) => r.open_now).length,
+    total: q.length,
     closing30: q.filter((r) => r._state === 'ok' && r._days < 30).length,
-    addressable: known.reduce((s, r) => s + r.award_max_usd, 0), unverified: q.length - known.length,
     newWeek: q.filter((r) => r._new).length,
     sinceVisit: ctx.since ? q.filter((r) => r._changedAt > ctx.since).length : null,
     byBucket,
     applyNow: q.filter((r) => r._lane === 'apply_now').length,
     applyNowUsd: q.filter((r) => r._lane === 'apply_now').reduce((s, r) => s + (r.award_max_usd ?? 0), 0),
-    rollingOpen: q.filter((r) => r._lane === 'rolling').length,
     primeStrong: q.filter((r) => r._tier && (r._tier.key === 'prime' || r._tier.key === 'strong')).length,
     avgFit: scored.length ? Math.round(scored.reduce((s, r) => s + r.fit_score, 0) / scored.length * 10) / 10 : null,
-    itemized: q.filter((r) => r.fit_breakdown).length,
     pipeline: pipe,
     collect: collectSummary(q),
     evidencePct: pct(q.filter((r) => r._evid && r._evid.n >= 3).length, q.length),
     byLane: Object.fromEntries(Object.keys(LANES).map((k) => [k, q.filter((r) => r._lane === k).length])),
-    byTier: Object.fromEntries(DEFAULT_TIERS.map((t) => [t.key, q.filter((r) => r._tier?.key === t.key).length])),
   };
 }
 
@@ -340,8 +383,8 @@ export function insights(rows, feed, now = new Date()) {
 }
 
 /* ---- URL hash codec (never contains the passcode) ---- */
-const ARR = ['bucket', 'ua', 'geo', 'themes', 'band', 'partner', 'team', 'tier'];
-const VIEWS = ['table', 'cards', 'timeline', 'board', 'database', 'galaxy', 'insights', 'method'];
+const ARR = ['bucket', 'ua', 'geo', 'themes', 'band', 'partner', 'team', 'tier', 'mark'];
+export const VIEWS = ['table', 'cards', 'timeline', 'board', 'database', 'galaxy', 'insights', 'method'];
 export function encodeHash(F, view = 'table', sort = 'deadline') {
   const d = defaultFilters(), p = new URLSearchParams();
   for (const k of Object.keys(d)) {
@@ -383,20 +426,20 @@ export const CSV_COLS = [
   ...DIM_KEYS.map((k) => [`Fit: ${k} pts`, (r) => r.fit_breakdown?.dims?.find((d) => d.key === k)?.points]),
   ['Evidence (n of 4)', (r) => r._evid && r._evid.n], ['LOI', (r) => r.requirements?.loi], ['Cost share', (r) => r.requirements?.cost_share],
   ['Indirect cap', (r) => r.requirements?.indirect_cap], ['Geography', (r) => r.geography], ['Themes', (r) => r.themes],
-  ['Team state', (r) => r.team.state], ['Ask USD', (r) => r.team.ask_usd], ['Owner', (r) => r.team.owner], ['Notes', (r) => r.team.notes],
+  ['Team state', (r) => r.team.state], ['Ask USD', (r) => r.team.ask_usd], ['Owner', (r) => r.team.owner], ['Notes', (r) => r.team.notes], ['Bookmark', (r) => r._mark?.label],
   ['Call page', (r) => r.url], ['Apply page', (r) => r.apply_url], ['Last checked', (r) => r.last_checked_at], ['collection_mode', (r) => collectionOf(r).mode], ['open_calls', (r) => collectionOf(r).open_calls],
 ];
 export const toCsv = (rows) =>
   '﻿' + [CSV_COLS.map((c) => csvCell(c[0])).join(','), ...rows.map((r) => CSV_COLS.map((c) => csvCell(c[1](r))).join(','))].join('\r\n');
 
 /* ---- global search: one list in a fixed group order; ranks prefix (0) < word start (1) < substring (2) ---- */
-const SUGGEST_GROUPS = ['funder', 'screened', 'lead', 'call', 'owner', 'theme', 'category'];
+const SUGGEST_GROUPS = ['funder', 'screened', 'lead', 'call', 'owner', 'theme', 'category', 'bookmark'];
 const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : '');
 const rankOf = (text, q) => {
   const s = String(text || '').toLowerCase();
   return s.startsWith(q) ? 0 : s.split(/[^a-z0-9]+/).some((w) => w.startsWith(q)) ? 1 : s.includes(q) ? 2 : -1;
 };
-export function suggest(q, { rows = [], registry = null, limit = 8 } = {}) {
+export function suggest(q, { rows = [], registry = null, marks = null, limit = 8 } = {}) {
   const needle = String(q || '').trim().toLowerCase();
   if (!needle) return [];
   const funders = registry?.funders || [], leads = registry?.leads || [], calls = registry?.calls || [], all = [...(rows || []), ...funders];
@@ -417,6 +460,7 @@ export function suggest(q, { rows = [], registry = null, limit = 8 } = {}) {
   const themes = [...new Set(all.flatMap((f) => f.themes || []))];
   for (const th of themes) add('theme', th, { value: th, label: th, sub: 'Theme' });
   for (const [key, label] of Object.entries(BUCKETS)) add('category', label, { value: key, label, sub: 'Bucket' });
+  for (const d of marks?.defs || []) add('bookmark', d.label, { value: d.id, label: d.label, sub: 'Bookmark' });
   return SUGGEST_GROUPS.flatMap((g) => groups[g].sort((a, b) => a._rank - b._rank).slice(0, limit).map(({ _rank, ...x }) => x));
 }
 

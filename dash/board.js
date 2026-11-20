@@ -11,7 +11,7 @@ export const CAP = { new: 12 }; // only Not started is capped; the other columns
 export const UNASSIGNED = '__unassigned__', MINE = '__me__';
 export const KINDS = [['all', 'All'], ['move', 'Moves'], ['owner', 'Assignments'], ['ask', 'Asks'], ['note', 'Notes'], ['decision', 'Decisions']];
 const LIVE = ['new', 'reviewing', 'applying'];
-const DECISION = new Set(['promote', 'demote', 'release', 'call_demote', 'call_restore', 'lead_queue', 'lead_dismiss']);
+const DECISION = new Set(['promote', 'demote', 'release', 'call_demote', 'call_restore', 'lead_queue', 'lead_dismiss', 'mark_set', 'mark_clear']);
 const TIME = (ts) => (ts instanceof Date ? ts.getTime() : Date.parse(ts || '') || 0);
 const DAY = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }); // en-CA prints YYYY-MM-DD
 const clamp = (x) => Math.max(0, Math.min(100, Math.round(+x || 0)));
@@ -73,13 +73,6 @@ export function capColumn(list, state, showAll = false) {
 }
 export const usdOf = (r) => r?.team?.ask_usd ?? r?.award_max_usd ?? 0;
 export function totals(list) { return { n: list.length, usd: list.reduce((t, r) => t + usdOf(r), 0) }; }
-export function summarize(cols) {
-  return {
-    play: totals(['reviewing', 'applying', 'submitted'].flatMap((s) => cols[s] || [])),
-    awarded: totals(cols.awarded || []),
-    fresh: totals(cols.new || []),
-  };
-}
 export function moneyLine(r) {
   if (r.team?.ask_usd != null) return `Ask ${money(r.team.ask_usd)}`;
   if (r.award_max_usd != null) return `Up to ${money(r.award_max_usd)}`;
@@ -191,7 +184,6 @@ export function render(root, app) {
   const unlocked = app.unlocked(), me = app.me(), now = S.now || new Date();
   const again = (keep) => { mod.keep = keep || null; render(root, app); };
   const L = (s) => S.stateLabel?.[s] || STATE_LABELS[s] || s; // one map: the shell's stateLabel is the same STATE_LABELS
-  const menuLabel = (s) => (s === 'skip' ? 'Skip it' : L(s));
   const keep = root.querySelector('.board')?.scrollLeft || 0;
   if (!ROOTS.has(root)) { ROOTS.add(root); root.addEventListener('click', onRootClick, true); root.addEventListener('keydown', onRootKey, true); }
   mod.ctl = [];
@@ -199,12 +191,12 @@ export function render(root, app) {
   const announce = (msg) => { live.textContent = msg; };
 
   const rows = S.rows.filter((r) => !r._skip);
-  const skipped = S.rows.length - rows.length;
+  const hidden = S.rows.length - rows.length;
   const { searched, pool } = pipelineRows(rows, { owner: st.owner, me, match: (t) => app.matchQ(t), notesFor: (id) => app.notesFor(id) });
   const fresh = pool.filter((r) => r.team.state === 'new' && !r._dq);
   const recIds = D.recommend(fresh, now, fresh.length).map((x) => x.row.id);
   const cols = Object.fromEntries(COLS.map((s) => [s, orderColumn(pool.filter((r) => r.team.state === s), s, recIds)]));
-  const sm = summarize(cols);
+  const play = totals(['reviewing', 'applying', 'submitted'].flatMap((s) => cols[s]));
   const groups = ownerGroups(searched);
 
   // saveTeam (dashboard.html) adds the team event to S.events before it resolves, so the overview already shows it; the board writes none
@@ -293,13 +285,14 @@ export function render(root, app) {
     const last = latestEvent(app.eventsFor(r.id));
     const btn = el('button', { class: 'btn btn--sm bmove', type: 'button', 'aria-label': `Move to: ${r.name}`, 'data-keep': `move:${r.id}` }, 'Move to', ico('chev'));
     const wrap = el('div', { class: 'bmove-wrap' }, btn);
-    const menu = UI.menu(btn, D.STATES.map((x) => ({ label: x === r.team.state ? `${menuLabel(x)} (now)` : menuLabel(x), onSelect: () => move(r, x) })));
+    const menu = UI.menu(btn, D.pickStates(r.team.state).map((x) => ({ label: x === r.team.state ? `${L(x)} (now)` : L(x), onSelect: () => move(r, x) })));
     mod.ctl.push({ wrap, close: menu.close });
     const li = el('li', { class: `bcard b-${bk}${r._dq ? ' is-closed' : ''}`, 'data-id': r.id, 'data-state': s },
       el('div', { class: 'bcard-top' },
         el('span', { class: 'bcat' }, UI.bucketDot(r.bucket), el('span', { text: S.bucketLabel?.[bk] || bk })),
         whenEl(r, s),
-        unlocked ? el('span', { class: 'bgrip', 'aria-hidden': 'true', title: 'Drag to another column' }) : null),
+        unlocked ? el('span', { class: 'bgrip', 'aria-hidden': 'true', title: 'Drag to another column' }) : null,
+        app.markControl('funder', r.id, r.name)),
       el('button', { class: 'rl', type: 'button', onclick: () => app.openDrawer(r.id), text: r.name }),
       r.program ? el('p', { class: 'bprog', text: r.program, title: r.program }) : null,
       el('div', { class: 'bfit' },
@@ -344,16 +337,11 @@ export function render(root, app) {
   groups.people.forEach((p, i) => chips.push(chip(`p${i}`, p.name, p.n, p.name, UI.avatar(p.name, { size: 'sm' }))));
   if (groups.unassigned || st.owner === UNASSIGNED) chips.push(chip('none', 'Unassigned', groups.unassigned, UNASSIGNED, UI.avatar('', { size: 'sm' })));
 
-  const stat = (n, label, sub) => el('div', { class: 'bstat' }, el('span', { class: 'bstat-n num', text: String(n) }), el('span', { class: 'bstat-l', text: label }), el('span', { class: 'bstat-s num', text: sub }));
-  const summary = el('div', { class: 'bstats' },
-    stat(sm.play.n, sm.play.n === 1 ? 'bid in play' : 'bids in play', sm.play.usd ? `${money(sm.play.usd)} asked or possible` : 'No amounts yet'),
-    stat(sm.awarded.n, 'awarded', sm.awarded.usd ? `${money(sm.awarded.usd)} in total` : 'No amounts yet'),
-    stat(sm.fresh.n, L('new').toLowerCase(), sm.fresh.n ? 'Recommended first' : 'Nothing waiting'));
   const toolbar = el('div', { class: 'bfilters' },
     el('div', { class: 'bowners', role: 'group', 'aria-label': 'Filter by owner' }, chips),
     el('div', { class: 'bbar-end' },
-      el('span', { class: 'bcount num', text: pool.length === rows.length ? `${rows.length} funders` : `${pool.length} of ${rows.length} shown` }),
-      skipped ? el('span', { class: 'bcount', text: `${skipped} skipped, hidden` }) : null,
+      el('span', { class: 'bcount num', text: `${pool.length === rows.length ? `${rows.length} funders` : `${pool.length} of ${rows.length} shown`}, ${play.n} in play${play.usd ? ` (${money(play.usd)} asked or possible)` : ''}` }),
+      hidden ? el('span', { class: 'bcount', text: `${hidden} hidden` }) : null,
       unlocked ? null : el('button', { class: 'btn btn--sm', type: 'button', 'data-keep': 'unlock', onclick: () => app.requireUnlock() }, ico('lock'), 'Unlock to move funders'),
       el('button', { class: 'btn btn--sm', type: 'button', onclick: () => { st.actOpen = true; again('act-toggle'); root.querySelector('#bact')?.scrollIntoView({ block: 'start' }); } }, 'Activity')));
 
@@ -399,7 +387,7 @@ export function render(root, app) {
   };
 
   const boardEl = el('div', { class: 'board', role: 'group', 'aria-label': 'Funders by team status' }, COLS.map(colEl));
-  root.replaceChildren(live, el('div', { class: 'bpage' }, summary, toolbar, boardEl, activity()));
+  root.replaceChildren(live, el('div', { class: 'bpage' }, toolbar, boardEl, activity()));
   const b = root.querySelector('.board');
   if (b) { b.scrollLeft = keep; cueMore(b); b.addEventListener('scroll', () => cueMore(b), { passive: true }); }
   if (mod.keep) { root.querySelector(`[data-keep="${String(mod.keep).replace(/"/g, '\\"')}"]`)?.focus({ preventScroll: true }); mod.keep = null; }

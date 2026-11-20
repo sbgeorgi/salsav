@@ -1,9 +1,7 @@
 // Deadline horizon: one dot per dated funder on a time axis, shaded band = closes before the minimum lead time.
-// Shared by the Radar page and the Insights view. Feed text only reaches the page through setAttribute/textContent.
 import { dayNum, todayISO, countdown, fmtDate, daysLeft, BUCKETS } from '../dashboard.js';
+import { sv } from './ui.js';
 
-const NS = 'http://www.w3.org/2000/svg';
-const sv = (t, a = {}, ...k) => { const e = document.createElementNS(NS, t); for (const [n, v] of Object.entries(a)) if (v != null && v !== false) e.setAttribute(n, v === true ? '' : v); for (const c of k.flat()) if (c != null) e.append(typeof c === 'string' ? document.createTextNode(c) : c); return e; };
 export const EMPTY = 'No dated deadlines in this selection';
 const D0 = -21, D1 = 365, P = 12, STEP = 11, MIN_ROWS = 7, MAX_ROWS = 9; // 7 to 9 dot rows keep the chart 127 to 149px tall
 

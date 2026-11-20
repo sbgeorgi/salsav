@@ -2,14 +2,13 @@
    decision, the team's overrides, and the calls and leads the discovery agent produced. The pure logic is exported and tested in
    database.test.mjs; the view only builds DOM with the shell's el() and text nodes. Colours come from tokens in dashboard.css. */
 import * as D from '../dashboard.js';
-import { statusChip, stateChip, bucketDot, bucketChip, gateChips, avatar, timeAgo, menu, AGENT_HOUR, agentDaysText, agentRunLabel, STATUS_LABEL } from './ui.js';
+import { statusChip, stateChip, bucketDot, bucketChip, gateChips, avatar, timeAgo, menu, AGENT_HOUR, agentDaysText, agentRunLabel, STATUS_LABEL, markFilter } from './ui.js';
 /* the discovery agent's schedule lives in ui.js; re-exported here for the Database tests */
 export { AGENT_DAYS, AGENT_HOUR, agentDaysText, agentRunLabel, nextAgentRun } from './ui.js';
 
 export const PAGE = 50;
 const STATUS_RANK = { vetted: 0, candidate: 1, rejected: 2 };
 const UA_RANK = ['eligible', 'eligible_with_partner', 'invitation_only', 'unknown', 'unlikely'];
-const STATE_RANK = ['new', 'reviewing', 'applying', 'submitted', 'awarded', 'declined', 'skip'];
 const DIR_DEFAULT = { name: 'asc', status: 'asc', ua: 'asc', pipeline: 'asc', fit: 'desc', award: 'desc', evaluated: 'desc', calls: 'desc' };
 export const CRITERIA = [
   { key: 'fit', label: 'Fit below threshold', hint: 'Scored, and the fit score is under the minimum' },
@@ -79,7 +78,7 @@ export function orgOptions(rows) {
 const AGGREGATOR_NOTE = 'Searched for calls. Not listed on the Radar as a funder.';
 const isAggregator = (f) => f?.category === 'aggregator' || /^aggregator\b/i.test(f?.vet_note || '');
 /* ---- rows: one per registry funder, every status ---- */
-export function buildRows(reg, { notes = () => null } = {}) {
+export function buildRows(reg, { notes = () => null, marks = null } = {}) {
   const t = reg?.thresholds || {};
   return (reg?.funders || []).map((f) => {
     const criteria = criteriaOf(f);
@@ -96,16 +95,16 @@ export function buildRows(reg, { notes = () => null } = {}) {
       criteria, judgment: criteria.includes('judgment'), aggregator: isAggregator(f), reason,crawler: team ? crawler : '', vetNote: f.vet_note || '', rejectReason: f.reject_reason || '',
       evaluated: f.evaluated_at || null, evalMs: ms(f.evaluated_at), pipeline: f.team_state || null,
       callsOpen: num(f.calls_open) ?? 0, callsTotal: num(f.calls_total) ?? 0, human: f.human || null, queue: f.queue || null,
-      notes: notes(f.id),
+      notes: notes(f.id), mark: D.markOf(marks, 'funder', f.id)?.def || null,
     };
     const themes = Array.isArray(f.themes) ? f.themes : [];
-    row.search = [row.name, row.program, reason, crawler, f.vet_note, f.reject_reason, ...themes, D.BUCKETS[row.bucket], orgLabel(row.orgKey)]
+    row.search = [row.name, row.program, reason, crawler, f.vet_note, f.reject_reason, ...themes, D.BUCKETS[row.bucket], orgLabel(row.orgKey), row.mark?.label]
       .filter(Boolean).join(' ').toLowerCase();
     return row;
   });
 }
 
-/* ---- filter: F = {status, buckets[], criterion, org, band, human, queue, openCalls}; words = lower-cased search words ---- */
+/* ---- filter: F = {status, buckets[], criterion, org, band, human, queue, openCalls, marks[]}; words = lower-cased search words ---- */
 export function filterRows(rows, F = {}, words = []) {
   const buckets = F.buckets || [];
   return rows.filter((r) =>
@@ -117,6 +116,7 @@ export function filterRows(rows, F = {}, words = []) {
     (!F.human || !!r.human) &&
     (!F.queue || r.queue === 'pending') &&
     (!F.openCalls || r.callsOpen > 0) &&
+    D.markPass(F.marks, r.mark?.id) &&
     words.every((w) => r.search.includes(w)));
 }
 
@@ -128,7 +128,7 @@ const SORT_VALUE = {
   award: (r) => r.award,
   ua: (r) => (UA_RANK.includes(r.ua) ? UA_RANK.indexOf(r.ua) : null),
   evaluated: (r) => r.evalMs,
-  pipeline: (r) => (r.pipeline && STATE_RANK.includes(r.pipeline) ? STATE_RANK.indexOf(r.pipeline) : null),
+  pipeline: (r) => (r.pipeline && D.STATES.includes(r.pipeline) ? D.STATES.indexOf(r.pipeline) : null),
   calls: (r) => r.callsOpen,
 };
 export function sortRows(rows, sort = {}) {
@@ -144,7 +144,7 @@ export function sortRows(rows, sort = {}) {
   });
 }
 /* how many filters are on: the Filters badge (search words are the shell's, not counted) */
-export const dbFilterCount = (F = {}) => (F.status && F.status !== 'all' ? 1 : 0) + (F.buckets?.length || 0) + ['criterion', 'org', 'band', 'human', 'queue', 'openCalls'].filter((k) => F[k]).length;
+export const dbFilterCount = (F = {}) => (F.status && F.status !== 'all' ? 1 : 0) + (F.buckets?.length || 0) + (F.marks?.length || 0) + ['criterion', 'org', 'band', 'human', 'queue', 'openCalls'].filter((k) => F[k]).length;
 export const defaultSort = (F = {}) => ({ key: 'evaluated', dir: 'desc', judgmentFirst: F.status === 'rejected' });
 /* a header click: the same column flips, a new column starts in its natural direction */
 export function nextSort(cur, key) {
@@ -280,7 +280,7 @@ function exportFile(app, kind, funders) {
 /* ---- view ---- */
 let seq = 0;
 const DEFAULTS = () => ({ tab: 'funders', status: 'all', buckets: [], criterion: '', org: '', band: '', human: false, queue: false,
-  openCalls: false, sort: null, limit: PAGE, open: [], queueOpen: false, filtersOpen: false, callState: 'all', callFunder: '', callLimit: PAGE });
+  openCalls: false, marks: [], sort: null, limit: PAGE, open: [], queueOpen: false, filtersOpen: false, callState: 'all', callFunder: '', callLimit: PAGE });
 
 export async function render(root, app) {
   const mine = ++seq;
@@ -314,10 +314,10 @@ function paint(root, app, U) {
   const thresholds = reg.thresholds || {};
   const calls = reg.calls || [];
   const leads = reg.leads || [];
-  const hit = (text) => words.every((w) => String(text || '').toLowerCase().includes(w));
   const focusKey = root.contains(document.activeElement) ? document.activeElement.getAttribute('data-k') : null;
-  const rows = buildRows(reg, { notes: (id) => (unlocked ? app.notesFor(id).length : null) });
-  const F = { status: U.status, buckets: U.buckets, criterion: U.criterion, org: U.org, band: U.band, human: U.human, queue: U.queue, openCalls: U.openCalls };
+  const rows = buildRows(reg, { notes: (id) => (unlocked ? app.notesFor(id).length : null), marks: S.marks });
+  const markIds = (U.marks || []).filter((id) => S.marks.byId.has(id)); // a retired bookmark no longer filters
+  const F = { status: U.status, buckets: U.buckets, criterion: U.criterion, org: U.org, band: U.band, human: U.human, queue: U.queue, openCalls: U.openCalls, marks: markIds };
   const sortUsed = U.sort ? { ...U.sort, judgmentFirst: false } : defaultSort(F);
   const list = sortRows(filterRows(rows, F, words), sortUsed);
   const shown = list.slice(0, U.limit);
@@ -327,7 +327,7 @@ function paint(root, app, U) {
   const put = (patch) => { Object.assign(U, patch); paint(root, app, U); };
   const filt = (patch) => put({ ...patch, limit: PAGE });
   const callFilt = (patch) => put({ ...patch, callLimit: PAGE });
-  const clearAll = () => filt({ status: 'all', buckets: [], criterion: '', org: '', band: '', human: false, queue: false, openCalls: false });
+  const clearAll = () => filt({ status: 'all', buckets: [], criterion: '', org: '', band: '', human: false, queue: false, openCalls: false, marks: [] });
   /* "Ana Ruiz promoted this funder, 2 days ago"; the name is left out when the read did not carry one */
   const decisionLine = (h, kind) => {
     const d = decisionParts(h, kind);
@@ -395,6 +395,7 @@ function paint(root, app, U) {
     el('option', { value: '', text: 'Any size' }), D.BANDS.map(([k, l]) => el('option', { value: k, text: l })));
   bandSel.value = U.band;
   const frow = (label, ...kids) => el('div', { class: 'db-frow db-frow--l' }, el('span', { class: 'db-lbl', text: label }), el('div', { class: 'db-fitems' }, kids.flat()));
+  const markGroup = markFilter({ defs: S.marks.defs, selected: markIds, counts: rows.reduce((m, r) => (r.mark ? m.set(r.mark.id, (m.get(r.mark.id) || 0) + 1) : m), new Map(S.marks.defs.map((d) => [d.id, 0]))), onToggle: (id) => filt({ marks: toggleIn(markIds, id) }) });
   const filters = el('div', { class: 'db-filters' },
     frow('Status', statusSeg),
     frow('Category', bucketChips),
@@ -402,8 +403,8 @@ function paint(root, app, U) {
     frow('More',
       el('label', { class: 'field db-sel' }, el('span', { class: 'db-lbl', text: 'Type' }), orgSel),
       el('label', { class: 'field db-sel' }, el('span', { class: 'db-lbl', text: 'Size' }), bandSel),
-      el('button', { class: 'fchip', type: 'button', 'data-k': 'human', 'aria-pressed': U.human, onclick: () => filt({ human: !U.human }) }, 'Human decisions'),
-      el('button', { class: 'fchip', type: 'button', 'data-k': 'opencalls', 'aria-pressed': U.openCalls, onclick: () => filt({ openCalls: !U.openCalls }) }, 'Has open calls')));
+      el('button', { class: 'fchip', type: 'button', 'data-k': 'opencalls', 'aria-pressed': U.openCalls, onclick: () => filt({ openCalls: !U.openCalls }) }, 'Has open calls')),
+    markGroup ? frow('Bookmarks', markGroup) : null);
   filters.id = 'db-filters';
   filters.hidden = !U.filtersOpen;
   /* the closed panel's state as removable chips: [data-k, label, undo] */
@@ -416,6 +417,7 @@ function paint(root, app, U) {
   if (U.human) actives.push(['human', 'Human decisions', () => filt({ human: false })]);
   if (U.queue) actives.push(['queue', 'In agent queue', () => filt({ queue: false })]);
   if (U.openCalls) actives.push(['opencalls', 'Has open calls', () => filt({ openCalls: false })]);
+  for (const id of markIds) actives.push(['mk-' + id, `Bookmark: ${S.marks.byId.get(id).label}`, () => filt({ marks: toggleIn(markIds, id) })]);
   const ftoggle = el('button', { class: 'btn db-ftoggle', type: 'button', 'data-k': 'ftoggle', 'aria-expanded': !!U.filtersOpen, 'aria-controls': 'db-filters',
     'aria-label': nFilters ? `Filters, ${nFilters} active` : 'Filters', onclick: () => put({ filtersOpen: !U.filtersOpen }) },
   el('span', { class: 'db-ficon', 'aria-hidden': 'true' }), el('span', { text: 'Filters' }), nFilters ? el('b', { class: 'db-fcount', text: String(nFilters) }) : null);
@@ -477,9 +479,6 @@ function paint(root, app, U) {
     const h = r.human;
     const hasBy = !!decisionParts(h).by;
     const notes = unlocked ? app.notesFor(r.id).slice(0, 2) : [];
-    const action = r.status === 'vetted'
-      ? el('button', { class: 'btn btn--sm btn--danger', type: 'button', 'data-k': 'dm-' + r.id, onclick: () => demote(app, r) }, 'Screen out')
-      : el('button', { class: 'btn btn--sm btn--primary', type: 'button', 'data-k': 'pr-' + r.id, onclick: () => promote(app, r) }, 'Promote to tracked');
     const facts = [
       ['Geography', Array.isArray(f.geography) && f.geography.length ? f.geography.join(', ') : 'Not recorded'],
       ['Themes', Array.isArray(f.themes) && f.themes.length ? f.themes.join(', ') : 'Not recorded'],
@@ -503,10 +502,7 @@ function paint(root, app, U) {
             decisionLine(h, 'funder'),
             h.note ? el('p', { class: 'db-note', text: h.note }) : null))
             : el('p', { class: 'sub', text: 'No team decision. Automated vetting decides.' }),
-          r.queue === 'pending' ? el('p', { class: 'sub', text: `Waiting for the discovery agent. Next run: ${agentRunLabel(now)}.` }) : null,
-          el('div', { class: 'db-acts' }, action,
-            r.human ? el('button', { class: 'btn btn--sm', type: 'button', 'data-k': 'rl-' + r.id, onclick: () => release(app, r) }, 'Release the decision') : null,
-            el('button', { class: 'btn btn--sm', type: 'button', 'data-k': 'full-' + r.id, onclick: () => app.openDrawer(r.id) }, 'Open full details')))),
+          r.queue === 'pending' ? el('p', { class: 'sub', text: `Waiting for the discovery agent. Next run: ${agentRunLabel(now)}.` }) : null)),
       el('div', { class: 'db-col' },
         el('section', { class: 'db-section' }, el('h3', { text: 'Fit breakdown' }),
           dimRows.length ? el('div', { class: 'db-dims' }, dimRows) : el('p', { class: 'sub', text: r.fit == null ? 'Not scored yet, so there is no breakdown.' : 'No breakdown recorded.' }),
@@ -534,7 +530,8 @@ function paint(root, app, U) {
           r.program ? el('span', { class: 'db-prog', title: r.program, text: r.program }) : null,
           unlocked && r.notes ? el('span', { text: `${r.notes} ${r.notes === 1 ? 'note' : 'notes'}` }) : null,
           el('span', { class: 'db-eval-inline', text: `Evaluated ${r.evaluated ? D.fmtDate(r.evaluated) : 'not recorded'}` })))),
-      el('td', { class: 'c-status', 'data-label': 'Status' }, statusChip(r.status), r.queue === 'pending' ? statusChip('queue') : null, el('span', { class: 'db-pipe-inline' }, r.pipeline ? stateChip(r.pipeline) : null)),
+      el('td', { class: 'c-status', 'data-label': 'Status' }, statusChip(r.status), r.queue === 'pending' ? statusChip('queue') : null, el('span', { class: 'db-pipe-inline' }, r.pipeline ? stateChip(r.pipeline) : null),
+        app.markControl('funder', r.id, r.name, { label: 'set' })),
       el('td', { class: 'c-fit', 'data-label': 'Fit' }, fitCell(r)),
       el('td', { class: 'c-award', 'data-label': 'Award' }, el('span', { class: 'num', text: r.awardText }),
         el('span', { class: `db-ua-inline${r.ua === 'unlikely' ? ' is-bad' : ''}`, text: r.uaLabel })),
@@ -565,7 +562,7 @@ function paint(root, app, U) {
   const scoped = U.callFunder ? calls.filter((c) => c.funder_id === U.callFunder) : calls;
   const callState = CALL_STATES.some(([k]) => k === U.callState) ? U.callState : 'all';
   const callCnt = callCounts(scoped);
-  const callList = sortCalls(callRows(scoped, { state: callState })).filter((c) => hit(`${c.title} ${app.funderName(c.funder_id)}`));
+  const callList = sortCalls(callRows(scoped, { state: callState })).filter((c) => app.matchQ(`${c.title} ${app.funderName(c.funder_id)}`) && D.markPass(markIds, app.markOf('call', c.id)?.def.id));
   const callShown = callList.slice(0, U.callLimit || PAGE);
   const callsIntro = el('p', { class: 'sub db-intro', text: 'Every call the discovery agent found, for every funder. Demote takes a call out of the feed; Restore puts a hidden call back.' });
   const callChips = el('div', { class: 'db-frow', role: 'group', 'aria-label': 'Calls by state' }, CALL_STATES.map(([k, l]) =>
@@ -576,7 +573,7 @@ function paint(root, app, U) {
   const callResult = el('div', { class: 'db-result' }, el('p', { class: 'sub', 'aria-live': 'polite', text: `${callList.length} of ${scoped.length} calls` }));
   const callItem = (c) => {
     const u = D.safeUrl(c.url), act = callAction(c), restore = act === 'restore';
-    return el('li', { class: 'db-item db-item--call' },
+    return el('li', { class: `db-item db-item--call${app.markOf('call', c.id)?.def.effect === 'hide' ? ' mk-dim' : ''}` },
       el('div', { class: 'db-item-main' },
         el('p', { class: 'db-item-t' }, u ? el('a', { href: u, target: '_blank', rel: 'noopener noreferrer', text: c.title || 'Untitled call' }) : el('span', { text: c.title || 'Untitled call' })),
         el('p', { class: 'sub db-line' }, el('button', { class: 'linkbtn', type: 'button', 'data-k': 'cf-' + c.id, onclick: () => app.openDrawer(c.funder_id) }, app.funderName(c.funder_id) || 'Unknown funder'),
@@ -587,7 +584,7 @@ function paint(root, app, U) {
       el('div', { class: 'db-item-dec' }, c.human ? decisionLine(c.human, 'call') : el('p', { class: 'sub', text: 'Automated decision' }),
         c.human?.note ? el('p', { class: 'sub db-note', text: c.human.note }) : null,
         !c.human && c.vet_status === 'rejected' ? el('p', { class: 'sub', text: 'No reason recorded.' }) : null), // calls carry no crawler reason yet
-      el('div', { class: 'db-item-act' }, el('button', { class: `btn btn--sm${restore ? '' : ' btn--danger'}`, type: 'button', 'data-k': 'ca-' + c.id,
+      el('div', { class: 'db-item-act' }, app.markControl('call', c.id, c.title || 'untitled call', { label: 'set' }), el('button', { class: `btn btn--sm${restore ? '' : ' btn--danger'}`, type: 'button', 'data-k': 'ca-' + c.id,
         title: restore ? 'Put this call back in the feed' : 'Take this call out of the feed',
         'aria-label': `${restore ? 'Restore' : 'Demote'} call: ${c.title || 'untitled'}`,
         onclick: () => app.act('call', c.id, act, { body: CALL_BODY[act] }) }, restore ? 'Restore' : 'Demote')));
@@ -599,26 +596,29 @@ function paint(root, app, U) {
     : el('p', { class: 'db-empty', text: words.length ? 'No calls match the search.' : U.callFunder ? 'This funder has no calls in this group.' : CALL_EMPTY[callState] });
 
   /* leads, grouped by status */
-  const leadGroupsShown = leadGroups(leads).map((g) => ({ ...g, items: g.items.filter((l) => hit(`${l.org} ${l.program_hint} ${l.why} ${l.note}`)) })).filter((g) => g.items.length);
+  const leadGroupsShown = leadGroups(leads).map((g) => ({ ...g, items: g.items.filter((l) => app.matchQ(`${l.org} ${l.program_hint} ${l.why} ${l.note}`) && D.markPass(markIds, app.markOf('lead', l.id)?.def.id)) })).filter((g) => g.items.length);
   const leadItem = (l) => {
     const a = leadActions(l), buttons = [];
     if (a.queue) buttons.push(el('button', { class: 'btn btn--sm', type: 'button', 'data-k': 'lq-' + l.id, onclick: () => app.act('lead', l.id, 'queue') }, 'Queue for the agent'));
     if (a.dismiss) buttons.push(el('button', { class: 'btn btn--sm btn--danger', type: 'button', 'data-k': 'ld-' + l.id, onclick: () => app.act('lead', l.id, 'dismiss') }, 'Dismiss'));
-    return el('li', { class: 'db-item' },
+    return el('li', { class: `db-item${app.markOf('lead', l.id)?.def.effect === 'hide' ? ' mk-dim' : ''}` },
       el('div', { class: 'db-item-main' }, el('p', { class: 'db-item-t', text: l.org || 'Unnamed lead' }), el('p', { class: 'sub', text: l.program_hint || '' }), el('p', {}, bucketChip(l.bucket))),
       el('div', { class: 'db-item-side' }, el('p', { text: l.why || 'No reason recorded' }), l.note ? el('p', { class: 'sub', text: l.note }) : null,
         l.funder_id ? el('p', { class: 'sub' }, 'Covered by ', el('button', { class: 'linkbtn', type: 'button', 'data-k': 'lf-' + l.id, onclick: () => app.openDrawer(l.funder_id) }, app.funderName(l.funder_id) || 'a tracked funder')) : null),
       el('div', { class: 'db-item-dec' }, el('p', { class: 'sub', text: `Priority ${l.priority ?? 'not set'}` }), el('p', { class: 'sub', text: `Updated ${timeAgo(l.updated_at, now) || 'not recorded'}` }),
         l.source ? el('p', { class: 'sub', text: `Source: ${l.source}` }) : null),
-      el('div', { class: 'db-item-act' }, buttons));
+      el('div', { class: 'db-item-act' }, app.markControl('lead', l.id, l.org || 'unnamed lead', { label: 'set' }), buttons));
   };
   const leadsBody = leadGroupsShown.length
     ? leadGroupsShown.map((g) => el('section', { class: 'db-group' }, el('h3', { text: g.label }), el('span', { class: 'db-cn num', text: String(g.items.length) }),
       el('ul', { class: 'db-list' }, g.items.map(leadItem))))
     : el('p', { class: 'db-empty', text: words.length ? 'No leads match the search.' : 'No leads yet. The discovery agent adds leads for funders outside the current list.' });
 
-  const body = U.tab === 'calls' ? [callsIntro, callChips, callScope, callResult, callsBody]
-    : U.tab === 'leads' ? [el('p', { class: 'sub db-intro', text: 'Leads are funders the discovery agent found outside the list. Queue one to have the agent check it at its next run; dismiss it to drop it.' }), leadsBody]
+  /* the Filters panel is Funders only, so the other tabs say when a bookmark filter is narrowing them */
+  const markNote = markIds.length ? el('p', { class: 'sub' }, `Only bookmarked as ${markIds.map((id) => S.marks.byId.get(id).label).join(', ')}. `,
+    el('button', { class: 'linkbtn', type: 'button', 'data-k': 'mk-clear', onclick: () => put({ marks: [] }) }, 'Show all')) : null;
+  const body = U.tab === 'calls' ? [callsIntro, callChips, callScope, markNote, callResult, callsBody]
+    : U.tab === 'leads' ? [el('p', { class: 'sub db-intro', text: 'Leads are funders the discovery agent found outside the list. Queue one to have the agent check it at its next run; dismiss it to drop it.' }), markNote, leadsBody]
       : [filters, table, more];
 
   /* one toolbar row: tabs, Filters toggle, count and Export on the right (Funders only); active chips under it */
