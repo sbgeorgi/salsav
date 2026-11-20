@@ -39,3 +39,11 @@ Crawler healthy (0 overdue shards, 0 stuck runs; staggered-kick fix holds). Reve
 
 ## Next step
 Gulbenkian/UAE need an engine-side fix to become collectable (UAE: Deno.createHttpClient caCerts with the missing intermediate; Gulbenkian: none known). Targets queue empty and gaps 0: next pass should re-verify the next 6 in the brief and consider raising bucket minimums or seeding targets.
+
+## Pass 6 (2026-11-20, discovery-2026-11-20) - in progress
+Brief: promoted 0, targets 0, all bucket gaps 0 (no gap discovery), crawler healthy (0 overdue shards, 0 stuck runs; last_refresh ok). Failing/gaps: Gulbenkian (Cloudflare 403 prod), UAE (TLS chain) unchanged.
+Workflow wf_aedd5d51-23b: reverify 6 (CFHF, Shell Fdn, NSF IUCRC, NRCS CIG, OPEC Fund, Allen), backfill 8, 4 candidate calls, UAE TLS engine-fix investigation (no deploy).
+Result: 6 reverified kept; 5 backfilled (stay rejected; Minciencias 53 48, SEFA 46, AFD 42, GIZ 42 pass gates but keep stale reject_reasons), 3 left unscored (non-funders: Climate Finance Lab, CORAF, EAC). Rejected 3 out-of-scope candidate calls; DOE SBIR FY26 Phase II placeholder left as candidate.
+Engine v11 deployed (extra_ca.ts: GlobalSign RSA OV SSL CA 2018 for uaerep.ae/rain.ae hosts). UAE probe 341: TLS error gone, now "request timed out" (0 bytes) -> unverified, note datacenter_timeout. Regression probe 343 ok (NRCS, Allen, OPEC). Run logged finished.
+## Next step
+UAE: check whether the cron's next run still times out; if so the host likely drops datacenter traffic (no fix known). Decide whether to re-list gate-passing rejected rows (Minciencias 53, SEFA, AFD, GIZ) or correct the 3 non-funder reject reasons.

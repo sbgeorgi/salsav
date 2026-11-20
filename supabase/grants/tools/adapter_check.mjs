@@ -7,10 +7,17 @@
 //   mode (C2): calls = grants_gov|eu_ft|sam_gov|json_api|rss, or html with list; cycle = html with self only; page = html alone.
 //   ok: kind "ok" and count >= expect.min_items (default 1) for calls and cycle; text_len >= 300 for page.
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { createRequire } from "node:module";
 import { basename, join } from "node:path";
+import { rootCertificates } from "node:tls";
 import { fetchSource } from "../../functions/grants-refresh/adapters/index.ts";
 import { DEFAULT_POLITENESS, Politeness } from "../../functions/grants-refresh/politeness.ts";
 import { realClock } from "../../functions/grants-refresh/types.ts";
+import { withExtraCa } from "../../functions/grants-refresh/extra_ca.ts";
+
+// mirrors index.ts: hosts that omit their intermediate certificate get an agent trusting it (Node: undici dispatcher)
+const { Agent } = createRequire(import.meta.url)("../../functions/grants-refresh/node_modules/undici");
+const fetchCa = withExtraCa(fetch, (pem) => ({ dispatcher: new Agent({ connect: { ca: [...rootCertificates, pem] } }) }));
 
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 SALSAV-GrantWatch/1.0 (+https://salsav.org)";
 const ALL_ITEMS = process.argv.includes("--items");
@@ -73,7 +80,7 @@ async function check(arg) {
     const deadline = Date.now() + RUN_BUDGET_MS;
     const d = {
       pol,
-      fetchImpl: fetch,
+      fetchImpl: fetchCa,
       env: { allowLocal: false, grantsGovKey: undefined, samKey: undefined },
       deadline,
       requestTimeoutMs: REQUEST_TIMEOUT_MS,

@@ -7,6 +7,7 @@ import { allDates } from "../extract.ts";
 import { DEFAULT_POLITENESS, Politeness } from "../politeness.ts";
 import type { Opportunity, Source } from "../types.ts";
 import { realClock } from "../types.ts";
+import { EXTRA_CA, withExtraCa } from "../extra_ca.ts";
 
 const TODAY = "2027-01-10";
 const BASE = "https://funder.example.org/calls/";
@@ -962,4 +963,26 @@ test("selfCycle: assume_next_year reads a yearless month and day as its next occ
   assert.equal(selfCycle(text, src, { deadline_regex: rx, assume_next_year: true }, "2026-11-12")[0].deadline, "2026-12-01");
   assert.equal(selfCycle(text, src, { deadline_regex: rx, assume_next_year: true }, "2026-12-02")[0].deadline, "2027-07-01");
   assert.equal(selfCycle(text, src, { deadline_regex: rx, assume_next_year: true }, "2026-12-01")[0].deadline, "2026-12-01");
+});
+
+test("extra CA: only listed hosts get the extra client, a throwing factory falls back to plain fetch", async () => {
+  const seen: { url: string; init?: RequestInit }[] = [];
+  const base = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    seen.push({ url: String(input), init });
+    return new Response("ok");
+  }) as typeof fetch;
+  let made = 0;
+  const f = withExtraCa(base, (pem) => (made++, { client: { pem } }));
+  await f("https://www.uaerep.ae/section/outreach/applicants/apply-now?nID=2030&locale=en", { method: "GET" });
+  await f("https://apply.uaerep.ae/", {});
+  await f("https://www.grants.gov/", { method: "GET" });
+  assert.equal((seen[0].init as { client?: { pem: string } }).client?.pem, EXTRA_CA["www.uaerep.ae"]);
+  assert.equal(seen[0].init?.method, "GET");
+  assert.ok((seen[1].init as { client?: unknown }).client);
+  assert.equal((seen[2].init as { client?: unknown }).client, undefined);
+  assert.equal(made, 1); // one client per PEM, reused across hosts
+  assert.match(EXTRA_CA["www.uaerep.ae"], /^-----BEGIN CERTIFICATE-----\n[A-Za-z0-9+\/=\n]+-----END CERTIFICATE-----\n$/);
+  const g = withExtraCa(base, () => { throw new TypeError("Deno.createHttpClient is not a function"); });
+  await g("https://www.uaerep.ae/", { method: "GET" });
+  assert.equal((seen[3].init as { client?: unknown }).client, undefined);
 });
