@@ -217,7 +217,7 @@ export function markItems({ def, defs = [], note = '', onPick, onNote, onManage 
 }
 /* label: true = text always ('Bookmark' when unset); 'set' = text only when set; false = glyph alone */
 export function markButton({ key, def, defs = [], team = false, name = '', note = '', label = false, busy = false, onPick, onNote, onManage, onLocked } = {}) {
-  if (!team && !def && label !== true) return null;
+  // always drawn: a locked viewer sees where bookmarks go, and the click asks for the unlock (owner, 2026-11-20)
   const text = label === true ? (def ? def.label : 'Bookmark') : label === 'set' && def ? def.label : '';
   const btn = el('button', {
     class: ['mk-btn', def && 'is-set', busy && 'is-busy', text && 'mk-btn--label', !team && 'is-ro'].filter(Boolean).join(' '), type: 'button', 'data-mark': key,
