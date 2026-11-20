@@ -2,18 +2,24 @@
   "id": "d91ff6b5-9c51-4b6e-aeac-e794c4f8317a",
   "name": "LEAP-SE (LEAP ENERGY, AU-EU sustainable energy partnership)",
   "program": "LEAP-SE joint calls",
-  "mode": "cycle",
+  "mode": "calls",
   "adapter": "html",
   "url": "https://leap-energy.eu/call-funding",
   "feed_url": null,
   "adapter_config": {
-    "auto_vet": true,
-    "self": {
-      "title": "LEAP-SE joint call for AU-EU sustainable energy research projects",
-      "deadline_regex": "([A-Z][a-z]+ \\d{1,2}(?:st|nd|rd|th),? \\d{4})[^\\n]*\\s+Deadline for full-proposal"
-    }
+    "list": {
+      "item": "a[href*='call-funding']",
+      "match": "call for funding",
+      "closed": "\\(closed\\)",
+      "date_label": true,
+      "detail": {
+        "max": 5,
+        "deadline_regex": "([A-Z][a-z]+ \\d{1,2}(?:st|nd|rd|th),? \\d{4})[^\\n]*\\s+Deadline for full-proposal"
+      }
+    },
+    "auto_vet": true
   },
-  "collect_note": "Reads the full-proposal deadline of the current LEAP-SE joint call from the funder's call page (the site moved from leap-re.eu to leap-energy.eu; the call-funding page always shows the latest call). The 2026 call closed 24 Jun 2026, so nothing is shown until the next call is published at the same address.",
+  "collect_note": "Reads the site's menu of LEAP-SE funding calls (one page per call year) and each call page's full-proposal deadline, so a new call year shows up as soon as its page is added; the 2026 call closed 24 Jun 2026, so nothing is open today.",
   "expect": {
     "min_items": 0,
     "sample": []
@@ -22,7 +28,7 @@
     "quote": "June 24th 2026 at 16:00 CET Deadline for full-proposal submission (mandatory)",
     "url": "https://leap-energy.eu/call-funding"
   },
-  "evidence": "Channels tried 2026-11-12: https://www.leap-re.eu/ 301 to https://leap-energy.eu/ (HTTP 200, static server-rendered HTML); /wp-json/wp/v2/types gives a 404 page (not WordPress); no RSS or feed link in the page head; /news lists three forum and portfolio posts, no call announcements; https://leap-energy.app/opportunities is a consortium-search app, not a call list; archived calls sit at /call-funding-2025, /call-funding-2022-2023, /call-funding-2021-2022 (2025 call: pre-proposal 27 Mar 2025, full proposal 11 Sep 2025). The current page /call-funding carries the dated call calendar, so the cycle mode reads it.",
+  "evidence": "Channels tried 2026-11-12: https://www.leap-re.eu/ 301 to https://leap-energy.eu/ (HTTP 200, static server-rendered HTML); /wp-json/wp/v2/types gives a 404 page (not WordPress); no RSS or feed link in the page head; /news lists three forum and portfolio posts, no call announcements; https://leap-energy.app/opportunities is a consortium-search app, not a call list; archived calls sit at /call-funding-2025, /call-funding-2022-2023, /call-funding-2021-2022 (2025 call: pre-proposal 27 Mar 2025, full proposal 11 Sep 2025). The current page /call-funding carries the dated call calendar, so the cycle mode reads it. Audit 2026-11-20: RSS /feed, /rss: 404; WordPress REST /wp-json: 404 (not WordPress); sitemap.xml: 200, 13 pages incl. call-funding, call-funding-2025, call-funding-2022-2023, call-funding-2021-2022 (a call per year page); EU F&T SEDIA text search 'LEAP-SE': 0 results (co-funded by national agencies, not an EU topic); html list over /news with call words (anchor mode): matched nav links, not news; the pre-announcement news item is dated Oct 2025; html list over the site menu a[href*='call-funding'] with detail hop for the full-proposal deadline and closed regex: ok true, 4 calls, 0 open - CHOSEN; The old self rule was dropped (not combined) because its cycle item would duplicate the 2026 call page item",
   "edge_risk": "none",
   "confidence": "medium"
 }

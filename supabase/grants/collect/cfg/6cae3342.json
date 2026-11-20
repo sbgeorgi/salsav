@@ -2,18 +2,27 @@
   "id": "6cae3342-97a8-4683-9f6f-ef2b2dfedd81",
   "name": "Greenacres Foundation",
   "program": "Regenerative Agriculture Research Grant (2027 targeted RFP)",
-  "mode": "cycle",
+  "mode": "calls",
   "adapter": "html",
   "url": "https://green-acres.org/research/regenerative-agriculture-research-grant/",
   "feed_url": null,
   "adapter_config": {
-    "auto_vet": true,
     "self": {
       "title": "Regenerative Agriculture Targeted RFP (Greenacres Foundation)",
       "deadline_regex": "Application\\s+Deadline:\\s+([A-Z][a-z]+ \\d{1,2}, \\d{4})"
-    }
+    },
+    "list": {
+      "url": "https://green-acres.org/research/research-grants/",
+      "match": "research/(agriculture-research-grant|ecology-and-environment-research-grants)",
+      "detail": {
+        "max": 3,
+        "deadline_regex": "Letter\\s+of\\s+Intent\\s+Deadline:\\s*([A-Z][a-z]+ \\d{1,2}, \\d{4})",
+        "closed": "Deadline:\\s*anticipated"
+      }
+    },
+    "auto_vet": true
   },
-  "collect_note": "Reads the dated 2027 Application Deadline of the Greenacres Foundation Regenerative Agriculture targeted RFP from its own page twice a day (plain HTML, no JavaScript). The program's main page (/research/agriculture-research-grant/) states its Letter of Intent deadline only as month and year ('anticipated February 2027'), which the parser cannot store, so the dated call lives on this sibling page; the main page is not monitored as a dated call. The Greenacres site has no grant portal, no opportunity post type and no calls feed (its RSS feed is news and blog posts), so this page is the best source that exists.",
+  "collect_note": "Reads the dated Application Deadline of the invitation-only Regenerative Agriculture targeted RFP from its own page, and lists the two annual open research grants (Regenerative Agriculture, Ecology and Environment; letter of intent) from the research grants page; they show as closed until a dated Letter of Intent deadline is posted (now only 'anticipated February 2027'), then open by themselves.",
   "expect": {
     "min_items": 1,
     "sample": [
@@ -24,7 +33,7 @@
       }
     ]
   },
-  "evidence": "Plain HTTP GET https://green-acres.org/research/regenerative-agriculture-research-grant/ HTTP 200, 216 KB, static WordPress HTML, text reads '2027 Grant Information ... Grant Budget: $250,000 Application Deadline: April 26, 2027'. Program page https://green-acres.org/research/agriculture-research-grant/ HTTP 200: 'Letter of Intent Deadline: anticipated February 2027' (month only). Also checked: /feed/ (10 blog or news items, no calls), /wp-json/wp/v2/types (no grant post type; programs CPT is not opportunities), sitemap_index (page sitemap lists research RFP pages), ical special-events feed (0 grant events), robots.txt (no block). Sibling /research/agricultural-grants-part-2/ also shows 'Application Deadline: April 26, 2027' and is not covered by this one-url config. Checked 2026-11-12.",
+  "evidence": "Plain HTTP GET https://green-acres.org/research/regenerative-agriculture-research-grant/ HTTP 200, 216 KB, static WordPress HTML, text reads '2027 Grant Information ... Grant Budget: $250,000 Application Deadline: April 26, 2027'. Program page https://green-acres.org/research/agriculture-research-grant/ HTTP 200: 'Letter of Intent Deadline: anticipated February 2027' (month only). Also checked: /feed/ (10 blog or news items, no calls), /wp-json/wp/v2/types (no grant post type; programs CPT is not opportunities), sitemap_index (page sitemap lists research RFP pages), ical special-events feed (0 grant events), robots.txt (no block). Sibling /research/agricultural-grants-part-2/ also shows 'Application Deadline: April 26, 2027' and is not covered by this one-url config. Checked 2026-11-12. Audit 2026-11-20: RSS /feed/: http 200, only blog and recipe posts, no calls; WordPress REST /wp-json/wp/v2/types and /pages: 200, lists 95 pages incl. the 5 research grant pages (used to learn structure); no custom call post type; sitemap.xml: 200, post/page/event sitemaps, no calls index; html list over /research/research-grants/ hub (anchor mode, match on the two program URLs) with detail hop for the LOI date and closed regex on 'anticipated': ok true, 3 calls - CHOSEN, kept alongside the existing self rule for the RFP page (distinct urls, no duplicate); Grants.gov / EU F&T / SAM: private foundation, not posted there; Page text shows LOI dates only as 'anticipated January/February 2027' (no day), so no date can be parsed yet; applications are via an external landing page (mjlp.lu) not scannable",
   "edge_risk": "none",
   "confidence": "medium"
 }

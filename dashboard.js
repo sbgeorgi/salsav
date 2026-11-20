@@ -259,6 +259,10 @@ export function normalize(feed, now = new Date(), team = {}, marks = null) {
   });
 }
 
+/* a row screened out as a duplicate of a tracked row: its calls are collected under that row, so it is not shown.
+   shortcut: matches the 'Duplicate' prefix the vetting agent writes (discovery-task.md); upgrade to a duplicate_of column if the wording drifts */
+export const isDuplicate = (f) => f?.status === 'rejected' && /^duplicate\b/i.test(f.reject_reason || f.vet_note || '');
+
 /* ---- filters ---- */
 export const defaultFilters = () => ({
   q: '', bucket: [], ua: [], geo: [], themes: [], window: '', band: [], fit: 0, partner: [], loi: false, cost: false,
@@ -453,7 +457,7 @@ export function suggest(q, { rows = [], registry = null, marks = null, limit = 8
     seen.add(f.id);
     add('funder', f.name, { id: f.id, label: f.name, sub: f.program || '' });
   }
-  for (const f of funders) if ((f.status || 'vetted') !== 'vetted') add('screened', f.name, { id: f.id, label: f.name, sub: f.reject_reason || cap(f.status) });
+  for (const f of funders) if ((f.status || 'vetted') !== 'vetted' && !isDuplicate(f)) add('screened', f.name, { id: f.id, label: f.name, sub: f.reject_reason || cap(f.status) });
   for (const l of leads) add('lead', l.org, { id: l.id, label: l.org, sub: l.program_hint || '' });
   for (const c of calls) add('call', c.title, { id: c.funder_id, value: c.id, label: c.title, sub: nameOf(c.funder_id) });
   const owners = [...new Set((rows || []).map((r) => r.team?.owner).filter(Boolean))];

@@ -7,9 +7,7 @@
   "url": "https://cpo.noaa.gov/divisions-programs/climate-adaptation-partnerships/",
   "feed_url": null,
   "adapter_config": {
-    "keyword": "Climate Adaptation Partnerships Regional Integrated Sciences and Assessments",
-    "oppStatuses": "forecasted|posted",
-    "rows": 25,
+    "rows": 100,
     "filter": {
       "any": [
         "Regional Integrated Science",
@@ -17,8 +15,10 @@
       ],
       "fields": "title"
     },
+    "keyword": "Climate Adaptation Partnerships Regional Integrated Sciences and Assessments",
     "auto_vet": false,
-    "max_items": 20
+    "max_items": 20,
+    "oppStatuses": "forecasted|posted"
   },
   "collect_note": "New NOAA Climate Program Office regional-team competitions (RISA, now Climate Adaptation Partnerships) are read from Grants.gov twice a day by title and wait for review before showing. Nothing is open now: the FY2026 round (NOAA-OAR-CPO-2026-33094) closed June 2026.",
   "zero_reason": {

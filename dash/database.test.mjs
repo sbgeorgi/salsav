@@ -25,6 +25,13 @@ t('buildRows: one row per registry funder, every status, ids unique', () => {
   assert.equal(by('rejected'), 7);
   assert.equal(by('candidate'), 2);
 });
+t('buildRows: a row screened out as a duplicate is dropped; other screened-out rows stay', () => {
+  const dup = { ...funders.find((f) => f.status === 'rejected'), id: 'dup1', reject_reason: 'Duplicate listing. Tracked under the row X.' };
+  const keep = { ...dup, id: 'keep1', reject_reason: 'Fit 30, below the 40 gate; not a duplicate of anything.' };
+  const tracked = { ...funders.find((f) => f.status === 'vetted'), id: 'v1', vet_note: 'Duplicate wording in a tracked note' };
+  const ids = DB.buildRows({ ...reg, funders: [dup, keep, tracked] }, noNotes).map((r) => r.id);
+  assert.deepEqual(ids.sort(), ['keep1', 'v1']);
+});
 t('buildRows: notes come from the injected lookup', () => {
   const r = DB.buildRows(reg, { notes: () => 3 })[0];
   assert.equal(r.notes, 3);

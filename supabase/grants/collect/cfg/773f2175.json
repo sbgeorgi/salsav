@@ -1,0 +1,48 @@
+{
+  "id": "773f2175-0bb0-45f9-97e8-8f4a5e53957e",
+  "name": "Grants.gov (XML Extract, daily database export)",
+  "program": "Grants.gov keyword search \"solar agriculture\" (federal notices, forecasted or posted), title-filtered",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.grants.gov/xml-extract",
+  "feed_url": null,
+  "adapter_config": {
+    "keyword": "solar agriculture",
+    "rows": 100,
+    "oppStatuses": "forecasted|posted",
+    "auto_vet": false,
+    "max_items": 40,
+    "filter": {
+      "any": [
+        "agrivolt",
+        "agri",
+        "solar",
+        "photovolt",
+        "farm",
+        "rural",
+        "crop",
+        "irrigat",
+        "ranch",
+        "dual-use",
+        "water",
+        "soil"
+      ],
+      "none": [
+        "re:^ROSES",
+        "Solar System",
+        "Heliophysics",
+        "Astrophysics",
+        "Cryosphere"
+      ],
+      "fields": "title"
+    }
+  },
+  "collect_note": "Searches the official Grants.gov API twice a day for open or forecasted federal notices matching solar plus agriculture, kept only when the title shows farm, crop, water, soil, rural or solar wording; new ones wait for review before showing, because many also appear under the individual agency funders.",
+  "expect": {
+    "min_items": 1,
+    "sample": []
+  },
+  "evidence": "Grants.gov search2 API, keyword 'solar agriculture', forecasted|posted: adapter_check ok, mode calls, 12 items kept by the title filter (2026-11-20). Audit 2026-11-20: Grants.gov search2 keyword 'agrivoltaic': http 200, 0 hits today (real keyword, nothing open) - too narrow to ever return raw>0, so not used alone; Grants.gov search2 keyword 'photovoltaic': 5 hits, mostly not agriculture (NRL BAA, global health, SCALEUP) - noisy; Grants.gov search2 keyword 'solar agriculture' unfiltered: 28 hits incl. NASA ROSES/Solar System items - irrelevant, needs filter; Grants.gov search2 'solar agriculture' + title+description regex filter (solar near agri): 0 items, descriptions too short - rejected; Grants.gov search2 'solar agriculture' + title filter (agri/solar/farm/crop/rural/water/soil, none NASA ROSES): ok true, 12 open calls, titles are real federal funding opportunities - CHOSEN; Current route: html page watch of the xml-extract page (plain data-dump landing page, no opportunity list; feed_url is a dated zip the html adapter cannot read); Not tried further: SAM.gov and EU F&T (this row is a US federal aggregator, no EU calls)",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

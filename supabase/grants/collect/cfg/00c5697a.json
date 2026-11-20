@@ -2,18 +2,30 @@
   "id": "00c5697a-eb43-4349-a81b-d0f8bb9ad2d2",
   "name": "Bureau of Reclamation (WaterSMART)",
   "program": "Cooperative Watershed Management Program (Funding Opportunity R26AS00349)",
-  "mode": "cycle",
-  "adapter": "html",
+  "mode": "calls",
+  "adapter": "grants_gov",
   "url": "https://www.usbr.gov/watersmart/cwmp/",
   "feed_url": null,
   "adapter_config": {
-    "auto_vet": true,
-    "self": {
-      "title": "WaterSMART Cooperative Watershed Management Program",
-      "deadline_regex": "Round \\d: ([A-Z][a-z]+ \\d{1,2}, \\d{4})"
-    }
+    "agencies": "DOI-BOR",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "detail": true,
+    "also_page": true,
+    "filter": {
+      "any": [
+        "watersmart",
+        "title xvi"
+      ],
+      "fields": "title+description",
+      "none": [
+        "desalination"
+      ]
+    },
+    "max_items": 25,
+    "auto_vet": true
   },
-  "collect_note": "Reads the next application deadline for the Bureau of Reclamation Cooperative Watershed Management Program from its own page twice a day. Right now that is Round 2, closing Feb 24, 2027. Only this one program is tracked; once the last listed round passes, nothing is shown until new dates are posted.",
+  "collect_note": "Reads open Bureau of Reclamation WaterSMART and Title XVI funding opportunities from the Grants.gov API twice a day. Grants.gov shows the final closing date, so the Cooperative Watershed Management Program reads 2028-02-15 while the Reclamation page says Round 2 closes 2027-02-24; the old per-program cycle item (cycle:2027) duplicated it and is retired.",
   "expect": {
     "min_items": 1,
     "sample": [
@@ -24,7 +36,7 @@
       }
     ]
   },
-  "evidence": "Plain HTTP POST https://api.grants.gov/v1/api/search2 with body {rows:50, oppStatuses:'forecasted|posted', agencies:'DOI-BOR'}, HTTP 200, 5 hits total (R26AS00349, R26AS00034, R26AS00079, R26AS00017, R26AS00021), checked 2026-11-12. Keyword probe 'WaterSMART' returned 4 DOI-BOR hits; page GET https://www.usbr.gov/watersmart/cwmp/ HTTP 200, 23 KB, static HTML, no JavaScript needed. Filter replay: 4 of 5 pass (desalination dropped).",
+  "evidence": "Plain HTTP POST https://api.grants.gov/v1/api/search2 with body {rows:50, oppStatuses:'forecasted|posted', agencies:'DOI-BOR'}, HTTP 200, 5 hits total (R26AS00349, R26AS00034, R26AS00079, R26AS00017, R26AS00021), checked 2026-11-12. Keyword probe 'WaterSMART' returned 4 DOI-BOR hits; page GET https://www.usbr.gov/watersmart/cwmp/ HTTP 200, 23 KB, static HTML, no JavaScript needed. Filter replay: 4 of 5 pass (desalination dropped). Audit 2026-11-20: Grants.gov search2 agencies DOI-BOR (HTTP 200, 5 hits): works, 4 WaterSMART/Title XVI notices after filter, with detail award ceilings. CHOSEN.; usbr.gov/watersmart sidebar 'Open Funding Opportunities' (round dates): anchor-mode list gives titles 'R26AS...' and null deadlines because the markup has bare NOFO numbers outside elements; unusable.; RSS: usbr.gov/feeds 404, no alternate link on /watersmart/.; WP REST/JSON: not a WordPress site, none.; Current cycle self on /watersmart/cwmp/: ok true, 1 item (CWMP round 2, 2027-02-24).",
   "edge_risk": "none",
   "confidence": "high",
   "harness": {

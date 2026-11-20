@@ -2,18 +2,23 @@
   "id": "c7adf093-ce2d-4e2c-a2bc-297dac569e8e",
   "name": "Global Ecosystem-based Adaptation (EbA) Fund",
   "program": "Global EbA Fund, medium-size (up to USD 500,000) and small-size (up to USD 250,000) grants",
-  "mode": "cycle",
+  "mode": "calls",
   "adapter": "html",
   "url": "https://globalebafund.org/medium-size-grants/",
   "feed_url": null,
   "adapter_config": {
-    "auto_vet": true,
-    "self": {
-      "title": "Global EbA Fund Medium-Size Grants Call for Proposals",
-      "deadline_regex": "Submission Window: \\d{1,2} [A-Za-z]+ to (\\d{1,2} [A-Za-z]+,? \\d{4})"
-    }
+    "list": {
+      "item": "a.menu-link",
+      "match": "^(?:small|medium)-size grants",
+      "detail": {
+        "max": 3,
+        "deadline_regex": "Submission Window:\\s*\\d{1,2}(?: [A-Za-z]+)? to (\\d{1,2} [A-Za-z]+,? \\d{4})"
+      },
+      "amount": false
+    },
+    "auto_vet": true
   },
-  "collect_note": "Reads the closing date of the Global EbA Fund medium-size grants submission window from its own call page twice a day; today that is 16 November 2026. The page is reused for each new call, so a new window shows up as a new dated call; once the window passes nothing is shown until new dates are posted.",
+  "collect_note": "Reads both Global EbA Fund call pages (medium-size and small-size grants) from the site menu and takes each page's own 'Submission Window ... to <date>' closing date twice a day; both 2026 windows have closed, and a new window on either page shows up as a new open call.",
   "expect": {
     "min_items": 1,
     "sample": [
@@ -24,7 +29,7 @@
       }
     ]
   },
-  "evidence": "Checked 2026-11-12. https://globalebafund.org/medium-size-grants/ HTTP 200 static WordPress HTML, text 'Submission Window: 12 October to 16 November 2026'. /feed/ HTTP 200 RSS but has no items; /wp-json/wp/v2/posts returns [] (only posts, pages and media types, no calls type); /news/ lists events and updates only, with no per-call listing; the small-size page (https://globalebafund.org/small-size-grants/, window 28 Sep to 26 Oct 2026, closed) has the same layout but is not tracked. No Grants.gov or EU API applies (IKI funds via IUCN and UNEP). Calls are downloaded and submitted on an online platform, no public portal list.",
+  "evidence": "Checked 2026-11-12. https://globalebafund.org/medium-size-grants/ HTTP 200 static WordPress HTML, text 'Submission Window: 12 October to 16 November 2026'. /feed/ HTTP 200 RSS but has no items; /wp-json/wp/v2/posts returns [] (only posts, pages and media types, no calls type); /news/ lists events and updates only, with no per-call listing; the small-size page (https://globalebafund.org/small-size-grants/, window 28 Sep to 26 Oct 2026, closed) has the same layout but is not tracked. No Grants.gov or EU API applies (IKI funds via IUCN and UNEP). Calls are downloaded and submitted on an online platform, no public portal list. Audit 2026-11-20: Grants.gov/EU/SAM: not posted there; RSS: /feed/ valid but 0 items (posts unused); WP REST: /wp/v2/posts [] ; types news, resource, project, grantee-resource exist but hold news/webinar/projects, not calls; /wp/v2/pages lists only the two call pages (no listing); sitemap.xml: page/project sitemaps only, no calls index; html list over menu links (a.menu-link, match size-grants) with detail hop to each call page and Submission Window deadline_regex: ok true, count 2 -> chosen; covers the small-size window that the old self config missed",
   "edge_risk": "none",
   "confidence": "medium"
 }

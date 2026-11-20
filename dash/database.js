@@ -80,7 +80,7 @@ const isAggregator = (f) => f?.category === 'aggregator' || /^aggregator\b/i.tes
 /* ---- rows: one per registry funder, every status ---- */
 export function buildRows(reg, { notes = () => null, marks = null } = {}) {
   const t = reg?.thresholds || {};
-  return (reg?.funders || []).map((f) => {
+  return (reg?.funders || []).filter((f) => !D.isDuplicate(f)).map((f) => {
     const criteria = criteriaOf(f);
     const crawler = f.status === 'vetted' ? f.vet_note || '' : f.reject_reason || f.vet_note || '';
     const by = who(f.human?.by); // a name arrives only when unlocked (hideHuman), so the reason reads "by" only then
