@@ -18,6 +18,8 @@ The owner explicitly accepts direct browser-to-Pantry mode. Pantry access and th
 
 Standing permission (owner, 2026-11-12): agents may `git push` this repository's branches without asking. Never force-push.
 
+Standing rule (owner, 2026-11-20): "when i say fix something and give you end to [end] authority that means push it to live when you're done". When the owner's request gives an agent end-to-end ownership of a task, publishing the verified result to `main` (the live site, salsav.org) is part of the task: do it without asking, then check the live site. Publish the dashboard with the `salsav-dashboard-publish` skill (runtime files only, never a merge of the work branch). If the owner says "local only" or "don't push live", keep it off `main`.
+
 ## Primary Rule
 
 Editing happens directly on the live public pages.
