@@ -45,10 +45,10 @@ t('disqualified hidden by default, shown with dq; skipped collapse', () => {
 });
 t('filters: text, window, fit, loi, changed', () => {
   const R = rows([row({ id: 'a', name: 'Solar Fund', fit_score: 80, requirements: { loi: 'Required' }, deadline: plus(40), last_changed_at: '2026-11-11T10:00:00Z' }),
-    row({ id: 'b', name: 'Other', fit_score: 40, requirements: { loi: 'No' }, deadline: plus(100) }), row({ id: 'c', deadline: null, cycle: 'rolling' })]);
+    row({ id: 'b', name: 'Other', vetted_at: '2026-11-09T00:00:00Z', fit_score: 40, requirements: { loi: 'No' }, deadline: plus(100) }), row({ id: 'c', deadline: null, cycle: 'rolling' })]);
   const f = (o) => D.applyFilters(R, { ...D.defaultFilters(), ...o }, { since: Date.parse('2026-11-11T00:00:00Z') }).map((r) => r.id);
   assert.deepEqual(f({ q: 'solar' }), ['a']); assert.deepEqual(f({ window: '60' }), ['a']); assert.deepEqual(f({ window: 'rolling' }), ['c']);
-  assert.deepEqual(f({ fit: 50 }), ['a']); assert.deepEqual(f({ loi: true }), ['a']); assert.deepEqual(f({ changed: true }), ['a']);
+  assert.deepEqual(f({ fit: 50 }), ['a']); assert.deepEqual(f({ loi: true }), ['a']); assert.deepEqual(f({ changed: true }), ['a']); assert.deepEqual(f({ new: true }), ['b']);
 });
 t('sort: soonest first, nulls last, disqualified last', () => {
   const R = rows([row({ id: 'n', deadline: null, cycle: 'rolling' }), row({ id: 'late', deadline: plus(90) }), row({ id: 'dq', deadline: plus(5) }), row({ id: 'soon', deadline: plus(20) })]);

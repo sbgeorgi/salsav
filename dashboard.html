@@ -83,7 +83,7 @@
         <fieldset><legend>Partner needed</legend><div class="chips" data-g="partner"></div></fieldset>
         <fieldset><legend>Team status</legend><div class="chips" data-g="team"></div></fieldset>
         <fieldset id="markFs" hidden><legend>Bookmark</legend><div id="markChips"></div></fieldset>
-        <fieldset class="checks"><legend>Requirements</legend><label><input type="checkbox" data-c="loi"> Needs a letter of intent</label><label><input type="checkbox" data-c="cost"> Needs cost-share</label><label><input type="checkbox" data-c="changed"> Changed since my last visit</label></fieldset>
+        <fieldset class="checks"><legend>Requirements</legend><label><input type="checkbox" data-c="loi"> Needs a letter of intent</label><label><input type="checkbox" data-c="cost"> Needs cost-share</label><label><input type="checkbox" data-c="new"> New this week</label><label><input type="checkbox" data-c="changed"> Changed since my last visit</label></fieldset>
         <fieldset class="checks"><legend>Collection</legend><label><input type="checkbox" data-c="calls"> Has open calls</label></fieldset>
         <fieldset class="themes"><legend>Themes (must match all)</legend><div class="chips" data-g="themes"></div></fieldset>
       </div>
@@ -458,8 +458,7 @@ function renderKpis() {
     { l: 'Closing in 30 days', n: num(k.closing30), sub: near ? `${near.name}, ${D.countdown(near._days)}` : 'Nothing urgent', hot: k.closing30 > 0, on: F.window === '30', patch: { window: '30' }, clear: { window: '' } },
     { l: 'Prime and strong fit', n: num(k.primeStrong), sub: k.avgFit != null ? `Average fit ${k.avgFit}` : 'No scores yet', on: F.tier.length === 2 && F.tier.includes('prime') && F.tier.includes('strong'), patch: { tier: ['prime', 'strong'] }, clear: { tier: [] }, sp: series((m) => (m.by_tier?.prime ?? NaN) + (m.by_tier?.strong ?? NaN)) },
     { l: 'In play', n: D.money(p.usd), sub: p.n ? `${p.n} ${p.n === 1 ? 'funder' : 'funders'}, ${p.byState.applying.n} applying` : 'Nobody is writing yet', act: () => go('board'), sp: series((m) => (m.pipeline ? sumBy(m.pipeline, (x) => x.usd) : NaN)) },
-    { l: 'New this week', n: num(k.newWeek), sub: k.sinceVisit == null ? 'Changes show from your next visit' : `${num(k.sinceVisit)} changed since your last visit`, on: since ? F.changed : S.sort === 'changed',
-      act: () => { if (since) setFilters({ changed: !F.changed }); else { S.sort = 'changed'; render(); } } },
+    { l: 'New this week', n: num(k.newWeek), sub: k.sinceVisit == null ? 'Changes show from your next visit' : `${num(k.sinceVisit)} changed since your last visit`, on: F.new, patch: { new: true }, clear: { new: false } },
     { l: 'Collected automatically', n: `${k.collect.auto} of ${k.collect.total}`, sub: `${k.collect.openCalls} open ${k.collect.openCalls === 1 ? 'call' : 'calls'} found${k.collect.attention ? `, ${k.collect.attention} ${k.collect.attention === 1 ? 'needs' : 'need'} attention` : ''}`,
       act: () => { afterView = () => $('#m-collection')?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); go('method'); },
       sp: series((m) => (m.collection?.listed ? m.collection.auto / m.collection.listed * 100 : NaN)) },
@@ -693,7 +692,7 @@ function syncUI() {
   $$('[data-c]').forEach((c) => (c.checked = F[c.dataset.c])); $('#showDq').checked = F.dq; $('#showSkip').checked = F.skip;
   $$('[data-scope]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.scope === S.scope));
   renderMarkFilter();
-  const n = ['ua', 'geo', 'band', 'partner', 'team', 'themes', 'tier', 'mark'].reduce((s, k) => s + F[k].length, 0) + F.loi + F.cost + F.changed + F.evid + F.calls;
+  const n = ['ua', 'geo', 'band', 'partner', 'team', 'themes', 'tier', 'mark'].reduce((s, k) => s + F[k].length, 0) + F.loi + F.cost + F.changed + F.new + F.evid + F.calls;
   $('#moreN').hidden = !n; $('#moreN').textContent = n;
 }
 let qt; $('#q').addEventListener('input', (e) => { clearTimeout(qt); showSuggest(); qt = setTimeout(() => { S.F.q = e.target.value.trim(); queryChanged(); }, 180); });
