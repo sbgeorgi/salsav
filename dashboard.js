@@ -262,7 +262,7 @@ export function normalize(feed, now = new Date(), team = {}, marks = null) {
 /* ---- filters ---- */
 export const defaultFilters = () => ({
   q: '', bucket: [], ua: [], geo: [], themes: [], window: '', band: [], fit: 0, partner: [], loi: false, cost: false,
-  team: [], changed: false, dq: false, skip: false, lane: '', tier: [], evid: false, calls: false, mark: [],
+  team: [], changed: false, new: false, dq: false, skip: false, lane: '', tier: [], evid: false, calls: false, mark: [],
 });
 const has = (arr, v) => !arr.length || arr.includes(v);
 export function matches(r, F, ctx = {}) {
@@ -281,6 +281,7 @@ export function matches(r, F, ctx = {}) {
   if (F.calls && !(collectionOf(r).open_calls > 0)) return false;
   if (F.loi && !needsLoi(r)) return false;
   if (F.cost && !needsCostShare(r)) return false;
+  if (F.new && !r._new) return false;
   if (F.changed && !(ctx.since && r._changedAt > ctx.since)) return false;
   const w = F.window;
   if (w === 'rolling') return r._state === 'rolling';
