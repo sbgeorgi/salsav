@@ -131,7 +131,6 @@
 .mk-btn.is-ro { cursor: pointer; }
 /* an unset ribbon rests at 55% where a pointer can hover, and wakes on row hover, focus and touch; a set one is always full */
 @media (hover: hover) {
-  .mk-btn:not(.is-set):not(.mk-btn--label) .mk-ico { opacity: .55; }
   :is(tr, li, .card, .bcard, .it):hover .mk-btn .mk-ico, .mk-wrap:focus-within .mk-ico, .mk-btn:hover .mk-ico { opacity: 1; }
   .mk-ico.is-hide, :is(tr, li, .card, .bcard, .it):hover .mk-ico.is-hide { opacity: .55; }
 }
