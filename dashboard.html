@@ -96,6 +96,7 @@
       <label class="checks"><input type="checkbox" id="showDq"> <span id="dqLabel">Show disqualified</span></label>
       <label class="checks"><input type="checkbox" id="showSkip"> <span id="skipLabel">Show hidden</span></label>
       <span class="spacer"></span>
+      <button class="btn btn--sm btn--primary" id="addLeadBtn" type="button" hidden>+ Add candidate</button>
       <button class="btn btn--sm" id="csvBtn" type="button"><svg class="ico" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Export CSV</button>
     </div>
     </div>
@@ -134,6 +135,19 @@
     <label><span id="aLabel">Reason</span><textarea id="aText" rows="3" maxlength="500" autocomplete="off" aria-describedby="aErr"></textarea></label>
     <p class="err" id="aErr" role="alert"></p>
     <div class="acts"><button class="btn" type="button" id="aCancel">Cancel</button><button class="btn btn--primary" id="aGo" type="submit">Save</button></div>
+  </form>
+</dialog>
+<dialog class="modal" id="leadDlg" aria-labelledby="lTitle">
+  <form id="leadForm" method="dialog" novalidate autocomplete="off">
+    <h2 id="lTitle">Add a candidate</h2>
+    <p class="sub">The discovery agent checks it at its next run and lists it as a funder if it fits.</p>
+    <label>Organisation<input id="lOrg" type="text" maxlength="200" required aria-describedby="lErr"></label>
+    <label>Program (optional)<input id="lProg" type="text" maxlength="200"></label>
+    <label>Link (optional)<input id="lUrl" type="url" maxlength="500" placeholder="https://"></label>
+    <label>Funder type<select id="lBucket" required></select></label>
+    <label>Why it may fit (optional)<textarea id="lWhy" rows="2" maxlength="400"></textarea></label>
+    <p class="err" id="lErr" role="alert"></p>
+    <div class="acts"><button class="btn" type="button" id="lCancel">Cancel</button><button class="btn btn--primary" id="lGo" type="submit">Add to the queue</button></div>
   </form>
 </dialog>
 <dialog class="modal" id="marksDlg" aria-labelledby="mkTitle">
@@ -190,7 +204,7 @@ const unlocked = () => !!S.pass && S.unlocked;
 const isRadar = () => RADAR.includes(S.view);
 
 /* ---------------- data ---------------- */
-const PASS_FNS = new Set(['grants_check_pass', 'grants_team_notes', 'grants_set_state', 'grants_note', 'grants_set_funder', 'grants_set_call', 'grants_set_lead', 'grants_mark']);
+const PASS_FNS = new Set(['grants_check_pass', 'grants_team_notes', 'grants_set_state', 'grants_note', 'grants_set_funder', 'grants_set_call', 'grants_set_lead', 'grants_add_lead', 'grants_mark']);
 const TIER_FNS = new Set(['grants_registry', 'grants_funder', 'grants_marks']); // reads that show team identity only with a passcode: sent while unlocked, never as ''
 const MOCK_URL = D.sameOriginFeed(qs.get('mock'), location.href); // dev hook: ?mock=<same-origin json>, served by dash/mock.js
 let mockApi = null;
@@ -427,7 +441,7 @@ const app = { S, D, el, ico, link, rubric: () => S.feed?.rubric || null, openDra
   ui: UI, rpc, me: () => S.me || '', q: () => searchWords(), matchQ: (text) => { const t = String(text || '').toLowerCase(); return searchWords().every((w) => t.includes(w)); },
   loadRegistry, reg: () => S.reg, funderName: (id) => (S.rows.find((r) => r.id === id) || S.regById?.get(id) || {}).name || '',
   notesFor: (id) => (unlocked() ? S.notes.filter((n) => n.funder_id === id) : []), eventsFor: (id) => (unlocked() ? S.events.filter((e) => e.funder_id === id) : []),
-  addNote, removeNote, act, ask, setMark, manageMarks, markControl, markOf: (kind, id) => D.markOf(S.marks, kind, id),
+  addNote, removeNote, act, ask, addLead, setMark, manageMarks, markControl, markOf: (kind, id) => D.markOf(S.marks, kind, id),
   markChip: (kind, id) => { const m = D.markOf(S.marks, kind, id); return UI.markChip(m?.def, m?.note); },
   ui_state: (name, defaults = {}) => Object.assign(S.ui[name] ||= {}, { ...defaults, ...S.ui[name] }) }; // same object, missing keys filled, so a caller may set one field first
 
@@ -909,8 +923,41 @@ async function changeName() {
   const me = v.replace(/\s+/g, ' '); // owner matching is exact text, so "Ana  Ruiz" must equal "Ana Ruiz"
   S.me = me; store.set('me', me); syncMe(); toast('Name saved'); render();
 }
+/* + Add candidate: a new lead (grants.targets) for the discovery agent's next run (grants_add_lead, migration 029) */
+const LEAD_BUCKETS = ['us_federal', 'intl_dev', 'state_regional', 'private_sector', 'foundation_ngo']; // the targets.bucket check; no 'tracker'
+function addLead() {
+  if (!requireUnlock()) return;
+  const d = $('#leadDlg'), form = $('#leadForm'), err = $('#lErr'), go = $('#lGo'), opener = document.activeElement;
+  if (!$('#lBucket').options.length) $('#lBucket').replaceChildren(...LEAD_BUCKETS.map((b) => el('option', { value: b, text: D.BUCKETS[b] })));
+  for (const id of ['lOrg', 'lProg', 'lUrl', 'lWhy']) $('#' + id).value = '';
+  err.textContent = ''; go.disabled = false;
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const v = (id) => $('#' + id).value.trim().replace(/\s+/g, ' ');
+    const patch = { org: v('lOrg'), program: v('lProg'), url: v('lUrl'), bucket: $('#lBucket').value, why: $('#lWhy').value.trim(), actor: S.me || undefined };
+    if (patch.org.length < 2) { err.textContent = 'Give the organisation name.'; $('#lOrg').focus(); return; }
+    if (patch.url && !/^https?:\/\/\S+\.\S+$/i.test(patch.url)) { err.textContent = 'The link must start with http:// or https://'; $('#lUrl').focus(); return; }
+    go.disabled = true;
+    try {
+      const r = await rpc('grants_add_lead', { p_patch: patch });
+      if (r?.code === '28000') { d.close(); return failWrite(r, 'Could not add'); }
+      if (!r?.added) {
+        err.textContent = r?.reason === 'funder' ? `Already on record as ${r.funder?.name || 'a funder'} (${r.funder?.status || 'listed'}).`
+          : r?.reason === 'queued' ? `${r.lead?.org || 'This lead'} is already in the agent queue.` : `${r?.lead?.org || 'This lead'} is already covered by a listed funder.`;
+        go.disabled = false; return;
+      }
+      d.close(); opener?.focus?.();
+      const near = (r.near || []).map((m) => m.name).filter(Boolean);
+      toast(`${r.requeued ? 'Queued again' : 'Added'}: ${r.org}. The agent checks it at its next run.` + (near.length ? ` Similar on record: ${near.join(', ')}.` : ''));
+      await refresh();
+    } catch (e) { go.disabled = false; err.textContent = D.authMsg(e) || e.message || 'Could not add'; if (e.code === '28000') { d.close(); failWrite(e, 'Could not add'); } }
+  };
+  $('#lCancel').onclick = () => d.close();
+  d.showModal(); $('#lOrg').focus();
+}
+$('#addLeadBtn').onclick = addLead;
 function syncMe() {
-  $('#meWrap').hidden = !unlocked();
+  $('#meWrap').hidden = !unlocked(); $('#addLeadBtn').hidden = !unlocked();
   const b = $('#meBtn');
   b.replaceChildren(UI.avatar(S.me, { size: 'sm' }), el('span', { class: 'hide-m', text: S.me || 'Your name' }));
   b.setAttribute('aria-label', S.me ? `Signed in as ${S.me}. Open the menu.` : 'Open the menu');
