@@ -7,7 +7,7 @@
 import { STATES } from '../dashboard.js';
 
 const OPEN = new Set(['grants_feed', 'grants_registry', 'grants_funder', 'grants_marks']);
-const PASSED = new Set(['grants_check_pass', 'grants_team_notes', 'grants_set_state', 'grants_note', 'grants_set_funder', 'grants_set_call', 'grants_set_lead', 'grants_mark']);
+const PASSED = new Set(['grants_check_pass', 'grants_team_notes', 'grants_set_state', 'grants_note', 'grants_set_funder', 'grants_set_call', 'grants_set_lead', 'grants_add_lead', 'grants_mark']);
 const VETTING_KIND = { promote: 'promoted', demote: 'demoted', release: 'released' };
 let DB = null, seq = 5000, MARKS = null;
 const SEED_MARKS = () => ({ defs: [
@@ -167,6 +167,26 @@ function setLead(id, p, who) {
   return { id: l.id, status: l.status, note: l.note };
 }
 
+/* 029_add_lead.sql grants.add_lead: a funder by name or URL is not added; a same-key lead is re-queued or reported */
+const leadKey = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+function addLead(p, who) {
+  if (!who) throw fail('actor is required', '22023');
+  const org = String(p.org || '').trim(), prog = String(p.program || '').trim() || null, url = String(p.url || '').trim() || null;
+  if (org.length < 2 || org.length > 200) throw fail('give the organisation name (2 to 200 characters)', '22023');
+  if (url && !/^https?:\/\/[^\s/]+\.\S+$/i.test(url)) throw fail('the link must be a web address starting with http:// or https://', '22023');
+  if (!['us_federal', 'intl_dev', 'state_regional', 'private_sector', 'foundation_ngo'].includes(p.bucket)) throw fail('pick a funder type', '22023');
+  const k = leadKey(org + ' ' + (prog || ''));
+  const f = DB.registry.funders.find((x) => leadKey(x.name + ' ' + (x.program || '')) === k || (url && x.url === url));
+  if (f) return { added: false, reason: 'funder', funder: { id: f.id, name: f.name, status: f.status } };
+  const l = DB.registry.leads.find((x) => leadKey(x.org + ' ' + (x.program_hint || '')) === k);
+  if (l && (l.status === 'rejected' || l.status === 'deferred')) { const r = setLead(l.id, { action: 'queue', reason: p.why || 'added again from the dashboard' }, who); return { added: true, requeued: true, id: r.id, org: l.org, status: r.status }; }
+  if (l) return { added: false, reason: l.status === 'pending' ? 'queued' : 'covered', lead: { id: l.id, org: l.org, status: l.status, funder_id: l.funder_id ?? null } };
+  const n = { id: `lead-${++seq}`, org, program_hint: prog, url_hint: url, bucket: p.bucket, why: String(p.why || '').trim() || null, status: 'pending', priority: 1, note: `${who}: added from the dashboard`, funder_id: null, source: 'team', updated_at: stamp() };
+  DB.registry.leads.unshift(n);
+  logEvent(null, 'lead_queue', who, { target_id: n.id, org, reason: n.why, from_status: null });
+  return { added: true, requeued: false, id: n.id, org, status: 'pending', near: [] };
+}
+
 /* ---- bookmarks (024_bookmarks.sql human_mark / marks_payload): in memory, reset by load() ---- */
 const targetOf = (kind, id) => { // { name, funder } of a funder, call or lead, like the three selects in human_mark
   if (kind === 'funder') { const f = find(DB.registry.funders, 'id', id); return f && { name: f.name, funder: f.id }; }
@@ -266,6 +286,7 @@ export async function rpc(fn, body = {}) {
     case 'grants_set_funder': return setFunder(b.p_funder, p, who);
     case 'grants_set_call': return setCall(b.p_opp, p, who);
     case 'grants_set_lead': return setLead(b.p_target, p, who);
+    case 'grants_add_lead': return addLead(p, who);
     case 'grants_marks': return marksPayload(teamPass(b));
     case 'grants_mark': return setMark(b, p);
   }

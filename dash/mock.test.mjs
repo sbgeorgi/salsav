@@ -112,3 +112,17 @@ test('the shared STATES list backs grants_set_state', async () => {
   await rejects(rpc('grants_set_state', { p_pass: PASS, p_funder: FUNDER.id, p_patch: { state: 'bogus' } }), 'P0001', 'Unknown state');
   assert.equal((await rpc('grants_set_state', { p_pass: PASS, p_funder: FUNDER.id, p_patch: { state: 'skip' } })).state, 'skip');
 });
+
+test('grants_add_lead: adds a pending lead, then reports it queued; a funder name is not added', async () => {
+  const add = (patch) => rpc('grants_add_lead', { p_pass: PASS, p_patch: { actor: 'Ada', bucket: 'foundation_ngo', ...patch } });
+  const r = await add({ org: 'Zzqx Test Foundation', why: 'solar grazing' });
+  assert.equal(r.added, true); assert.equal(r.status, 'pending');
+  const reg = await rpc('grants_registry', { p_pass: PASS });
+  assert.equal(reg.leads.find((l) => l.id === r.id)?.priority, 1);
+  assert.equal((await events()).some((e) => e.kind === 'lead_queue' && e.payload?.target_id === r.id), true);
+  assert.equal((await add({ org: 'Zzqx  test foundation' })).reason, 'queued');
+  assert.equal((await add({ org: FUNDER.name, program: FUNDER.program })).reason, 'funder');
+  await rejects(add({ org: 'Q' }), '22023');
+  await rejects(add({ org: 'Some Org', url: 'ftp://x' }), '22023');
+  await rejects(add({ org: 'Some Org', bucket: 'tracker' }), '22023');
+});

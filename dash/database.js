@@ -618,11 +618,12 @@ function paint(root, app, U) {
   const markNote = markIds.length ? el('p', { class: 'sub' }, `Only bookmarked as ${markIds.map((id) => S.marks.byId.get(id).label).join(', ')}. `,
     el('button', { class: 'linkbtn', type: 'button', 'data-k': 'mk-clear', onclick: () => put({ marks: [] }) }, 'Show all')) : null;
   const body = U.tab === 'calls' ? [callsIntro, callChips, callScope, markNote, callResult, callsBody]
-    : U.tab === 'leads' ? [el('p', { class: 'sub db-intro', text: 'Leads are funders the discovery agent found outside the list. Queue one to have the agent check it at its next run; dismiss it to drop it.' }), markNote, leadsBody]
+    : U.tab === 'leads' ? [el('p', { class: 'sub db-intro', text: 'Leads are funders the discovery agent found outside the list. Queue one to have the agent check it at its next run; dismiss it to drop it. + Add candidate puts a funder you know about in the queue.' }), markNote, leadsBody]
       : [filters, table, more];
 
   /* one toolbar row: tabs, Filters toggle, count and Export on the right (Funders only); active chips under it */
-  const bar = el('div', { class: 'db-toolbar' }, tabs, U.tab === 'funders' ? [ftoggle, count, exportBtn.parentElement] : null);
+  const addBtn = unlocked ? el('button', { class: 'btn btn--sm btn--primary', type: 'button', 'data-k': 'add-lead', onclick: () => app.addLead() }, '+ Add candidate') : null;
+  const bar = el('div', { class: 'db-toolbar' }, tabs, U.tab === 'funders' ? [ftoggle, count, exportBtn.parentElement] : null, addBtn);
   root.replaceChildren(el('div', { class: 'db' }, el('div', { class: 'db-meta' }, lockNote, queueBar), strip, bar, U.tab === 'funders' ? activeRow : null, el('section', { id: 'db-panel', class: 'db-panel', 'aria-label': 'Database' }, body.flat())));
   if (focusKey) {
     /* a removed chip / Reset filters is gone after the repaint: land on the next chip, else the Filters toggle */
