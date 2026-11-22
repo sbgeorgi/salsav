@@ -167,21 +167,22 @@ function setLead(id, p, who) {
   return { id: l.id, status: l.status, note: l.note };
 }
 
-/* 029_add_lead.sql grants.add_lead: a funder by name or URL is not added; a same-key lead is re-queued or reported */
+/* 029_add_lead.sql + 030_queue_phrase.sql grants.add_lead: a funder by name or URL is not added; a same-key lead is re-queued or reported */
 const leadKey = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 function addLead(p, who) {
   if (!who) throw fail('actor is required', '22023');
   const org = String(p.org || '').trim(), prog = String(p.program || '').trim() || null, url = String(p.url || '').trim() || null;
-  if (org.length < 2 || org.length > 200) throw fail('give the organisation name (2 to 200 characters)', '22023');
+  if (org.length < 2 || org.length > 1000) throw fail('write 2 to 1000 characters', '22023');
   if (url && !/^https?:\/\/[^\s/]+\.\S+$/i.test(url)) throw fail('the link must be a web address starting with http:// or https://', '22023');
-  if (!['us_federal', 'intl_dev', 'state_regional', 'private_sector', 'foundation_ngo'].includes(p.bucket)) throw fail('pick a funder type', '22023');
+  if (p.bucket && !['us_federal', 'intl_dev', 'state_regional', 'private_sector', 'foundation_ngo'].includes(p.bucket)) throw fail('unknown funder type', '22023');
+  const link = url || (org.match(/https?:\/\/[^\s<>"')]+/i)?.[0] || '').replace(/[.,;:!?]+$/, '') || null; // 030: the phrase's first link
   const k = leadKey(org + ' ' + (prog || ''));
-  const f = DB.registry.funders.find((x) => leadKey(x.name + ' ' + (x.program || '')) === k || (url && x.url === url));
+  const f = DB.registry.funders.find((x) => leadKey(x.name + ' ' + (x.program || '')) === k || (link && x.url === link));
   if (f) return { added: false, reason: 'funder', funder: { id: f.id, name: f.name, status: f.status } };
   const l = DB.registry.leads.find((x) => leadKey(x.org + ' ' + (x.program_hint || '')) === k);
   if (l && (l.status === 'rejected' || l.status === 'deferred')) { const r = setLead(l.id, { action: 'queue', reason: p.why || 'added again from the dashboard' }, who); return { added: true, requeued: true, id: r.id, org: l.org, status: r.status }; }
   if (l) return { added: false, reason: l.status === 'pending' ? 'queued' : 'covered', lead: { id: l.id, org: l.org, status: l.status, funder_id: l.funder_id ?? null } };
-  const n = { id: `lead-${++seq}`, org, program_hint: prog, url_hint: url, bucket: p.bucket, why: String(p.why || '').trim() || null, status: 'pending', priority: 1, note: `${who}: added from the dashboard`, funder_id: null, source: 'team', updated_at: stamp() };
+  const n = { id: `lead-${++seq}`, org, program_hint: prog, url_hint: link, bucket: p.bucket || 'foundation_ngo', lens: p.bucket ? null : 'unsorted', why: String(p.why || '').trim() || null, status: 'pending', priority: 1, note: `${who}: added from the dashboard`, funder_id: null, source: 'team', updated_at: stamp() };
   DB.registry.leads.unshift(n);
   logEvent(null, 'lead_queue', who, { target_id: n.id, org, reason: n.why, from_status: null });
   return { added: true, requeued: false, id: n.id, org, status: 'pending', near: [] };

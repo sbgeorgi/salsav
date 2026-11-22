@@ -173,6 +173,9 @@ export function agentQueue(funders = []) {
     return cmp(String(a.name).toLowerCase(), String(b.name).toLowerCase());
   });
 }
+/* leads a person queued (priority 1, pending): the agent works these first, so they belong in the agent queue too */
+export const teamQueue = (leads = []) => leads.filter((l) => l.status === 'pending' && l.priority === 1)
+  .sort((a, b) => (ms(a.updated_at) ?? 0) - (ms(b.updated_at) ?? 0) || cmp(String(a.org), String(b.org)));
 /* the agent queue line: who promoted the funder and when; a missing name is left out */
 export function queueLine(f, now = new Date()) {
   const by = who(f?.human?.by), when = timeAgo(f?.human?.at, now);
@@ -322,7 +325,7 @@ function paint(root, app, U) {
   const list = sortRows(filterRows(rows, F, words), sortUsed);
   const shown = list.slice(0, U.limit);
   const sum = summarize(rows, reg);
-  const queued = agentQueue(reg.funders || []);
+  const queued = agentQueue(reg.funders || []), teamLeads = teamQueue(reg.leads || []), waiting = queued.length + teamLeads.length;
   const nFilters = dbFilterCount(F), hasFilter = nFilters > 0;
   const put = (patch) => { Object.assign(U, patch); paint(root, app, U); };
   const filt = (patch) => put({ ...patch, limit: PAGE });
@@ -357,22 +360,39 @@ function paint(root, app, U) {
     stat('screened', 'Screened out', sum.screened, U.status === 'rejected', () => toggleStatus('rejected')),
     stat('candidates', 'Candidates', sum.candidates, U.status === 'candidate', () => toggleStatus('candidate')),
     stat('leads', 'Open leads', sum.leads, U.tab === 'leads', () => filt({ tab: 'leads' })),
-    stat('queue', 'In agent queue', sum.queue, U.queue, () => filt({ queue: !U.queue, tab: 'funders' })),
+    stat('queue', 'Funders queued', sum.queue, U.queue, () => filt({ queue: !U.queue, tab: 'funders' })),
     stat('human', 'Human decisions', sum.human, U.human, () => filt({ human: !U.human, tab: 'funders' })));
 
   /* agent queue: one line, the list on demand */
-  const queueList = el('ol', { class: 'db-queue-list', 'aria-label': 'Funders waiting for the agent' }, queued.map((f) => el('li', {},
+  const queueList = el('ol', { class: 'db-queue-list', 'aria-label': 'Waiting for the agent' }, queued.map((f) => el('li', {},
     decisionParts(f.human).by ? avatar(f.human.by, { size: 'sm' }) : null,
     el('div', { class: 'db-line-w' }, el('button', { class: 'linkbtn', type: 'button', 'data-k': 'qo-' + f.id, onclick: () => app.openDrawer(f.id) }, f.name),
       f.human?.note ? el('p', { class: 'sub', text: f.human.note }) : null),
-    el('time', { class: 'sub', datetime: f.human?.at || '', text: queueLine(f, now) }))));
+    el('time', { class: 'sub', datetime: f.human?.at || '', text: queueLine(f, now) }))),
+    teamLeads.map((l) => el('li', {},
+      el('div', { class: 'db-line-w' }, el('button', { class: 'linkbtn', type: 'button', 'data-k': 'ql-' + l.id, onclick: () => put({ tab: 'leads' }) }, l.org),
+        l.note ? el('p', { class: 'sub', text: l.note }) : null),
+      el('time', { class: 'sub', datetime: l.updated_at || '', text: `Lead, queued ${timeAgo(l.updated_at, now) || 'at a time not recorded'}` }))));
+  /* one line to queue anything for the agent: a name, link or idea (grants_add_lead; the agent sorts it) */
+  const queueAdd = () => {
+    const input = el('input', { type: 'text', class: 'db-qadd-in', maxlength: '1000', 'data-k': 'qadd-in', 'aria-label': 'Add to the agent queue',
+      placeholder: 'Add to the queue: a funder, program, link or idea' });
+    const go = el('button', { class: 'btn btn--sm btn--primary', type: 'submit', 'data-k': 'qadd-go' }, 'Add');
+    const msg = el('p', { class: 'sub db-qadd-msg', role: 'status' });
+    return el('form', { class: 'db-qadd', onsubmit: async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (text.length < 2) { msg.textContent = 'Write a few words.'; input.focus(); return; }
+      go.disabled = true; msg.textContent = await app.queueText(text); go.disabled = false; // a success repaints the view, which clears the field
+    } }, input, go, msg);
+  };
   const queueBar = el('section', { class: 'db-queue', 'aria-label': 'Agent queue' },
     el('p', { class: 'db-queue-text' },
-      el('b', { text: queued.length ? `Agent queue: ${queued.length} waiting.` : 'Agent queue: nothing waiting.' }),
+      el('b', { text: waiting ? `Agent queue: ${waiting} waiting.` : 'Agent queue: nothing waiting.' }),
       ` The agent runs on ${agentDaysText()} at ${String(AGENT_HOUR).padStart(2, '0')}:00 local time. Next run: ${agentRunLabel(now)}.`),
-    queued.length ? el('button', { class: 'btn btn--sm', type: 'button', 'data-k': 'queue-toggle', 'aria-expanded': String(!!U.queueOpen),
+    waiting ? el('button', { class: 'btn btn--sm', type: 'button', 'data-k': 'queue-toggle', 'aria-expanded': String(!!U.queueOpen),
       onclick: () => put({ queueOpen: !U.queueOpen }) }, U.queueOpen ? 'Hide the queue' : 'Show the queue') : null,
-    U.queueOpen && queued.length ? queueList : null);
+    U.queueOpen && waiting ? queueList : null, unlocked ? queueAdd() : null);
 
   /* tabs: aria-pressed segments, every one reachable with Tab */
   const TABS = [['funders', 'Funders', rows.length], ['calls', 'Calls', calls.length], ['leads', 'Leads', leads.length]];
@@ -602,7 +622,7 @@ function paint(root, app, U) {
     if (a.queue) buttons.push(el('button', { class: 'btn btn--sm', type: 'button', 'data-k': 'lq-' + l.id, onclick: () => app.act('lead', l.id, 'queue') }, 'Queue for the agent'));
     if (a.dismiss) buttons.push(el('button', { class: 'btn btn--sm btn--danger', type: 'button', 'data-k': 'ld-' + l.id, onclick: () => app.act('lead', l.id, 'dismiss') }, 'Dismiss'));
     return el('li', { class: `db-item${app.markOf('lead', l.id)?.def.effect === 'hide' ? ' mk-dim' : ''}` },
-      el('div', { class: 'db-item-main' }, el('p', { class: 'db-item-t', text: l.org || 'Unnamed lead' }), el('p', { class: 'sub', text: l.program_hint || '' }), el('p', {}, bucketChip(l.bucket))),
+      el('div', { class: 'db-item-main' }, el('p', { class: 'db-item-t', text: l.org || 'Unnamed lead' }), el('p', { class: 'sub', text: l.program_hint || '' }), el('p', {}, l.lens === 'unsorted' ? el('span', { class: 'chip', text: 'Agent sorts the type' }) : bucketChip(l.bucket))),
       el('div', { class: 'db-item-side' }, el('p', { text: l.why || 'No reason recorded' }), l.note ? el('p', { class: 'sub', text: l.note }) : null,
         l.funder_id ? el('p', { class: 'sub' }, 'Covered by ', el('button', { class: 'linkbtn', type: 'button', 'data-k': 'lf-' + l.id, onclick: () => app.openDrawer(l.funder_id) }, app.funderName(l.funder_id) || 'a tracked funder')) : null),
       el('div', { class: 'db-item-dec' }, el('p', { class: 'sub', text: `Priority ${l.priority ?? 'not set'}` }), el('p', { class: 'sub', text: `Updated ${timeAgo(l.updated_at, now) || 'not recorded'}` }),
@@ -618,12 +638,11 @@ function paint(root, app, U) {
   const markNote = markIds.length ? el('p', { class: 'sub' }, `Only bookmarked as ${markIds.map((id) => S.marks.byId.get(id).label).join(', ')}. `,
     el('button', { class: 'linkbtn', type: 'button', 'data-k': 'mk-clear', onclick: () => put({ marks: [] }) }, 'Show all')) : null;
   const body = U.tab === 'calls' ? [callsIntro, callChips, callScope, markNote, callResult, callsBody]
-    : U.tab === 'leads' ? [el('p', { class: 'sub db-intro', text: 'Leads are funders the discovery agent found outside the list. Queue one to have the agent check it at its next run; dismiss it to drop it. + Add candidate puts a funder you know about in the queue.' }), markNote, leadsBody]
+    : U.tab === 'leads' ? [el('p', { class: 'sub db-intro', text: 'Leads are funders the discovery agent found outside the list. Queue one to have the agent check it at its next run; dismiss it to drop it. Use the box in the agent queue bar to add one yourself.' }), markNote, leadsBody]
       : [filters, table, more];
 
   /* one toolbar row: tabs, Filters toggle, count and Export on the right (Funders only); active chips under it */
-  const addBtn = unlocked ? el('button', { class: 'btn btn--sm btn--primary', type: 'button', 'data-k': 'add-lead', onclick: () => app.addLead() }, '+ Add candidate') : null;
-  const bar = el('div', { class: 'db-toolbar' }, tabs, U.tab === 'funders' ? [ftoggle, count, exportBtn.parentElement] : null, addBtn);
+  const bar = el('div', { class: 'db-toolbar' }, tabs, U.tab === 'funders' ? [ftoggle, count, exportBtn.parentElement] : null);
   root.replaceChildren(el('div', { class: 'db' }, el('div', { class: 'db-meta' }, lockNote, queueBar), strip, bar, U.tab === 'funders' ? activeRow : null, el('section', { id: 'db-panel', class: 'db-panel', 'aria-label': 'Database' }, body.flat())));
   if (focusKey) {
     /* a removed chip / Reset filters is gone after the repaint: land on the next chip, else the Filters toggle */

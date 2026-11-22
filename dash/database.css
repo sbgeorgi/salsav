@@ -33,6 +33,11 @@ body[data-view="database"] .pagehead p { max-width: none; margin-top: 0; font-si
 .db-queue { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-3); min-height: 40px; padding: 4px var(--sp-4); border-radius: var(--radius); background: var(--surface-2); }
 .db-queue-text { flex: 1 1 320px; margin: 0; font-size: var(--t-xs); color: var(--ink-2); }
 .db-queue-text b { color: var(--ink); font-weight: 600; }
+.db-qadd { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; margin: 0 0 var(--sp-2); }
+.db-qadd-in { flex: 1 1 260px; min-width: 0; min-height: 36px; padding: .35rem .7rem; border: var(--hair); border-radius: var(--radius-sm); background: var(--bg); }
+.db-qadd-in:focus-visible { outline: 0; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 16%, transparent); }
+.db-qadd-msg { flex-basis: 100%; margin: 0; }
+.db-qadd-msg:empty { display: none; }
 .db-queue-list { flex-basis: 100%; display: grid; gap: var(--sp-2); margin: 0; padding: 0; list-style: none; }
 .db-queue-list li { display: flex; align-items: center; gap: var(--sp-3); min-width: 0; font-size: var(--t-sm); }
 .db-line-w { flex: 1; min-width: 0; }
@@ -269,5 +274,5 @@ button[aria-pressed="true"] > .db-cn { background: var(--primary-ink); color: va
   .db-stat { padding: var(--sp-3) var(--sp-4); }
 }
 @media (pointer: coarse), (max-width: 760px) {
-  .db-sort, .db-tog, .db-ftoggle, .db-achip, .db-reset-f, .db-stat, .db-toolbar .btn, .db-lock .btn { min-height: 44px; }
+  .db-sort, .db-tog, .db-ftoggle, .db-achip, .db-reset-f, .db-stat, .db-toolbar .btn, .db-lock .btn, .db-qadd .btn, .db-qadd-in { min-height: 44px; }
 }

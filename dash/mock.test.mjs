@@ -125,4 +125,8 @@ test('grants_add_lead: adds a pending lead, then reports it queued; a funder nam
   await rejects(add({ org: 'Q' }), '22023');
   await rejects(add({ org: 'Some Org', url: 'ftp://x' }), '22023');
   await rejects(add({ org: 'Some Org', bucket: 'tracker' }), '22023');
+  await rejects(add({ org: 'x'.repeat(1001) }), '22023');
+  const ph = await add({ org: 'check the Zzqx grazing call at https://zzqx.example.org/apply. thanks', bucket: '' });
+  const row = (await rpc('grants_registry', { p_pass: PASS })).leads.find((l) => l.id === ph.id);
+  assert.deepEqual([row.url_hint, row.lens, row.bucket], ['https://zzqx.example.org/apply', 'unsorted', 'foundation_ngo']);
 });

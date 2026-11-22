@@ -1,0 +1,72 @@
+-- 030: the agent queue takes a plain phrase. grants.add_lead now accepts 2 to 1000 characters in org (a name, program,
+-- link or idea; the agent works out what it points to), takes the first web address in the phrase as the link when none
+-- is given, and makes the funder type optional (placeholder bucket foundation_ngo with lens 'unsorted').
+-- Replaces grants.add_lead only; public.grants_add_lead, grants and the return shape are unchanged.
+
+create or replace function grants.add_lead(p_org text, p_program text, p_url text, p_bucket text, p_why text, p_actor text)
+returns jsonb
+language plpgsql set search_path to '' as $body$
+declare
+  v_actor text := left(btrim(coalesce(p_actor, '')), 60);
+  v_org text := btrim(coalesce(p_org, ''));
+  v_prog text := nullif(btrim(coalesce(p_program, '')), '');
+  v_url text := nullif(btrim(coalesce(p_url, '')), '');
+  v_why text := nullif(left(btrim(coalesce(p_why, '')), 400), '');
+  v_key text; v_bucket text; v_lens text; f grants.funders%rowtype; t grants.targets%rowtype; v_near jsonb;
+begin
+  if v_actor = '' then raise exception 'actor is required' using errcode = '22023'; end if;
+  if char_length(v_org) < 2 or char_length(v_org) > 1000 then
+    raise exception 'write 2 to 1000 characters' using errcode = '22023';
+  end if;
+  if v_prog is not null and char_length(v_prog) > 200 then raise exception 'program is too long (200 characters at most)' using errcode = '22023'; end if;
+  if v_url is not null and (v_url !~* '^https?://[^\s/]+\.[^\s]+$' or char_length(v_url) > 500) then
+    raise exception 'the link must be a web address starting with http:// or https://' using errcode = '22023';
+  end if;
+  -- a phrase may carry the link: take its first web address (trailing punctuation dropped) when no link is given;
+  -- one that does not look like a link is left in the phrase only, never an error
+  if v_url is null then
+    v_url := rtrim(substring(v_org from '[Hh][Tt][Tt][Pp][Ss]?://[^\s<>"'')]+'), '.,;:!?');
+    if v_url !~* '^https?://[^\s/]+\.[^\s]+$' or char_length(v_url) > 500 then v_url := null; end if;
+  end if;
+  -- no funder type: the agent sorts it; discovery_brief joins targets to coverage by bucket, so a placeholder
+  -- bucket keeps the row visible and lens 'unsorted' tells the dashboard and the agent it is not a real choice
+  if nullif(p_bucket, '') is null then v_bucket := 'foundation_ngo'; v_lens := 'unsorted';
+  elsif p_bucket not in ('us_federal', 'intl_dev', 'state_regional', 'private_sector', 'foundation_ngo') then
+    raise exception 'unknown funder type' using errcode = '22023';
+  else v_bucket := p_bucket;
+  end if;
+  v_key := grants.name_key(v_org || ' ' || coalesce(v_prog, ''));
+
+  -- already a funder: same rule as grants.add_targets
+  select * into f from grants.funders x
+   where x.name_key = v_key or (v_url is not null and x.url_norm = grants.url_norm(v_url))
+   order by (x.name_key = v_key) desc limit 1;
+  if found then
+    return jsonb_build_object('added', false, 'reason', 'funder',
+      'funder', jsonb_build_object('id', f.id, 'name', f.name, 'status', f.status));
+  end if;
+
+  select * into t from grants.targets x where x.org_key = v_key for update;
+  if found then
+    if t.status in ('rejected', 'deferred') then
+      perform grants.human_set_lead(t.id, 'queue', coalesce(v_why, 'added again from the dashboard'), v_actor);
+      select * into t from grants.targets x where x.id = t.id;
+      return jsonb_build_object('added', true, 'requeued', true, 'id', t.id, 'org', t.org, 'status', t.status);
+    end if;
+    return jsonb_build_object('added', false, 'reason', case t.status when 'pending' then 'queued' else 'covered' end,
+      'lead', jsonb_build_object('id', t.id, 'org', t.org, 'status', t.status, 'funder_id', t.funder_id));
+  end if;
+
+  insert into grants.targets(org, program_hint, url_hint, bucket, lens, priority, why, source, note)
+  values (v_org, v_prog, v_url, v_bucket, v_lens, 1, v_why, 'team', left(v_actor || ': added from the dashboard', 300))
+  returning * into t;
+  insert into grants.team_events(funder_id, actor, kind, payload)
+  values (null, v_actor, 'lead_queue', jsonb_build_object('target_id', t.id, 'org', t.org, 'reason', v_why, 'from_status', null));
+
+  select coalesce(jsonb_agg(m) filter (where m->>'match' in ('likely', 'related')), '[]'::jsonb) into v_near
+    from jsonb_array_elements(grants.check_known(jsonb_build_array(jsonb_build_object('name', v_org, 'program', v_prog, 'url', v_url)))->0->'matches') m;
+  return jsonb_build_object('added', true, 'requeued', false, 'id', t.id, 'org', t.org, 'status', t.status,
+    'near', (select coalesce(jsonb_agg(jsonb_build_object('id', m->'id', 'name', m->'name', 'status', m->'status', 'match', m->'match')), '[]'::jsonb)
+               from (select m from jsonb_array_elements(v_near) m limit 3) s));
+end
+$body$;

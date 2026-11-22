@@ -164,6 +164,16 @@ t('agentQueue: pending funders, oldest promotion first, then name', () => {
   assert.deepEqual(q.map((f) => f.name), ['A', 'B', 'D']);
   assert.deepEqual(DB.agentQueue(funders).map((f) => f.id), funders.filter((f) => f.queue === 'pending').map((f) => f.id));
 });
+t('teamQueue: pending priority-1 leads only, oldest first', () => {
+  const q = DB.teamQueue([
+    { id: 'a', org: 'A', status: 'pending', priority: 1, updated_at: '2026-11-20T00:00:00Z' },
+    { id: 'b', org: 'B', status: 'pending', priority: 2, updated_at: '2026-11-01T00:00:00Z' },
+    { id: 'c', org: 'C', status: 'rejected', priority: 1, updated_at: '2026-11-01T00:00:00Z' },
+    { id: 'd', org: 'D', status: 'pending', priority: 1, updated_at: '2026-11-10T00:00:00Z' },
+  ]);
+  assert.deepEqual(q.map((l) => l.id), ['d', 'a']);
+  assert.deepEqual(DB.teamQueue(), []);
+});
 t('queueLine: who promoted and when, with the fallbacks for a read without a name or time', () => {
   const now = new Date('2026-11-17T12:00:00Z');
   assert.equal(DB.queueLine({ human: { by: 'Ben Okafor', at: '2026-11-16T15:00:00Z' } }, now), 'Promoted by Ben Okafor, 21 h ago');
