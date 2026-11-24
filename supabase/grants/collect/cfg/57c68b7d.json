@@ -1,0 +1,30 @@
+{
+  "id": "57c68b7d-f6c5-41ad-bf95-80496e30d550",
+  "name": "Agence Francaise de Developpement (AFD)",
+  "program": "AdaptAction research call: climate adaptation in the Mediterranean region (expression of interest, 2026)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.afd.fr/en/calls-for-projects/research-projects-climate-adaptation-mediterranean-region",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.afd.fr/en/calls-for-projects/list?status%5Bongoing%5D=ongoing&status%5Bsoon%5D=soon&status%5Bclosed%5D=closed",
+      "match": "adaptation-mediterranean|adaptation in the Mediterranean|AdaptAction"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "AFD's own list of calls (linked from its calls-for-projects page, all statuses) is read and kept only where the item text or link is this AdaptAction Mediterranean adaptation call; the list holds other AFD calls, so auto_vet is false. endpoint_recon found no JSON, feed or sitemap call list (sitemap has no call pages; the jsonapi article node is news). The call page is fetched second for text. This is a one-off expression-of-interest round that closed July 6, 2026, so the watch catches a repeat round.",
+  "expect": {
+    "min_items": 1,
+    "sample": [
+      {
+        "title": "Call for research projects on adaptation in the Mediterranean region (water, agriculture and food security, coastal areas, conflict zones, health)",
+        "deadline": null,
+        "url": "https://www.afd.fr/en/calls-for-projects/research-projects-climate-adaptation-mediterranean-region"
+      }
+    ]
+  },
+  "evidence": "2026-11-24: afd.fr/en/calls-for-projects (calls index, no AdaptAction entry), afd.fr/en/calls-for-projects/list (status filter all) and the call page (fetch_text: closed call, closing July 6, 2026, EUR 160,000 max per project); endpoint_recon html_ok, no endpoint; sitemap.xml 9 urls, no call hits; the PDF is not fetchable (FETCH_FAILED).",
+  "confidence": "low"
+}

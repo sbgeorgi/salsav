@@ -1,0 +1,29 @@
+{
+  "id": "15594c63-828d-4a9a-ba53-04a2ce03051d",
+  "name": "Water and Energy for Food Grand Challenge (WE4F)",
+  "program": "WE4F 2.0 MENA calls for innovations (Tracks 1-4)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://we4f.org/mena",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "WE4F 2.0 MENA innovator calls (Track 1-4) Round 2",
+      "deadline_regex": "Round 2[^.]{0,160}?(\\d{1,2} [A-Za-z]+ \\d{4})"
+    }
+  },
+  "collect_note": "Reads the WE4F 2.0 MENA programme page twice a day for the announced Round 2 of its innovator tracks; Tracks 1 and 2 are closed and the page gives no date yet, so no item is produced until a Round 2 date is posted. Its Opportunities page lists consultant calls only and is not read.",
+  "zero_reason": {
+    "quote": "This track has closed. Please stay tuned for the announcement of Round 2.",
+    "url": "https://we4f.org/track-1-mena-closed",
+    "filter_test": "deadline_regex needs a 'Round 2' line followed by a day, month and year; the closed track pages and the MENA page carry no such date, so no item today."
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Channels tried: endpoint_recon (WordPress, no calls endpoint; sitemap has no call pages); /feed/ returns 301 with no body; wp-json pages search returns only track pages (Track 1-4 closed, 'stay tuned for Round 2'); /opportunities lists consultant calls for WE4F 2.0 MENA (R02, R03, CLOSES 10 DECEMBER 2026), not innovator grants, so it is excluded. Chosen: cycle on the programme page (Round 2 announcement).",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

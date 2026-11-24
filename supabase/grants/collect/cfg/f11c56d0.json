@@ -1,0 +1,29 @@
+{
+  "id": "f11c56d0-ce09-4448-981d-742f62bb45ab",
+  "name": "Minnesota Environment and Natural Resources Trust Fund (LCCMR)",
+  "program": "Environment and Natural Resources Trust Fund annual proposals (Request for Proposal, M.L. cycle)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.lccmr.mn.gov/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.lccmr.mn.gov/funding_process/process_main.html",
+      "match": "M\\.?L\\.? 20(2[89]|[3-9]\\d) Process"
+    },
+    "auto_vet": false
+  },
+  "collect_note": "Reads the LCCMR Proposal and Funding Process hub twice a day for its per-cycle process pages; a yearly Request for Proposal is issued each January and its cycle page is listed there as M.L. 20xx Process. The 2027 cycle is closed (proposals were due March 18, 2026), and the hub lists no 2028 cycle yet, so no item is produced until the M.L. 2028 Process page is posted. Items wait as candidates (auto_vet false) for confirmation on their own page. Grants and Funding Sources pages and the legacy RFP PDFs are not read.",
+  "zero_reason": {
+    "quote": "The 2027 Request for Proposal is closed as of March 18, 2026, at 4:30 PM.",
+    "url": "https://www.lccmr.mn.gov/funding_process/process_2027.html",
+    "filter_test": "The match regex M.L. 20(2[89]|[3-9]d) Process is tested on the last known cycle titles 'M.L. 2027 Process' and '2027 Request for Proposal': neither matches, so no item today."
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Channels tried 2026-11-24: endpoint_recon (html_ok, no opportunity endpoint, sitemap.xml HTTP 404, no feed link in home HTML, /feed and /rss.xml HTTP 404); Grants.gov and EU APIs not applicable (state trust fund); home page grep shows the Funding Process menu; funding_process/process_main.html HTTP 200 lists per-cycle pages M.L. 2027 Process down to 2009 and says the process begins with an RFP (list anchor mode, filter for cycles 2028 and later); process_2027.html HTTP 200 gives the 2027 RFP issue date (January 7, 2026) and closing (March 18, 2026), so the cycle is closed; no 2028 RFP page or deadline is posted; newsroom index has no RFP item; no RSS or Atom route; page watch not needed.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "5445aed5-15af-443b-988f-34808407c4f5",
+  "name": "Sida (Swedish International Development Cooperation Agency)",
+  "program": "Research and development cooperation calls",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.sida.se/en/for-partners/research-partners/research-calls-and-grants",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "url": "https://www.sida.se/en/for-partners/calls-and-announcements",
+      "item": "div.accordion-block li",
+      "title": "a",
+      "link": "a[href]",
+      "date_label": false
+    },
+    "filter": {
+      "any": ["research"],
+      "none": ["Zambia"],
+      "fields": "title"
+    }
+  },
+  "zero_reason": {
+    "quote": "Here is a list of Sida’s call processes that are are no longer open for application.",
+    "url": "https://www.sida.se/en/for-partners/calls-and-announcements"
+  },
+  "collect_note": "Reads Sida's Calls and announcements page (accordion lists) and keeps items whose title says research. Its only research item, the 2025 Zambia research-capacity call on calls.sida.se, sits in the closed list and is excluded by name (none Zambia) so it is not shown as open; the filter 'research' matches its title, so the filter is tested. Current announcements on the page list no research call (expect 0 open). Routes tried: sitemap.xml lists both pages (no call feed or JSON endpoint found by endpoint_recon); calls.sida.se is a Moodle course site with no listing. The research-calls page lists partner-run calls (JPIAMR, AI4D, OWSD, TWAS, IFS, AERC) that have their own rows, so they are not collected here. Mode calls, not page: the listing is a real calls section. Undated items get no deadline.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  }
+}

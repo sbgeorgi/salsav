@@ -1,0 +1,31 @@
+{
+  "id": "830351ce-dead-43fd-afbc-993acb547c6f",
+  "name": "National Research Fund Kenya (NRF)",
+  "program": "LEAWEF call for proposals (water-energy-food nexus), 2024 round",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://www.nrf.go.ke/category/grants-and-calls/",
+  "feed_url": "https://www.nrf.go.ke/category/grants-and-calls/feed/",
+  "adapter_config": {
+    "auto_vet": false,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "re:\\bLEAWEF\\b",
+        "re:water[- ]energy[- ]food",
+        "re:\\bnexus\\b"
+      ]
+    },
+    "max_items": 10
+  },
+  "collect_note": "NRF's grants-and-calls category feed (10 newest items, shared by all NRF calls) is read twice a day and only titles naming LEAWEF, water-energy-food or nexus are kept. None is posted today: the 2024 LEAWEF PDF is not in the feed. Hidden candidates (auto_vet false) because the feed is shared by several NRF programs. Routes tried: endpoint_recon found the category feed (rss, 10 items) and the WordPress sitemap (no call hits); the category HTML list is the same content. Filter tested against the 2024 call name from the PDF file name (LEAWEF-call_for_proposals); the live title of that call was not readable.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "Call for Research Proposals issued by the African Institute for Capacity Development (AICAD) invites research projects focused on community-level interventions, training",
+    "url": "https://www.nrf.go.ke/category/grants-and-calls/",
+    "note": "The category listing shows NRF calls dated 2025 and 2026 and none is titled LEAWEF or water-energy-food; the quote is a listing entry, not a closure statement, so zero is a reading of the list as fetched on 2026-11-24."
+  }
+}

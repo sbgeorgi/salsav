@@ -1,0 +1,36 @@
+{
+  "id": "8d873831-3736-4978-b6ca-2b53d9ddec1b",
+  "name": "Japan Climate Fund (Public Resource Foundation)",
+  "program": "Solar Sharing Grant Program: Connecting Agriculture and the Future (round 1)",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://www.public.or.jp/project/f0185",
+  "feed_url": "https://www.public.or.jp/blog-feed.xml",
+  "adapter_config": {
+    "auto_vet": false,
+    "filter": {
+      "fields": "title+description",
+      "any": [
+        "f0185",
+        "日本気候基金"
+      ],
+      "all": [
+        "re:公募|助成|募集|第2期|次期"
+      ]
+    },
+    "max_items": 10
+  },
+  "collect_note": "The foundation's blog feed (RSS, 20 items, all its funds) is read and only posts tagged #f0185 or naming 日本気候基金 that use a call word (公募, 助成, 募集, 第2期, 次期) are kept; none is posted today, and the round 1 program page is closed. Blocker for the program page itself: f0185 is a Wix page (1.4 MB) whose program text sits in ordinary HTML at character 829,379, past the 600,000 characters the engine parses (MAX_PARSE_CHARS in extract.ts), so the html adapter reads 0 characters. engine_gap: html parse window MAX_PARSE_CHARS 600000 cuts https://www.public.or.jp/project/f0185 before its text.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "日本気候基金 公募期間外 〜第1期：農業と未来をつなぐソーラーシェアリング助成〜",
+    "url": "https://www.public.or.jp/project/f0185",
+    "note": "Round 1 is closed. The filter is tested on the program title on the page, 第1期：農業と未来をつなぐソーラーシェアリング助成, which matches 助成 and the tag 日本気候基金, and on the feed's only #f0185 post (Q&A, 17 Jul 2026), which the call-word filter drops."
+  },
+  "evidence": "Route 1 official API: none on public.or.jp (no JSON API found). Route 2 feed: https://www.public.or.jp/blog-feed.xml HTTP 200 RSS 29.5 KB, 20 items, newest 17 Nov 2026; only f0185 post is the Q&A of 17 Jul 2026. /feed and /feed/ HTTP 404. Route 3 site JSON: /wp-json 404 (Wix site); the blog listing /blog/ embeds its post JSON in script data and no text is visible in its HTML. Route 4 listing: /news/ and /blog/ HTTP 200 with no program text in the first 600,000 chars; grant.public.or.jp is the foundation's application portal (nav 公募情報), its call list was not read (not a program listing). Route 5 sitemap: /sitemap.xml lists dynamic-project pages, no call list. Route 6 program page f0185 HTTP 200 1.43 MB, program text at char 829,379 (after the parse window). checked 2026-11-24",
+  "edge_risk": "rate_limit",
+  "confidence": "medium"
+}

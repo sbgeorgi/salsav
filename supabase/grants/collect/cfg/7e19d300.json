@@ -1,0 +1,29 @@
+{
+  "id": "7e19d300-625d-4020-8f15-0ffda836957e",
+  "name": "FoodShot Global",
+  "program": "GroundBreaker Prize (FoodShot Challenge #4: Water, the Essential Input)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://foundationfar.org/programs/foodshot-global-challenge",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "FoodShot Global GroundBreaker Prize (FoodShot Challenge)",
+      "deadline_regex": "Deadline:\\s*([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads FFAR's FoodShot Global Challenge program page twice a day; the page names the annual challenge and its single labeled deadline. Right now the page says it is no longer accepting applications and its only deadline is December 1, 2023, so no item is produced until a future labeled deadline is posted. Routes tried: foundationfar.org program page (used); foodshot.org homepage (fetch returned unrelated spam text, not usable); FFAR open-opportunities page (already read by funder 040f3e88, which does not list this program now).",
+  "zero_reason": {
+    "quote": "This program is no longer accepting applications",
+    "url": "https://foundationfar.org/programs/foodshot-global-challenge",
+    "filter_test": "deadline_regex matches the last labeled line 'Deadline: December 1, 2023' (date 2023-12-01, past, so no item)"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "channels checked 2026-11-24: foundationfar.org program page HTTP 200 (used, html, labeled deadline 2023-12-01, closed); foodshot.org homepage HTTP 200 but content is unrelated casino text, unusable; foodshot.org /groundbreaker, /prize, /challenges HTTP 404; sitemap.xml 1 URL, no call hits; FFAR news pages (2019, 2024 winners) are announcements, not calls; no feed or API found by endpoint_recon.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

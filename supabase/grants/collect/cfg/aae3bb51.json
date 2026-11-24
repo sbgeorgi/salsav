@@ -1,0 +1,39 @@
+{
+  "id": "aae3bb51-8200-4d3a-b41b-a748d5fd9bf4",
+  "name": "BARD (US-Israel Binational Agricultural Research and Development Fund)",
+  "program": "Aquaculture and Desert Farming Program",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.bard-isus.org/funding-opportunities/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "url": "https://www.bard-isus.org/funding-opportunities/",
+      "item": "div.jet-listing-grid__item",
+      "title": "h2, h3, h4",
+      "link": "a[href]",
+      "date_label": true,
+      "closed": "\\bclosed\\b"
+    },
+    "filter": {
+      "any": ["Aquaculture and Desert Farming"],
+      "fields": "title"
+    }
+  },
+  "collect_note": "The BARD Funding Opportunities list is read and only the Aquaculture and Desert Farming card is kept (the list is shared with the Pioneer, NIFA-BARD, fellowship and accelerator cards). Its card reads Closed and the program page gives no next submission date, so the crawler stores no call until BARD posts a new round. Channels tried 2026-11-24: endpoint_recon found a WordPress feed (/feed/, 3 items, news not calls) and /wp-json/wp/v2/opportunities (11 items for all BARD programs, no deadline field); the HTML list was kept because it names the program and its status on one page.",
+  "zero_reason": {
+    "quote": "Submission closed at: September 16, 2026",
+    "url": "https://www.bard-isus.org/opportunities/bard-aquaculture-and-desert-farming-program/"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": [
+      {
+        "title": "BARD Aquaculture and Desert Farming Program",
+        "deadline": null,
+        "url": "https://www.bard-isus.org/opportunities/bard-aquaculture-and-desert-farming-program/"
+      }
+    ]
+  }
+}

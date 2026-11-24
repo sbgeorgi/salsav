@@ -1,0 +1,21 @@
+{
+  "id": "c1b5ef29-3685-4b1b-815f-d4dc9fe078af",
+  "name": "Water Infrastructure Finance Authority of Arizona (WIFA)",
+  "program": "Water Supply Development Fund FY2027",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://wifa.az.gov/water-supply-development-fund",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "WIFA Water Supply Development Fund (WSDRF) application window",
+      "deadline_regex": "Apply by\\s+([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads the WIFA Water Supply Development Fund program page twice a day for its single yearly application window ('Apply by <date>'). Stronger routes tried and not usable: sitemap.xml lists the page but no calls section, the Drupal jsonapi returns HTTP 500, and the WIFA news listing carries only Water Conservation Grant Fund rounds, none for this fund, so no listing route exists yet.",
+  "expect": { "min_items": 1, "sample": [] },
+  "evidence": "Channels tried 2026-11-24: endpoint_recon (no-chrome) on the program page: HTTP 200, 5248 chars static Drupal HTML, no feed; sitemap.xml 200 with 70 URLs and no calls section; /jsonapi/node/article HTTP 500; wifa.az.gov/news listing (fetched) has only Water Conservation Grant Fund items; program page states 'WIFA is accepting applications ... Apply by December 2, 2026.' (quote verified with fetch_text this run). azwater.gov (lead URL) returns HTTP 403 to fetch_text.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

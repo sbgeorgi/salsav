@@ -1,0 +1,27 @@
+{
+  "id": "fe8ca080-1143-44b9-a39b-0cb797a6cc4b",
+  "name": "Australian Government (Future Drought Fund)",
+  "program": "Drought Resilience Innovation Challenges Pilot Program",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.agriculture.gov.au/agriculture-land/farm-food-drought/drought/future-drought-fund/drought-resilience-innovation-challenges",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.agriculture.gov.au/agriculture-land/farm-food-drought/drought/future-drought-fund/programs",
+      "match": "Drought Resilience Innovation Challenges",
+      "detail": {"max": 1, "closed": "Applications closed"}
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads the Future Drought Fund programs listing (current programs, one card per program) and hops to the Drought Resilience Innovation Challenges Pilot Program page; the detail text 'Applications closed' marks the call closed. Nothing is open today: the pilot round closed and its recipients are announced. The program page is the only official place a next round would be announced, and the listing is the calls-level route. Routes tried: endpoint_recon (sitemap.xml exists: engine_gap: sitemap https://www.agriculture.gov.au/sitemap.xml, not used, no calls section checked; no feed, wp-json or embedded JSON found); communitygrants.gov.au grant page returned HTTP 403, so not used.",
+  "zero_reason": {
+    "quote": "Drought Resilience Innovation Challenges Pilot Program recipients have been announced.",
+    "url": "https://www.agriculture.gov.au/agriculture-land/farm-food-drought/drought/future-drought-fund/drought-resilience-innovation-challenges"
+  },
+  "expect": {"min_items": 0, "sample": []},
+  "evidence": "GET programs listing (Current programs includes Drought Resilience Innovation Challenges Pilot Program) and GET program page 2026-11-24: 'Applications closed', 'recipients have been announced'. Filter words 'Drought Resilience Innovation Challenges' match the program title, the last known call.",
+  "edge_risk": "agriculture.gov.au sitemap and page markup; communitygrants.gov.au 403",
+  "confidence": "medium"
+}

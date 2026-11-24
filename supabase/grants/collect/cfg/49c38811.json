@@ -1,0 +1,25 @@
+{
+  "id": "49c38811-c8ff-43e3-b4a2-b3dee2a099f0",
+  "name": "California Department of Water Resources",
+  "program": "Sustainable Groundwater Management Grant Program (Proposition 4)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://water.ca.gov/sgmgrants",
+  "feed_url": null,
+  "adapter_config": {
+    "self": {
+      "title": "Sustainable Groundwater Management Grant Program (Proposition 4)",
+      "deadline_regex": "(?:applications?|proposals?) (?:are )?due[^.]{0,60}?([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads the SGM program page; the Proposition 4 solicitation is still a draft (package released 2026-10-05, public comment to 2026-12-04), so no application round is dated yet and the deadline pattern picks up the first posted due date. Not on DWR's Open Solicitations list today.",
+  "zero_reason": {
+    "quote": "The draft Guideline Amendment and Proposal Solicitation Package for the full Proposition 4 solicitation were released on October 5, 2026.",
+    "url": "https://water.ca.gov/sgmgrants",
+    "filter_test": "No application due date is printed on the page yet, so deadline_regex finds no dated round and no item is produced."
+  },
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "Channels checked 2026-11-24: endpoint_recon (no-chrome) html_ok, no JSON, feed or embedded data; sitemap.xml 404. DWR Grants and Loans page (water.ca.gov/Work-With-Us/Grants-And-Loans) has an Open Solicitations list that does not carry this program today; no list channel built because a match filter would also hit program index links. Program page: draft solicitation only, no dated round.",
+  "edge_risk": "bot_protection",
+  "confidence": "medium"
+}

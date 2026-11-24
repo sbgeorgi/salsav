@@ -1,0 +1,23 @@
+{
+  "id": "e9d7b91c-e8ad-45a5-b259-851fe92dde03",
+  "name": "AECF (Africa Enterprise Challenge Fund)",
+  "program": "Competitions: agribusiness, renewable energy, resilience (sub-Saharan Africa)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.aecfafrica.org/approach/competitions/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.aecfafrica.org/im-looking-to/see-aecfs-funding-opportunities/",
+      "match": "apply here|read more and apply"
+    },
+    "auto_vet": false,
+    "max_items": 20
+  },
+  "collect_note": "Calls come from AECF's funding opportunities page, which lists each open competition with an apply link. The crawler reads the listing's apply links and their card text. The listing is shared by several AECF competitions, so auto_vet is false and each call waits as a candidate. Other routes tried: endpoint_recon found no API or feed; the sitemap_index (25 URLs) has no call pages. Competitions are announced without deadlines on the page, so no date is stored unless a card states one.",
+  "expect": {
+    "min_items": 1,
+    "sample": []
+  },
+  "evidence": "Plain HTTP GET 2026-11-24: https://www.aecfafrica.org/im-looking-to/see-aecfs-funding-opportunities/ lists 'LESSAP II ... Read more and apply', 'Energy Transition Challenge Fund ... Window 3.1: Skills Development for Energy Transition Apply here', 'Sudan SME Catalyser ... Apply here'. endpoint_recon (--no-chrome): no opportunity endpoint, sitemap_index has no call hits. Sitemap probe was not a feed route."
+}

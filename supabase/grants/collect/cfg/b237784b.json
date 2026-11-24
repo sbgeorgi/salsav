@@ -1,0 +1,32 @@
+{
+  "id": "b237784b-5f17-4478-8e14-f2980bd441b3",
+  "name": "Netherlands Organisation for Scientific Research (NWO)",
+  "program": "NL-CGIAR Water-Food Nexus call: rainfed agri-food systems in Sub-Saharan Africa (2024 round)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://zoek.officielebekendmakingen.nl/stcrt-2024-21283.html",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": false,
+    "list": {
+      "url": "https://www.nwo.nl/en/calls",
+      "item": "div.card",
+      "title": "h3.card__title",
+      "link": "h3.card__title a",
+      "match": "CGIAR|rainfed|water[- ]food|nexus"
+    }
+  },
+  "collect_note": "Reads NWO's public calls listing (Drupal, plain HTML, 12 cards on page 1) and keeps only cards whose title names the NL-CGIAR water-food nexus or rainfed topic. The 2024 round is closed (pre-proposals 15 Oct 2024, full proposals 13 May 2025) and no next round is announced, so no item is produced until NWO lists one. Routes tried: nwo.nl/en/calls HTML (used); nwo.nl jsonapi node/article and sitemap.xml (both 403 to the probe, not usable); Staatscourant notice (used as the funder url for the round text).",
+  "zero_reason": {
+    "quote": "The deadline for submitting full proposals is 13 May 2025 , before 14:00:00 CEST.",
+    "url": "https://zoek.officielebekendmakingen.nl/stcrt-2024-21283.html",
+    "filter_test": "match regex CGIAR|rainfed|water[- ]food|nexus matches the last known call title 'The Water-Food Nexus in rainfed agri-food systems in Sub-Saharan Africa' (rainfed); the listing has no such card today, so no item."
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Channels checked 2026-11-24: nwo.nl/en/calls endpoint_recon html_ok (drupal, 16k chars, no JSON or __NEXT_DATA__); jsonapi node/article 403 and sitemap.xml 403 to the probe; the notice page fetched with HTTP 200. The 2024 call title does not appear among the listing cards today. Cards are li.list-item > div.card > h3.card__title a.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

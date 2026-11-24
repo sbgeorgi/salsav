@@ -19,25 +19,20 @@
     "filter": {
       "any": [
         "Pioneer",
-        "Aquaculture",
         "NIFA-BARD",
         "Research Grants"
       ],
       "none": [
-        "Accelerator"
+        "Accelerator",
+        "Aquaculture"
       ],
       "fields": "title"
     }
   },
-  "collect_note": "Reads BARD's funding opportunities page twice a day and keeps its research grant cards: Research Grants, Pioneer, Aquaculture and the two NIFA-BARD tracks. All five show Closed today. A new round appears when a card shows a next submission date. Fellowships and workshops are not included.",
+  "collect_note": "Reads BARD's funding opportunities page twice a day and keeps its research grant cards: Research Grants, Pioneer and the two NIFA-BARD tracks. All four show Closed today. A new round appears when a card shows a next submission date. Fellowships and workshops are not included. The Aquaculture and Desert Farming card is collected by its own row (aae3bb51).",
   "expect": {
-    "min_items": 5,
+    "min_items": 4,
     "sample": [
-      {
-        "title": "BARD Aquaculture and Desert Farming Program",
-        "deadline": null,
-        "url": "https://www.bard-isus.org/opportunities/bard-aquaculture-and-desert-farming-program/"
-      },
       {
         "title": "Pioneer Funding Track",
         "deadline": null,
