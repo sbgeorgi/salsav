@@ -1,0 +1,30 @@
+{
+  "id": "e802117b-8722-42d8-8f2c-0bdd383b4e3b",
+  "name": "U.S. Department of Energy, Integrated Energy Systems Office (formerly Solar Energy Technologies Office)",
+  "program": "Advancing Workforce Partnerships Funding Program",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.energy.gov/eere/solar/advancing-equity-through-workforce-partnerships-funding-program",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.energy.gov/eere/solar/funding-opportunities",
+      "item": "div.block-title--open-funding-opportunities li, div.block-title--upcoming-funding-opportunities li",
+      "match": "workforce|apprentic",
+      "amount": false,
+      "date_label": true
+    },
+    "auto_vet": false,
+    "max_items": 20
+  },
+  "collect_note": "Reads the Open and Upcoming Funding Opportunities lists on the DOE solar funding page and keeps notices whose title names workforce or apprenticeship; the program's own page is a completed selection list with no open call, so a new solar workforce notice would appear here as a candidate. The same listing feeds the SETO row, which keeps agrivoltaics titles, so the two filters do not overlap on one call.",
+  "zero_reason": {
+    "quote": "There are no upcoming funding opportunities at this time.",
+    "url": "https://www.energy.gov/eere/solar/funding-opportunities",
+    "note": "Open list holds only the Space Photovoltaics Research and Development Partnership Intermediary Agreement and the Tribal Energy Capacity Expansion (TECE) Prize, neither workforce; the filter was tested against the program's own title, 'Advancing Workforce Partnerships Funding Program', which it matches."
+  },
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "Plain HTTP GET energy.gov/eere/solar/advancing-equity-through-workforce-partnerships-funding-program HTTP 200 (server-rendered selectee list, updated May 11, 2026, no eligibility or deadline text). Listing energy.gov/eere/solar/funding-opportunities checked 2026-11-27 via fetch_text: open list 2 items, upcoming 'There are no upcoming funding opportunities at this time.'. Recon endpoint_recon verdict html_ok, no opportunity endpoint; sitemap has no call URLs; jsonapi 404; Chrome refused on port 9333.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

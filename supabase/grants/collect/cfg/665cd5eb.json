@@ -1,0 +1,28 @@
+{
+  "id": "665cd5eb-32e1-437d-b20d-81ffe22ec465",
+  "name": "Department of Agriculture, Food and the Marine (Ireland), with USDA NIFA and DAERA (Northern Ireland)",
+  "program": "US-Ireland R&D Partnership Programme in Agriculture (joint proposals through USDA AFRI)",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.gov.ie/en/publication/a074b-call-information-us-ireland-research-and-development-partnership/",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "US-Ireland R&D Partnership in Agriculture: joint proposals through USDA AFRI"
+    }
+  },
+  "collect_note": "Reads the DAFM call-information page twice a day. The page says the call is an open, rolling window with deadlines set per AFRI program area (its table lists 2025 dates only), so no labeled future deadline is shown and the crawler produces no item until the page posts a dated 2026 or later deadline. No sitemap, feed or JSON endpoint exists for the page; the USDA AFRI NOFO list is a different program page and is not read here.",
+  "zero_reason": {
+    "quote": "Call type: Open, rolling application window",
+    "url": "https://www.gov.ie/en/publication/a074b-call-information-us-ireland-research-and-development-partnership/",
+    "filter_test": "The page's only labeled deadline reads 'Deadline: Various' (no date), and its program-area table lists 2025 deadlines (e.g. 'Soil Health (A1401) 18/09/2025 16/10/2025'), which are past, so no item is produced today."
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Channels tried 2026-11-27: endpoint_recon.py (page HTTP 200 text/html, 5956 chars, no opportunity endpoint; gov.ie sitemap.xml 200 with 25 URLs and no hits; Chrome unavailable on this PC). Page itself read with fetch_text.py: 'Call type: Open, rolling application window' and 'Deadline: Various', with the 2025 program-area deadline table and 'DAFM Funding: €500,000 per successful project'.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

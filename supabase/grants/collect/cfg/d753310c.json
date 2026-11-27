@@ -1,0 +1,24 @@
+{
+  "id": "d753310c-6019-4ef0-8861-43c70232380f",
+  "name": "U.S. Department of the Interior, Bureau of Indian Affairs (Office of Trust Services, Branch of Tribal Climate Resilience)",
+  "program": "Tribal Climate Resilience (TCR) annual awards program",
+  "mode": "cycle",
+  "adapter": "html",
+  "url": "https://www.indianaffairs.gov/service/tcr-annual-awards-program",
+  "feed_url": null,
+  "adapter_config": {
+    "auto_vet": true,
+    "self": {
+      "title": "Tribal Community Resilience Annual Awards Program (Category 1 Planning, Category 2 Implementation) request for proposals",
+      "deadline_regex": "(?:due|deadline|closes?)[^.]{0,60}?([A-Z][a-z]+ \\d{1,2}, \\d{4})"
+    }
+  },
+  "collect_note": "Reads the Indian Affairs program page for the Tribal Community Resilience Annual Awards Program twice a day; when a new request for proposals with a due date is posted there, it becomes one call. The page currently says 'Updates coming soon', so no item is produced. The RFP PDF and bia.gov pages return HTTP 403 to plain HTTP and the PDF cannot be read by the engine, so the crawler reads only the program page.",
+  "zero_reason": {
+    "quote": "Updates coming soon. Please check back for more.",
+    "url": "https://www.indianaffairs.gov/service/tcr-annual-awards-program",
+    "filter_test": "deadline_regex matches a line such as 'proposals are due October 18, 2024' (the last known FY24 due date) but not the current page text, so no item is produced until a future due date is posted."
+  },
+  "expect": { "min_items": 0, "sample": [] },
+  "evidence": "Channels tried 2026-11-27: (1) Grants.gov search2 POST, agencies DOI-BIA with oppStatuses forecasted|posted|closed: 23 BIA hits, none is the TCR program; keyword 'tribal climate resilience': no TCR row. (2) bia.gov/sitemap.xml: 2 URLs, no hits; bia.gov/service/tcr-annual-awards-program/how-to-apply and /about: HTTP 403 (endpoint_recon verdict blocked, Chrome 0 chars). (3) indianaffairs.gov/service/tcr-annual-awards-program: HTTP 200, program page with no call listing, links only to dashboard and previous solicitations. (4) RFP PDF bia_tcr_2024_annual_awards_program_rfp.pdf: fetch_text cannot read PDFs. (5) doi.gov press release 2025-01-08: award announcement only."
+}

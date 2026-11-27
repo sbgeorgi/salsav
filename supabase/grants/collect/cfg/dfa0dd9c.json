@@ -1,0 +1,35 @@
+{
+  "id": "dfa0dd9c-2ddf-4317-b98a-b9b148a9bda3",
+  "name": "Innovate UK (UKRI), for FCDO",
+  "program": "Energy Catalyst Round 10 Mid Stage",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://apply-for-innovation-funding.service.gov.uk/competition/1460/overview",
+  "feed_url": "https://www.gov.uk/government/organisations/innovate-uk.atom",
+  "adapter_config": {
+    "auto_vet": false,
+    "filter": {
+      "fields": "title",
+      "any": [
+        "re:energy catalyst",
+        "re:reliable energy",
+        "re:energy access",
+        "re:sub-saharan|south asia"
+      ]
+    },
+    "max_items": 10
+  },
+  "collect_note": "Innovate UK publishes Energy Catalyst calls as gov.uk notices; the Innovate UK organisation Atom feed is read and only titles about Energy Catalyst, reliable energy access or sub-Saharan Africa and South Asia are kept for review. The competition page (apply-for-innovation-funding competition 1460) returns HTTP 403 to every route tried, so it is not used. gov.uk search Atom is disallowed by robots.txt (/search/all*), so not used.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "Government support to get quantum to work faster, boosting UK’s health, defence, energy and more",
+    "url": "https://www.gov.uk/government/organisations/innovate-uk.atom",
+    "note": "Checked 2026-11-27: the Innovate UK organisation feed (20 newest notices, to 2026-10-08) holds no Energy Catalyst Round 10 notice; the Round 6 notice Global access to reliable energy: apply for funding (2018) is the last known call title and matches the filter re:reliable energy."
+  },
+  "evidence": "1 competition overview URL: HTTP 403 to fetch_text and endpoint_recon (Chrome 0 chars), not usable. 2 Atom feed of the Innovate UK organisation on gov.uk: HTTP 200, 20 items to 2026-10-08, absolute links, used. 3 gov.uk search Atom and JSON: robots.txt disallows /search/all*, and JSON gives relative links only, not used. 4 calls listing: ukri.org opportunity listing has no energy items over plain HTTP. 5 self: competition page blocked. Checked 2026-11-27.",
+  "edge_risk": "bot_protection",
+  "confidence": "medium"
+}

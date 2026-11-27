@@ -1,0 +1,37 @@
+{
+  "id": "7a87316b-f225-407d-8dc9-2bcee7c3dc3e",
+  "name": "U.S. Department of the Interior, Bureau of Reclamation (Native American Affairs Program)",
+  "program": "Colorado River Basin Tribal Drought Resiliency Program (FY2025 NOFO R26AS00021)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.usbr.gov/native/index.html",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "DOI-BOR",
+    "keyword": "tribal drought",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "detail": true,
+    "also_page": true,
+    "filter": {
+      "any": [
+        "colorado river basin tribal drought"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads forecasted or posted Bureau of Reclamation Grants.gov notices whose title is the Colorado River Basin Tribal Drought Resiliency Program (the Native American Affairs tribal drought series). The FY2025 NOFO R26AS00021 closed 2026-11-20 and no next round is announced, so the feed is expected to be empty until a new round posts; auto_vet false because the Native American Affairs series also carries other programs (Emergency Drought Relief for Tribes).",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "Closed : November 20, 2026",
+    "url": "https://simpler.grants.gov/opportunity/92e81596-675f-4f36-8462-e0630e8bd1d0"
+  },
+  "evidence": "Plain HTTP POST https://api.grants.gov/v1/api/search2 with body {rows:25, oppStatuses:'forecasted|posted|closed', agencies:'DOI-BOR', keyword:'tribal drought'}, HTTP 200, 25 hits; R26AS00021 closed 11/20/2026 with the program title. usbr.gov/native/index.html HTTP 200, 3589 chars, static, endpoint_recon verdict html_ok with no opportunity endpoint. Series also includes R24AS00051 and R25AS00275 (Emergency Drought for Tribes), excluded by the filter as other programs.",
+  "edge_risk": "none",
+  "confidence": "high"
+}

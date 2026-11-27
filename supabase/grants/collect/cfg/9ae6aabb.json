@@ -1,0 +1,18 @@
+{
+  "id": "9ae6aabb-e273-47a2-b40f-ca4c5ac4d8ca",
+  "name": "Qatar Research, Development and Innovation (QRDI) Council",
+  "program": "Food Security Call (FSC) and Climate Change and Environment Call (CCEC)",
+  "mode": "page",
+  "adapter": "html",
+  "url": "https://qrdi.org.qa/en-US/Scientific-Research",
+  "feed_url": null,
+  "adapter_config": {},
+  "collect_note": "Page watch only (blocker: js_only): the FSC and CCEC call names appear only as JavaScript menu items whose links are '#', and the call detail URLs return HTTP 404 to plain GET, so no listing of calls is readable over plain HTTP; the Scientific Research section page is watched, and a change there is flagged for review.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Plain HTTP 2026-11-27: homepage 200 (5523 chars, menu links all '#'); /en-US/Scientific-Research 200 (5864 chars, generic text, no call list); guessed and search-indexed call pages (/en-us/ and /en-US/ Scientific-Research/Food-Security-Call-FSC and Climate-Change-and-Environment-Call-CCEC) 404; /feed, /rss, /rss.xml, /atom.xml, /sitemap.xml, /wp-json, /api/calls 404; endpoint_recon verdict html_ok, no endpoint, local Chrome down (port 9333). Official news News-Detail?Id=109 is the only official call document reachable (2023 CCEC round, closed 2023-11-14).",
+  "edge_risk": "none",
+  "confidence": "low"
+}

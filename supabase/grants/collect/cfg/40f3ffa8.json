@@ -1,0 +1,28 @@
+{
+  "id": "40f3ffa8-2170-4c52-90be-faa69f53f44e",
+  "name": "FCDO (managed by Innovate UK)",
+  "program": "Agri-Tech Catalyst",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.gov.uk/international-development-funding/the-agri-tech-catalyst",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://apply-for-innovation-funding.service.gov.uk/competition/search",
+      "item": "li",
+      "match": "agri-?tech|agri tech|catalyst",
+      "date_label": true
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "The Agri-Tech Catalyst is run by Innovate UK, so its calls appear in the Innovation Funding Service competition listing (server-rendered, 10 per page, each li with an h2 link and Opened/Closes dates); the config keeps only items whose text names Agri-Tech or Catalyst. The gov.uk program page (Funds: Closed, published 31 July 2015) lists no call. Checked 2026-11-27: keyword search 'agri' returned 0 competitions and the unfiltered listing (24 competitions) had no Agri-Tech Catalyst title. The gov.uk Atom search for 'agri-tech catalyst' returned no matching call. No past Agri-Tech Catalyst call title is known, so the match is tested on the program name only.",
+  "zero_reason": {
+    "quote": "0 competitions",
+    "url": "https://apply-for-innovation-funding.service.gov.uk/competition/search?keywords=agri"
+  },
+  "expect": {"min_items": 0, "sample": []},
+  "evidence": "C4.1 no API for this program (gov.uk search has no opportunities endpoint); C4.2 no program feed (gov.uk search Atom 'agri-tech catalyst' returned unrelated guidance; opensearch 404); C4.3 no site JSON; C4.4 Innovation Funding Service competition listing, plain HTTP 200, used (list); C4.5 gov.uk program page has no dated cycle (self not used); C4.6 page watch not needed because a listing exists. Checked 2026-11-27.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

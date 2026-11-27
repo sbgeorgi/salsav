@@ -1,0 +1,37 @@
+{
+  "id": "6c007abb-48c8-4c85-a77a-f35112f2a374",
+  "name": "National Science Foundation (NSF)",
+  "program": "Regional Resilience Innovation Incubator (R2I2), Phase 2 implementation (NSF 24-595 Phase 1 archived)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.nsf.gov/funding/opportunities/r2i2-regional-resilience-innovation-incubator",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "NSF",
+    "keyword": "Regional Resilience Innovation Incubator",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "also_page": true,
+    "filter": {
+      "any": [
+        "regional resilience innovation",
+        "r2i2"
+      ],
+      "fields": "title+description"
+    },
+    "auto_vet": false,
+    "max_items": 10
+  },
+  "zero_reason": {
+    "quote": "Program 24-595 was archived.",
+    "url": "https://www.nsf.gov/funding/opportunities/r2i2-regional-resilience-innovation-incubator"
+  },
+  "collect_note": "Grants.gov is checked twice a day for a posted or forecasted NSF R2I2 Phase-2 solicitation (filter: regional resilience innovation, r2i2); nothing is open today because the Phase-1 solicitation NSF 24-595 is archived and the Phase-2 call has not been posted, so the NSF program page is also read for its status.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "Grants.gov search2 (agencies NSF, keyword Regional Resilience Innovation Incubator, forecasted|posted) checked by adapter_check; NSF program page shows 'Status: Archived' and 'Program 24-595 was archived.'; the page says a Phase-2 solicitation was envisioned 'in fiscal year 2026, subject to the availability of funds' and none is posted. NSF RSS funding feed not used (route 2, only if Grants.gov is empty). Checked 2026-11-27.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

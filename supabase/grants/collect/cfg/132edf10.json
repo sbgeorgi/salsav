@@ -1,0 +1,28 @@
+{
+  "id": "132edf10-aee2-4910-9115-435c46e893b9",
+  "name": "Mohamed bin Zayed Water Initiative",
+  "program": "Al Miyah Challenge for Agriculture",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.mohamedbinzayedwi.ae/al-miyah-challenge-for-agriculture",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.mohamedbinzayedwi.ae/news",
+      "match": "news/.*al-miyah",
+      "max_items": 10
+    },
+    "filter": {"any": ["al miyah"]},
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "The challenge's own page states its call closed on 30 June 2025 and no next round is announced; the crawler reads the initiative's news listing (server-rendered cards at /news) for any new Al Miyah announcement, filtered to the challenge's name, and keeps the matches as hidden candidates because the listing is shared by the initiative's other programs (Water Pioneers, Water Catalyst Research Grant, XPRIZE).",
+  "zero_reason": {
+    "quote": "30 June 2025 Close call for participation",
+    "url": "https://www.mohamedbinzayedwi.ae/al-miyah-challenge-for-agriculture"
+  },
+  "expect": {"min_items": 0, "sample": []},
+  "evidence": "Official page fetched 2026-11-27 with fetch_text.py: Key Dates 14 April 2025 Open call for participation; 30 June 2025 Close call for participation; Q2 2026 Finalists announcement; Nov 2025 to Nov 2026 Teams Testing; Dec 2026 Winners Announcement. Channels tried: API none found (no public call API); feeds /feed, /rss.xml, /atom.xml and /wp-json returned 404 on the official host; sitemap.xml 200 lists no calls section, only news items, including a finalists announcement; /news 200 server-rendered cards (anchor links, no JSON); endpoint_recon verdict html_ok, no opportunity endpoint, Chrome down (port 9333 refused); recon's sitemap guess pointed at an unrelated host returning 522, ignored. Cycle page: the challenge page itself, closed call (zero_reason). Page watch not needed because a calls listing exists over plain HTTP.",
+  "edge_risk": "news listing is shared by several programs; the title filter and auto_vet false keep other programs out of the dashboard",
+  "confidence": "medium"
+}

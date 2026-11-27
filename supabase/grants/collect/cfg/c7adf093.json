@@ -4,32 +4,32 @@
   "program": "Global EbA Fund, medium-size (up to USD 500,000) and small-size (up to USD 250,000) grants",
   "mode": "calls",
   "adapter": "html",
-  "url": "https://globalebafund.org/medium-size-grants/",
+  "url": "https://globalebafund.org/news/",
   "feed_url": null,
   "adapter_config": {
     "list": {
-      "item": "a.menu-link",
-      "match": "^(?:small|medium)-size grants",
-      "detail": {
-        "max": 3,
-        "deadline_regex": "Submission Window:\\s*\\d{1,2}(?: [A-Za-z]+)? to (\\d{1,2} [A-Za-z]+,? \\d{4})"
-      },
+      "item": "h3.geba-res__title",
+      "match": "calls? for proposals",
+      "skip": "webinar",
+      "title": "a",
+      "link": "a",
+      "closed": "now closed",
       "amount": false
     },
-    "auto_vet": true
+    "auto_vet": false
   },
-  "collect_note": "Reads both Global EbA Fund call pages (medium-size and small-size grants) from the site menu and takes each page's own 'Submission Window ... to <date>' closing date twice a day; both 2026 windows have closed, and a new window on either page shows up as a new open call.",
+  "collect_note": "Reads the Global EbA Fund news listing (globalebafund.org/news/) for call announcements; a new call is announced there. The old call pages (/medium-size-grants/, /small-size-grants/) now 404 and the IUCN portal call pages are 403 to automated fetches. Both 2026 windows closed (news 2026-11-23; portal says closed); /medium-size-grants/ says 'New calls coming soon'. Open calls: 0.",
   "expect": {
     "min_items": 1,
     "sample": [
       {
-        "title": "Global EbA Fund Medium-Size Grants Call for Proposals",
-        "deadline": "2026-11-16",
-        "url": "https://globalebafund.org/medium-size-grants/"
+        "title": "Global EbA Fund Calls for Proposals Now Closed",
+        "deadline": null,
+        "url": "https://globalebafund.org/news/global-eba-fund-calls-for-proposals-now-closed/"
       }
     ]
   },
-  "evidence": "Checked 2026-11-12. https://globalebafund.org/medium-size-grants/ HTTP 200 static WordPress HTML, text 'Submission Window: 12 October to 16 November 2026'. /feed/ HTTP 200 RSS but has no items; /wp-json/wp/v2/posts returns [] (only posts, pages and media types, no calls type); /news/ lists events and updates only, with no per-call listing; the small-size page (https://globalebafund.org/small-size-grants/, window 28 Sep to 26 Oct 2026, closed) has the same layout but is not tracked. No Grants.gov or EU API applies (IKI funds via IUCN and UNEP). Calls are downloaded and submitted on an online platform, no public portal list. Audit 2026-11-20: Grants.gov/EU/SAM: not posted there; RSS: /feed/ valid but 0 items (posts unused); WP REST: /wp/v2/posts [] ; types news, resource, project, grantee-resource exist but hold news/webinar/projects, not calls; /wp/v2/pages lists only the two call pages (no listing); sitemap.xml: page/project sitemaps only, no calls index; html list over menu links (a.menu-link, match size-grants) with detail hop to each call page and Submission Window deadline_regex: ok true, count 2 -> chosen; covers the small-size window that the old self config missed",
-  "edge_risk": "none",
+  "evidence": "Checked 2026-11-27. curl and fetch_text: https://globalebafund.org/medium-size-grants/ and /small-size-grants/ HTTP 404 (also with a browser UA); browser text of /medium-size-grants/ reads 'New calls coming soon'. https://gms-portal.iucn.org/public/calls/4c6561a2-74bc-436a-8a0c-c0eccd87fe65 (medium, 12 Oct - 17 Nov 2026) and .../6e62954d-c139-430b-b4ad-75d11a6ed4a5 (small, 28 Sep - 27 Oct 2026): 'This call is closed. No applying possible.' Portal, sitemap and call pages 403 to curl and fetch_text; endpoint_recon finds no JSON API. /feed/ has no call items; /wp-json/wp/v2/pages has no call pages; /news/ 2026-11-23 'Global EbA Fund Calls for Proposals Now Closed'. news page h3.geba-res__title checked in markup.",
+  "edge_risk": "Calls are announced only in the news listing, so a call that is published without a news item is missed; a new call has no deadline in the listing (main vets it).",
   "confidence": "medium"
 }

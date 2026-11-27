@@ -1,0 +1,34 @@
+{
+  "id": "36399836-e588-45ad-9e4f-c40091abecce",
+  "name": "XPRIZE Foundation",
+  "program": "XPRIZE Water Scarcity",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.xprize.org/news",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "item": "a.article-card",
+      "title": ".article-title",
+      "link": "a"
+    },
+    "filter": {
+      "all": ["re:water|desalin"],
+      "any": ["competition", "challenge", "call", "applications", "registration", "launch", "semifinal", "finalist"]
+    },
+    "max_items": 40,
+    "auto_vet": false
+  },
+  "collect_note": "Competition closed to entries (Track A testing deadline December 19, 2025; semifinal testing Q4 2026). Route checked: the XPRIZE news listing (www.xprize.org/news, 16 article cards on page 1, server-rendered) is the only place a new round of this prize would be announced. Plain-HTTP routes tried: /articles/rss.xml (404), sitemap.xml (no calls section), prize page /prizes/water (program page with no call rows; kept as evidence only). Filter tested against the last known call title 'XPRIZE announces semifinalist teams advancing in $119M competition to transform seawater desalination' (kept: water|desalin matches, competition matches). Page 1 currently has no water-prize item, so zero items is expected. Non-water XPRIZE news is dropped by the all filter. Items stay hidden candidates (auto_vet false).",
+  "zero_reason": {
+    "quote": "Qualified teams must complete testing by December 19, 2025.",
+    "url": "https://www.xprize.org/prizes/water"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-27: xprize.org/prizes/water (prize page, 'Active 2024 - 2028', Track A testing deadline December 19, 2025, semifinal testing Q4 2026, finals Q4 2027 - Q3 2028); xprize.org/news (16 cards, no water-prize item on page 1); /articles/rss.xml HTTP 404; sitemap.xml 200.",
+  "edge_risk": null,
+  "confidence": "medium"
+}

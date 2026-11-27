@@ -1,0 +1,29 @@
+{
+  "id": "24f15adc-39a3-4943-8cb4-4b4093fdebbb",
+  "name": "New Mexico EMNRD, Energy Conservation and Management Division (ECAM)",
+  "program": "Solar for New Mexico grant (state-funded, 2026 allocation)",
+  "mode": "calls",
+  "adapter": "html",
+  "url": "https://www.emnrd.nm.gov/ecmd/ecam-state-solar-pre-application-conference-presentation/",
+  "feed_url": null,
+  "adapter_config": {
+    "list": {
+      "url": "https://www.emnrd.nm.gov/ecmd/about-us/requests-for-proposals-applications/",
+      "match": "solar[ -]for[ -]new[ -]mexico"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "ECAM's Requests for Proposals page is where a Solar for New Mexico call would be posted; it reads 'No active RFPs' today, so the crawler watches that listing for a link naming the program (no call rows until one appears). The funder page itself holds only the 2026 pre-application deck, whose applications closed July 15, 2026.",
+  "zero_reason": {
+    "quote": "No active RFPs are available at this time.",
+    "url": "https://www.emnrd.nm.gov/ecmd/about-us/requests-for-proposals-applications/"
+  },
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-27: endpoint_recon on https://www.emnrd.nm.gov/ecmd/ (WordPress, HTTP 200, no API, /ecmd/feed/ and /comments/feed/ 0 items, sitemaps list no call pages); funder URL is a PDF (fetch_text FETCH_FAILED PDF; downloaded and read with pdftotext); /ecmd/about-us/requests-for-proposals-applications/ (HTTP 200, the NOFO section reads 'No active RFPs are available at this time.', chosen as list); /ecmd/news-and-announcements/ (only a different program, 'New Mexico Energy Grant: Concept Paper Submission', CBF USD 20M rolling, not this program, not listed here). Filter test: /solar[ -]for[ -]new[ -]mexico/i matches last known call title 'Solar for New Mexico Program'.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

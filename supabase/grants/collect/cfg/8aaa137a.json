@@ -1,0 +1,35 @@
+{
+  "id": "8aaa137a-5a13-4713-bb4e-151d4ea359c0",
+  "name": "Science for Africa Foundation (SFA Foundation)",
+  "program": "Grand Challenges Africa: African Agriculture Climate Adaptation Research System RFP (Round 14)",
+  "mode": "calls",
+  "adapter": "rss",
+  "url": "https://scienceforafrica.foundation/funding/african-agriculture-climate-adaptation-research-system-request-for-proposals",
+  "feed_url": "https://scienceforafrica.foundation/rss.xml",
+  "adapter_config": {
+    "auto_vet": false,
+    "filter": {
+      "fields": "title+description",
+      "any": [
+        "request for proposals",
+        "call for proposals",
+        "call for applications",
+        "re:\\brfp\\b"
+      ]
+    },
+    "max_items": 10
+  },
+  "collect_note": "SFA Foundation's site RSS feed (news, media and grantee items) is read and only items with call words (request for proposals, call for proposals, call for applications, RFP) are kept. The feed is a news feed, so it is used with a call-word filter tested on the last known call title, 'African Agriculture Climate Adaptation Research System Request for Proposals'. No open call is listed on 2026-11-27: the RFP page shows a deadline of Sunday, January 15, 2023 and the Grand Challenges Africa page names no current round, so the feed is expected to return zero items until a new RFP is posted.",
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "zero_reason": {
+    "quote": "Sunday, January 15, 2023",
+    "url": "https://scienceforafrica.foundation/funding/african-agriculture-climate-adaptation-research-system-request-for-proposals",
+    "note": "RFP page (HTTP 200) shows Deadline Sunday, January 15, 2023. RSS feed https://scienceforafrica.foundation/rss.xml (HTTP 200, 10 items, newest 2026-11-27) holds news, media and grantee items with no call. /funding (HTTP 200) lists programs with no call dates or RFP links. Grand Challenges Africa page names no current round."
+  },
+  "evidence": "GET https://scienceforafrica.foundation/rss.xml HTTP 200 application/rss+xml, 10 items, news and grantee pages, no RFP. GET /funding HTTP 200, program list only, no call links. GET /jsonapi and /jsonapi/node 404. GET /sitemap.xml 404. GET /feed and /funding/feed 404. GET /grand-challenges-africa HTTP 200, no current round. Filter tested by hand on the last known call title 'African Agriculture Climate Adaptation Research System Request for Proposals': matches 'request for proposals'. Checked 2026-11-27.",
+  "edge_risk": "none",
+  "confidence": "medium"
+}

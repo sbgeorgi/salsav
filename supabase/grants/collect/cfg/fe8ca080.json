@@ -10,18 +10,24 @@
     "list": {
       "url": "https://www.agriculture.gov.au/agriculture-land/farm-food-drought/drought/future-drought-fund/programs",
       "match": "Drought Resilience Innovation Challenges",
-      "detail": {"max": 1, "closed": "Applications closed"}
+      "detail": {
+        "max": 1,
+        "closed": "Applications closed"
+      }
     },
     "max_items": 10,
     "auto_vet": false
   },
-  "collect_note": "Reads the Future Drought Fund programs listing (current programs, one card per program) and hops to the Drought Resilience Innovation Challenges Pilot Program page; the detail text 'Applications closed' marks the call closed. Nothing is open today: the pilot round closed and its recipients are announced. The program page is the only official place a next round would be announced, and the listing is the calls-level route. Routes tried: endpoint_recon (sitemap.xml exists: engine_gap: sitemap https://www.agriculture.gov.au/sitemap.xml, not used, no calls section checked; no feed, wp-json or embedded JSON found); communitygrants.gov.au grant page returned HTTP 403, so not used.",
+  "collect_note": "Blocker: bot_protection. agriculture.gov.au drops non-browser clients (plain HTTP times out with 0 bytes or resets, 3 UAs and headers tried, incl. robots.txt, programs listing, sitemap, news RSS); headless Chrome loads the pages. GrantConnect Go/List: 119 records, no filter works, no drought call, DAFF 2; forecast 404. Applications closed, recipients announced, no next round. Checked 2026-11-27.",
   "zero_reason": {
     "quote": "Drought Resilience Innovation Challenges Pilot Program recipients have been announced.",
     "url": "https://www.agriculture.gov.au/agriculture-land/farm-food-drought/drought/future-drought-fund/drought-resilience-innovation-challenges"
   },
-  "expect": {"min_items": 0, "sample": []},
-  "evidence": "GET programs listing (Current programs includes Drought Resilience Innovation Challenges Pilot Program) and GET program page 2026-11-24: 'Applications closed', 'recipients have been announced'. Filter words 'Drought Resilience Innovation Challenges' match the program title, the last known call.",
-  "edge_risk": "agriculture.gov.au sitemap and page markup; communitygrants.gov.au 403",
-  "confidence": "medium"
+  "expect": {
+    "min_items": 0,
+    "sample": []
+  },
+  "evidence": "2026-11-27: endpoint_recon verdict none (site timeout/reset). curl plain: programs, program page, robots, sitemap, news RSS all timeout (0 bytes); agriculture.gov.au http 301 then reset. web act (headless Chrome) program page 200: 'Applications closed', 'recipients have been announced', page updated 16 Sep 2026. GrantConnect Go/List 200 (plain), 119 records over 8 pages, 15 per page, searchText/Agency params ignored, DAFF 2 records, zero drought. Go/Forecast 404. communitygrants.gov.au grant search: JS-rendered, no call text in HTML. data.gov.au package_search 404.",
+  "edge_risk": "bot_protection",
+  "confidence": "low"
 }

@@ -1,0 +1,32 @@
+{
+  "id": "9085e699-5c80-4f4e-83db-20587445fdc6",
+  "name": "U.S. Department of the Interior, Bureau of Reclamation",
+  "program": "WaterSMART Drought Response Program (FY26 round)",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.usbr.gov/drought/",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "DOI-BOR",
+    "keyword": "Drought Response Program",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "detail": true,
+    "also_page": true,
+    "filter": {
+      "any": [
+        "drought response program"
+      ],
+      "fields": "title+description"
+    },
+    "max_items": 10,
+    "auto_vet": false
+  },
+  "collect_note": "Reads forecasted or posted Bureau of Reclamation Grants.gov notices titled Drought Response Program (WaterSMART, R26AS00016 closed 2026-07-28, under review). No next round is announced, so the feed is expected to be empty until a new round posts; auto_vet false until a new round is confirmed on its own page.",
+  "expect": {
+    "min_items": 0,
+    "zero_reason": "R26AS00016 closed 2026-07-28 and no next round is announced on usbr.gov/drought/; Grants.gov shows no forecasted or posted Drought Response Program notice.",
+    "sample": []
+  },
+  "evidence": "2026-11-27 usbr.gov/drought/ states the funding opportunity closed July 28, 2026 and applications are under review; no next round announced."
+}

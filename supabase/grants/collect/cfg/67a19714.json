@@ -1,0 +1,32 @@
+{
+  "id": "67a19714-1721-4850-951a-9b0e8c5166d0",
+  "name": "USDA National Institute of Food and Agriculture (NIFA)",
+  "program": "AFRI Strengthening Agricultural Systems (SAS), FY2026 NOFO USDA-NIFA-AFRI-011677 (archived Apr 25 2026); FY2027 round not found",
+  "mode": "calls",
+  "adapter": "grants_gov",
+  "url": "https://www.nifa.usda.gov/grants/funding-opportunities/afri-strengthening-agricultural-systems",
+  "feed_url": null,
+  "adapter_config": {
+    "agencies": "USDA-NIFA",
+    "keyword": "Agricultural Systems",
+    "oppStatuses": "forecasted|posted",
+    "rows": 25,
+    "filter": {
+      "any": [
+        "Strengthening Agricultural Systems",
+        "Sustainable Agricultural Systems"
+      ],
+      "fields": "title"
+    },
+    "auto_vet": false,
+    "max_items": 10
+  },
+  "collect_note": "AFRI Strengthening Agricultural Systems notices from NIFA are read from the Grants.gov search API twice a day, filtered to titles that name Strengthening Agricultural Systems, and wait for review before showing. The date is only the Grants.gov closing date; each program area has its own due date on the NIFA page.",
+  "expect": {
+    "min_items": 0,
+    "sample": [],
+    "zero_reason": "Quote 'Closing Date Thursday, April 23, 2026' (https://www.nifa.usda.gov/grants/funding-opportunities/afri-strengthening-agricultural-systems, fetched 2026-11-27); Grants.gov 'Agriculture and Food Research Initiative Strengthening Agricultural Systems' (https://www.grants.gov/search-results-detail/361211) is archived with deadline 2026-04-23. Filter tested against that title: it matches. No FY2027 notice is forecasted or posted."
+  },
+  "evidence": "Grants.gov api search2 2026-11-27 with agencies USDA-NIFA and keyword 'Agricultural Systems': forecasted|posted gives 0 hits (adapter_check ok true, count 0); with archived included gives 7 SAS-titled notices, all past (2018 to 2026, titles 'Sustainable Agricultural Systems' before 2026). Filter any: 'Strengthening Agricultural Systems', 'Sustainable Agricultural Systems'. NIFA page: 'Closing Date Thursday, April 23, 2026', 'Page last updated: March 23, 2026'. endpoint_recon: plain page only (html_ok); jsonapi and sitemap unreachable from this PC, chrome down; no feed found.",
+  "edge_risk": "none"
+}
